@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>買爽的 MySongDe — 買個爽，不花錢</title>
-<meta name="description" content="台灣第一個多巴胺購物網站：限時搶購、折價券、爽買不用錢 — 不收費、不出貨、不收集資料，純粹買個爽。">
+<title>買爽的 MySongDe — 護腎知識商城</title>
+<meta name="description" content="護腎知識模擬商城：用夢幻幣購買護腎知識、玩小腎臟跑酷賺幣 — 不收費、不收集資料，唯一會出貨的是護腎知識。">
 <style>
   :root{
     --bg:#fff7f0; --card:#ffffff; --ink:#3d2c29; --dim:#a08a80;
@@ -19,91 +19,76 @@
        line-height:1.6;}
   button{font-family:inherit;cursor:pointer;border:none;background:none;}
 
-  /* ── 誠實橫幅 ── */
   .honest{position:sticky;top:0;z-index:60;background:#3d2c29;color:#ffe9d6;
           text-align:center;font-size:13px;padding:7px 12px;letter-spacing:.5px;}
   .honest b{color:#ffc857;}
 
-  /* ── Header ── */
   header{position:sticky;top:34px;z-index:50;background:rgba(255,247,240,.94);
          backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
   .hwrap{max-width:1180px;margin:0 auto;display:flex;align-items:center;
-         gap:14px;padding:10px 20px;}
-  .logo{font-size:23px;font-weight:900;letter-spacing:1px;
+         gap:10px;padding:10px 20px;flex-wrap:wrap;}
+  .logo{font-size:22px;font-weight:900;letter-spacing:1px;
         background:linear-gradient(90deg,var(--brand),var(--brand2));
         -webkit-background-clip:text;background-clip:text;color:transparent;
         white-space:nowrap;}
   .logo small{font-size:10px;color:var(--dim);-webkit-text-fill-color:var(--dim);
               display:block;letter-spacing:2px;font-weight:600;}
   .search{flex:1;display:flex;background:#fff;border:2px solid var(--brand);
-          border-radius:99px;overflow:hidden;max-width:520px;}
-  .search input{flex:1;border:none;padding:9px 16px;font-size:14px;
-                font-family:inherit;outline:none;color:var(--ink);background:transparent;}
-  .search button{background:var(--brand);color:#fff;padding:0 20px;font-size:15px;}
-  .cartbtn{position:relative;font-size:14px;font-weight:700;color:var(--ink);
-           background:#fff;border:2px solid var(--line);border-radius:99px;
-           padding:8px 16px;transition:.15s;white-space:nowrap;}
-  .cartbtn:hover{border-color:var(--brand);color:var(--brand);}
+          border-radius:99px;overflow:hidden;min-width:150px;max-width:420px;}
+  .search input{flex:1;border:none;padding:8px 15px;font-size:14px;
+                font-family:inherit;outline:none;color:var(--ink);background:transparent;min-width:0;}
+  .search button{background:var(--brand);color:#fff;padding:0 16px;font-size:15px;}
+  .hbtn{position:relative;font-size:13.5px;font-weight:700;color:var(--ink);
+        background:#fff;border:2px solid var(--line);border-radius:99px;
+        padding:7px 14px;transition:.15s;white-space:nowrap;}
+  .hbtn:hover{border-color:var(--brand);color:var(--brand);}
+  .coin{background:linear-gradient(90deg,#7c5cff,#a78bfa);color:#fff;border:none;
+        font-weight:900;}
+  .coin:hover{color:#fff;}
   .badge{position:absolute;top:-8px;right:-6px;background:var(--brand);
          color:#fff;font-size:12px;font-weight:800;min-width:22px;height:22px;
          border-radius:99px;display:flex;align-items:center;justify-content:center;
          padding:0 5px;transform:scale(0);transition:.2s;}
   .badge.show{transform:scale(1);}
 
-  /* ── 分類列 ── */
-  .cats{max-width:1180px;margin:0 auto;padding:10px 20px 2px;display:flex;
+  .cats{max-width:1180px;margin:0 auto;padding:8px 20px 10px;display:flex;
         gap:6px;flex-wrap:wrap;}
   .tab{padding:6px 14px;border-radius:99px;font-size:13.5px;color:var(--dim);
        font-weight:700;transition:.15s;background:#fff;border:1px solid var(--line);}
   .tab:hover{color:var(--brand);border-color:var(--brand);}
   .tab.on{background:var(--brand);color:#fff;border-color:var(--brand);}
 
-  /* ── 跑馬燈 ── */
   .marquee{max-width:1180px;margin:10px auto 0;padding:0 20px;overflow:hidden;}
   .marq-in{display:flex;gap:48px;white-space:nowrap;font-size:13px;color:var(--brand);
            font-weight:700;animation:marq 22s linear infinite;width:max-content;}
   @keyframes marq{to{transform:translateX(-50%)}}
 
-  /* ── 限時搶購 ── */
-  .flash{max-width:1180px;margin:14px auto 0;padding:0 20px;}
-  .flash-box{background:linear-gradient(120deg,#ff5d73,#ff9a3c);border-radius:18px;
-             padding:16px 18px;color:#fff;}
-  .flash-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px;}
-  .flash-head h2{font-size:20px;font-weight:900;letter-spacing:1px;}
-  .timer{display:flex;gap:5px;align-items:center;font-weight:900;font-size:15px;}
-  .timer span{background:#3d2c29;padding:3px 8px;border-radius:7px;font-family:Consolas,monospace;}
-  .flash-note{font-size:12px;opacity:.9;}
-  .flash-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
-  .fcard{background:#fff;border-radius:12px;padding:10px;color:var(--ink);
-         text-align:center;position:relative;transition:.15s;cursor:pointer;}
-  .fcard:hover{transform:translateY(-3px);}
-  .fcard .e{font-size:42px;}
-  .fcard .fn{font-size:12.5px;font-weight:700;margin:4px 0 2px;overflow:hidden;
-             text-overflow:ellipsis;white-space:nowrap;}
-  .fcard .fp{color:var(--brand);font-weight:900;font-size:16px;}
-  .fcard .fo{font-size:11px;color:var(--dim);text-decoration:line-through;}
-  .fbar{height:14px;background:#ffe3d6;border-radius:99px;margin-top:6px;
-        overflow:hidden;position:relative;}
-  .fbar i{position:absolute;inset:0;font-style:normal;font-size:10px;font-weight:800;
-          color:#fff;display:flex;align-items:center;justify-content:center;z-index:1;}
-  .fbar b{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));
-          border-radius:99px;}
+  /* ── 小遊戲區 ── */
+  .game{max-width:1180px;margin:14px auto 0;padding:0 20px;}
+  .game-box{background:linear-gradient(120deg,#7c5cff,#a78bfa);border-radius:18px;
+            padding:16px 18px;color:#fff;}
+  .game-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:10px;}
+  .game-head h2{font-size:20px;font-weight:900;letter-spacing:1px;}
+  .game-note{font-size:12.5px;opacity:.92;}
+  canvas{display:block;width:100%;background:#fffdf8;border-radius:12px;
+         touch-action:manipulation;cursor:pointer;}
+  .game-stats{display:flex;gap:18px;margin-top:8px;font-size:13px;font-weight:700;flex-wrap:wrap;}
 
-  /* ── 折價券 ── */
+  /* ── 禮包 ── */
   .coupons{max-width:1180px;margin:14px auto 0;padding:0 20px;display:grid;
            grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;}
-  .coupon{background:#fff;border:2px dashed var(--brand);border-radius:12px;
+  .coupon{background:#fff;border:2px dashed var(--accent);border-radius:12px;
           padding:10px 14px;display:flex;align-items:center;gap:10px;justify-content:space-between;}
   .coupon .cl{font-size:13px;}
-  .coupon .cl b{color:var(--brand);font-size:15px;display:block;}
+  .coupon .cl b{color:var(--accent);font-size:15px;display:block;}
   .coupon .cl small{color:var(--dim);font-size:11.5px;}
-  .claim{background:var(--brand);color:#fff;font-size:12.5px;font-weight:800;
+  .claim{background:var(--accent);color:#fff;font-size:12.5px;font-weight:800;
          padding:6px 13px;border-radius:99px;white-space:nowrap;}
-  .claim:disabled{background:#e8d5c9;cursor:default;}
+  .claim:disabled{background:#e0d5f5;cursor:default;}
 
-  /* ── 商品格 ── */
+  /* ── 商品 ── */
   .grid{max-width:1180px;margin:18px auto 60px;padding:0 20px;display:grid;
-        grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+        grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;}
   .count{max-width:1180px;margin:16px auto 0;padding:0 20px;font-size:13px;color:var(--dim);}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
         overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;
@@ -111,30 +96,28 @@
   .card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(255,93,115,.16);}
   .off{position:absolute;top:8px;left:8px;background:var(--brand);color:#fff;
        font-size:11px;font-weight:900;padding:2px 8px;border-radius:7px;z-index:1;}
-  .pic{height:110px;display:flex;align-items:center;justify-content:center;
-       font-size:52px;background:linear-gradient(135deg,#fff2e6,#ffe3ec);}
+  .owned{position:absolute;top:8px;right:8px;background:var(--ok);color:#fff;
+       font-size:11px;font-weight:900;padding:2px 8px;border-radius:7px;z-index:1;}
+  .pic{height:100px;display:flex;align-items:center;justify-content:center;
+       font-size:48px;background:linear-gradient(135deg,#fff2e6,#ffe3ec);}
   .body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1;}
   .name{font-size:13.5px;font-weight:700;line-height:1.45;flex:1;
         display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
   .name b{color:var(--accent);}
-  .tags{display:flex;gap:4px;flex-wrap:wrap;}
-  .tg{font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:5px;
-      background:#fff1e8;color:var(--brand2);border:1px solid #ffd9bd;}
-  .tg.free{background:#e9f9f1;color:var(--ok);border-color:#bfeeda;}
   .meta{font-size:11.5px;color:var(--dim);}
   .meta em{font-style:normal;color:#e8a13c;font-weight:700;}
   .row{display:flex;align-items:center;justify-content:space-between;margin-top:2px;}
-  .price{font-size:16.5px;font-weight:900;color:var(--brand);}
+  .price{font-size:16px;font-weight:900;color:var(--accent);}
   .price s{font-size:11px;color:var(--dim);font-weight:500;margin-right:4px;}
   .add{background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;
        font-size:13px;font-weight:800;padding:6px 13px;border-radius:99px;transition:.15s;}
   .add:active{transform:scale(.93);}
 
-  /* ── Drawer / Modal（沿用）── */
+  /* ── Drawer / Modal ── */
   .veil{position:fixed;inset:0;background:rgba(61,44,41,.45);z-index:80;
         opacity:0;pointer-events:none;transition:.25s;}
   .veil.on{opacity:1;pointer-events:auto;}
-  .drawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,94vw);z-index:90;
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,94vw);z-index:90;
           background:var(--card);box-shadow:-10px 0 40px rgba(0,0,0,.15);
           transform:translateX(105%);transition:.28s cubic-bezier(.2,.8,.3,1);
           display:flex;flex-direction:column;}
@@ -150,28 +133,28 @@
         border-bottom:1px dashed var(--line);}
   .item .e{font-size:32px;}
   .item .info{flex:1;min-width:0;}
-  .item .nm{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;
-            white-space:nowrap;}
-  .item .pr{font-size:13px;color:var(--brand);font-weight:800;}
+  .item .nm{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .item .pr{font-size:13px;color:var(--accent);font-weight:800;}
   .qty{display:flex;align-items:center;gap:8px;}
   .qty button{width:26px;height:26px;border-radius:8px;background:#fff1e8;
               font-weight:800;color:var(--brand);font-size:15px;}
   .dfoot{padding:14px 20px;border-top:1px solid var(--line);}
   .total{display:flex;justify-content:space-between;font-size:14px;
          font-weight:700;margin:2px 0;}
-  .total .amt{color:var(--brand);font-size:19px;font-weight:900;}
-  .total.disc .amt{color:var(--ok);font-size:14px;}
+  .total .amt{color:var(--accent);font-size:18px;font-weight:900;}
   .hint{font-size:12px;color:var(--dim);margin-bottom:10px;}
+  .hint.bad{color:var(--brand);font-weight:700;}
   .cta{width:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));
        color:#fff;font-size:16px;font-weight:900;padding:13px;border-radius:14px;
        letter-spacing:2px;transition:.15s;}
   .cta:active{transform:scale(.97);}
   .cta:disabled{opacity:.4;cursor:not-allowed;}
+  .cta.alt{background:linear-gradient(90deg,#7c5cff,#a78bfa);}
 
   .modal{position:fixed;inset:0;z-index:95;display:flex;align-items:center;
          justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:.22s;}
   .modal.on{opacity:1;pointer-events:auto;}
-  .sheet{background:var(--card);border-radius:22px;width:min(460px,96vw);
+  .sheet{background:var(--card);border-radius:22px;width:min(480px,96vw);
          max-height:92vh;overflow-y:auto;padding:26px 26px 22px;
          box-shadow:0 24px 60px rgba(0,0,0,.25);
          transform:translateY(16px);transition:.22s;}
@@ -181,24 +164,21 @@
   .fld{margin-bottom:14px;}
   .fld label{font-size:13px;font-weight:700;display:block;margin-bottom:6px;}
   .fld select{width:100%;padding:11px 13px;border:2px solid var(--line);
-        border-radius:12px;font-size:14px;font-family:inherit;background:#fffdfb;
-        color:var(--ink);}
+        border-radius:12px;font-size:14px;font-family:inherit;background:#fffdfb;color:var(--ink);}
   .fld select:focus{outline:none;border-color:var(--brand);}
-  .pays{display:grid;gap:8px;}
-  .pay{display:flex;align-items:center;gap:10px;border:2px solid var(--line);
-       border-radius:12px;padding:11px 13px;font-size:14px;cursor:pointer;transition:.15s;}
-  .pay:has(input:checked){border-color:var(--brand);background:#fff5f0;}
-  .pay small{color:var(--dim);display:block;font-size:12px;}
+  .paybox{border:2px solid var(--line);border-radius:12px;padding:12px 14px;
+          font-size:14px;display:flex;justify-content:space-between;align-items:center;}
+  .paybox b{color:var(--accent);}
   .note{font-size:11.5px;color:var(--dim);background:#fff7ee;
         border:1px dashed #f0d8bf;border-radius:10px;padding:9px 12px;margin:12px 0;}
 
   .done{text-align:center;padding:10px 0;}
-  .done .big{font-size:70px;}
+  .done .big{font-size:64px;}
   .done h2{margin:6px 0;}
   .ordno{font-family:Consolas,monospace;background:#fff3ea;color:var(--brand);
          font-weight:800;padding:4px 12px;border-radius:8px;font-size:14px;}
-  .track{margin:18px 0 6px;text-align:left;}
-  .step{display:flex;gap:12px;padding:9px 0;align-items:flex-start;opacity:.35;transition:.4s;}
+  .track{margin:16px 0 6px;text-align:left;}
+  .step{display:flex;gap:12px;padding:8px 0;align-items:flex-start;opacity:.35;transition:.4s;}
   .step.hit{opacity:1;}
   .step .dot{width:26px;height:26px;border-radius:99px;background:#f0e4da;
              display:flex;align-items:center;justify-content:center;font-size:13px;
@@ -206,8 +186,17 @@
   .step.hit .dot{background:var(--ok);color:#fff;}
   .step .tt{font-size:14px;font-weight:700;}
   .step .td{font-size:12px;color:var(--dim);}
-  .scooter{font-size:26px;display:inline-block;animation:ride 2.2s ease-in-out infinite;}
-  @keyframes ride{0%,100%{transform:translateX(-14px)}50%{transform:translateX(14px)}}
+  .newk{margin-top:12px;text-align:left;background:#f6f2ff;border:1px solid #e3d9ff;
+        border-radius:12px;padding:10px 14px;font-size:13px;}
+  .newk b{color:var(--accent);}
+
+  /* ── 知識庫 ── */
+  .kitem{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden;}
+  .kitem summary{padding:11px 14px;font-size:14px;font-weight:700;cursor:pointer;
+                 list-style:none;display:flex;gap:8px;align-items:center;}
+  .kitem summary::-webkit-details-marker{display:none;}
+  .kitem[open] summary{border-bottom:1px dashed var(--line);color:var(--accent);}
+  .kbody{padding:12px 16px;font-size:13.5px;color:#5a4a44;line-height:1.8;}
 
   footer{border-top:1px solid var(--line);background:#fff;padding:34px 20px 44px;}
   .fwrap{max-width:760px;margin:0 auto;font-size:13.5px;color:var(--dim);}
@@ -224,30 +213,36 @@
 </head>
 <body>
 
-<div class="honest">🎭 本站是<b>娛樂用的模擬購物網站</b> — 不會收費・不會出貨・不收集任何個人資料，純粹讓你買個爽</div>
+<div class="honest">🫘 本站是<b>娛樂用的護腎衛教模擬商城</b> — 不收費・不收集資料・唯一會出貨的是護腎知識</div>
 
 <header>
   <div class="hwrap">
     <div class="logo">買爽的<small>MYSONGDE.SHOP</small></div>
     <div class="search">
-      <input id="q" type="search" placeholder="搜尋 49 種買不起也不用買的好東西…" oninput="renderGrid()">
+      <input id="q" type="search" placeholder="搜尋護腎知識…" oninput="renderGrid()">
       <button onclick="renderGrid()">🔍</button>
     </div>
-    <button class="cartbtn" onclick="openCart()">🛒 購物車<span class="badge" id="badge">0</span></button>
+    <button class="hbtn coin" onclick="scrollGame()">💎 <span id="coinBal">100</span> 夢幻幣</button>
+    <button class="hbtn" onclick="openLib()">📚 知識庫<span class="badge" id="libBadge">0</span></button>
+    <button class="hbtn" onclick="openCart()">🛒<span class="badge" id="badge">0</span></button>
   </div>
   <nav class="cats" id="tabs"></nav>
 </header>
 
 <div class="marquee"><div class="marq-in" id="marq"></div></div>
 
-<section class="flash">
-  <div class="flash-box">
-    <div class="flash-head">
-      <h2>⚡ 限時搶購</h2>
-      <div class="timer">距結束 <span id="th">00</span>:<span id="tm">00</span>:<span id="ts">00</span></div>
-      <div class="flash-note">倒數結束後自動重來，跟你的減肥計畫一樣</div>
+<section class="game" id="gameSec">
+  <div class="game-box">
+    <div class="game-head">
+      <h2>🫘 小腎臟大冒險</h2>
+      <div class="game-note">按「空白鍵」或點擊畫面跳躍，躲開傷腎因子 — 每躲過一個 +3 夢幻幣</div>
     </div>
-    <div class="flash-row" id="flashRow"></div>
+    <canvas id="cv" width="760" height="230"></canvas>
+    <div class="game-stats">
+      <span>本局分數：<span id="gScore">0</span></span>
+      <span>躲過傷腎因子：<span id="gDodge">0</span></span>
+      <span>最高分：<span id="gBest">0</span></span>
+    </div>
   </div>
 </section>
 
@@ -258,11 +253,11 @@
 
 <footer>
   <div class="fwrap">
-    <h3>關於「買爽的」</h3>
-    <p>這是一個<strong>多巴胺網站（Dopamine Site）</strong>：模擬完整的網購流程 — 逛街、比價、搶購、領券、結帳、追蹤出貨 — 但全程不涉及任何金錢，也永遠不會有商品送達。</p>
-    <p>心理學研究認為，網購的快感大多來自「挑選與期待」的過程本身，而不是收到商品的那一刻。想亂花錢的時候，來這裡把流程走完一遍，衝動就消化掉了 — 錢包還是滿的。</p>
-    <p><strong>我們不收費、沒有金流、不會要求你輸入信用卡或任何真實個資。</strong>訂單紀錄只存在你自己瀏覽器的 localStorage 裡，本站沒有伺服器資料庫。所有品牌與商品皆為虛構，如有雷同，純屬你想太多。銷售量與好評數當然也是編的，跟商品一樣認真。</p>
-    <p style="margin-top:14px">🧾 檢舉前請先看這段：本站無任何付款功能，不符合詐欺構成要件（無財物交付、無詐術）。我們跟 165 是同一邊的 — 真正的購物詐騙網站不會告訴你「你不會收到貨」。</p>
+    <h3>關於「買爽的」護腎知識商城</h3>
+    <p>這是一個<strong>衛教遊戲化網站</strong>：用完整的網購體驗包裝護腎知識 — 逛街、比價、賺夢幻幣、結帳、追蹤出貨 — 全程不涉及任何金錢，而且這次真的會出貨：<strong>出的是護腎知識，直接送進你的知識庫。</strong></p>
+    <p><strong>我們不收費、沒有金流、不會要求你輸入信用卡或任何真實個資。</strong>夢幻幣是純遊戲幣，賺不了真錢也買不了真商品。知識庫與夢幻幣只存在你自己瀏覽器的 localStorage，本站沒有伺服器資料庫。銷售量與好評數是編的，但衛教內容是認真的。</p>
+    <p>⚕️ <strong>醫療免責聲明：</strong>本站衛教內容為一般性健康知識，不能取代醫師診斷與治療建議。腎功能異常、用藥問題請諮詢腎臟科醫師或藥師；有症狀請就醫。</p>
+    <p style="margin-top:14px">🧾 檢舉前請先看這段：本站無任何付款功能，不符合詐欺構成要件（無財物交付、無詐術）。真正的購物詐騙網站不會教你保護腎臟。</p>
   </div>
 </footer>
 
@@ -272,63 +267,62 @@
   <div class="dhead"><h2>🛒 購物車</h2><button class="x" onclick="closeAll()">✕</button></div>
   <div class="dbody" id="cartBody"></div>
   <div class="dfoot">
-    <div class="total"><span>商品金額</span><span class="amt" id="cartTotal">NT$0</span></div>
-    <div class="total disc"><span>折價券「反正不用錢券」</span><span class="amt" id="cartDisc">-NT$0</span></div>
-    <div class="hint">實付金額：NT$0（永遠）</div>
+    <div class="total"><span>合計</span><span class="amt" id="cartTotal">💎0</span></div>
+    <div class="total"><span>你的夢幻幣</span><span class="amt" id="cartBal">💎100</span></div>
+    <div class="hint" id="payHint">結帳後知識立即送達知識庫</div>
     <button class="cta" id="checkoutBtn" onclick="openCheckout()">前往結帳</button>
   </div>
+</aside>
+
+<!-- 知識庫 -->
+<aside class="drawer" id="libDrawer">
+  <div class="dhead"><h2>📚 我的護腎知識庫</h2><button class="x" onclick="closeAll()">✕</button></div>
+  <div class="dbody" id="libBody"></div>
+  <div class="dfoot"><div class="hint">知識存在你自己的瀏覽器裡，清除瀏覽資料會消失 — 但存進腦子的不會。</div></div>
 </aside>
 
 <!-- 結帳 -->
 <div class="modal" id="checkout">
   <div class="sheet">
     <h2>結帳 🧾</h2>
-    <div class="sub">放心按，這裡沒有任何一個欄位連著你的錢。</div>
+    <div class="sub">用夢幻幣結帳。夢幻幣不是錢，但知識是真的。</div>
     <div class="fld">
       <label>收件人稱謂</label>
       <select id="fName">
         <option>尊貴的我本人</option>
-        <option>未來的有錢人</option>
-        <option>今天不想努力的人</option>
-        <option>拿鐵因子絕緣體</option>
+        <option>未來的健康老人</option>
+        <option>兩顆腎都想留住的人</option>
+        <option>今天開始少吃鹽的人</option>
       </select>
     </div>
     <div class="fld">
       <label>配送地點</label>
       <select id="fAddr">
-        <option>夢裡（免運）</option>
-        <option>平行宇宙 7-11 取貨</option>
-        <option>我心裡最柔軟的地方</option>
-        <option>下輩子的家</option>
+        <option>我的知識庫（立即送達）</option>
+        <option>我的腦袋（需要複習幾次）</option>
+        <option>家庭群組（轉發給長輩）</option>
       </select>
     </div>
     <div class="fld">
       <label>付款方式</label>
-      <div class="pays">
-        <label class="pay"><input type="radio" name="pay" checked>
-          <span><b>💎 夢幻幣</b><small>餘額 ∞，怎麼刷都刷不完</small></span></label>
-        <label class="pay"><input type="radio" name="pay">
-          <span><b>🌬️ 空氣 Pay</b><small>感應即付，連手機都不用拿出來</small></span></label>
-        <label class="pay"><input type="radio" name="pay">
-          <span><b>🧘 心靈分期</b><small>0 期 0 利率，因為根本沒有帳單</small></span></label>
-      </div>
+      <div class="paybox"><span>💎 夢幻幣</span><span>餘額 <b id="ckBal">0</b> ｜ 應付 <b id="ckCost">0</b></span></div>
     </div>
-    <div class="note">🔒 本站不需要也<b>絕不會</b>要求信用卡號、真實姓名、地址或電話。任何要你輸入這些資料的「免費購物網站」都是詐騙，請直接檢舉 165。</div>
-    <button class="cta" onclick="placeOrder()">確認付款 NT$0</button>
+    <div class="note">🔒 本站不需要也<b>絕不會</b>要求信用卡號、真實姓名、地址或電話。夢幻幣用完了？去玩「小腎臟大冒險」賺，順便練習躲開傷腎因子。</div>
+    <button class="cta" id="payBtn" onclick="placeOrder()">確認付款</button>
     <button style="width:100%;padding:10px;color:var(--dim);font-size:13px;margin-top:6px" onclick="closeAll()">再逛一下</button>
   </div>
 </div>
 
-<!-- 訂單完成 + 追蹤 -->
+<!-- 訂單完成 -->
 <div class="modal" id="doneModal">
   <div class="sheet done">
-    <div class="big">🎉</div>
-    <h2>付款成功！才怪 😄</h2>
+    <div class="big">🫘✨</div>
+    <h2>出貨成功！這次是真的 😄</h2>
     <p style="font-size:14px;color:var(--dim)">訂單編號 <span class="ordno" id="ordNo"></span></p>
     <div class="track" id="track"></div>
-    <div style="margin:6px 0 14px"><span class="scooter">🛵💨</span></div>
-    <p style="font-size:13px;color:var(--dim)">預計送達時間：<b style="color:var(--brand)">永遠不會</b>（這就是重點）</p>
-    <button class="cta" style="margin-top:14px" onclick="closeAll()">爽完了，繼續逛</button>
+    <div class="newk" id="newk"></div>
+    <button class="cta alt" style="margin-top:14px" onclick="closeAll();openLib()">📚 打開知識庫閱讀</button>
+    <button style="width:100%;padding:10px;color:var(--dim);font-size:13px;margin-top:6px" onclick="closeAll()">繼續逛</button>
   </div>
 </div>
 
@@ -336,86 +330,114 @@
 
 <script>
 "use strict";
-/* {c:分類, e:emoji, b:品牌, n:商品名(含規格贈品), p:價, o:原價, r:評分, rv:評論數, s:已售, t:標籤} */
+/* ═══════════ 商品＝護腎知識 ═══════════
+   {id, c:分類, e, b:品牌, n:商品名, p:夢幻幣, o:原價, r, rv, s:已售, k:{t:知識標題, b:知識內文}} */
 const PRODUCTS = [
- /* 3C手機 */
- {c:"3C手機",e:"📱",b:"NOPHONE",n:"防沉迷手機 Pro 128G 開任何App都顯示「去睡覺」 加贈保護貼(貼了也救不了你)",p:36900,o:42900,r:4.4,rv:7788,s:3421,t:["今日到貨"]},
- {c:"3C手機",e:"🤖",b:"LAZYTECH",n:"幫你上班機器人 2.0 內建自動點頭模組 會議求生首選 加贈「嗯嗯我了解」語音包",p:2990000,o:3990000,r:4.9,rv:15302,s:9527,t:["熱銷","免運"]},
- {c:"3C手機",e:"⌨️",b:"已讀科技",n:"AI 自動回訊鍵盤 秒回已讀不再心累 支援「哈哈」「真的」「扯」三大萬用句式",p:8800,o:12800,r:4.7,rv:23456,s:18200,t:["買一送一"]},
- {c:"3C手機",e:"📶",b:"斷線工坊",n:"永不斷線 WiFi 分享器 訊號滿格 斷的只有你的理智 附全罩式冷靜頭盔",p:15900,r:4.2,rv:5432,s:2100,t:["免運"]},
- {c:"3C手機",e:"🕶️",b:"護眼本舖",n:"100% 防藍光眼鏡 全黑不透光 保證看不到任何藍光(或任何東西) 睡眠品質提升300%",p:1990,o:3990,r:4.8,rv:9876,s:7654,t:["5折"]},
- {c:"3C手機",e:"🔋",b:"心靈電力",n:"無線充電盤 心靈專用 放上手機充手機 放上自己充自己 充電效率視心情而定",p:4500,r:4.6,rv:3210,s:1876,t:["今日到貨"]},
- /* 家電 */
- {c:"家電",e:"👕",b:"摺學家",n:"全自動摺衣機(概念機) 概念是最後還是你自己摺 附贈「明天再摺」許可證10張",p:128000,o:158000,r:3.9,rv:4567,s:987,t:["預購"]},
- {c:"家電",e:"💨",b:"靜音研究所",n:"超靜音吹風機 靜音原理:壞掉了 風力0分貝 頭髮自然風乾派最愛",p:6900,r:4.1,rv:2345,s:1234,t:["免運"]},
- {c:"家電",e:"🧹",b:"孝順家電",n:"會道歉的掃地機器人 撞到桌腳會說對不起 卡住會唱歌求救 掃地功能另售",p:29900,o:35900,r:4.9,rv:8765,s:5432,t:["熱銷"]},
- {c:"家電",e:"🍟",b:"零卡工坊",n:"零卡路里氣炸鍋 炸出來的東西還是有卡路里 但鍋子本身零卡 標題沒騙你",p:3990,o:5990,r:4.5,rv:6789,s:4321,t:["7折"]},
- {c:"家電",e:"🚨",b:"媽媽同款",n:"冰箱門未關警報器 音效採集自全台媽媽 「門要不要順手關一下?」全曲收錄",p:1290,r:5.0,rv:12000,s:8888,t:["熱銷","免運"]},
- {c:"家電",e:"💧",b:"淚滴家電",n:"除濕機 眼淚專用款 追劇夜配備 集水盒容量:一部韓劇大結局",p:8900,r:4.8,rv:5678,s:3456,t:["今日到貨"]},
- /* 美妝保養 */
- {c:"美妝保養",e:"🧴",b:"誠實保養",n:"素顏霜 擦完還是素顏 主打成分:接受自己 全膚質適用 尤其是心",p:890,o:1290,r:4.9,rv:34567,s:23456,t:["熱銷"]},
- {c:"美妝保養",e:"✨",b:"時光保養",n:"逆齡精華液 30ml 有效回到上週 再貴一點可以回到上個月 效果因記憶而異",p:12800,o:19800,r:4.3,rv:8901,s:2345,t:["65折"]},
- {c:"美妝保養",e:"👁️",b:"睫望工程",n:"睫毛增長液 增長的是你的等待 每天擦每天等 等待本身就很美",p:1580,r:3.8,rv:4567,s:1987,t:["買一送一"]},
- {c:"美妝保養",e:"🌸",b:"氣味圖書館",n:"香水「加班的味道」50ml 前調咖啡 中調便當 後調絕望 辨識度極高",p:3200,r:4.7,rv:6543,s:3210,t:["免運"]},
- {c:"美妝保養",e:"😷",b:"安慰面膜",n:"「敷了就好了」安慰型面膜 10入 敷完什麼都沒改變 但心情好多了 這就夠了",p:399,o:599,r:5.0,rv:45678,s:34567,t:["熱銷","今日到貨"]},
- /* 居家生活 */
- {c:"居家生活",e:"🪑",b:"躺平工學",n:"人體工學電競椅 工學重點:躺 支援午睡/耍廢/裝忙三模式 附贈腰靠(裝飾用)",p:15800,o:22800,r:4.8,rv:9012,s:6789,t:["7折","免運"]},
- {c:"居家生活",e:"🪟",b:"黑洞窗簾",n:"全遮光窗簾 連夢想都能遮 遮光率101% 週末睡到下午三點指定款",p:2990,r:4.9,rv:11223,s:9876,t:["熱銷"]},
- {c:"居家生活",e:"🛏️",b:"記憶寢具",n:"記憶枕 記得你所有黑歷史 半夜想起十年前的尷尬事?是枕頭在放給你看",p:1990,o:2990,r:4.2,rv:7890,s:4567,t:["66折"]},
- {c:"居家生活",e:"🕯️",b:"氣味圖書館",n:"香氛蠟燭「新鈔的味道」 點燃後滿室富貴 熄滅後回歸現實 燃燒時間:發薪日到月中",p:1200,r:4.9,rv:8765,s:6543,t:["今日到貨"]},
- {c:"居家生活",e:"🛋️",b:"辭職家居",n:"懶人沙發 坐下去就想辭職款 人體陷入深度3公分 站起來需要人生規劃",p:6990,o:9990,r:4.7,rv:5432,s:3210,t:["7折","免運"]},
- {c:"居家生活",e:"🪴",b:"不死園藝",n:"永生盆栽 怎麼養都不會死 因為是塑膠的 綠手指黑手指一律平等",p:790,r:5.0,rv:23456,s:12345,t:["熱銷"]},
- /* 食品生鮮 */
- {c:"食品生鮮",e:"🫧",b:"ALPINE AIR",n:"罐裝頂級空氣 阿爾卑斯山限定 開罐即逝跟青春一樣 6入組 加贈台北盆地空氣1罐(對照組)",p:128000,r:4.7,rv:2310,s:876,t:["進口"]},
- {c:"食品生鮮",e:"😴",b:"好眠研究所",n:"一夜好眠 7小時裝 不含半夜3點的焦慮 保存期限到明天早上 效期短請盡速使用",p:3900,r:5.0,rv:88420,s:65432,t:["熱銷","今日到貨"]},
- {c:"食品生鮮",e:"💊",b:"好眠研究所",n:"拖延症特效藥 30錠 預計明天出貨 後天 大後天吧 反正會到(可能)",p:990,r:3.2,rv:66666,s:5432,t:["預購"]},
- {c:"食品生鮮",e:"🧋",b:"零卡飲品",n:"零卡珍珠奶茶 無珍珠無奶無茶 成分:冰塊+誠實 全糖去冰做不到因為沒有糖",p:65,o:120,r:4.4,rv:34521,s:28765,t:["54折"]},
- {c:"食品生鮮",e:"🍱",b:"家的味道",n:"媽媽的手藝冷凍料理包 微波後自動變涼 因為媽媽說「快點吃不要滑手機」",p:320,r:4.9,rv:19876,s:15678,t:["冷凍宅配"]},
- {c:"食品生鮮",e:"🍵",b:"輕盈茶坊",n:"減肥茶 30包入 喝了保證變輕 變輕的是錢包 體重不在保固範圍",p:1280,o:1880,r:3.5,rv:8765,s:4321,t:["68折"]},
- /* 運動戶外 */
- {c:"運動戶外",e:"👟",b:"VELOCITÀ",n:"光速跑鞋 穿上後跑起來跟平常一樣 但心裡快很多 心率有到就算有跑",p:128000,o:158000,r:4.8,rv:5566,s:2345,t:["8折","免運"]},
- {c:"運動戶外",e:"🧘",b:"躺平運動",n:"瑜珈墊 躺著滑手機專用 防滑設計讓你滑手機不滑手 運動功能未開放",p:990,r:4.9,rv:14567,s:11234,t:["熱銷"]},
- {c:"運動戶外",e:"🏋️",b:"泡麵健身",n:"啞鈴 2kg 壓泡麵專用 三分鐘出餐 順便練二頭(拿起泡麵那下)",p:690,r:4.8,rv:9871,s:7654,t:["今日到貨"]},
- {c:"運動戶外",e:"📿",b:"代步科技",n:"自動計步器 幫你走 你躺著它計 日行萬步輕鬆達成 健康資料好看最重要",p:2490,o:2990,r:4.1,rv:6543,s:3456,t:["83折"]},
- {c:"運動戶外",e:"🚴",b:"曬衣車業",n:"高階飛輪健身車 到貨第3天自動轉職曬衣架 業界最快轉職速度 曬衣容量5kg",p:19900,o:29900,r:4.9,rv:8912,s:5678,t:["熱銷","免運"]},
- /* 精品 */
- {c:"精品",e:"👜",b:"LUXÉ VOID",n:"夢想名牌包 容量無限大 因為裡面什麼都沒有 全球限量(每個人都買得到的那種限量)",p:1280000,o:2560000,r:4.9,rv:8721,s:1234,t:["5折"]},
- {c:"精品",e:"⌚",b:"NEVERTIME",n:"時間靜止腕錶 戴上的瞬間週一永遠不會來 瑞士靈感 台灣組裝 時間概念另購",p:9990000,o:12000000,r:4.8,rv:3204,s:456,t:["免運"]},
- {c:"精品",e:"💍",b:"CARBONIA",n:"十克拉空氣鑽戒 跟真鑽同樣成分(碳) 純度更高 附鑑定書(自己印的)",p:6660000,r:5.0,rv:999,s:321,t:["附鑑定書"]},
- {c:"精品",e:"🏝️",b:"ISLA NADA",n:"私人小島(迷你) 漲潮時暫停營業 含一棵椰子樹 地契存在你心中",p:88800000,r:4.7,rv:156,s:88,t:["預購"]},
- {c:"精品",e:"🚁",b:"SKYWHATEVER",n:"通勤用直升機 再也不用擠捷運 因為它飛不起來 純觀賞 停機坪另購",p:45000000,r:4.6,rv:412,s:65,t:["大型宅配"]},
- {c:"精品",e:"👑",b:"皇家御用",n:"國王的新衣 只有聰明人看得見 乾洗會消失 尺寸:自由心證",p:999999,r:4.8,rv:1912,s:777,t:["限量"]},
- {c:"精品",e:"🛥️",b:"浴缸海事",n:"私人遊艇(浴缸尺寸) 在家享受海洋人生 附船長帽 出海範圍:浴室",p:3880000,r:4.5,rv:678,s:123,t:["大型宅配"]},
- /* 療癒小物 */
- {c:"療癒小物",e:"🍀",b:"心靈選品",n:"中樂透的感覺 純感覺 號碼另購(沒有販售) 中獎機率100%(感覺的部分)",p:100,o:2000,r:4.9,rv:203944,s:187654,t:["熱銷","5折"]},
- {c:"療癒小物",e:"🐈",b:"貓皇認證",n:"貓咪的尊重 極稀有 本品可能不存在 訂購後由貓咪決定是否出貨(不會)",p:9999999,r:5.0,rv:31415,s:271,t:["稀有"]},
- {c:"療癒小物",e:"🗣️",b:"職場幻想",n:"老闆的讚美(限量) 錄音檔格式 內容:「嗯,還行」 情緒價值拉滿",p:750000,o:990000,r:4.5,rv:9527,s:888,t:["限量"]},
- {c:"療癒小物",e:"🫙",b:"心靈選品",n:"平靜的心(久放不壞) 開罐後請盡速使用 遇到已讀不回會揮發 建議囤貨",p:5200,r:4.9,rv:45671,s:34567,t:["熱銷"]},
- {c:"療癒小物",e:"📅",b:"時間商行",n:"週一取消券 單次有效 使用後直接跳到週二(週二變成新的週一) 總之買就對了",p:52000,r:4.6,rv:23456,s:12000,t:["電子票券"]},
- {c:"療癒小物",e:"🏖️",b:"時間商行",n:"無限期休假申請書 主管簽名欄已預先空白一萬年 法律效力:作夢等級",p:8800,r:4.8,rv:18765,s:9876,t:["電子票券"]},
- {c:"療癒小物",e:"💬",b:"心靈選品",n:"已讀秒回體驗券 體驗被秒回的感覺一次 回覆內容不拘 已讀不回患者福音",p:3000,o:4500,r:4.9,rv:56789,s:45678,t:["熱銷","電子票券"]},
- {c:"療癒小物",e:"🥫",b:"心靈選品",n:"罐裝自信 350ml 搖勻後使用 開會前飲用效果最佳 副作用:敢在群組講話",p:6600,r:4.7,rv:29876,s:21098,t:["今日到貨"]},
+ /* 用藥安全 */
+ {id:"nsaid",c:"用藥安全",e:"💊",b:"藥安心",n:"NSAID 止痛藥使用說明書 腎臟頭號黑名單 附「先問藥師」提示卡",p:35,o:50,r:4.9,rv:8721,s:12345,
+  k:{t:"NSAID 止痛藥：腎臟的頭號黑名單",b:"布洛芬、雙氯芬酸等非類固醇消炎止痛藥（NSAID）會抑制前列腺素，讓腎臟血流減少。健康人偶爾短期使用通常沒事，但在脫水、年長、慢性腎臟病，或同時使用利尿劑與降壓藥（ACEI/ARB）時，急性腎損傷風險大幅上升——這個組合在醫界被稱為「三重打擊」。腎功能不好的人止痛請先與醫師或藥師討論，普拿疼（乙醯胺酚）在建議劑量內對腎臟相對安全。"}},
+ {id:"unknown-med",c:"用藥安全",e:"🏴",b:"藥安心",n:"來路不明止痛藥鑑定指南 地下電台特供版(反串) 認明藥品許可證",p:30,r:4.8,rv:6543,s:9876,
+  k:{t:"來路不明的止痛藥，成分永遠是驚喜",b:"地下電台、遊覽車團購、標示不清的「祖傳秘方」止痛粉，經常摻入高劑量 NSAID、類固醇，甚至已禁用成分。長期服用不明複方止痛藥與慢性間質性腎炎、止痛藥腎病變有明確關聯。買藥認明兩件事：包裝上的衛福部藥品許可證字號，以及願意回答你問題的藥師。便宜有效又神秘的藥，通常是腎臟在幫你付帳。"}},
+ {id:"aristo",c:"用藥安全",e:"🌿",b:"藥安心",n:"馬兜鈴酸警世錄 不可逆的教訓 中藥請找合格中醫師",p:30,r:5.0,rv:4321,s:7654,
+  k:{t:"馬兜鈴酸：一次傷害，終身有效",b:"含馬兜鈴酸的中草藥（關木通、廣防己等）會造成不可逆的腎間質纖維化，還會大幅提高泌尿道上皮癌風險——台灣曾是全球馬兜鈴酸腎病變最盛行的地區之一，因此已全面禁用。但地下管道與來源不明的草藥、藥粉仍可能含有。想用中藥調理沒問題，請找合格中醫師開立、在有 GMP 認證的藥廠產品範圍內使用，不要吃朋友送的、山上採的、夜市買的。"}},
+ {id:"contrast",c:"用藥安全",e:"💉",b:"藥安心",n:"顯影劑檢查前必讀 腎功能先報備 檢查後多喝水",p:25,r:4.7,rv:3210,s:5432,
+  k:{t:"打顯影劑前，先讓醫師知道你的腎",b:"電腦斷層與心導管使用的含碘顯影劑可能造成顯影劑腎病變，高風險族群是原本腎功能就差、糖尿病、脫水與年長者。要做檢查前：主動告知醫師自己的腎功能或直接出示抽血報告；檢查前後依醫囑補充水分；服用 metformin（二甲雙胍）的糖尿病患者，醫師可能會請你暫停幾天。多數人風險很低，不需要因噎廢食拒絕必要檢查——關鍵是讓團隊知道你的腎，事先準備。"}},
+ {id:"ppi",c:"用藥安全",e:"🫗",b:"藥安心",n:"胃藥不是保養品 PPI 長期使用冷知識",p:20,r:4.5,rv:2345,s:4321,
+  k:{t:"胃藥不是保養品：PPI 的腎臟冷知識",b:"氫離子幫浦阻斷劑（PPI，常見的「強效胃藥」）長期使用與急性間質性腎炎及慢性腎臟病風險上升有關。短期依醫囑治療胃食道逆流、胃潰瘍沒有問題，有明確適應症就該用；問題出在「吃了舒服就一直吃」、把胃藥當日常保養。任何藥要不要長期吃，答案都應該來自回診評估，而不是習慣。"}},
+ {id:"abx",c:"用藥安全",e:"🦠",b:"藥安心",n:"抗生素正確使用手冊 吃好吃滿但不亂吃",p:20,r:4.6,rv:1987,s:3210,
+  k:{t:"抗生素：該吃就吃好吃滿，不該吃別碰",b:"部分抗生素（如胺基糖苷類）本身有腎毒性，醫師開立時會依腎功能調整劑量並監測——這是專業判斷，請照醫囑完成療程，自行停藥反而養出抗藥菌。真正傷腎的常見情境是：自行到藥房買抗生素、吃別人剩下的藥、感冒（多為病毒）卻硬要吃抗生素。抗生素不是消炎藥，也不是退燒藥。"}},
+
+ /* 飲食護腎 */
+ {id:"starfruit",c:"飲食護腎",e:"🌟",b:"護腎食堂",n:"楊桃禁忌錄 腎友限定黑名單 打嗝打不停要當心",p:30,o:45,r:5.0,rv:9876,s:15432,
+  k:{t:"楊桃：腎友的水果黑名單第一名",b:"楊桃含有神經毒素 caramboxin，健康的腎臟能把它排掉，但腎功能不全與透析患者排不掉，累積後會造成頑固性打嗝、意識混亂、癲癇，嚴重可致命——一杯楊桃汁就可能出事。慢性腎臟病與透析患者：楊桃、楊桃汁、楊桃蜜餞全部避免。腎功能正常的人適量吃沒有這個問題，但空腹大量喝濃縮楊桃汁曾有急性腎損傷的報告，也別挑戰。"}},
+ {id:"salt",c:"飲食護腎",e:"🧂",b:"護腎食堂",n:"高鹽退散指南 每日鹽分 6g 達成挑戰 湯底是隱藏魔王",p:25,r:4.8,rv:23456,s:34567,
+  k:{t:"鹽：腎臟每天在幫你擦的屁股",b:"吃太鹹→血壓上升→腎絲球長期高壓過濾→腎功能加速惡化，這條路線清楚明確。台灣成人平均每天吃進約 10 克鹽，將近建議量（6 克以下）的兩倍。真正的大魔王不是餐桌上的鹽罐，而是：麵湯與火鍋湯底、加工食品、醬料、麵包與零食裡的隱藏鈉。實用技巧：湯少喝、醬另沾、看營養標示的鈉含量，400mg 鈉≒1 克鹽。"}},
+ {id:"phosphate",c:"飲食護腎",e:"🥤",b:"護腎食堂",n:"隱形磷追緝令 加工食品照妖鏡 腎友必修課",p:30,r:4.7,rv:8765,s:12000,
+  k:{t:"隱形磷：包裝食品裡的血管殺手",b:"腎功能變差後磷排不掉，高血磷會導致血管鈣化、皮膚搔癢與腎性骨病變。天然食物的磷（肉、蛋、豆）吸收率約五成，但加工食品添加的磷酸鹽吸收率接近百分之百——香腸火腿、可樂、即溶飲品、重組肉、起司片都是重災區。腎友選食物的口訣：看得出原型的食物優先，成分表出現「磷酸」開頭的添加物就放回架上。"}},
+ {id:"potassium",c:"飲食護腎",e:"🍌",b:"護腎食堂",n:"香蕉與鉀的真相 正常腎不用怕 晚期腎友要會算",p:25,r:4.6,rv:7654,s:9870,
+  k:{t:"鉀：正常腎不用怕，晚期腎友要會算",b:"常有人問「腎不好是不是不能吃香蕉」——答案分兩段。腎功能正常或早期慢性腎臟病：不需要刻意限鉀，蔬果照吃，高鉀飲食甚至有助血壓。晚期腎臟病與透析患者：腎臟排鉀能力下降，高血鉀可能引發致命心律不整，需要限制高鉀食物（香蕉、奇異果、番茄、深綠色蔬菜、低鈉鹽），蔬菜先燙過再炒可去掉部分鉀。該不該限、限多嚴，以抽血數值和醫囑為準，不要自己嚇自己。"}},
+ {id:"protein",c:"飲食護腎",e:"🥩",b:"護腎食堂",n:"蛋白質的兩難 腎友吃太多傷腎吃太少傷身 營養師調配版",p:35,r:4.8,rv:6543,s:8765,
+  k:{t:"蛋白質：吃多傷腎、吃少傷身的兩難",b:"慢性腎臟病患者常需要「低蛋白飲食」（約每公斤體重 0.6–0.8 克）減輕腎臟負擔，但蛋白質吃太少又會肌少症、營養不良——所以重點是「量要精、質要好」，優先選蛋、魚、豆腐等優質蛋白，嚴格限制時醫師可能搭配酮酸胺基酸。而開始透析後策略反轉：透析會流失蛋白質，反而要吃夠。健身族的高蛋白飲食與蛋白粉，對健康的腎臟大致安全，但已有腎病的人請先諮詢。這門課的正解只有一個：找腎臟科醫師與營養師量身調配。"}},
+ {id:"water",c:"飲食護腎",e:"💧",b:"護腎食堂",n:"多喝水的正確姿勢 看尿色調水量 心衰竭腎友另有劇本",p:20,o:30,r:4.9,rv:34567,s:45678,
+  k:{t:"多喝水護腎，但不是人人適用",b:"對大多數人，每天約 2000ml 水分、讓尿液保持淡黃色，是最便宜的護腎投資——足夠的尿量能稀釋代謝廢物、降低結石與泌尿道感染風險。曾長結石的人要喝更多。但注意兩個例外：心衰竭與透析患者需要「限水」，喝太多會喘、水腫、增加心臟負擔，請依醫囑執行；老人家口渴感覺遲鈍，夏天要主動提醒喝水，不要等渴。"}},
+ {id:"sportsdrink",c:"飲食護腎",e:"🧃",b:"護腎食堂",n:"運動飲料與能量飲測評 沒流汗喝白開水就好",p:20,r:4.4,rv:5432,s:6789,
+  k:{t:"運動飲料：沒大量流汗，喝的只是糖水",b:"運動飲料設計給長時間大量流汗的情境，平常上班喝，等於喝下一堆糖和鈉；能量飲的高咖啡因利尿，還可能讓你更脫水。含糖飲料喝越多，肥胖、糖尿病、高尿酸的風險越高——而這三個都是腎臟病的上游。口渴的標準答案永遠是白開水；真的激烈運動流很多汗，再考慮電解質補充。"}},
+ {id:"uricacid",c:"飲食護腎",e:"🍺",b:"護腎食堂",n:"痛風尿酸管理包 啤酒海鮮湯內臟三連退 目標小於6",p:30,r:4.7,rv:8901,s:11234,
+  k:{t:"高尿酸：痛的是腳，傷的是腎",b:"尿酸太高不只讓關節痛風發作，還會形成尿酸結石、傷害腎功能，而腎功能變差又更排不掉尿酸——惡性循環。飲食紅燈：啤酒與烈酒、內臟、濃肉湯海鮮湯、大量含糖飲料（果糖是被低估的兇手）。已確診痛風或尿酸明顯偏高者，光靠飲食通常降不夠，規律服用降尿酸藥把數值控制在 6 mg/dL 以下，比忍痛硬撐重要得多。"}},
+
+ /* 生活習慣 */
+ {id:"dehydration",c:"生活習慣",e:"🏜️",b:"生活護腎",n:"脫水警報器 尿變深變少就是警訊 夏日限定必買",p:25,o:35,r:4.8,rv:12345,s:23456,
+  k:{t:"脫水：急性腎損傷最常見的開場",b:"腎臟需要足夠的血流灌注才能工作。大量流汗、腹瀉嘔吐、發燒卻沒補水時，腎臟血流下降，就可能發生「腎前性急性腎損傷」——這是住院病人腎功能惡化最常見的原因之一。警訊很簡單：尿變深、變少、頭暈心悸。此時若再吃 NSAID 止痛藥或繼續用利尿劑，等於雪上加霜。腹瀉發燒時的功課：小口多次補水（必要時電解質液），並暫停止痛藥前先問醫師。"}},
+ {id:"holdurine",c:"生活習慣",e:"🚻",b:"生活護腎",n:"不憋尿許可證 隨到隨上 泌尿道感染退散",p:20,r:4.9,rv:15678,s:26789,
+  k:{t:"憋尿的代價：從膀胱炎到腎盂腎炎",b:"尿液在膀胱裡滯留越久，細菌越有機會繁殖。反覆憋尿與泌尿道感染關係密切，感染若往上蔓延成急性腎盂腎炎，就會發燒、腰痛、需要抗生素治療，嚴重時留下腎臟疤痕。女性因尿道短更容易中獎。護腎最便宜的兩招：水喝夠、想上就去上。上班再忙，膀胱的行程永遠該排前面。"}},
+ {id:"smoking",c:"生活習慣",e:"🚭",b:"生活護腎",n:"戒菸護腎二合一 血管保養頂級方案",p:30,r:4.8,rv:6789,s:8901,
+  k:{t:"抽菸傷腎：血管的事，腎臟全都算一份",b:"腎臟本質上是一團精密的血管球。菸品中的尼古丁與毒素會收縮血管、加速動脈硬化、增加蛋白尿，讓慢性腎臟病惡化速度明顯加快——對糖尿病患者的腎臟傷害更是加乘。研究一致顯示吸菸者進入透析的風險更高。戒菸是少數「同時保護心、腦、肺、腎」的投資，而且免費。需要幫忙可以找戒菸門診，健保有給付。"}},
+ {id:"sleep",c:"生活習慣",e:"🌙",b:"生活護腎",n:"睡好睡滿護腎方案 7小時裝 熬夜追劇適用",p:25,r:4.6,rv:9012,s:13456,
+  k:{t:"睡不夠，腎臟也在加班",b:"長期睡眠不足與高血壓、蛋白尿、腎功能下降的風險上升有關——睡眠是血壓的夜間休息時段，長期熬夜等於讓腎絲球連夜加班。此外，嚴重打鼾與睡眠呼吸中止症會造成夜間缺氧與血壓飆升，是被低估的腎臟壓力源，枕邊人抱怨你「鼾聲會停一下再大聲吸氣」就該去檢查。目標很樸素：每天 7 小時左右、規律作息、打鼾嚴重就就醫。"}},
+ {id:"dietpill",c:"生活習慣",e:"⚖️",b:"生活護腎",n:"減肥藥陷阱圖鑑 來路不明速效款=腎臟盲盒",p:25,r:4.7,rv:5678,s:7890,
+  k:{t:"來路不明的減肥藥：瘦不瘦不知道，腎臟先抽獎",b:"標榜「速效」的不明減肥產品，被驗出過利尿劑（脫水假象體重）、甲狀腺素、瀉藥，甚至已禁用的西布曲明。利尿劑與瀉藥造成的脫水和電解質失衡，是急性腎損傷的標準劇本。真正有效且安全的減重：飲食調整、運動，必要時由醫師處方合法減重藥物。體重可以慢慢減，腎臟壞了不會慢慢好。"}},
+ {id:"exercise",c:"生活習慣",e:"🏃",b:"生活護腎",n:"規律運動處方箋 控三高就是護腎 橫紋肌溶解除外條款",p:25,r:4.8,rv:7891,s:10123,
+  k:{t:"運動護腎：控制三高就是保護腎絲球",b:"規律的中等強度運動（快走、游泳、騎車，每週 150 分鐘）能改善血壓、血糖、體重——這三項正是腎臟病最大的上游因子，慢性腎臟病患者適度運動同樣安全且有益。要避開的是極端劇本：平常不動、突然高強度爆發（重訓過猛、酷熱下長跑），可能引發橫紋肌溶解症，肌肉崩解產物堵塞腎小管造成急性腎損傷，尿液呈可樂色就要立刻就醫。循序漸進、補足水分，避免運動前吞 NSAID 止痛藥。"}},
+
+ /* 檢查數值 */
+ {id:"egfr",c:"檢查數值",e:"🧪",b:"數值解碼",n:"肌酸酐與 eGFR 解碼器 腎功能成績單看懂版",p:35,o:50,r:4.9,rv:11234,s:16789,
+  k:{t:"eGFR：你的腎功能成績單怎麼看",b:"抽血的「肌酸酐」是肌肉代謝廢物，腎臟排不掉就會升高，但它受肌肉量影響——壯漢天生偏高、瘦小長輩偏低，單看數字會誤判。所以要看換算後的 eGFR（估算腎絲球過濾率）：90 以上正常，60–89 輕度下降，低於 60 且持續三個月以上就符合慢性腎臟病定義，低於 15 為末期。重點：eGFR 低於 60 才開始注意就晚了，健檢報告有紅字請帶著報告找腎臟科，不要只是「明年再追蹤」。"}},
+ {id:"proteinuria",c:"檢查數值",e:"🫧",b:"數值解碼",n:"泡泡尿檢測指南 泡泡不散要驗尿 蛋白尿是腎的求救訊號",p:30,r:4.9,rv:19876,s:28765,
+  k:{t:"泡泡尿：先別慌，但一定要驗",b:"尿有泡泡不等於蛋白尿——尿急沖力大、馬桶清潔劑都會起泡。要警覺的是「細緻綿密、靜置十幾分鐘不散」的泡沫。確認方式很簡單：驗尿（尿液常規或尿蛋白/肌酸酐比值 UPCR），幾百元有找。蛋白尿是腎絲球受損最早的訊號之一，同時也是心血管風險指標；越早抓到，用藥（如 ACEI/ARB、SGLT2 抑制劑）越能減緩惡化。有糖尿病、高血壓的人，每年至少驗一次尿。"}},
+ {id:"bp",c:"檢查數值",e:"🩺",b:"數值解碼",n:"血壓 722 量測套組 腎臟病患目標 130/80 特別版",p:30,r:4.8,rv:8765,s:12345,
+  k:{t:"血壓與腎：互相傷害的一對",b:"高血壓傷腎，腎不好又讓血壓更難控——這對冤家必須同時處理。慢性腎臟病患者的血壓目標一般是 130/80 mmHg 以下（依個別狀況微調）。量血壓記住「722」口訣：連續 7 天、早晚各 2 次、每次量 2 遍取平均，帶著紀錄回診比診間單次數值有用得多。降壓藥中的 ACEI/ARB 類同時有降蛋白尿的護腎效果，醫師開了請規律吃，不要血壓正常就自行停藥。"}},
+ {id:"hba1c",c:"檢查數值",e:"🍬",b:"數值解碼",n:"糖化血色素管理包 糖尿病腎病變是洗腎第一大原因",p:35,r:4.9,rv:10987,s:15678,
+  k:{t:"血糖控不好，是台灣洗腎的第一大原因",b:"台灣每年新進入透析的患者中，糖尿病是最大宗原因。長期高血糖默默傷害腎絲球微血管，等出現蛋白尿才發現時已走了一段。糖化血色素（HbA1c）反映近三個月血糖平均，一般目標 7% 上下、依年齡與併發症個別化。好消息是近年 SGLT2 抑制劑（排糖藥）與 GLP-1 藥物被證實能實質減緩糖尿病腎病變惡化——所以糖尿病患者請務必：規律回診、每年驗尿追蛋白尿、與醫師討論最適合的藥物組合。"}},
+ {id:"echo",c:"檢查數值",e:"📡",b:"數值解碼",n:"腎臟超音波導覽 無痛無輻射 大小水腎結石一次看",p:25,r:4.7,rv:4567,s:6543,
+  k:{t:"腎臟超音波：十分鐘看清你的腎",b:"超音波無痛、無輻射、不用打針，能看出腎臟大小（慢性病變常見萎縮）、水腎（尿路阻塞）、結石、囊腫與腫瘤。慢性腎臟病、反覆泌尿道感染、血尿、有多囊腎家族史的人都適合檢查。順帶一提：健檢報告寫「單純性囊腫」通常是良性的水泡，定期追蹤即可，不用失眠；但「多顆、雙側、有家族史」的囊腫要請腎臟科評估是否為多囊腎。"}},
+
+ /* 警訊與迷思 */
+ {id:"edema",c:"警訊與迷思",e:"🦵",b:"警訊雷達",n:"水腫判讀器 一壓一個洞 早上眼皮腫下午腳腫",p:30,r:4.8,rv:7654,s:10987,
+  k:{t:"水腫：用手指壓一下就能做的初步檢查",b:"用拇指壓小腿脛骨前方五秒，放開後留下凹陷久久不平——這是「凹陷性水腫」。腎臟性水腫的特色是早上眼皮腫、下午往下肢移動；若合併大量泡泡尿，要想到腎病症候群（大量蛋白尿）。不過水腫的鑑別很廣：心衰竭、肝硬化、藥物（某些降壓藥）、久站都可能。重點是：新出現、持續惡化、或合併喘與尿量減少的水腫，請就醫抽血驗尿，不要先買利尿劑自己消。"}},
+ {id:"five-signs",c:"警訊與迷思",e:"🚨",b:"警訊雷達",n:"腎病五警訊速記卡「泡水高貧倦」 全家都該會背",p:35,o:50,r:5.0,rv:23456,s:34567,
+  k:{t:"泡、水、高、貧、倦：五個字記住腎病警訊",b:"台灣腎臟醫學界推廣的五字口訣：「泡」泡泡尿（蛋白尿）、「水」水腫、「高」高血壓、「貧」不明原因貧血、「倦」持續倦怠。中了任何一項，就值得抽血驗尿檢查腎功能。要特別強調：慢性腎臟病早期常常完全沒症狀，等到症狀明顯往往已是中後期——所以有糖尿病、高血壓、痛風、腎病家族史、長期用藥史的高風險族群，不要等症狀，每年定期檢驗肌酸酐與尿蛋白才是正解。"}},
+ {id:"backpain",c:"警訊與迷思",e:"🔙",b:"迷思破解",n:"腰痛=腎不好? 迷思拆解包 腎痛其實很低調",p:25,r:4.7,rv:9871,s:13579,
+  k:{t:"腰痛就是腎不好？大多數時候不是",b:"門診最常見的誤會之一。絕大多數腰痛來自肌肉、筋膜與脊椎——彎腰搬重物後痛、姿勢改變會加劇的，幾乎都是骨骼肌肉問題。腎臟本身痛起來通常是結石的劇烈絞痛（痛到打滾、可能合併血尿）或腎盂腎炎的悶痛加發燒、敲擊腰部會痛。最容易被忽略的真相是反過來的：慢性腎臟病早期通常「完全不會痛」。與其用腰痛猜腎，不如用驗血驗尿確認。"}},
+ {id:"organ-food",c:"警訊與迷思",e:"🍢",b:"迷思破解",n:"吃腰子補腰子? 以形補形破解版 普林磷雙倍奉還",p:25,r:4.6,rv:6543,s:8765,
+  k:{t:"吃腰子補腰子？補到的只有尿酸和磷",b:"「以形補形」沒有任何科學依據。動物內臟（腰子、肝、腦）是高普林、高磷、高膽固醇食物——高普林升尿酸傷腎，高磷正是腎友要嚴格限制的，等於「補腎餐」吃進雙倍傷腎成分。同理，號稱補腎的藥燉排骨湯是濃肉湯（高普林）加上來源不明的藥材（風險見馬兜鈴酸篇）。真想對腎臟好：控三高、喝白開水、少吃鹽，樸素但有效。"}},
+ {id:"dialysis-myth",c:"警訊與迷思",e:"🩸",b:"迷思破解",n:"「洗腎都是吃西藥害的」終極破解 亂停藥才是真兇",p:35,r:4.9,rv:14567,s:19876,
+  k:{t:"「洗腎是西藥吃太多」？真相恰恰相反",b:"台灣人進入透析的最主要原因是糖尿病與高血壓控制不良，不是「按醫囑吃藥」。這個迷思最大的傷害在於：病人因為怕「吃藥傷腎」自行停掉降壓藥降糖藥，改吃來路不明的偏方——結果血壓血糖失控，腎臟加速報銷，反而應驗了預言。事實是：正規的降壓藥（ACEI/ARB）與排糖藥（SGLT2i）是目前實證最強的「護腎藥」。真正該怕的是不明藥物、NSAID 濫用與擅自停藥。相信你的腎臟科醫師，規律回診，這是保住腎功能最可靠的路。"}},
 ];
-const CATS = ["全部","3C手機","家電","美妝保養","居家生活","食品生鮮","運動戶外","精品","療癒小物"];
-const FLASH_IDX = [26, 41, 17, 4, 47, 34];   // 限時搶購精選
-const MARQ = ["🔥 全站 NT$0 免運中(因為不運)","⚡ 限時下殺:所有價格都是裝飾","💳 刷夢幻幣滿萬送萬","🚚 火速出貨(出貨是一種心境)","🎁 買一送一:買一個寂寞送一個空虛","⭐ 會員獨享:人人都是會員"];
-const COUPONS = [
-  {t:"全額折抵券", d:"折抵100%,結帳自動套用", s:"每人無限張"},
-  {t:"免運券", d:"本來就免運,因為根本不運", s:"永久有效"},
-  {t:"夢幻幣回饋10%", d:"10% × NT$0 = 還是0,數學沒問題", s:"回饋直接入夢"},
+
+const CATS = ["全部","用藥安全","飲食護腎","生活習慣","檢查數值","警訊與迷思"];
+const FLASH = ["nsaid","starfruit","five-signs","egfr","water","dialysis-myth"];
+const MARQ = ["🫘 小腎臟大冒險:躲過 NSAID 大隊,每個 +3 夢幻幣","📚 知識到貨率 100%,本站唯一會出貨的東西","💎 夢幻幣賺不了真錢,但賺得了腎","🧂 今日特賣:少吃一口鹽,免費","🚰 白開水永久 0 元,全站最強護腎商品其實是它","⚕️ 衛教內容不取代就醫,有症狀請看腎臟科"];
+const GIFTS = [
+  {id:0,t:"新手禮包 +30 💎",d:"開站禮,人人有份",s:"限領一次",amt:30,daily:false},
+  {id:1,t:"每日簽到 +15 💎",d:"每天回來看一篇知識",s:"每日可領",amt:15,daily:true},
 ];
 const $ = id => document.getElementById(id);
-const NT = n => "NT$" + n.toLocaleString("zh-Hant-TW");
+const C = n => "💎" + n.toLocaleString("zh-Hant-TW");
 
 let cart = {};
 let curCat = "全部";
 
+/* ── localStorage ── */
 const store = {
+  get coins(){ const v = parseInt(localStorage.msd_coins); return isNaN(v) ? 100 : v; },
+  set coins(v){ localStorage.msd_coins = Math.max(0, v); },
+  get lib(){ try{return JSON.parse(localStorage.msd_lib||"[]")}catch(e){return[]} },
+  set lib(v){ localStorage.msd_lib = JSON.stringify(v); },
   get orders(){ try{return JSON.parse(localStorage.msd_orders||"[]")}catch(e){return[]} },
   set orders(v){ localStorage.msd_orders = JSON.stringify(v.slice(-50)); },
-  get claimed(){ try{return JSON.parse(localStorage.msd_coupons||"[]")}catch(e){return[]} },
-  set claimed(v){ localStorage.msd_coupons = JSON.stringify(v); }
+  get gifts(){ try{return JSON.parse(localStorage.msd_gifts||"{}")}catch(e){return{}} },
+  set gifts(v){ localStorage.msd_gifts = JSON.stringify(v); },
+  get best(){ return parseInt(localStorage.msd_best)||0; },
+  set best(v){ localStorage.msd_best = v; },
 };
+if(localStorage.msd_coins === undefined) store.coins = 100;
+
+function owned(id){ return store.lib.some(k=>k.id===id); }
+function syncCoins(){
+  $("coinBal").textContent = store.coins.toLocaleString();
+  $("libBadge").textContent = store.lib.length;
+  $("libBadge").classList.toggle("show", store.lib.length>0);
+}
 
 /* ── 渲染 ── */
 function renderTabs(){
@@ -423,7 +445,6 @@ function renderTabs(){
     `<button class="tab ${c===curCat?"on":""}" onclick="setCat('${c}')">${c}</button>`).join("");
 }
 function setCat(c){ curCat=c; renderTabs(); renderGrid(); }
-
 function offPct(p){ return p.o ? Math.round((1-p.p/p.o)*100) : 0; }
 
 function cardHTML(p){
@@ -431,139 +452,152 @@ function cardHTML(p){
   return `
     <article class="card">
       ${off?`<div class="off">-${off}%</div>`:""}
+      ${owned(p.id)?`<div class="owned">已擁有</div>`:""}
       <div class="pic">${p.e}</div>
       <div class="body">
         <div class="name"><b>【${p.b}】</b>${p.n}</div>
-        <div class="tags">${p.t.map(t=>`<span class="tg ${t==="免運"?"free":""}">${t}</span>`).join("")}</div>
         <div class="meta"><em>★${p.r}</em>(${p.rv.toLocaleString()}) ｜ 已爽買 ${p.s.toLocaleString()} 件</div>
         <div class="row">
-          <div class="price">${p.o?`<s>${NT(p.o)}</s>`:""}${NT(p.p)}</div>
+          <div class="price">${p.o?`<s>${C(p.o)}</s>`:""}${C(p.p)}</div>
           <button class="add" onclick="addCart(${p.i})">爽買</button>
         </div>
       </div>
     </article>`;
 }
-
 function renderGrid(){
   const kw = ($("q").value||"").trim().toLowerCase();
   const list = PRODUCTS.map((p,i)=>({...p,i}))
     .filter(p => curCat==="全部" || p.c===curCat)
-    .filter(p => !kw || (p.b+p.n+p.c).toLowerCase().includes(kw));
+    .filter(p => !kw || (p.b+p.n+p.c+p.k.t).toLowerCase().includes(kw));
   $("grid").innerHTML = list.map(cardHTML).join("") ||
-    `<div class="empty" style="grid-column:1/-1"><span class="e">🔍</span>找不到「${$("q").value}」<br>但反正買什麼都一樣不會到貨</div>`;
-  $("cnt").textContent = `共 ${list.length} 件商品 — 全部都買得起，因為都不用錢`;
+    `<div class="empty" style="grid-column:1/-1"><span class="e">🔍</span>找不到相關知識<br>但少吃鹽多喝水永遠適用</div>`;
+  $("cnt").textContent = `共 ${list.length} 篇護腎知識 — 全部買得起，夢幻幣不夠就去玩遊戲`;
 }
-
-function renderFlash(){
-  $("flashRow").innerHTML = FLASH_IDX.map(i=>{
-    const p = PRODUCTS[i];
-    const pct = 60 + (i*7)%35;
-    return `<div class="fcard" onclick="addCart(${i})">
-      <div class="e">${p.e}</div>
-      <div class="fn">【${p.b}】${p.n.split(" ")[0]}</div>
-      <div class="fo">${NT(p.o||Math.round(p.p*1.6))}</div>
-      <div class="fp">${NT(p.p)}</div>
-      <div class="fbar"><i>已搶 ${pct}%</i><b style="width:${pct}%"></b></div>
+function renderMarq(){
+  $("marq").innerHTML = [...MARQ,...MARQ].map(m=>`<span>${m}</span>`).join("");
+}
+function renderGifts(){
+  const g = store.gifts;
+  const today = new Date().toISOString().slice(0,10);
+  $("coupons").innerHTML = GIFTS.map(x=>{
+    const done = x.daily ? g["g"+x.id]===today : !!g["g"+x.id];
+    return `<div class="coupon">
+      <div class="cl"><b>${x.t}</b>${x.d}<br><small>${x.s}</small></div>
+      <button class="claim" ${done?"disabled":""} onclick="claimGift(${x.id})">${done?"已領取":"領取"}</button>
     </div>`;
   }).join("");
 }
-
-function renderMarq(){
-  const items = [...MARQ, ...MARQ];
-  $("marq").innerHTML = items.map(m=>`<span>${m}</span>`).join("");
+function claimGift(id){
+  const x = GIFTS[id];
+  const g = store.gifts;
+  const today = new Date().toISOString().slice(0,10);
+  if(x.daily ? g["g"+id]===today : g["g"+id]) return;
+  g["g"+id] = x.daily ? today : true;
+  store.gifts = g;
+  store.coins = store.coins + x.amt;
+  syncCoins(); renderGifts();
+  toast(`已領取 ${x.t}，餘額 ${C(store.coins)} 🎉`);
 }
-
-function renderCoupons(){
-  const claimed = store.claimed;
-  $("coupons").innerHTML = COUPONS.map((c,i)=>`
-    <div class="coupon">
-      <div class="cl"><b>${c.t}</b>${c.d}<br><small>${c.s}</small></div>
-      <button class="claim" id="cp${i}" ${claimed.includes(i)?"disabled":""}
-        onclick="claimCoupon(${i})">${claimed.includes(i)?"已領取":"領取"}</button>
-    </div>`).join("");
-}
-function claimCoupon(i){
-  const c = store.claimed;
-  if(!c.includes(i)){ c.push(i); store.claimed = c; }
-  renderCoupons();
-  toast(`已領取「${COUPONS[i].t}」🎫 省下 NT$0`);
-}
-
-/* ── 倒數（到午夜，結束自動重來）── */
-function tickTimer(){
-  const now = new Date();
-  const end = new Date(now); end.setHours(24,0,0,0);
-  let s = Math.floor((end-now)/1000);
-  const pad = n => String(n).padStart(2,"0");
-  $("th").textContent = pad(Math.floor(s/3600));
-  $("tm").textContent = pad(Math.floor(s%3600/60));
-  $("ts").textContent = pad(s%60);
-}
-setInterval(tickTimer, 1000);
+function scrollGame(){ $("gameSec").scrollIntoView({behavior:"smooth",block:"center"}); }
 
 /* ── 購物車 ── */
 function cartCount(){ return Object.values(cart).reduce((a,b)=>a+b,0); }
-function cartSum(){ return Object.entries(cart).reduce((s,[i,q])=>s+PRODUCTS[i].p*q,0); }
+function cartSum(){ return Object.keys(cart).reduce((s,i)=>s+PRODUCTS[i].p,0); }
 
 function addCart(i){
-  cart[i] = (cart[i]||0)+1;
+  const p = PRODUCTS[i];
+  if(owned(p.id)){ toast(`「${p.k.t}」已在你的知識庫裡 📚`); return; }
+  if(cart[i]){ toast("知識買一份就夠了，重讀免費 😄"); return; }
+  cart[i] = 1;
   syncBadge();
-  toast(`已加入 — 【${PRODUCTS[i].b}】${PRODUCTS[i].n.split(" ")[0]} 🎊`);
+  toast(`已加入 — ${p.k.t} 🫘`);
 }
-function chQty(i,d){
-  cart[i]=(cart[i]||0)+d;
-  if(cart[i]<=0) delete cart[i];
-  syncBadge(); renderCart();
-}
+function rmCart(i){ delete cart[i]; syncBadge(); renderCart(); }
 function syncBadge(){
   const n = cartCount();
-  const b = $("badge");
-  b.textContent = n;
-  b.classList.toggle("show", n>0);
+  $("badge").textContent = n;
+  $("badge").classList.toggle("show", n>0);
 }
 function renderCart(){
   const keys = Object.keys(cart);
   $("cartBody").innerHTML = keys.length ? keys.map(i=>{
     const p = PRODUCTS[i];
     return `<div class="item"><div class="e">${p.e}</div>
-      <div class="info"><div class="nm">【${p.b}】${p.n.split(" ")[0]}</div><div class="pr">${NT(p.p)}</div></div>
-      <div class="qty"><button onclick="chQty(${i},-1)">−</button><span>${cart[i]}</span><button onclick="chQty(${i},1)">＋</button></div>
+      <div class="info"><div class="nm">${p.k.t}</div><div class="pr">${C(p.p)}</div></div>
+      <div class="qty"><button onclick="rmCart(${i})">✕</button></div>
     </div>`;
   }).join("") :
-  `<div class="empty"><span class="e">🛒</span>購物車空空的<br>去挑幾個買不起的東西吧</div>`;
-  const sum = cartSum();
-  $("cartTotal").textContent = NT(sum);
-  $("cartDisc").textContent = "-" + NT(sum);
-  $("checkoutBtn").disabled = !keys.length;
+  `<div class="empty"><span class="e">🛒</span>購物車空空的<br>去挑幾篇護腎知識吧</div>`;
+  const sum = cartSum(), bal = store.coins;
+  $("cartTotal").textContent = C(sum);
+  $("cartBal").textContent = C(bal);
+  const short = sum > bal;
+  $("payHint").textContent = short
+    ? `夢幻幣不足，還差 ${C(sum-bal)} — 去玩小腎臟大冒險賺！`
+    : "結帳後知識立即送達知識庫";
+  $("payHint").classList.toggle("bad", short);
+  $("checkoutBtn").disabled = !keys.length || short;
+  if(short){
+    $("checkoutBtn").disabled = false;
+    $("checkoutBtn").textContent = "🎮 去賺夢幻幣";
+    $("checkoutBtn").onclick = ()=>{ closeAll(); scrollGame(); };
+  }else{
+    $("checkoutBtn").textContent = "前往結帳";
+    $("checkoutBtn").onclick = openCheckout;
+    $("checkoutBtn").disabled = !keys.length;
+  }
 }
 
 /* ── 開關 ── */
 function openCart(){ renderCart(); $("veil").classList.add("on"); $("drawer").classList.add("on"); }
-function openCheckout(){ $("drawer").classList.remove("on"); $("checkout").classList.add("on"); }
-function closeAll(){ ["drawer","checkout","doneModal"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
+function openLib(){ renderLib(); $("veil").classList.add("on"); $("libDrawer").classList.add("on"); }
+function openCheckout(){
+  $("drawer").classList.remove("on");
+  $("ckBal").textContent = C(store.coins);
+  $("ckCost").textContent = C(cartSum());
+  $("payBtn").disabled = cartSum() > store.coins;
+  $("checkout").classList.add("on");
+}
+function closeAll(){ ["drawer","libDrawer","checkout","doneModal"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
 
-/* ── 下單 ── */
+/* ── 下單：扣夢幻幣、知識入庫 ── */
 function placeOrder(){
-  const no = "MS" + Date.now().toString(36).toUpperCase();
   const sum = cartSum();
-  const orders = store.orders;
-  orders.push({no, sum, t: Date.now(), n: cartCount()});
-  store.orders = orders;
-  cart = {}; syncBadge();
+  if(sum > store.coins) return;
+  const items = Object.keys(cart).map(i=>PRODUCTS[i]);
+  store.coins = store.coins - sum;
 
+  const lib = store.lib;
+  const added = [];
+  items.forEach(p=>{
+    if(!lib.some(k=>k.id===p.id)){
+      lib.push({id:p.id, t:p.k.t, b:p.k.b, e:p.e, c:p.c, at:Date.now()});
+      added.push(p);
+    }
+  });
+  store.lib = lib;
+
+  const no = "KD" + Date.now().toString(36).toUpperCase();
+  const orders = store.orders;
+  orders.push({no, sum, t:Date.now(), n:items.length});
+  store.orders = orders;
+
+  cart = {}; syncBadge(); syncCoins(); renderGrid();
   $("checkout").classList.remove("on");
   $("ordNo").textContent = no;
+  $("newk").innerHTML = `<b>📬 本次送達 ${added.length} 篇知識：</b><br>` +
+    added.map(p=>`・${p.e} ${p.k.t}`).join("<br>");
   renderTrack(Date.now());
   $("doneModal").classList.add("on");
   confetti();
 }
 
-/* ── 出貨追蹤 ── */
+/* ── 出貨追蹤（這次真的會到）── */
 const STEPS = [
   ["✅","已接單","系統秒速確認，效率跟真的一樣"],
-  ["📦","理貨中","倉庫小精靈正在打包一個空氣"],
-  ["🛵","快遞員已出發","他真的很努力在騎（原地）"],
-  ["♾️","配送中","距離你家：永遠差一條街"],
+  ["📦","知識打包中","衛教小精靈正在裝箱重點"],
+  ["🛵","衛教士已出發","這次他真的在前進"],
+  ["📚","已送達知識庫","本站唯一說到做到的配送"],
 ];
 let trackTimer;
 function renderTrack(t0){
@@ -571,14 +605,168 @@ function renderTrack(t0){
   $("track").innerHTML = STEPS.map((s,i)=>`
     <div class="step" id="stp${i}"><div class="dot">${s[0]}</div>
     <div><div class="tt">${s[1]}</div><div class="td">${s[2]}</div></div></div>`).join("");
-  const gates = [0, 1500, 3500, 6000];
+  const gates = [0, 1200, 2600, 4000];
   const tick = ()=>{
     const dt = Date.now()-t0;
     gates.forEach((g,i)=>{ if(dt>=g) $("stp"+i)?.classList.add("hit"); });
-    if(dt > 6000) clearInterval(trackTimer);
+    if(dt > 4200) clearInterval(trackTimer);
   };
-  tick(); trackTimer = setInterval(tick, 400);
+  tick(); trackTimer = setInterval(tick, 300);
 }
+
+/* ── 知識庫 ── */
+function renderLib(){
+  const lib = store.lib;
+  if(!lib.length){
+    $("libBody").innerHTML = `<div class="empty"><span class="e">📚</span>知識庫還是空的<br>去商城買幾篇，或先玩遊戲賺夢幻幣</div>`;
+    return;
+  }
+  const full = Object.fromEntries(PRODUCTS.map(p=>[p.id,p]));
+  $("libBody").innerHTML = [...lib].reverse().map(k=>{
+    const p = full[k.id];
+    const body = p ? p.k.b : (k.b || "");
+    return `<details class="kitem">
+      <summary>${k.e} ${k.t}</summary>
+      <div class="kbody">${body}</div>
+    </details>`;
+  }).join("");
+}
+
+/* ═══════════ 小腎臟大冒險（小恐龍式跑酷）═══════════ */
+const OBS = [
+  {l:"NSAID",e:"💊",tip:"NSAID 止痛藥會減少腎臟血流，脫水時服用風險加倍。"},
+  {l:"不明止痛藥",e:"🏴",tip:"來路不明的止痛複方是止痛藥腎病變的主因，買藥認明許可證。"},
+  {l:"脫水",e:"🏜️",tip:"脫水是急性腎損傷最常見的開場，尿變深變少就要補水。"},
+  {l:"心衰竭",e:"💔",tip:"心臟打不出血，腎臟就缺血——心腎是命運共同體。"},
+  {l:"休克",e:"⚡",tip:"休克時腎臟血流驟降，是加護病房急性腎損傷的常見原因。"},
+  {l:"楊桃",e:"🌟",tip:"腎功能不全者吃楊桃可能中毒：頑固打嗝、意識改變，嚴重可致命。"},
+  {l:"馬兜鈴酸",e:"🌿",tip:"馬兜鈴酸造成不可逆腎纖維化與泌尿道癌，不明草藥不要碰。"},
+  {l:"顯影劑",e:"💉",tip:"顯影劑檢查前主動告知腎功能，檢查前後多補水。"},
+  {l:"高鹽",e:"🧂",tip:"吃太鹹讓腎絲球長期高壓過濾，每天鹽分控制在 6 克以下。"},
+  {l:"橫紋肌溶解",e:"🏋️",tip:"突然過度運動可能橫紋肌溶解，可樂色尿液請立刻就醫。"},
+];
+const cv = $("cv"), cx = cv.getContext("2d");
+const G = {
+  running:false, over:false, t:0, speed:5,
+  y:0, vy:0, ground:186, kid:{x:64, w:34, h:34},
+  obs:[], nextIn:0, score:0, dodged:0, earned:0, deadBy:null,
+};
+function gReset(){
+  G.running=true; G.over=false; G.t=0; G.speed=5;
+  G.y=G.ground; G.vy=0; G.obs=[]; G.nextIn=50;
+  G.score=0; G.dodged=0; G.earned=0; G.deadBy=null;
+}
+function gJump(){
+  if(!G.running){ gReset(); return; }
+  if(G.over) return;
+  if(G.y >= G.ground-0.5){ G.vy = -11.5; }
+}
+function spawn(){
+  const o = OBS[Math.floor(Math.random()*OBS.length)];
+  G.obs.push({...o, x:cv.width+30, w:30, h:30, passed:false});
+  G.nextIn = 55 + Math.random()*70 - Math.min(30, G.t/400);
+}
+function gLoop(){
+  requestAnimationFrame(gLoop);
+  cx.clearRect(0,0,cv.width,cv.height);
+
+  /* 地面 */
+  cx.strokeStyle="#e8d5c9"; cx.lineWidth=2;
+  cx.beginPath(); cx.moveTo(0,G.ground+30); cx.lineTo(cv.width,G.ground+30); cx.stroke();
+
+  if(!G.running){
+    cx.fillStyle="#3d2c29"; cx.font="900 22px 'Microsoft JhengHei',sans-serif";
+    cx.textAlign="center";
+    cx.fillText("🫘 小腎臟大冒險", cv.width/2, 90);
+    cx.font="14px 'Microsoft JhengHei',sans-serif"; cx.fillStyle="#a08a80";
+    cx.fillText("按空白鍵或點擊開始 — 躲開傷腎因子，每躲過一個 +3 夢幻幣", cv.width/2, 120);
+    cx.font="34px serif"; cx.fillText("🫘", cv.width/2, 175);
+    return;
+  }
+
+  if(!G.over){
+    G.t++;
+    G.speed = 5 + Math.min(5, G.t/600);
+    G.score = Math.floor(G.t/5);
+
+    /* 物理 */
+    G.vy += 0.6; G.y += G.vy;
+    if(G.y > G.ground){ G.y = G.ground; G.vy = 0; }
+
+    /* 障礙 */
+    if(--G.nextIn <= 0) spawn();
+    G.obs.forEach(o=>{ o.x -= G.speed; });
+    G.obs = G.obs.filter(o=>o.x > -60);
+    G.obs.forEach(o=>{
+      if(!o.passed && o.x + o.w < G.kid.x){ o.passed=true; G.dodged++; }
+      /* 碰撞（AABB 內縮 5px） */
+      if(o.x+5 < G.kid.x+G.kid.w-5 && o.x+o.w-5 > G.kid.x+5 &&
+         G.ground+34-5 > G.y+5 && o.x!==undefined){
+        const kidTop = G.y, kidBot = G.y+G.kid.h;
+        const obTop = G.ground+34-o.h, obBot = G.ground+34;
+        if(kidBot-5 > obTop && kidTop+5 < obBot &&
+           o.x+5 < G.kid.x+G.kid.w-5 && o.x+o.w-5 > G.kid.x+5){
+          G.over = true; G.deadBy = o;
+          G.earned = G.dodged*3;
+          store.coins = store.coins + G.earned;
+          if(G.score > store.best) store.best = G.score;
+          syncCoins();
+          $("gBest").textContent = store.best;
+        }
+      }
+    });
+    $("gScore").textContent = G.score;
+    $("gDodge").textContent = G.dodged;
+  }
+
+  /* 畫障礙 */
+  cx.textAlign="center";
+  G.obs.forEach(o=>{
+    cx.font="28px serif";
+    cx.fillText(o.e, o.x+o.w/2, G.ground+30);
+    cx.font="700 10px 'Microsoft JhengHei',sans-serif";
+    cx.fillStyle="#ff5d73";
+    cx.fillText(o.l, o.x+o.w/2, G.ground-8);
+    cx.fillStyle="#3d2c29";
+  });
+
+  /* 畫小腎臟 */
+  cx.font="32px serif";
+  cx.fillText("🫘", G.kid.x+G.kid.w/2, G.y+30);
+
+  if(G.over){
+    cx.fillStyle="rgba(61,44,41,.88)";
+    cx.fillRect(0,0,cv.width,cv.height);
+    cx.fillStyle="#fff"; cx.font="900 20px 'Microsoft JhengHei',sans-serif";
+    cx.fillText(`你被「${G.deadBy.l}」擊倒了！`, cv.width/2, 62);
+    cx.font="13px 'Microsoft JhengHei',sans-serif"; cx.fillStyle="#ffe9d6";
+    wrapText(G.deadBy.tip, cv.width/2, 92, cv.width-80, 20);
+    cx.fillStyle="#ffc857"; cx.font="900 16px 'Microsoft JhengHei',sans-serif";
+    cx.fillText(`本局獲得 💎${G.earned} 夢幻幣（躲過 ${G.dodged} 個 × 3）`, cv.width/2, 158);
+    cx.fillStyle="#a78bfa"; cx.font="13px 'Microsoft JhengHei',sans-serif";
+    cx.fillText("按空白鍵或點擊再來一局", cv.width/2, 188);
+    if(G.overCool === undefined) G.overCool = 30;
+  }
+}
+function wrapText(text, x, y, maxW, lh){
+  let line="", yy=y;
+  for(const ch of text){
+    if(cx.measureText(line+ch).width > maxW){ cx.fillText(line,x,yy); line=ch; yy+=lh; }
+    else line += ch;
+  }
+  cx.fillText(line,x,yy);
+}
+function gRestart(){
+  if(G.over){ G.overCool=undefined; gReset(); }
+  else gJump();
+}
+document.addEventListener("keydown", e=>{
+  if(e.code==="Space" || e.code==="ArrowUp"){
+    const gameVisible = $("gameSec").getBoundingClientRect().top < innerHeight;
+    if(gameVisible){ e.preventDefault(); gRestart(); }
+  }
+});
+cv.addEventListener("pointerdown", gRestart);
 
 /* ── 特效 ── */
 let toastTimer;
@@ -586,10 +774,10 @@ function toast(msg){
   const t = $("toast");
   t.textContent = msg; t.classList.add("on");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove("on"), 1600);
+  toastTimer = setTimeout(()=>t.classList.remove("on"), 1800);
 }
 function confetti(){
-  const EMO = ["🎉","✨","💸","🎊","💖","⭐"];
+  const EMO = ["🫘","✨","📚","🎊","💖","⭐"];
   for(let i=0;i<36;i++){
     const s = document.createElement("span");
     s.className = "confetti";
@@ -602,8 +790,10 @@ function confetti(){
   }
 }
 
-renderTabs(); renderGrid(); renderFlash(); renderMarq(); renderCoupons();
-syncBadge(); tickTimer();
+renderTabs(); renderGrid(); renderMarq(); renderGifts();
+syncBadge(); syncCoins();
+$("gBest").textContent = store.best;
+gLoop();
 </script>
 </body>
 </html>
