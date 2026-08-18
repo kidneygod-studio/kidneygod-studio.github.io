@@ -4,45 +4,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>買爽的 MySongDe — 買個爽，不花錢</title>
-<meta name="description" content="台灣第一個多巴胺購物網站：盡情逛街、加入購物車、豪邁結帳 — 不收費、不出貨、不收集資料，純粹買個爽。">
+<meta name="description" content="台灣第一個多巴胺購物網站：限時搶購、折價券、爽買不用錢 — 不收費、不出貨、不收集資料，純粹買個爽。">
 <style>
   :root{
     --bg:#fff7f0; --card:#ffffff; --ink:#3d2c29; --dim:#a08a80;
     --brand:#ff5d73; --brand2:#ff9a3c; --accent:#7c5cff; --ok:#2ec27e;
-    --line:#f3e2d7; --shadow:0 6px 24px rgba(255,93,115,.10);
-    --r:18px;
+    --line:#f3e2d7; --shadow:0 4px 16px rgba(255,93,115,.09);
+    --r:14px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
   body{background:var(--bg);color:var(--ink);
        font-family:"Segoe UI","Microsoft JhengHei",system-ui,sans-serif;
-       line-height:1.65;}
+       line-height:1.6;}
   button{font-family:inherit;cursor:pointer;border:none;background:none;}
 
-  /* ── 誠實橫幅（永遠可見）── */
+  /* ── 誠實橫幅 ── */
   .honest{position:sticky;top:0;z-index:60;background:#3d2c29;color:#ffe9d6;
           text-align:center;font-size:13px;padding:7px 12px;letter-spacing:.5px;}
   .honest b{color:#ffc857;}
 
   /* ── Header ── */
-  header{position:sticky;top:34px;z-index:50;background:rgba(255,247,240,.92);
+  header{position:sticky;top:34px;z-index:50;background:rgba(255,247,240,.94);
          backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
-  .hwrap{max-width:1100px;margin:0 auto;display:flex;align-items:center;
-         gap:16px;padding:12px 20px;}
-  .logo{font-size:24px;font-weight:900;letter-spacing:1px;
+  .hwrap{max-width:1180px;margin:0 auto;display:flex;align-items:center;
+         gap:14px;padding:10px 20px;}
+  .logo{font-size:23px;font-weight:900;letter-spacing:1px;
         background:linear-gradient(90deg,var(--brand),var(--brand2));
         -webkit-background-clip:text;background-clip:text;color:transparent;
         white-space:nowrap;}
-  .logo small{font-size:11px;color:var(--dim);-webkit-text-fill-color:var(--dim);
+  .logo small{font-size:10px;color:var(--dim);-webkit-text-fill-color:var(--dim);
               display:block;letter-spacing:2px;font-weight:600;}
-  .tabs{display:flex;gap:6px;flex:1;flex-wrap:wrap;}
-  .tab{padding:7px 15px;border-radius:99px;font-size:14px;color:var(--dim);
-       font-weight:600;transition:.15s;}
-  .tab:hover{background:#ffeadf;color:var(--brand);}
-  .tab.on{background:var(--brand);color:#fff;box-shadow:var(--shadow);}
-  .cartbtn{position:relative;font-size:15px;font-weight:700;color:var(--ink);
+  .search{flex:1;display:flex;background:#fff;border:2px solid var(--brand);
+          border-radius:99px;overflow:hidden;max-width:520px;}
+  .search input{flex:1;border:none;padding:9px 16px;font-size:14px;
+                font-family:inherit;outline:none;color:var(--ink);background:transparent;}
+  .search button{background:var(--brand);color:#fff;padding:0 20px;font-size:15px;}
+  .cartbtn{position:relative;font-size:14px;font-weight:700;color:var(--ink);
            background:#fff;border:2px solid var(--line);border-radius:99px;
-           padding:8px 18px;transition:.15s;}
+           padding:8px 16px;transition:.15s;white-space:nowrap;}
   .cartbtn:hover{border-color:var(--brand);color:var(--brand);}
   .badge{position:absolute;top:-8px;right:-6px;background:var(--brand);
          color:#fff;font-size:12px;font-weight:800;min-width:22px;height:22px;
@@ -50,42 +50,87 @@
          padding:0 5px;transform:scale(0);transition:.2s;}
   .badge.show{transform:scale(1);}
 
-  /* ── Hero ── */
-  .hero{max-width:1100px;margin:0 auto;padding:44px 20px 8px;text-align:center;}
-  .hero h1{font-size:clamp(28px,5vw,44px);font-weight:900;line-height:1.3;}
-  .hero h1 span{background:linear-gradient(90deg,var(--brand),var(--accent));
-                -webkit-background-clip:text;background-clip:text;color:transparent;}
-  .hero p{color:var(--dim);margin-top:10px;font-size:16px;}
-  .stats{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:22px;}
-  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-        padding:12px 22px;box-shadow:var(--shadow);}
-  .stat .n{font-size:22px;font-weight:900;color:var(--brand);}
-  .stat .l{font-size:12px;color:var(--dim);}
+  /* ── 分類列 ── */
+  .cats{max-width:1180px;margin:0 auto;padding:10px 20px 2px;display:flex;
+        gap:6px;flex-wrap:wrap;}
+  .tab{padding:6px 14px;border-radius:99px;font-size:13.5px;color:var(--dim);
+       font-weight:700;transition:.15s;background:#fff;border:1px solid var(--line);}
+  .tab:hover{color:var(--brand);border-color:var(--brand);}
+  .tab.on{background:var(--brand);color:#fff;border-color:var(--brand);}
 
-  /* ── 商品 ── */
-  .grid{max-width:1100px;margin:26px auto 60px;padding:0 20px;display:grid;
-        grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;}
+  /* ── 跑馬燈 ── */
+  .marquee{max-width:1180px;margin:10px auto 0;padding:0 20px;overflow:hidden;}
+  .marq-in{display:flex;gap:48px;white-space:nowrap;font-size:13px;color:var(--brand);
+           font-weight:700;animation:marq 22s linear infinite;width:max-content;}
+  @keyframes marq{to{transform:translateX(-50%)}}
+
+  /* ── 限時搶購 ── */
+  .flash{max-width:1180px;margin:14px auto 0;padding:0 20px;}
+  .flash-box{background:linear-gradient(120deg,#ff5d73,#ff9a3c);border-radius:18px;
+             padding:16px 18px;color:#fff;}
+  .flash-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px;}
+  .flash-head h2{font-size:20px;font-weight:900;letter-spacing:1px;}
+  .timer{display:flex;gap:5px;align-items:center;font-weight:900;font-size:15px;}
+  .timer span{background:#3d2c29;padding:3px 8px;border-radius:7px;font-family:Consolas,monospace;}
+  .flash-note{font-size:12px;opacity:.9;}
+  .flash-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+  .fcard{background:#fff;border-radius:12px;padding:10px;color:var(--ink);
+         text-align:center;position:relative;transition:.15s;cursor:pointer;}
+  .fcard:hover{transform:translateY(-3px);}
+  .fcard .e{font-size:42px;}
+  .fcard .fn{font-size:12.5px;font-weight:700;margin:4px 0 2px;overflow:hidden;
+             text-overflow:ellipsis;white-space:nowrap;}
+  .fcard .fp{color:var(--brand);font-weight:900;font-size:16px;}
+  .fcard .fo{font-size:11px;color:var(--dim);text-decoration:line-through;}
+  .fbar{height:14px;background:#ffe3d6;border-radius:99px;margin-top:6px;
+        overflow:hidden;position:relative;}
+  .fbar i{position:absolute;inset:0;font-style:normal;font-size:10px;font-weight:800;
+          color:#fff;display:flex;align-items:center;justify-content:center;z-index:1;}
+  .fbar b{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));
+          border-radius:99px;}
+
+  /* ── 折價券 ── */
+  .coupons{max-width:1180px;margin:14px auto 0;padding:0 20px;display:grid;
+           grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;}
+  .coupon{background:#fff;border:2px dashed var(--brand);border-radius:12px;
+          padding:10px 14px;display:flex;align-items:center;gap:10px;justify-content:space-between;}
+  .coupon .cl{font-size:13px;}
+  .coupon .cl b{color:var(--brand);font-size:15px;display:block;}
+  .coupon .cl small{color:var(--dim);font-size:11.5px;}
+  .claim{background:var(--brand);color:#fff;font-size:12.5px;font-weight:800;
+         padding:6px 13px;border-radius:99px;white-space:nowrap;}
+  .claim:disabled{background:#e8d5c9;cursor:default;}
+
+  /* ── 商品格 ── */
+  .grid{max-width:1180px;margin:18px auto 60px;padding:0 20px;display:grid;
+        grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+  .count{max-width:1180px;margin:16px auto 0;padding:0 20px;font-size:13px;color:var(--dim);}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
         overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;
-        transition:.18s;}
-  .card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(255,93,115,.18);}
-  .pic{height:150px;display:flex;align-items:center;justify-content:center;
-       font-size:64px;background:linear-gradient(135deg,#fff2e6,#ffe3ec);}
-  .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1;}
-  .brand{font-size:11.5px;color:var(--accent);font-weight:700;letter-spacing:1px;}
-  .name{font-size:16px;font-weight:800;}
-  .desc{font-size:13px;color:var(--dim);flex:1;}
-  .rating{font-size:12.5px;color:#e8a13c;font-weight:700;}
-  .rating i{color:var(--dim);font-style:normal;font-weight:500;}
-  .row{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
-  .price{font-size:18px;font-weight:900;color:var(--brand);}
-  .price s{font-size:12px;color:var(--dim);font-weight:500;margin-right:5px;}
+        transition:.18s;position:relative;}
+  .card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(255,93,115,.16);}
+  .off{position:absolute;top:8px;left:8px;background:var(--brand);color:#fff;
+       font-size:11px;font-weight:900;padding:2px 8px;border-radius:7px;z-index:1;}
+  .pic{height:110px;display:flex;align-items:center;justify-content:center;
+       font-size:52px;background:linear-gradient(135deg,#fff2e6,#ffe3ec);}
+  .body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1;}
+  .name{font-size:13.5px;font-weight:700;line-height:1.45;flex:1;
+        display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .name b{color:var(--accent);}
+  .tags{display:flex;gap:4px;flex-wrap:wrap;}
+  .tg{font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:5px;
+      background:#fff1e8;color:var(--brand2);border:1px solid #ffd9bd;}
+  .tg.free{background:#e9f9f1;color:var(--ok);border-color:#bfeeda;}
+  .meta{font-size:11.5px;color:var(--dim);}
+  .meta em{font-style:normal;color:#e8a13c;font-weight:700;}
+  .row{display:flex;align-items:center;justify-content:space-between;margin-top:2px;}
+  .price{font-size:16.5px;font-weight:900;color:var(--brand);}
+  .price s{font-size:11px;color:var(--dim);font-weight:500;margin-right:4px;}
   .add{background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;
-       font-size:14px;font-weight:800;padding:8px 16px;border-radius:99px;
-       transition:.15s;}
+       font-size:13px;font-weight:800;padding:6px 13px;border-radius:99px;transition:.15s;}
   .add:active{transform:scale(.93);}
 
-  /* ── Drawer / Modal 共用 ── */
+  /* ── Drawer / Modal（沿用）── */
   .veil{position:fixed;inset:0;background:rgba(61,44,41,.45);z-index:80;
         opacity:0;pointer-events:none;transition:.25s;}
   .veil.on{opacity:1;pointer-events:auto;}
@@ -94,37 +139,37 @@
           transform:translateX(105%);transition:.28s cubic-bezier(.2,.8,.3,1);
           display:flex;flex-direction:column;}
   .drawer.on{transform:none;}
-  .dhead{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;
+  .dhead{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;
          align-items:center;justify-content:space-between;}
   .dhead h2{font-size:18px;font-weight:900;}
   .x{font-size:22px;color:var(--dim);padding:4px 10px;}
-  .dbody{flex:1;overflow-y:auto;padding:14px 20px;}
+  .dbody{flex:1;overflow-y:auto;padding:12px 20px;}
   .empty{text-align:center;color:var(--dim);padding:60px 10px;font-size:15px;}
   .empty .e{font-size:52px;display:block;margin-bottom:10px;}
-  .item{display:flex;gap:12px;align-items:center;padding:12px 0;
+  .item{display:flex;gap:12px;align-items:center;padding:10px 0;
         border-bottom:1px dashed var(--line);}
-  .item .e{font-size:34px;}
-  .item .info{flex:1;}
-  .item .nm{font-size:14px;font-weight:700;}
+  .item .e{font-size:32px;}
+  .item .info{flex:1;min-width:0;}
+  .item .nm{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;
+            white-space:nowrap;}
   .item .pr{font-size:13px;color:var(--brand);font-weight:800;}
   .qty{display:flex;align-items:center;gap:8px;}
   .qty button{width:26px;height:26px;border-radius:8px;background:#fff1e8;
               font-weight:800;color:var(--brand);font-size:15px;}
-  .dfoot{padding:16px 20px;border-top:1px solid var(--line);}
-  .total{display:flex;justify-content:space-between;font-size:15px;
-         font-weight:700;margin-bottom:4px;}
-  .total .amt{color:var(--brand);font-size:20px;font-weight:900;}
+  .dfoot{padding:14px 20px;border-top:1px solid var(--line);}
+  .total{display:flex;justify-content:space-between;font-size:14px;
+         font-weight:700;margin:2px 0;}
+  .total .amt{color:var(--brand);font-size:19px;font-weight:900;}
+  .total.disc .amt{color:var(--ok);font-size:14px;}
   .hint{font-size:12px;color:var(--dim);margin-bottom:10px;}
   .cta{width:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));
-       color:#fff;font-size:16px;font-weight:900;padding:14px;border-radius:14px;
+       color:#fff;font-size:16px;font-weight:900;padding:13px;border-radius:14px;
        letter-spacing:2px;transition:.15s;}
   .cta:active{transform:scale(.97);}
   .cta:disabled{opacity:.4;cursor:not-allowed;}
 
-  /* ── 結帳 ── */
   .modal{position:fixed;inset:0;z-index:95;display:flex;align-items:center;
-         justify-content:center;padding:16px;opacity:0;pointer-events:none;
-         transition:.22s;}
+         justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:.22s;}
   .modal.on{opacity:1;pointer-events:auto;}
   .sheet{background:var(--card);border-radius:22px;width:min(460px,96vw);
          max-height:92vh;overflow-y:auto;padding:26px 26px 22px;
@@ -134,31 +179,26 @@
   .sheet h2{font-size:20px;font-weight:900;margin-bottom:4px;}
   .sheet .sub{font-size:13px;color:var(--dim);margin-bottom:16px;}
   .fld{margin-bottom:14px;}
-  .fld label{font-size:13px;font-weight:700;color:var(--ink);display:block;
-             margin-bottom:6px;}
-  .fld select,.fld input{width:100%;padding:11px 13px;border:2px solid var(--line);
+  .fld label{font-size:13px;font-weight:700;display:block;margin-bottom:6px;}
+  .fld select{width:100%;padding:11px 13px;border:2px solid var(--line);
         border-radius:12px;font-size:14px;font-family:inherit;background:#fffdfb;
         color:var(--ink);}
-  .fld select:focus,.fld input:focus{outline:none;border-color:var(--brand);}
+  .fld select:focus{outline:none;border-color:var(--brand);}
   .pays{display:grid;gap:8px;}
   .pay{display:flex;align-items:center;gap:10px;border:2px solid var(--line);
-       border-radius:12px;padding:11px 13px;font-size:14px;cursor:pointer;
-       transition:.15s;}
+       border-radius:12px;padding:11px 13px;font-size:14px;cursor:pointer;transition:.15s;}
   .pay:has(input:checked){border-color:var(--brand);background:#fff5f0;}
-  .pay b{font-size:14px;}
   .pay small{color:var(--dim);display:block;font-size:12px;}
   .note{font-size:11.5px;color:var(--dim);background:#fff7ee;
         border:1px dashed #f0d8bf;border-radius:10px;padding:9px 12px;margin:12px 0;}
 
-  /* ── 完成 / 追蹤 ── */
   .done{text-align:center;padding:10px 0;}
   .done .big{font-size:70px;}
   .done h2{margin:6px 0;}
   .ordno{font-family:Consolas,monospace;background:#fff3ea;color:var(--brand);
          font-weight:800;padding:4px 12px;border-radius:8px;font-size:14px;}
   .track{margin:18px 0 6px;text-align:left;}
-  .step{display:flex;gap:12px;padding:9px 0;align-items:flex-start;opacity:.35;
-        transition:.4s;}
+  .step{display:flex;gap:12px;padding:9px 0;align-items:flex-start;opacity:.35;transition:.4s;}
   .step.hit{opacity:1;}
   .step .dot{width:26px;height:26px;border-radius:99px;background:#f0e4da;
              display:flex;align-items:center;justify-content:center;font-size:13px;
@@ -166,8 +206,7 @@
   .step.hit .dot{background:var(--ok);color:#fff;}
   .step .tt{font-size:14px;font-weight:700;}
   .step .td{font-size:12px;color:var(--dim);}
-  .scooter{font-size:26px;display:inline-block;
-           animation:ride 2.2s ease-in-out infinite;}
+  .scooter{font-size:26px;display:inline-block;animation:ride 2.2s ease-in-out infinite;}
   @keyframes ride{0%,100%{transform:translateX(-14px)}50%{transform:translateX(14px)}}
 
   footer{border-top:1px solid var(--line);background:#fff;padding:34px 20px 44px;}
@@ -190,29 +229,39 @@
 <header>
   <div class="hwrap">
     <div class="logo">買爽的<small>MYSONGDE.SHOP</small></div>
-    <nav class="tabs" id="tabs"></nav>
+    <div class="search">
+      <input id="q" type="search" placeholder="搜尋 49 種買不起也不用買的好東西…" oninput="renderGrid()">
+      <button onclick="renderGrid()">🔍</button>
+    </div>
     <button class="cartbtn" onclick="openCart()">🛒 購物車<span class="badge" id="badge">0</span></button>
   </div>
+  <nav class="cats" id="tabs"></nav>
 </header>
 
-<section class="hero">
-  <h1>錢包毫髮無傷，<br><span>多巴胺照樣噴發</span></h1>
-  <p>盡情逛、盡情買、豪邁結帳 — 反正不用錢，也不會有包裹。靈感來自韓國爆紅的「多巴胺網站」。</p>
-  <div class="stats">
-    <div class="stat"><div class="n" id="stSaved">NT$0</div><div class="l">你今天沒花掉的錢</div></div>
-    <div class="stat"><div class="n" id="stOrders">0</div><div class="l">你的假訂單數</div></div>
-    <div class="stat"><div class="n">∞</div><div class="l">夢幻幣餘額</div></div>
+<div class="marquee"><div class="marq-in" id="marq"></div></div>
+
+<section class="flash">
+  <div class="flash-box">
+    <div class="flash-head">
+      <h2>⚡ 限時搶購</h2>
+      <div class="timer">距結束 <span id="th">00</span>:<span id="tm">00</span>:<span id="ts">00</span></div>
+      <div class="flash-note">倒數結束後自動重來，跟你的減肥計畫一樣</div>
+    </div>
+    <div class="flash-row" id="flashRow"></div>
   </div>
 </section>
 
+<section class="coupons" id="coupons"></section>
+
+<div class="count" id="cnt"></div>
 <main class="grid" id="grid"></main>
 
 <footer>
   <div class="fwrap">
     <h3>關於「買爽的」</h3>
-    <p>這是一個<strong>多巴胺網站（Dopamine Site）</strong>：模擬完整的網購流程 — 逛街、比價、加入購物車、結帳、追蹤出貨 — 但全程不涉及任何金錢，也永遠不會有商品送達。</p>
+    <p>這是一個<strong>多巴胺網站（Dopamine Site）</strong>：模擬完整的網購流程 — 逛街、比價、搶購、領券、結帳、追蹤出貨 — 但全程不涉及任何金錢，也永遠不會有商品送達。</p>
     <p>心理學研究認為，網購的快感大多來自「挑選與期待」的過程本身，而不是收到商品的那一刻。想亂花錢的時候，來這裡把流程走完一遍，衝動就消化掉了 — 錢包還是滿的。</p>
-    <p><strong>我們不收費、沒有金流、不會要求你輸入信用卡或任何真實個資。</strong>訂單紀錄只存在你自己瀏覽器的 localStorage 裡，本站沒有伺服器資料庫。所有品牌與商品皆為虛構，如有雷同，純屬你想太多。</p>
+    <p><strong>我們不收費、沒有金流、不會要求你輸入信用卡或任何真實個資。</strong>訂單紀錄只存在你自己瀏覽器的 localStorage 裡，本站沒有伺服器資料庫。所有品牌與商品皆為虛構，如有雷同，純屬你想太多。銷售量與好評數當然也是編的，跟商品一樣認真。</p>
     <p style="margin-top:14px">🧾 檢舉前請先看這段：本站無任何付款功能，不符合詐欺構成要件（無財物交付、無詐術）。我們跟 165 是同一邊的 — 真正的購物詐騙網站不會告訴你「你不會收到貨」。</p>
   </div>
 </footer>
@@ -223,7 +272,8 @@
   <div class="dhead"><h2>🛒 購物車</h2><button class="x" onclick="closeAll()">✕</button></div>
   <div class="dbody" id="cartBody"></div>
   <div class="dfoot">
-    <div class="total"><span>總金額</span><span class="amt" id="cartTotal">NT$0</span></div>
+    <div class="total"><span>商品金額</span><span class="amt" id="cartTotal">NT$0</span></div>
+    <div class="total disc"><span>折價券「反正不用錢券」</span><span class="amt" id="cartDisc">-NT$0</span></div>
     <div class="hint">實付金額：NT$0（永遠）</div>
     <button class="cta" id="checkoutBtn" onclick="openCheckout()">前往結帳</button>
   </div>
@@ -286,35 +336,85 @@
 
 <script>
 "use strict";
+/* {c:分類, e:emoji, b:品牌, n:商品名(含規格贈品), p:價, o:原價, r:評分, rv:評論數, s:已售, t:標籤} */
 const PRODUCTS = [
-  {c:"精品",e:"👜",b:"LUXÉ VOID",n:"夢想名牌包",d:"容量無限大，因為裡面什麼都沒有。",p:1280000,o:2560000,r:4.9,rv:8721},
-  {c:"精品",e:"⌚",b:"NEVERTIME",n:"時間靜止腕錶",d:"戴上的瞬間，週一永遠不會來。",p:9990000,o:12000000,r:4.8,rv:3204},
-  {c:"精品",e:"💍",b:"CARBONIA",n:"十克拉空氣鑽戒",d:"跟真鑽同樣成分（碳），純度更高。",p:6660000,r:5.0,rv:999},
-  {c:"精品",e:"🏝️",b:"ISLA NADA",n:"私人小島（迷你）",d:"漲潮時暫停營業。含一棵椰子樹。",p:88800000,r:4.7,rv:156},
-  {c:"3C",e:"🚁",b:"SKYWHATEVER",n:"通勤用直升機",d:"再也不用擠捷運，因為它飛不起來。",p:45000000,r:4.6,rv:412},
-  {c:"3C",e:"🤖",b:"LAZYTECH",n:"幫你上班機器人",d:"會議中會自動點頭，老闆看不出來。",p:2990000,o:3990000,r:4.9,rv:15302},
-  {c:"3C",e:"📱",b:"NOPHONE",n:"防沉迷手機 Pro",d:"打開任何 App 都顯示「去睡覺」。",p:36900,r:4.4,rv:7788},
-  {c:"3C",e:"👟",b:"VELOCITÀ",n:"光速跑鞋",d:"穿上後跑步的感覺跟平常一樣，但心裡快很多。",p:128000,o:158000,r:4.8,rv:5566},
-  {c:"療癒",e:"😴",b:"好眠研究所",n:"一夜好眠（7小時裝）",d:"不含半夜3點的焦慮。保存期限：到明天早上。",p:3900,r:5.0,rv:88420},
-  {c:"療癒",e:"🫙",b:"心靈選品",n:"平靜的心（久放不壞）",d:"開罐後請盡速使用，遇到已讀不回會揮發。",p:5200,r:4.9,rv:45671},
-  {c:"療癒",e:"🍀",b:"心靈選品",n:"中樂透的感覺",d:"只有感覺。號碼另購（沒有販售）。",p:100,o:2000,r:4.9,rv:203944},
-  {c:"療癒",e:"💆",b:"好眠研究所",n:"拖延症特效藥",d:"預計明天出貨。後天。大後天吧。",p:990,r:3.2,rv:66666},
-  {c:"荒謬",e:"🫧",b:"ALPINE AIR",n:"罐裝頂級空氣",d:"阿爾卑斯山限定。開罐即逝，跟青春一樣。",p:128000,r:4.7,rv:2310},
-  {c:"荒謬",e:"👑",b:"皇家御用",n:"國王的新衣",d:"只有聰明人看得見。乾洗會消失。",p:999999,r:4.8,rv:1912},
-  {c:"荒謬",e:"🐈",b:"貓皇認證",n:"貓咪的尊重",d:"極稀有。本品可能不存在。",p:9999999,r:5.0,rv:31415},
-  {c:"荒謬",e:"🗣️",b:"職場幻想",n:"老闆的讚美（限量）",d:"錄音檔格式。內容：「嗯，還行。」",p:750000,o:990000,r:4.5,rv:9527},
+ /* 3C手機 */
+ {c:"3C手機",e:"📱",b:"NOPHONE",n:"防沉迷手機 Pro 128G 開任何App都顯示「去睡覺」 加贈保護貼(貼了也救不了你)",p:36900,o:42900,r:4.4,rv:7788,s:3421,t:["今日到貨"]},
+ {c:"3C手機",e:"🤖",b:"LAZYTECH",n:"幫你上班機器人 2.0 內建自動點頭模組 會議求生首選 加贈「嗯嗯我了解」語音包",p:2990000,o:3990000,r:4.9,rv:15302,s:9527,t:["熱銷","免運"]},
+ {c:"3C手機",e:"⌨️",b:"已讀科技",n:"AI 自動回訊鍵盤 秒回已讀不再心累 支援「哈哈」「真的」「扯」三大萬用句式",p:8800,o:12800,r:4.7,rv:23456,s:18200,t:["買一送一"]},
+ {c:"3C手機",e:"📶",b:"斷線工坊",n:"永不斷線 WiFi 分享器 訊號滿格 斷的只有你的理智 附全罩式冷靜頭盔",p:15900,r:4.2,rv:5432,s:2100,t:["免運"]},
+ {c:"3C手機",e:"🕶️",b:"護眼本舖",n:"100% 防藍光眼鏡 全黑不透光 保證看不到任何藍光(或任何東西) 睡眠品質提升300%",p:1990,o:3990,r:4.8,rv:9876,s:7654,t:["5折"]},
+ {c:"3C手機",e:"🔋",b:"心靈電力",n:"無線充電盤 心靈專用 放上手機充手機 放上自己充自己 充電效率視心情而定",p:4500,r:4.6,rv:3210,s:1876,t:["今日到貨"]},
+ /* 家電 */
+ {c:"家電",e:"👕",b:"摺學家",n:"全自動摺衣機(概念機) 概念是最後還是你自己摺 附贈「明天再摺」許可證10張",p:128000,o:158000,r:3.9,rv:4567,s:987,t:["預購"]},
+ {c:"家電",e:"💨",b:"靜音研究所",n:"超靜音吹風機 靜音原理:壞掉了 風力0分貝 頭髮自然風乾派最愛",p:6900,r:4.1,rv:2345,s:1234,t:["免運"]},
+ {c:"家電",e:"🧹",b:"孝順家電",n:"會道歉的掃地機器人 撞到桌腳會說對不起 卡住會唱歌求救 掃地功能另售",p:29900,o:35900,r:4.9,rv:8765,s:5432,t:["熱銷"]},
+ {c:"家電",e:"🍟",b:"零卡工坊",n:"零卡路里氣炸鍋 炸出來的東西還是有卡路里 但鍋子本身零卡 標題沒騙你",p:3990,o:5990,r:4.5,rv:6789,s:4321,t:["7折"]},
+ {c:"家電",e:"🚨",b:"媽媽同款",n:"冰箱門未關警報器 音效採集自全台媽媽 「門要不要順手關一下?」全曲收錄",p:1290,r:5.0,rv:12000,s:8888,t:["熱銷","免運"]},
+ {c:"家電",e:"💧",b:"淚滴家電",n:"除濕機 眼淚專用款 追劇夜配備 集水盒容量:一部韓劇大結局",p:8900,r:4.8,rv:5678,s:3456,t:["今日到貨"]},
+ /* 美妝保養 */
+ {c:"美妝保養",e:"🧴",b:"誠實保養",n:"素顏霜 擦完還是素顏 主打成分:接受自己 全膚質適用 尤其是心",p:890,o:1290,r:4.9,rv:34567,s:23456,t:["熱銷"]},
+ {c:"美妝保養",e:"✨",b:"時光保養",n:"逆齡精華液 30ml 有效回到上週 再貴一點可以回到上個月 效果因記憶而異",p:12800,o:19800,r:4.3,rv:8901,s:2345,t:["65折"]},
+ {c:"美妝保養",e:"👁️",b:"睫望工程",n:"睫毛增長液 增長的是你的等待 每天擦每天等 等待本身就很美",p:1580,r:3.8,rv:4567,s:1987,t:["買一送一"]},
+ {c:"美妝保養",e:"🌸",b:"氣味圖書館",n:"香水「加班的味道」50ml 前調咖啡 中調便當 後調絕望 辨識度極高",p:3200,r:4.7,rv:6543,s:3210,t:["免運"]},
+ {c:"美妝保養",e:"😷",b:"安慰面膜",n:"「敷了就好了」安慰型面膜 10入 敷完什麼都沒改變 但心情好多了 這就夠了",p:399,o:599,r:5.0,rv:45678,s:34567,t:["熱銷","今日到貨"]},
+ /* 居家生活 */
+ {c:"居家生活",e:"🪑",b:"躺平工學",n:"人體工學電競椅 工學重點:躺 支援午睡/耍廢/裝忙三模式 附贈腰靠(裝飾用)",p:15800,o:22800,r:4.8,rv:9012,s:6789,t:["7折","免運"]},
+ {c:"居家生活",e:"🪟",b:"黑洞窗簾",n:"全遮光窗簾 連夢想都能遮 遮光率101% 週末睡到下午三點指定款",p:2990,r:4.9,rv:11223,s:9876,t:["熱銷"]},
+ {c:"居家生活",e:"🛏️",b:"記憶寢具",n:"記憶枕 記得你所有黑歷史 半夜想起十年前的尷尬事?是枕頭在放給你看",p:1990,o:2990,r:4.2,rv:7890,s:4567,t:["66折"]},
+ {c:"居家生活",e:"🕯️",b:"氣味圖書館",n:"香氛蠟燭「新鈔的味道」 點燃後滿室富貴 熄滅後回歸現實 燃燒時間:發薪日到月中",p:1200,r:4.9,rv:8765,s:6543,t:["今日到貨"]},
+ {c:"居家生活",e:"🛋️",b:"辭職家居",n:"懶人沙發 坐下去就想辭職款 人體陷入深度3公分 站起來需要人生規劃",p:6990,o:9990,r:4.7,rv:5432,s:3210,t:["7折","免運"]},
+ {c:"居家生活",e:"🪴",b:"不死園藝",n:"永生盆栽 怎麼養都不會死 因為是塑膠的 綠手指黑手指一律平等",p:790,r:5.0,rv:23456,s:12345,t:["熱銷"]},
+ /* 食品生鮮 */
+ {c:"食品生鮮",e:"🫧",b:"ALPINE AIR",n:"罐裝頂級空氣 阿爾卑斯山限定 開罐即逝跟青春一樣 6入組 加贈台北盆地空氣1罐(對照組)",p:128000,r:4.7,rv:2310,s:876,t:["進口"]},
+ {c:"食品生鮮",e:"😴",b:"好眠研究所",n:"一夜好眠 7小時裝 不含半夜3點的焦慮 保存期限到明天早上 效期短請盡速使用",p:3900,r:5.0,rv:88420,s:65432,t:["熱銷","今日到貨"]},
+ {c:"食品生鮮",e:"💊",b:"好眠研究所",n:"拖延症特效藥 30錠 預計明天出貨 後天 大後天吧 反正會到(可能)",p:990,r:3.2,rv:66666,s:5432,t:["預購"]},
+ {c:"食品生鮮",e:"🧋",b:"零卡飲品",n:"零卡珍珠奶茶 無珍珠無奶無茶 成分:冰塊+誠實 全糖去冰做不到因為沒有糖",p:65,o:120,r:4.4,rv:34521,s:28765,t:["54折"]},
+ {c:"食品生鮮",e:"🍱",b:"家的味道",n:"媽媽的手藝冷凍料理包 微波後自動變涼 因為媽媽說「快點吃不要滑手機」",p:320,r:4.9,rv:19876,s:15678,t:["冷凍宅配"]},
+ {c:"食品生鮮",e:"🍵",b:"輕盈茶坊",n:"減肥茶 30包入 喝了保證變輕 變輕的是錢包 體重不在保固範圍",p:1280,o:1880,r:3.5,rv:8765,s:4321,t:["68折"]},
+ /* 運動戶外 */
+ {c:"運動戶外",e:"👟",b:"VELOCITÀ",n:"光速跑鞋 穿上後跑起來跟平常一樣 但心裡快很多 心率有到就算有跑",p:128000,o:158000,r:4.8,rv:5566,s:2345,t:["8折","免運"]},
+ {c:"運動戶外",e:"🧘",b:"躺平運動",n:"瑜珈墊 躺著滑手機專用 防滑設計讓你滑手機不滑手 運動功能未開放",p:990,r:4.9,rv:14567,s:11234,t:["熱銷"]},
+ {c:"運動戶外",e:"🏋️",b:"泡麵健身",n:"啞鈴 2kg 壓泡麵專用 三分鐘出餐 順便練二頭(拿起泡麵那下)",p:690,r:4.8,rv:9871,s:7654,t:["今日到貨"]},
+ {c:"運動戶外",e:"📿",b:"代步科技",n:"自動計步器 幫你走 你躺著它計 日行萬步輕鬆達成 健康資料好看最重要",p:2490,o:2990,r:4.1,rv:6543,s:3456,t:["83折"]},
+ {c:"運動戶外",e:"🚴",b:"曬衣車業",n:"高階飛輪健身車 到貨第3天自動轉職曬衣架 業界最快轉職速度 曬衣容量5kg",p:19900,o:29900,r:4.9,rv:8912,s:5678,t:["熱銷","免運"]},
+ /* 精品 */
+ {c:"精品",e:"👜",b:"LUXÉ VOID",n:"夢想名牌包 容量無限大 因為裡面什麼都沒有 全球限量(每個人都買得到的那種限量)",p:1280000,o:2560000,r:4.9,rv:8721,s:1234,t:["5折"]},
+ {c:"精品",e:"⌚",b:"NEVERTIME",n:"時間靜止腕錶 戴上的瞬間週一永遠不會來 瑞士靈感 台灣組裝 時間概念另購",p:9990000,o:12000000,r:4.8,rv:3204,s:456,t:["免運"]},
+ {c:"精品",e:"💍",b:"CARBONIA",n:"十克拉空氣鑽戒 跟真鑽同樣成分(碳) 純度更高 附鑑定書(自己印的)",p:6660000,r:5.0,rv:999,s:321,t:["附鑑定書"]},
+ {c:"精品",e:"🏝️",b:"ISLA NADA",n:"私人小島(迷你) 漲潮時暫停營業 含一棵椰子樹 地契存在你心中",p:88800000,r:4.7,rv:156,s:88,t:["預購"]},
+ {c:"精品",e:"🚁",b:"SKYWHATEVER",n:"通勤用直升機 再也不用擠捷運 因為它飛不起來 純觀賞 停機坪另購",p:45000000,r:4.6,rv:412,s:65,t:["大型宅配"]},
+ {c:"精品",e:"👑",b:"皇家御用",n:"國王的新衣 只有聰明人看得見 乾洗會消失 尺寸:自由心證",p:999999,r:4.8,rv:1912,s:777,t:["限量"]},
+ {c:"精品",e:"🛥️",b:"浴缸海事",n:"私人遊艇(浴缸尺寸) 在家享受海洋人生 附船長帽 出海範圍:浴室",p:3880000,r:4.5,rv:678,s:123,t:["大型宅配"]},
+ /* 療癒小物 */
+ {c:"療癒小物",e:"🍀",b:"心靈選品",n:"中樂透的感覺 純感覺 號碼另購(沒有販售) 中獎機率100%(感覺的部分)",p:100,o:2000,r:4.9,rv:203944,s:187654,t:["熱銷","5折"]},
+ {c:"療癒小物",e:"🐈",b:"貓皇認證",n:"貓咪的尊重 極稀有 本品可能不存在 訂購後由貓咪決定是否出貨(不會)",p:9999999,r:5.0,rv:31415,s:271,t:["稀有"]},
+ {c:"療癒小物",e:"🗣️",b:"職場幻想",n:"老闆的讚美(限量) 錄音檔格式 內容:「嗯,還行」 情緒價值拉滿",p:750000,o:990000,r:4.5,rv:9527,s:888,t:["限量"]},
+ {c:"療癒小物",e:"🫙",b:"心靈選品",n:"平靜的心(久放不壞) 開罐後請盡速使用 遇到已讀不回會揮發 建議囤貨",p:5200,r:4.9,rv:45671,s:34567,t:["熱銷"]},
+ {c:"療癒小物",e:"📅",b:"時間商行",n:"週一取消券 單次有效 使用後直接跳到週二(週二變成新的週一) 總之買就對了",p:52000,r:4.6,rv:23456,s:12000,t:["電子票券"]},
+ {c:"療癒小物",e:"🏖️",b:"時間商行",n:"無限期休假申請書 主管簽名欄已預先空白一萬年 法律效力:作夢等級",p:8800,r:4.8,rv:18765,s:9876,t:["電子票券"]},
+ {c:"療癒小物",e:"💬",b:"心靈選品",n:"已讀秒回體驗券 體驗被秒回的感覺一次 回覆內容不拘 已讀不回患者福音",p:3000,o:4500,r:4.9,rv:56789,s:45678,t:["熱銷","電子票券"]},
+ {c:"療癒小物",e:"🥫",b:"心靈選品",n:"罐裝自信 350ml 搖勻後使用 開會前飲用效果最佳 副作用:敢在群組講話",p:6600,r:4.7,rv:29876,s:21098,t:["今日到貨"]},
 ];
-const CATS = ["全部","精品","3C","療癒","荒謬"];
+const CATS = ["全部","3C手機","家電","美妝保養","居家生活","食品生鮮","運動戶外","精品","療癒小物"];
+const FLASH_IDX = [26, 41, 17, 4, 47, 34];   // 限時搶購精選
+const MARQ = ["🔥 全站 NT$0 免運中(因為不運)","⚡ 限時下殺:所有價格都是裝飾","💳 刷夢幻幣滿萬送萬","🚚 火速出貨(出貨是一種心境)","🎁 買一送一:買一個寂寞送一個空虛","⭐ 會員獨享:人人都是會員"];
+const COUPONS = [
+  {t:"全額折抵券", d:"折抵100%,結帳自動套用", s:"每人無限張"},
+  {t:"免運券", d:"本來就免運,因為根本不運", s:"永久有效"},
+  {t:"夢幻幣回饋10%", d:"10% × NT$0 = 還是0,數學沒問題", s:"回饋直接入夢"},
+];
 const $ = id => document.getElementById(id);
 const NT = n => "NT$" + n.toLocaleString("zh-Hant-TW");
 
-let cart = {};   // idx -> qty
+let cart = {};
 let curCat = "全部";
 
-/* ── localStorage（只存在使用者自己的瀏覽器）── */
 const store = {
   get orders(){ try{return JSON.parse(localStorage.msd_orders||"[]")}catch(e){return[]} },
-  set orders(v){ localStorage.msd_orders = JSON.stringify(v.slice(-50)); }
+  set orders(v){ localStorage.msd_orders = JSON.stringify(v.slice(-50)); },
+  get claimed(){ try{return JSON.parse(localStorage.msd_coupons||"[]")}catch(e){return[]} },
+  set claimed(v){ localStorage.msd_coupons = JSON.stringify(v); }
 };
 
 /* ── 渲染 ── */
@@ -324,32 +424,91 @@ function renderTabs(){
 }
 function setCat(c){ curCat=c; renderTabs(); renderGrid(); }
 
-function renderGrid(){
-  const list = PRODUCTS.map((p,i)=>({...p,i}))
-                       .filter(p => curCat==="全部" || p.c===curCat);
-  $("grid").innerHTML = list.map(p => `
+function offPct(p){ return p.o ? Math.round((1-p.p/p.o)*100) : 0; }
+
+function cardHTML(p){
+  const off = offPct(p);
+  return `
     <article class="card">
+      ${off?`<div class="off">-${off}%</div>`:""}
       <div class="pic">${p.e}</div>
       <div class="body">
-        <div class="brand">${p.b}</div>
-        <div class="name">${p.n}</div>
-        <div class="desc">${p.d}</div>
-        <div class="rating">${"★".repeat(Math.round(p.r))}<i> ${p.r}（${p.rv.toLocaleString()} 則虛構好評）</i></div>
+        <div class="name"><b>【${p.b}】</b>${p.n}</div>
+        <div class="tags">${p.t.map(t=>`<span class="tg ${t==="免運"?"free":""}">${t}</span>`).join("")}</div>
+        <div class="meta"><em>★${p.r}</em>(${p.rv.toLocaleString()}) ｜ 已爽買 ${p.s.toLocaleString()} 件</div>
         <div class="row">
           <div class="price">${p.o?`<s>${NT(p.o)}</s>`:""}${NT(p.p)}</div>
           <button class="add" onclick="addCart(${p.i})">爽買</button>
         </div>
       </div>
-    </article>`).join("");
+    </article>`;
 }
 
+function renderGrid(){
+  const kw = ($("q").value||"").trim().toLowerCase();
+  const list = PRODUCTS.map((p,i)=>({...p,i}))
+    .filter(p => curCat==="全部" || p.c===curCat)
+    .filter(p => !kw || (p.b+p.n+p.c).toLowerCase().includes(kw));
+  $("grid").innerHTML = list.map(cardHTML).join("") ||
+    `<div class="empty" style="grid-column:1/-1"><span class="e">🔍</span>找不到「${$("q").value}」<br>但反正買什麼都一樣不會到貨</div>`;
+  $("cnt").textContent = `共 ${list.length} 件商品 — 全部都買得起，因為都不用錢`;
+}
+
+function renderFlash(){
+  $("flashRow").innerHTML = FLASH_IDX.map(i=>{
+    const p = PRODUCTS[i];
+    const pct = 60 + (i*7)%35;
+    return `<div class="fcard" onclick="addCart(${i})">
+      <div class="e">${p.e}</div>
+      <div class="fn">【${p.b}】${p.n.split(" ")[0]}</div>
+      <div class="fo">${NT(p.o||Math.round(p.p*1.6))}</div>
+      <div class="fp">${NT(p.p)}</div>
+      <div class="fbar"><i>已搶 ${pct}%</i><b style="width:${pct}%"></b></div>
+    </div>`;
+  }).join("");
+}
+
+function renderMarq(){
+  const items = [...MARQ, ...MARQ];
+  $("marq").innerHTML = items.map(m=>`<span>${m}</span>`).join("");
+}
+
+function renderCoupons(){
+  const claimed = store.claimed;
+  $("coupons").innerHTML = COUPONS.map((c,i)=>`
+    <div class="coupon">
+      <div class="cl"><b>${c.t}</b>${c.d}<br><small>${c.s}</small></div>
+      <button class="claim" id="cp${i}" ${claimed.includes(i)?"disabled":""}
+        onclick="claimCoupon(${i})">${claimed.includes(i)?"已領取":"領取"}</button>
+    </div>`).join("");
+}
+function claimCoupon(i){
+  const c = store.claimed;
+  if(!c.includes(i)){ c.push(i); store.claimed = c; }
+  renderCoupons();
+  toast(`已領取「${COUPONS[i].t}」🎫 省下 NT$0`);
+}
+
+/* ── 倒數（到午夜，結束自動重來）── */
+function tickTimer(){
+  const now = new Date();
+  const end = new Date(now); end.setHours(24,0,0,0);
+  let s = Math.floor((end-now)/1000);
+  const pad = n => String(n).padStart(2,"0");
+  $("th").textContent = pad(Math.floor(s/3600));
+  $("tm").textContent = pad(Math.floor(s%3600/60));
+  $("ts").textContent = pad(s%60);
+}
+setInterval(tickTimer, 1000);
+
+/* ── 購物車 ── */
 function cartCount(){ return Object.values(cart).reduce((a,b)=>a+b,0); }
 function cartSum(){ return Object.entries(cart).reduce((s,[i,q])=>s+PRODUCTS[i].p*q,0); }
 
 function addCart(i){
   cart[i] = (cart[i]||0)+1;
   syncBadge();
-  toast(`已加入 — ${PRODUCTS[i].n} 🎊`);
+  toast(`已加入 — 【${PRODUCTS[i].b}】${PRODUCTS[i].n.split(" ")[0]} 🎊`);
 }
 function chQty(i,d){
   cart[i]=(cart[i]||0)+d;
@@ -367,12 +526,14 @@ function renderCart(){
   $("cartBody").innerHTML = keys.length ? keys.map(i=>{
     const p = PRODUCTS[i];
     return `<div class="item"><div class="e">${p.e}</div>
-      <div class="info"><div class="nm">${p.n}</div><div class="pr">${NT(p.p)}</div></div>
+      <div class="info"><div class="nm">【${p.b}】${p.n.split(" ")[0]}</div><div class="pr">${NT(p.p)}</div></div>
       <div class="qty"><button onclick="chQty(${i},-1)">−</button><span>${cart[i]}</span><button onclick="chQty(${i},1)">＋</button></div>
     </div>`;
   }).join("") :
   `<div class="empty"><span class="e">🛒</span>購物車空空的<br>去挑幾個買不起的東西吧</div>`;
-  $("cartTotal").textContent = NT(cartSum());
+  const sum = cartSum();
+  $("cartTotal").textContent = NT(sum);
+  $("cartDisc").textContent = "-" + NT(sum);
   $("checkoutBtn").disabled = !keys.length;
 }
 
@@ -395,10 +556,9 @@ function placeOrder(){
   renderTrack(Date.now());
   $("doneModal").classList.add("on");
   confetti();
-  syncStats();
 }
 
-/* ── 出貨追蹤（永遠到不了）── */
+/* ── 出貨追蹤 ── */
 const STEPS = [
   ["✅","已接單","系統秒速確認，效率跟真的一樣"],
   ["📦","理貨中","倉庫小精靈正在打包一個空氣"],
@@ -408,8 +568,7 @@ const STEPS = [
 let trackTimer;
 function renderTrack(t0){
   clearInterval(trackTimer);
-  const el = $("track");
-  el.innerHTML = STEPS.map((s,i)=>`
+  $("track").innerHTML = STEPS.map((s,i)=>`
     <div class="step" id="stp${i}"><div class="dot">${s[0]}</div>
     <div><div class="tt">${s[1]}</div><div class="td">${s[2]}</div></div></div>`).join("");
   const gates = [0, 1500, 3500, 6000];
@@ -419,13 +578,6 @@ function renderTrack(t0){
     if(dt > 6000) clearInterval(trackTimer);
   };
   tick(); trackTimer = setInterval(tick, 400);
-}
-
-/* ── 統計 ── */
-function syncStats(){
-  const o = store.orders;
-  $("stOrders").textContent = o.length;
-  $("stSaved").textContent = NT(o.reduce((s,x)=>s+x.sum,0));
 }
 
 /* ── 特效 ── */
@@ -450,7 +602,8 @@ function confetti(){
   }
 }
 
-renderTabs(); renderGrid(); syncBadge(); syncStats();
+renderTabs(); renderGrid(); renderFlash(); renderMarq(); renderCoupons();
+syncBadge(); tickTimer();
 </script>
 </body>
 </html>
