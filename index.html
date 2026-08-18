@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>買爽的 MaiSongDe — 買個爽，不花錢</title>
+<meta name="description" content="台灣第一個多巴胺購物網站：盡情逛街、加入購物車、豪邁結帳 — 不收費、不出貨、不收集資料，純粹買個爽。">
+<style>
+  :root{
+    --bg:#fff7f0; --card:#ffffff; --ink:#3d2c29; --dim:#a08a80;
+    --brand:#ff5d73; --brand2:#ff9a3c; --accent:#7c5cff; --ok:#2ec27e;
+    --line:#f3e2d7; --shadow:0 6px 24px rgba(255,93,115,.10);
+    --r:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--ink);
+       font-family:"Segoe UI","Microsoft JhengHei",system-ui,sans-serif;
+       line-height:1.65;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;}
+
+  /* ── 誠實橫幅（永遠可見）── */
+  .honest{position:sticky;top:0;z-index:60;background:#3d2c29;color:#ffe9d6;
+          text-align:center;font-size:13px;padding:7px 12px;letter-spacing:.5px;}
+  .honest b{color:#ffc857;}
+
+  /* ── Header ── */
+  header{position:sticky;top:34px;z-index:50;background:rgba(255,247,240,.92);
+         backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .hwrap{max-width:1100px;margin:0 auto;display:flex;align-items:center;
+         gap:16px;padding:12px 20px;}
+  .logo{font-size:24px;font-weight:900;letter-spacing:1px;
+        background:linear-gradient(90deg,var(--brand),var(--brand2));
+        -webkit-background-clip:text;background-clip:text;color:transparent;
+        white-space:nowrap;}
+  .logo small{font-size:11px;color:var(--dim);-webkit-text-fill-color:var(--dim);
+              display:block;letter-spacing:2px;font-weight:600;}
+  .tabs{display:flex;gap:6px;flex:1;flex-wrap:wrap;}
+  .tab{padding:7px 15px;border-radius:99px;font-size:14px;color:var(--dim);
+       font-weight:600;transition:.15s;}
+  .tab:hover{background:#ffeadf;color:var(--brand);}
+  .tab.on{background:var(--brand);color:#fff;box-shadow:var(--shadow);}
+  .cartbtn{position:relative;font-size:15px;font-weight:700;color:var(--ink);
+           background:#fff;border:2px solid var(--line);border-radius:99px;
+           padding:8px 18px;transition:.15s;}
+  .cartbtn:hover{border-color:var(--brand);color:var(--brand);}
+  .badge{position:absolute;top:-8px;right:-6px;background:var(--brand);
+         color:#fff;font-size:12px;font-weight:800;min-width:22px;height:22px;
+         border-radius:99px;display:flex;align-items:center;justify-content:center;
+         padding:0 5px;transform:scale(0);transition:.2s;}
+  .badge.show{transform:scale(1);}
+
+  /* ── Hero ── */
+  .hero{max-width:1100px;margin:0 auto;padding:44px 20px 8px;text-align:center;}
+  .hero h1{font-size:clamp(28px,5vw,44px);font-weight:900;line-height:1.3;}
+  .hero h1 span{background:linear-gradient(90deg,var(--brand),var(--accent));
+                -webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p{color:var(--dim);margin-top:10px;font-size:16px;}
+  .stats{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:22px;}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+        padding:12px 22px;box-shadow:var(--shadow);}
+  .stat .n{font-size:22px;font-weight:900;color:var(--brand);}
+  .stat .l{font-size:12px;color:var(--dim);}
+
+  /* ── 商品 ── */
+  .grid{max-width:1100px;margin:26px auto 60px;padding:0 20px;display:grid;
+        grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+        overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;
+        transition:.18s;}
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(255,93,115,.18);}
+  .pic{height:150px;display:flex;align-items:center;justify-content:center;
+       font-size:64px;background:linear-gradient(135deg,#fff2e6,#ffe3ec);}
+  .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1;}
+  .brand{font-size:11.5px;color:var(--accent);font-weight:700;letter-spacing:1px;}
+  .name{font-size:16px;font-weight:800;}
+  .desc{font-size:13px;color:var(--dim);flex:1;}
+  .rating{font-size:12.5px;color:#e8a13c;font-weight:700;}
+  .rating i{color:var(--dim);font-style:normal;font-weight:500;}
+  .row{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+  .price{font-size:18px;font-weight:900;color:var(--brand);}
+  .price s{font-size:12px;color:var(--dim);font-weight:500;margin-right:5px;}
+  .add{background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;
+       font-size:14px;font-weight:800;padding:8px 16px;border-radius:99px;
+       transition:.15s;}
+  .add:active{transform:scale(.93);}
+
+  /* ── Drawer / Modal 共用 ── */
+  .veil{position:fixed;inset:0;background:rgba(61,44,41,.45);z-index:80;
+        opacity:0;pointer-events:none;transition:.25s;}
+  .veil.on{opacity:1;pointer-events:auto;}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,94vw);z-index:90;
+          background:var(--card);box-shadow:-10px 0 40px rgba(0,0,0,.15);
+          transform:translateX(105%);transition:.28s cubic-bezier(.2,.8,.3,1);
+          display:flex;flex-direction:column;}
+  .drawer.on{transform:none;}
+  .dhead{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;
+         align-items:center;justify-content:space-between;}
+  .dhead h2{font-size:18px;font-weight:900;}
+  .x{font-size:22px;color:var(--dim);padding:4px 10px;}
+  .dbody{flex:1;overflow-y:auto;padding:14px 20px;}
+  .empty{text-align:center;color:var(--dim);padding:60px 10px;font-size:15px;}
+  .empty .e{font-size:52px;display:block;margin-bottom:10px;}
+  .item{display:flex;gap:12px;align-items:center;padding:12px 0;
+        border-bottom:1px dashed var(--line);}
+  .item .e{font-size:34px;}
+  .item .info{flex:1;}
+  .item .nm{font-size:14px;font-weight:700;}
+  .item .pr{font-size:13px;color:var(--brand);font-weight:800;}
+  .qty{display:flex;align-items:center;gap:8px;}
+  .qty button{width:26px;height:26px;border-radius:8px;background:#fff1e8;
+              font-weight:800;color:var(--brand);font-size:15px;}
+  .dfoot{padding:16px 20px;border-top:1px solid var(--line);}
+  .total{display:flex;justify-content:space-between;font-size:15px;
+         font-weight:700;margin-bottom:4px;}
+  .total .amt{color:var(--brand);font-size:20px;font-weight:900;}
+  .hint{font-size:12px;color:var(--dim);margin-bottom:10px;}
+  .cta{width:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));
+       color:#fff;font-size:16px;font-weight:900;padding:14px;border-radius:14px;
+       letter-spacing:2px;transition:.15s;}
+  .cta:active{transform:scale(.97);}
+  .cta:disabled{opacity:.4;cursor:not-allowed;}
+
+  /* ── 結帳 ── */
+  .modal{position:fixed;inset:0;z-index:95;display:flex;align-items:center;
+         justify-content:center;padding:16px;opacity:0;pointer-events:none;
+         transition:.22s;}
+  .modal.on{opacity:1;pointer-events:auto;}
+  .sheet{background:var(--card);border-radius:22px;width:min(460px,96vw);
+         max-height:92vh;overflow-y:auto;padding:26px 26px 22px;
+         box-shadow:0 24px 60px rgba(0,0,0,.25);
+         transform:translateY(16px);transition:.22s;}
+  .modal.on .sheet{transform:none;}
+  .sheet h2{font-size:20px;font-weight:900;margin-bottom:4px;}
+  .sheet .sub{font-size:13px;color:var(--dim);margin-bottom:16px;}
+  .fld{margin-bottom:14px;}
+  .fld label{font-size:13px;font-weight:700;color:var(--ink);display:block;
+             margin-bottom:6px;}
+  .fld select,.fld input{width:100%;padding:11px 13px;border:2px solid var(--line);
+        border-radius:12px;font-size:14px;font-family:inherit;background:#fffdfb;
+        color:var(--ink);}
+  .fld select:focus,.fld input:focus{outline:none;border-color:var(--brand);}
+  .pays{display:grid;gap:8px;}
+  .pay{display:flex;align-items:center;gap:10px;border:2px solid var(--line);
+       border-radius:12px;padding:11px 13px;font-size:14px;cursor:pointer;
+       transition:.15s;}
+  .pay:has(input:checked){border-color:var(--brand);background:#fff5f0;}
+  .pay b{font-size:14px;}
+  .pay small{color:var(--dim);display:block;font-size:12px;}
+  .note{font-size:11.5px;color:var(--dim);background:#fff7ee;
+        border:1px dashed #f0d8bf;border-radius:10px;padding:9px 12px;margin:12px 0;}
+
+  /* ── 完成 / 追蹤 ── */
+  .done{text-align:center;padding:10px 0;}
+  .done .big{font-size:70px;}
+  .done h2{margin:6px 0;}
+  .ordno{font-family:Consolas,monospace;background:#fff3ea;color:var(--brand);
+         font-weight:800;padding:4px 12px;border-radius:8px;font-size:14px;}
+  .track{margin:18px 0 6px;text-align:left;}
+  .step{display:flex;gap:12px;padding:9px 0;align-items:flex-start;opacity:.35;
+        transition:.4s;}
+  .step.hit{opacity:1;}
+  .step .dot{width:26px;height:26px;border-radius:99px;background:#f0e4da;
+             display:flex;align-items:center;justify-content:center;font-size:13px;
+             flex-shrink:0;margin-top:2px;}
+  .step.hit .dot{background:var(--ok);color:#fff;}
+  .step .tt{font-size:14px;font-weight:700;}
+  .step .td{font-size:12px;color:var(--dim);}
+  .scooter{font-size:26px;display:inline-block;
+           animation:ride 2.2s ease-in-out infinite;}
+  @keyframes ride{0%,100%{transform:translateX(-14px)}50%{transform:translateX(14px)}}
+
+  footer{border-top:1px solid var(--line);background:#fff;padding:34px 20px 44px;}
+  .fwrap{max-width:760px;margin:0 auto;font-size:13.5px;color:var(--dim);}
+  .fwrap h3{color:var(--ink);font-size:16px;margin-bottom:8px;}
+  .fwrap p{margin:8px 0;}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);
+         background:var(--ink);color:#fff;font-size:14px;font-weight:600;
+         padding:11px 22px;border-radius:99px;z-index:99;transition:.3s;opacity:0;}
+  .toast.on{transform:translateX(-50%);opacity:1;}
+  .confetti{position:fixed;top:-12px;z-index:98;font-size:20px;pointer-events:none;
+            animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.6;}}
+</style>
+</head>
+<body>
+
+<div class="honest">🎭 本站是<b>娛樂用的模擬購物網站</b> — 不會收費・不會出貨・不收集任何個人資料，純粹讓你買個爽</div>
+
+<header>
+  <div class="hwrap">
+    <div class="logo">買爽的<small>MAISONGDE.SHOP</small></div>
+    <nav class="tabs" id="tabs"></nav>
+    <button class="cartbtn" onclick="openCart()">🛒 購物車<span class="badge" id="badge">0</span></button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>錢包毫髮無傷，<br><span>多巴胺照樣噴發</span></h1>
+  <p>盡情逛、盡情買、豪邁結帳 — 反正不用錢，也不會有包裹。靈感來自韓國爆紅的「多巴胺網站」。</p>
+  <div class="stats">
+    <div class="stat"><div class="n" id="stSaved">NT$0</div><div class="l">你今天沒花掉的錢</div></div>
+    <div class="stat"><div class="n" id="stOrders">0</div><div class="l">你的假訂單數</div></div>
+    <div class="stat"><div class="n">∞</div><div class="l">夢幻幣餘額</div></div>
+  </div>
+</section>
+
+<main class="grid" id="grid"></main>
+
+<footer>
+  <div class="fwrap">
+    <h3>關於「買爽的」</h3>
+    <p>這是一個<strong>多巴胺網站（Dopamine Site）</strong>：模擬完整的網購流程 — 逛街、比價、加入購物車、結帳、追蹤出貨 — 但全程不涉及任何金錢，也永遠不會有商品送達。</p>
+    <p>心理學研究認為，網購的快感大多來自「挑選與期待」的過程本身，而不是收到商品的那一刻。想亂花錢的時候，來這裡把流程走完一遍，衝動就消化掉了 — 錢包還是滿的。</p>
+    <p><strong>我們不收費、沒有金流、不會要求你輸入信用卡或任何真實個資。</strong>訂單紀錄只存在你自己瀏覽器的 localStorage 裡，本站沒有伺服器資料庫。所有品牌與商品皆為虛構，如有雷同，純屬你想太多。</p>
+    <p style="margin-top:14px">🧾 檢舉前請先看這段：本站無任何付款功能，不符合詐欺構成要件（無財物交付、無詐術）。我們跟 165 是同一邊的 — 真正的購物詐騙網站不會告訴你「你不會收到貨」。</p>
+  </div>
+</footer>
+
+<!-- 購物車 -->
+<div class="veil" id="veil" onclick="closeAll()"></div>
+<aside class="drawer" id="drawer">
+  <div class="dhead"><h2>🛒 購物車</h2><button class="x" onclick="closeAll()">✕</button></div>
+  <div class="dbody" id="cartBody"></div>
+  <div class="dfoot">
+    <div class="total"><span>總金額</span><span class="amt" id="cartTotal">NT$0</span></div>
+    <div class="hint">實付金額：NT$0（永遠）</div>
+    <button class="cta" id="checkoutBtn" onclick="openCheckout()">前往結帳</button>
+  </div>
+</aside>
+
+<!-- 結帳 -->
+<div class="modal" id="checkout">
+  <div class="sheet">
+    <h2>結帳 🧾</h2>
+    <div class="sub">放心按，這裡沒有任何一個欄位連著你的錢。</div>
+    <div class="fld">
+      <label>收件人稱謂</label>
+      <select id="fName">
+        <option>尊貴的我本人</option>
+        <option>未來的有錢人</option>
+        <option>今天不想努力的人</option>
+        <option>拿鐵因子絕緣體</option>
+      </select>
+    </div>
+    <div class="fld">
+      <label>配送地點</label>
+      <select id="fAddr">
+        <option>夢裡（免運）</option>
+        <option>平行宇宙 7-11 取貨</option>
+        <option>我心裡最柔軟的地方</option>
+        <option>下輩子的家</option>
+      </select>
+    </div>
+    <div class="fld">
+      <label>付款方式</label>
+      <div class="pays">
+        <label class="pay"><input type="radio" name="pay" checked>
+          <span><b>💎 夢幻幣</b><small>餘額 ∞，怎麼刷都刷不完</small></span></label>
+        <label class="pay"><input type="radio" name="pay">
+          <span><b>🌬️ 空氣 Pay</b><small>感應即付，連手機都不用拿出來</small></span></label>
+        <label class="pay"><input type="radio" name="pay">
+          <span><b>🧘 心靈分期</b><small>0 期 0 利率，因為根本沒有帳單</small></span></label>
+      </div>
+    </div>
+    <div class="note">🔒 本站不需要也<b>絕不會</b>要求信用卡號、真實姓名、地址或電話。任何要你輸入這些資料的「免費購物網站」都是詐騙，請直接檢舉 165。</div>
+    <button class="cta" onclick="placeOrder()">確認付款 NT$0</button>
+    <button style="width:100%;padding:10px;color:var(--dim);font-size:13px;margin-top:6px" onclick="closeAll()">再逛一下</button>
+  </div>
+</div>
+
+<!-- 訂單完成 + 追蹤 -->
+<div class="modal" id="doneModal">
+  <div class="sheet done">
+    <div class="big">🎉</div>
+    <h2>付款成功！才怪 😄</h2>
+    <p style="font-size:14px;color:var(--dim)">訂單編號 <span class="ordno" id="ordNo"></span></p>
+    <div class="track" id="track"></div>
+    <div style="margin:6px 0 14px"><span class="scooter">🛵💨</span></div>
+    <p style="font-size:13px;color:var(--dim)">預計送達時間：<b style="color:var(--brand)">永遠不會</b>（這就是重點）</p>
+    <button class="cta" style="margin-top:14px" onclick="closeAll()">爽完了，繼續逛</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const PRODUCTS = [
+  {c:"精品",e:"👜",b:"LUXÉ VOID",n:"夢想名牌包",d:"容量無限大，因為裡面什麼都沒有。",p:1280000,o:2560000,r:4.9,rv:8721},
+  {c:"精品",e:"⌚",b:"NEVERTIME",n:"時間靜止腕錶",d:"戴上的瞬間，週一永遠不會來。",p:9990000,o:12000000,r:4.8,rv:3204},
+  {c:"精品",e:"💍",b:"CARBONIA",n:"十克拉空氣鑽戒",d:"跟真鑽同樣成分（碳），純度更高。",p:6660000,r:5.0,rv:999},
+  {c:"精品",e:"🏝️",b:"ISLA NADA",n:"私人小島（迷你）",d:"漲潮時暫停營業。含一棵椰子樹。",p:88800000,r:4.7,rv:156},
+  {c:"3C",e:"🚁",b:"SKYWHATEVER",n:"通勤用直升機",d:"再也不用擠捷運，因為它飛不起來。",p:45000000,r:4.6,rv:412},
+  {c:"3C",e:"🤖",b:"LAZYTECH",n:"幫你上班機器人",d:"會議中會自動點頭，老闆看不出來。",p:2990000,o:3990000,r:4.9,rv:15302},
+  {c:"3C",e:"📱",b:"NOPHONE",n:"防沉迷手機 Pro",d:"打開任何 App 都顯示「去睡覺」。",p:36900,r:4.4,rv:7788},
+  {c:"3C",e:"👟",b:"VELOCITÀ",n:"光速跑鞋",d:"穿上後跑步的感覺跟平常一樣，但心裡快很多。",p:128000,o:158000,r:4.8,rv:5566},
+  {c:"療癒",e:"😴",b:"好眠研究所",n:"一夜好眠（7小時裝）",d:"不含半夜3點的焦慮。保存期限：到明天早上。",p:3900,r:5.0,rv:88420},
+  {c:"療癒",e:"🫙",b:"心靈選品",n:"平靜的心（久放不壞）",d:"開罐後請盡速使用，遇到已讀不回會揮發。",p:5200,r:4.9,rv:45671},
+  {c:"療癒",e:"🍀",b:"心靈選品",n:"中樂透的感覺",d:"只有感覺。號碼另購（沒有販售）。",p:100,o:2000,r:4.9,rv:203944},
+  {c:"療癒",e:"💆",b:"好眠研究所",n:"拖延症特效藥",d:"預計明天出貨。後天。大後天吧。",p:990,r:3.2,rv:66666},
+  {c:"荒謬",e:"🫧",b:"ALPINE AIR",n:"罐裝頂級空氣",d:"阿爾卑斯山限定。開罐即逝，跟青春一樣。",p:128000,r:4.7,rv:2310},
+  {c:"荒謬",e:"👑",b:"皇家御用",n:"國王的新衣",d:"只有聰明人看得見。乾洗會消失。",p:999999,r:4.8,rv:1912},
+  {c:"荒謬",e:"🐈",b:"貓皇認證",n:"貓咪的尊重",d:"極稀有。本品可能不存在。",p:9999999,r:5.0,rv:31415},
+  {c:"荒謬",e:"🗣️",b:"職場幻想",n:"老闆的讚美（限量）",d:"錄音檔格式。內容：「嗯，還行。」",p:750000,o:990000,r:4.5,rv:9527},
+];
+const CATS = ["全部","精品","3C","療癒","荒謬"];
+const $ = id => document.getElementById(id);
+const NT = n => "NT$" + n.toLocaleString("zh-Hant-TW");
+
+let cart = {};   // idx -> qty
+let curCat = "全部";
+
+/* ── localStorage（只存在使用者自己的瀏覽器）── */
+const store = {
+  get orders(){ try{return JSON.parse(localStorage.msd_orders||"[]")}catch(e){return[]} },
+  set orders(v){ localStorage.msd_orders = JSON.stringify(v.slice(-50)); }
+};
+
+/* ── 渲染 ── */
+function renderTabs(){
+  $("tabs").innerHTML = CATS.map(c =>
+    `<button class="tab ${c===curCat?"on":""}" onclick="setCat('${c}')">${c}</button>`).join("");
+}
+function setCat(c){ curCat=c; renderTabs(); renderGrid(); }
+
+function renderGrid(){
+  const list = PRODUCTS.map((p,i)=>({...p,i}))
+                       .filter(p => curCat==="全部" || p.c===curCat);
+  $("grid").innerHTML = list.map(p => `
+    <article class="card">
+      <div class="pic">${p.e}</div>
+      <div class="body">
+        <div class="brand">${p.b}</div>
+        <div class="name">${p.n}</div>
+        <div class="desc">${p.d}</div>
+        <div class="rating">${"★".repeat(Math.round(p.r))}<i> ${p.r}（${p.rv.toLocaleString()} 則虛構好評）</i></div>
+        <div class="row">
+          <div class="price">${p.o?`<s>${NT(p.o)}</s>`:""}${NT(p.p)}</div>
+          <button class="add" onclick="addCart(${p.i})">爽買</button>
+        </div>
+      </div>
+    </article>`).join("");
+}
+
+function cartCount(){ return Object.values(cart).reduce((a,b)=>a+b,0); }
+function cartSum(){ return Object.entries(cart).reduce((s,[i,q])=>s+PRODUCTS[i].p*q,0); }
+
+function addCart(i){
+  cart[i] = (cart[i]||0)+1;
+  syncBadge();
+  toast(`已加入 — ${PRODUCTS[i].n} 🎊`);
+}
+function chQty(i,d){
+  cart[i]=(cart[i]||0)+d;
+  if(cart[i]<=0) delete cart[i];
+  syncBadge(); renderCart();
+}
+function syncBadge(){
+  const n = cartCount();
+  const b = $("badge");
+  b.textContent = n;
+  b.classList.toggle("show", n>0);
+}
+function renderCart(){
+  const keys = Object.keys(cart);
+  $("cartBody").innerHTML = keys.length ? keys.map(i=>{
+    const p = PRODUCTS[i];
+    return `<div class="item"><div class="e">${p.e}</div>
+      <div class="info"><div class="nm">${p.n}</div><div class="pr">${NT(p.p)}</div></div>
+      <div class="qty"><button onclick="chQty(${i},-1)">−</button><span>${cart[i]}</span><button onclick="chQty(${i},1)">＋</button></div>
+    </div>`;
+  }).join("") :
+  `<div class="empty"><span class="e">🛒</span>購物車空空的<br>去挑幾個買不起的東西吧</div>`;
+  $("cartTotal").textContent = NT(cartSum());
+  $("checkoutBtn").disabled = !keys.length;
+}
+
+/* ── 開關 ── */
+function openCart(){ renderCart(); $("veil").classList.add("on"); $("drawer").classList.add("on"); }
+function openCheckout(){ $("drawer").classList.remove("on"); $("checkout").classList.add("on"); }
+function closeAll(){ ["drawer","checkout","doneModal"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
+
+/* ── 下單 ── */
+function placeOrder(){
+  const no = "MS" + Date.now().toString(36).toUpperCase();
+  const sum = cartSum();
+  const orders = store.orders;
+  orders.push({no, sum, t: Date.now(), n: cartCount()});
+  store.orders = orders;
+  cart = {}; syncBadge();
+
+  $("checkout").classList.remove("on");
+  $("ordNo").textContent = no;
+  renderTrack(Date.now());
+  $("doneModal").classList.add("on");
+  confetti();
+  syncStats();
+}
+
+/* ── 出貨追蹤（永遠到不了）── */
+const STEPS = [
+  ["✅","已接單","系統秒速確認，效率跟真的一樣"],
+  ["📦","理貨中","倉庫小精靈正在打包一個空氣"],
+  ["🛵","快遞員已出發","他真的很努力在騎（原地）"],
+  ["♾️","配送中","距離你家：永遠差一條街"],
+];
+let trackTimer;
+function renderTrack(t0){
+  clearInterval(trackTimer);
+  const el = $("track");
+  el.innerHTML = STEPS.map((s,i)=>`
+    <div class="step" id="stp${i}"><div class="dot">${s[0]}</div>
+    <div><div class="tt">${s[1]}</div><div class="td">${s[2]}</div></div></div>`).join("");
+  const gates = [0, 1500, 3500, 6000];
+  const tick = ()=>{
+    const dt = Date.now()-t0;
+    gates.forEach((g,i)=>{ if(dt>=g) $("stp"+i)?.classList.add("hit"); });
+    if(dt > 6000) clearInterval(trackTimer);
+  };
+  tick(); trackTimer = setInterval(tick, 400);
+}
+
+/* ── 統計 ── */
+function syncStats(){
+  const o = store.orders;
+  $("stOrders").textContent = o.length;
+  $("stSaved").textContent = NT(o.reduce((s,x)=>s+x.sum,0));
+}
+
+/* ── 特效 ── */
+let toastTimer;
+function toast(msg){
+  const t = $("toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove("on"), 1600);
+}
+function confetti(){
+  const EMO = ["🎉","✨","💸","🎊","💖","⭐"];
+  for(let i=0;i<36;i++){
+    const s = document.createElement("span");
+    s.className = "confetti";
+    s.textContent = EMO[i%EMO.length];
+    s.style.left = Math.random()*100+"vw";
+    s.style.animationDuration = (1.4+Math.random()*1.6)+"s";
+    s.style.animationDelay = Math.random()*.5+"s";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), 3600);
+  }
+}
+
+renderTabs(); renderGrid(); syncBadge(); syncStats();
+</script>
+</body>
+</html>
