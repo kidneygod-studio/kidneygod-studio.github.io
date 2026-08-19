@@ -213,7 +213,7 @@
 </head>
 <body>
 
-<div class="honest">🫘 本站是<b>娛樂用的護腎衛教模擬商城</b> — 不收費・不收集資料・唯一會出貨的是護腎知識</div>
+<div class="honest">🫘 本站是<b>娛樂用的護腎衛教模擬商城</b> — 不收費・不會要求信用卡・唯一會出貨的是護腎知識</div>
 
 <header>
   <div class="hwrap">
@@ -225,6 +225,7 @@
     <button class="hbtn coin" onclick="scrollGame()">🫘 <span id="coinBal">100</span> 腎元</button>
     <button class="hbtn" onclick="openLib()">📚 知識庫<span class="badge" id="libBadge">0</span></button>
     <button class="hbtn" onclick="openCart()">🛒<span class="badge" id="badge">0</span></button>
+    <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
   </div>
   <nav class="cats" id="tabs"></nav>
 </header>
@@ -255,7 +256,8 @@
   <div class="fwrap">
     <h3>關於「護腎教室」護腎知識商城</h3>
     <p>這是一個<strong>衛教遊戲化網站</strong>：用完整的網購體驗包裝護腎知識 — 逛街、比價、賺腎元、結帳、追蹤出貨 — 全程不涉及任何金錢，而且這次真的會出貨：<strong>出的是護腎知識，直接送進你的知識庫。</strong></p>
-    <p><strong>我們不收費、沒有金流、不會要求你輸入信用卡或任何真實個資。</strong>腎元是純遊戲幣，賺不了真錢也買不了真商品。知識庫與腎元只存在你自己瀏覽器的 localStorage，本站沒有伺服器資料庫。銷售量與好評數是編的，但衛教內容是認真的。</p>
+    <p><strong>我們不收費、沒有金流、不會要求你輸入信用卡。</strong>腎元是純遊戲幣，賺不了真錢也買不了真商品。銷售量與好評數是編的，但衛教內容是認真的。</p>
+    <p>🔐 <strong>隱私說明：</strong>未登入時，你的進度（腎元、知識庫、最高分）只存在你自己瀏覽器的 localStorage，本站不會取得。若你<strong>選擇</strong>使用雲端同步：「匿名開始」只會產生一組隨機識別碼，不涉及任何個人資料；「Google 登入」會取得你的 email 與顯示名稱，<strong>僅用於帳號識別與進度同步</strong>，不作行銷使用、不提供第三人，資料儲存於 Google Firebase。本站不經手任何密碼（登入視窗由 Google 官方提供）。你可隨時在帳號視窗登出，或使用「刪除雲端資料」將同步資料自伺服器移除。</p>
     <p>⚕️ <strong>醫療免責聲明：</strong>本站衛教內容為一般性健康知識，不能取代醫師診斷與治療建議。腎功能異常、用藥問題請諮詢腎臟科醫師或藥師；有症狀請就醫。</p>
     <p style="margin-top:14px">🧾 檢舉前請先看這段：本站無任何付款功能，不符合詐欺構成要件（無財物交付、無詐術）。真正的購物詐騙網站不會教你保護腎臟。</p>
   </div>
@@ -310,6 +312,17 @@
     <div class="note">🔒 本站不需要也<b>絕不會</b>要求信用卡號、真實姓名、地址或電話。腎元用完了？去玩「小腎臟大冒險」賺，順便練習躲開傷腎因子。</div>
     <button class="cta" id="payBtn" onclick="placeOrder()">確認付款</button>
     <button style="width:100%;padding:10px;color:var(--dim);font-size:13px;margin-top:6px" onclick="closeAll()">再逛一下</button>
+  </div>
+</div>
+
+<!-- 帳號 / 雲端同步 -->
+<div class="modal" id="account">
+  <div class="sheet">
+    <h2>☁️ 雲端進度同步</h2>
+    <div class="sub" id="accStatus">未登入 — 進度目前只存在這台裝置的瀏覽器裡</div>
+    <div id="accActions"></div>
+    <div class="note">🔒 本站<b>不經手任何密碼</b>：Google 登入視窗由 Google 官方提供。匿名開始不需要提供任何資料；之後可隨時升級成 Google 帳號，把進度帶到其他裝置。詳見頁尾隱私說明。</div>
+    <button style="width:100%;padding:10px;color:var(--dim);font-size:13px;margin-top:6px" onclick="closeAll()">關閉</button>
   </div>
 </div>
 
@@ -420,17 +433,55 @@ let curCat = "全部";
 /* ── localStorage ── */
 const store = {
   get coins(){ const v = parseInt(localStorage.msd_coins); return isNaN(v) ? 100 : v; },
-  set coins(v){ localStorage.msd_coins = Math.max(0, v); },
+  set coins(v){ localStorage.msd_coins = Math.max(0, v); syncPush(); },
   get lib(){ try{return JSON.parse(localStorage.msd_lib||"[]")}catch(e){return[]} },
-  set lib(v){ localStorage.msd_lib = JSON.stringify(v); },
+  set lib(v){ localStorage.msd_lib = JSON.stringify(v); syncPush(); },
   get orders(){ try{return JSON.parse(localStorage.msd_orders||"[]")}catch(e){return[]} },
   set orders(v){ localStorage.msd_orders = JSON.stringify(v.slice(-50)); },
   get gifts(){ try{return JSON.parse(localStorage.msd_gifts||"{}")}catch(e){return{}} },
-  set gifts(v){ localStorage.msd_gifts = JSON.stringify(v); },
+  set gifts(v){ localStorage.msd_gifts = JSON.stringify(v); syncPush(); },
   get best(){ return parseInt(localStorage.msd_best)||0; },
-  set best(v){ localStorage.msd_best = v; },
+  set best(v){ localStorage.msd_best = v; syncPush(); },
 };
-if(localStorage.msd_coins === undefined) store.coins = 100;
+if(localStorage.msd_coins === undefined) localStorage.msd_coins = 100;
+
+/* ── 雲端同步掛鉤（Firebase 模組載入後接手；未設定時為空操作）── */
+let syncT;
+function syncPush(){
+  if(!window.cloud) return;
+  clearTimeout(syncT);
+  syncT = setTimeout(()=>window.cloud.push(), 1500);
+}
+function getLocalState(){
+  return {coins:store.coins, lib:store.lib, gifts:store.gifts, best:store.best};
+}
+function applyState(s){
+  if(!s) return;
+  localStorage.msd_coins = Math.max(0, s.coins ?? 100);
+  localStorage.msd_lib   = JSON.stringify(s.lib || []);
+  localStorage.msd_gifts = JSON.stringify(s.gifts || {});
+  localStorage.msd_best  = s.best || 0;
+  syncCoins(); renderGrid(); renderGifts();
+  $("gBest").textContent = store.best;
+}
+/* 合併雲端與本機：腎元/最高分取大者、知識庫取聯集、禮包取已領狀態 */
+function mergeState(cloud, local){
+  const lib = [...(cloud.lib||[])];
+  (local.lib||[]).forEach(k=>{ if(!lib.some(x=>x.id===k.id)) lib.push(k); });
+  const gifts = {...(cloud.gifts||{})};
+  Object.entries(local.gifts||{}).forEach(([k,v])=>{
+    if(!gifts[k] || (typeof v==="string" && v > gifts[k])) gifts[k]=v;
+  });
+  return {
+    coins: Math.max(cloud.coins ?? 0, local.coins ?? 0),
+    best:  Math.max(cloud.best ?? 0,  local.best ?? 0),
+    lib, gifts,
+  };
+}
+function openAccount(){
+  if(window.cloud) window.cloud.renderAccount();
+  $("veil").classList.add("on"); $("account").classList.add("on");
+}
 
 function owned(id){ return store.lib.some(k=>k.id===id); }
 function syncCoins(){
@@ -558,7 +609,7 @@ function openCheckout(){
   $("payBtn").disabled = cartSum() > store.coins;
   $("checkout").classList.add("on");
 }
-function closeAll(){ ["drawer","libDrawer","checkout","doneModal"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
+function closeAll(){ ["drawer","libDrawer","checkout","doneModal","account"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
 
 /* ── 下單：扣腎元、知識入庫 ── */
 function placeOrder(){
@@ -810,6 +861,102 @@ renderTabs(); renderGrid(); renderMarq(); renderGifts();
 syncBadge(); syncCoins();
 $("gBest").textContent = store.best;
 gLoop();
+</script>
+
+<script type="module">
+/* ═══════════ 雲端進度同步（Firebase）═══════════
+   啟用方式：把下面的 null 換成 Firebase console > 專案設定 > 一般 >
+   「你的應用程式」SDK 設定物件（apiKey 等為公開識別碼，可放前端）。
+   未填入時本區塊自動休眠，網站功能不受影響。 */
+const FIREBASE_CONFIG = null;
+
+if (FIREBASE_CONFIG) {
+  const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js");
+  const { getAuth, onAuthStateChanged, signInAnonymously, GoogleAuthProvider,
+          signInWithPopup, linkWithPopup, signOut } =
+    await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js");
+  const { getFirestore, doc, getDoc, setDoc, deleteDoc } =
+    await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+
+  const app  = initializeApp(FIREBASE_CONFIG);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+  let user = null;
+
+  const userDoc = () => doc(db, "users", user.uid);
+
+  async function pull(){
+    try{
+      const snap = await getDoc(userDoc());
+      const cloudState = snap.exists() ? snap.data() : {};
+      const merged = mergeState(cloudState, getLocalState());
+      applyState(merged);
+      await setDoc(userDoc(), {...merged, updatedAt: Date.now()});
+      toast("☁️ 進度已同步");
+    }catch(e){ console.error("sync pull failed", e); toast("⚠️ 同步失敗，稍後再試"); }
+  }
+
+  window.cloud = {
+    async push(){
+      if(!user) return;
+      try{ await setDoc(userDoc(), {...getLocalState(), updatedAt: Date.now()}); }
+      catch(e){ console.error("sync push failed", e); }
+    },
+    renderAccount(){
+      const box = document.getElementById("accActions");
+      const st  = document.getElementById("accStatus");
+      const btn = (label, fn, alt) =>
+        `<button class="cta${alt?" alt":""}" style="margin-bottom:8px" data-act="${fn}">${label}</button>`;
+      if(!user){
+        st.textContent = "未登入 — 進度目前只存在這台裝置的瀏覽器裡";
+        box.innerHTML = btn("使用 Google 登入", "google", true) + btn("先匿名開始（不留任何資料）", "anon");
+      }else if(user.isAnonymous){
+        st.textContent = "匿名同步中 — 識別碼 " + user.uid.slice(0,8) + "…（僅限此瀏覽器）";
+        box.innerHTML = btn("升級成 Google 帳號（進度可跨裝置）", "link", true) +
+                        btn("登出", "logout") + btn("刪除雲端資料", "wipe");
+      }else{
+        st.textContent = "已登入：" + (user.email || user.displayName || "Google 帳號");
+        box.innerHTML = btn("登出", "logout") + btn("刪除雲端資料", "wipe");
+      }
+      box.querySelectorAll("button").forEach(b=>{
+        b.onclick = () => window.cloud[b.dataset.act]();
+      });
+    },
+    async google(){
+      try{ await signInWithPopup(auth, provider); closeAll(); }
+      catch(e){ console.error(e); toast("⚠️ Google 登入未完成"); }
+    },
+    async anon(){
+      try{ await signInAnonymously(auth); closeAll(); }
+      catch(e){ console.error(e); toast("⚠️ 匿名登入未完成"); }
+    },
+    async link(){
+      try{ await linkWithPopup(auth.currentUser, provider); toast("✅ 已升級為 Google 帳號"); this.renderAccount(); }
+      catch(e){ console.error(e); toast("⚠️ 升級未完成（此 Google 帳號可能已有資料）"); }
+    },
+    async logout(){ await signOut(auth); closeAll(); toast("已登出，進度保留在本機"); },
+    async wipe(){
+      if(!user) return;
+      try{
+        await deleteDoc(userDoc());
+        const u = auth.currentUser;
+        await signOut(auth);
+        try{ await u.delete(); }catch(e){ /* 需重新驗證時僅刪文件 */ }
+        closeAll(); toast("☁️ 雲端資料已刪除，本機進度保留");
+      }catch(e){ console.error(e); toast("⚠️ 刪除失敗，稍後再試"); }
+    },
+  };
+
+  onAuthStateChanged(auth, u => {
+    user = u;
+    const label = document.getElementById("loginLabel");
+    if(u){ label.textContent = u.isAnonymous ? "匿名同步中" : "已同步"; pull(); }
+    else { label.textContent = "登入"; }
+  });
+
+  document.getElementById("loginBtn").style.display = "";
+}
 </script>
 </body>
 </html>
