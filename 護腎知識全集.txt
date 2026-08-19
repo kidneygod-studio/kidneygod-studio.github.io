@@ -340,4 +340,4 @@
 腎功能異常、用藥問題請諮詢腎臟科醫師或藥師；有症狀請就醫。
 
 內容出處：護腎教室 KidneyGod.Studio
-https://shockdroger.github.io/kidneygod/
+https://kidneygod-studio.github.io/kidneygod/
