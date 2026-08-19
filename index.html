@@ -137,6 +137,12 @@
   .dl:active{transform:scale(.93);}
   .setg{font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:5px;
         background:#f0eaff;color:var(--accent);border:1px solid #ddd0ff;}
+  .attg{font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:5px;margin-left:4px;
+        background:#e9f9f1;color:var(--ok);border:1px solid #bfeeda;white-space:nowrap;}
+  .dl.att{font-size:12px;padding:6px 11px;}
+  .libatt{display:inline-block;margin-top:8px;background:var(--ok);color:#fff;
+          font-size:12.5px;font-weight:800;padding:5px 12px;border-radius:99px;
+          text-decoration:none;}
   .rare{font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:5px;margin-left:4px;
         background:linear-gradient(90deg,#ffd76e,#ffb03a);color:#6b4200;
         border:1px solid #f0b850;}
@@ -390,6 +396,7 @@
 const PRODUCTS = [
  /* 用藥安全 */
  {id:"nsaid",c:"用藥安全",e:"💊",b:"藥安心",n:"NSAID 止痛藥使用說明書 腎臟頭號黑名單 附「先問藥師」提示卡",p:35,o:50,r:4.9,rv:8721,s:12345,
+  dl:"card-nsaid.png",dn:"「先問藥師」提示卡",
   k:{t:"NSAID 止痛藥：腎臟的頭號黑名單",b:"布洛芬、雙氯芬酸等非類固醇消炎止痛藥（NSAID）會抑制前列腺素，讓腎臟血流減少。健康人偶爾短期使用通常沒事，但在脫水、年長、慢性腎臟病，或同時使用利尿劑與降壓藥（ACEI/ARB）時，急性腎損傷風險大幅上升——這個組合在醫界被稱為「三重打擊」。腎功能不好的人止痛請先與醫師或藥師討論，普拿疼（乙醯胺酚）在建議劑量內對腎臟相對安全。"}},
  {id:"unknown-med",c:"用藥安全",e:"🏴",b:"藥安心",n:"來路不明止痛藥鑑定指南 地下電台特供版(反串) 認明藥品許可證",p:30,r:4.8,rv:6543,s:9876,
   k:{t:"來路不明的止痛藥，成分永遠是驚喜",b:"地下電台、遊覽車團購、標示不清的「祖傳秘方」止痛粉，經常摻入高劑量 NSAID、類固醇，甚至已禁用成分。長期服用不明複方止痛藥與慢性間質性腎炎、止痛藥腎病變有明確關聯。買藥認明兩件事：包裝上的衛福部藥品許可證字號，以及願意回答你問題的藥師。便宜有效又神秘的藥，通常是腎臟在幫你付帳。"}},
@@ -458,8 +465,10 @@ const PRODUCTS = [
  {id:"dialysis-myth",c:"警訊與迷思",e:"🩸",b:"迷思破解",n:"「洗腎都是吃西藥害的」終極破解 亂停藥才是真兇",p:35,r:4.9,rv:14567,s:19876,
   k:{t:"「洗腎是西藥吃太多」？真相恰恰相反",b:"台灣人進入透析的最主要原因是糖尿病與高血壓控制不良，不是「按醫囑吃藥」。這個迷思最大的傷害在於：病人因為怕「吃藥傷腎」自行停掉降壓藥降糖藥，改吃來路不明的偏方——結果血壓血糖失控，腎臟加速報銷，反而應驗了預言。事實是：正規的降壓藥（ACEI/ARB）與排糖藥（SGLT2i）是目前實證最強的「護腎藥」。真正該怕的是不明藥物、NSAID 濫用與擅自停藥。相信你的腎臟科醫師，規律回診，這是保住腎功能最可靠的路。"}},
  {id:"bp-130",c:"血壓管理",e:"🩺",b:"血壓管家",n:"高血壓新標準 130/80 解讀卡 2022 台灣指引下修版 附居家量測對照表",p:30,o:45,r:4.5,rv:3200,s:2100,
+  dl:"table-bp.png",dn:"居家血壓對照表",
   k:{t:"130/80：台灣的高血壓標準為什麼下修了",b:"2022 年台灣高血壓治療指引把診斷標準從 140/90 下修到 130/80 mmHg，依據之一是以華人為主要受試者的 STEP 研究——把收縮壓控制在 130 以下，心血管事件風險下降約 26%。這不是把更多人「變成病人」，而是把介入時機提早到器官還沒受損之前。對腎臟尤其重要：血壓每高一階，腎絲球就多承受一分壓力，而腎功能一旦掉下去就回不來。看到 132/84 別再說「才一點點」。"}},
  {id:"bp-722",c:"血壓管理",e:"📋",b:"血壓管家",n:"居家血壓 722 量測法 連續7天早晚2次每次2遍 附紀錄表",p:25,r:4.6,rv:4573,s:3077,
+  dl:"sheet-722.png",dn:"722 血壓紀錄表",
   k:{t:"722 原則：血壓要在家量，不是在診間量",b:"新版指引最大的改變之一，是把「居家血壓」當成主要判斷依據，而不是診間量的那一次。做法就是 722：連續 7 天、早晚各 2 次、每次量 2 遍取平均。早上起床後一小時內、上廁所後、吃藥前量；晚上睡前量。量之前先靜坐五分鐘，背靠椅背、腳平放地面、手臂與心臟同高。一週的平均值比任何單次數字都有意義，回診時把紀錄帶去，醫師調藥才有依據。"}},
  {id:"bp-whitecoat",c:"血壓管理",e:"🥼",b:"血壓管家",n:"白袍高血壓 vs 隱匿性高血壓 鑑別指南 為什麼診間與家裡數字不一樣",p:30,r:4.7,rv:5946,s:4054,
   k:{t:"白袍高血壓與隱匿性高血壓：哪一個比較危險",b:"有人一進診間血壓就飆，回家卻正常，這叫白袍高血壓；反過來，診間量起來漂亮、在家或上班時卻偏高，叫隱匿性高血壓。後者更值得警惕——因為它平常不會被抓到，器官卻一直在受傷，心血管與腎臟風險接近真正的高血壓患者。這正是指引改以居家血壓為準的原因。只在診間量血壓，等於只在體檢當天觀察一個人的作息。"}},
@@ -478,8 +487,10 @@ const PRODUCTS = [
  {id:"bp-howto",c:"血壓管理",e:"📐",b:"血壓管家",n:"量血壓常見錯誤糾正表 姿勢袖帶時間點一次矯正",p:20,o:30,r:4.9,rv:15557,s:10893,
   k:{t:"血壓量錯了，後面的治療都是猜的",b:"常見的五個錯誤：量之前剛走完路或喝完咖啡（要先靜坐五分鐘）、翹腳或腳懸空（要平放地面）、手臂垂放或抬太高（要與心臟同高）、袖帶太小或隔著厚衣服（袖帶要合尺寸、直接貼上臂）、憋著尿量（膀胱脹會讓血壓上升）。另外，量兩遍取平均比只量一次可靠，兩次之間間隔約一分鐘。手腕式血壓計方便但容易因姿勢誤差失準，若要用於長期追蹤，建議還是選上臂式並定期校正。"}},
  {id:"dm-no1",c:"血糖管理",e:"🥇",b:"血糖控管所",n:"糖尿病腎病變警示包 台灣洗腎第一大原因 附三段惡化路徑圖",p:35,o:50,r:4.5,rv:16930,s:11870,
+  dl:"chart-dn.png",dn:"腎病變路徑圖",
   k:{t:"糖尿病是台灣洗腎的第一大原因",b:"依 2022 台灣腎病年報，2020 年進入透析的患者中，前一年已有糖尿病的比率接近五成；台灣的透析發生率與盛行率長年位居世界前列。糖尿病傷腎的路徑很安靜：先是腎絲球高過濾，接著出現微量白蛋白尿，然後蛋白尿變多、eGFR 開始下滑，最後進入末期腎病。前面兩個階段幾乎沒有症狀，卻正是唯一能有效逆轉或延緩的窗口。所以糖尿病患者最重要的護腎動作不是吃什麼補品，而是每年準時驗尿。"}},
  {id:"dm-a1c",c:"血糖管理",e:"🍬",b:"血糖控管所",n:"糖化血色素 HbA1c 判讀器 目標 7% 個別化說明 附血糖換算表",p:30,r:4.6,rv:18303,s:12847,
+  dl:"table-a1c.png",dn:"HbA1c 換算表",
   k:{t:"HbA1c：三個月的血糖成績單",b:"糖化血色素反映的是近二到三個月的平均血糖，不會因為抽血前一天忌口就變漂亮，這是它比空腹血糖更能反映真實控制狀況的原因。一般成人的控制目標是 7% 以下，但要個別化：年輕、病程短、沒有併發症的人可以更嚴格；年長、有心血管疾病、容易低血糖或獨居的人，目標會放寬到 7.5–8%，因為對這些人來說低血糖的風險比高血糖更立即。目標值要由醫師依你的狀況設定，別拿別人的數字要求自己。"}},
  {id:"dm-screen",c:"血糖管理",e:"📅",b:"血糖控管所",n:"糖尿病腎病變篩檢時程表 每年 UACR + eGFR 附追蹤頻率建議",p:30,r:4.7,rv:19676,s:13824,
   k:{t:"糖尿病患者的護腎行事曆：每年兩項檢查",b:"糖尿病照護指引建議，尚未出現腎病變者每年至少檢查一次「尿液白蛋白／肌酸酐比值（UACR）」與「腎絲球過濾率（eGFR）」；已經診斷腎臟病（eGFR < 60 或 UACR ≥ 30）者，則建議每 3–6 個月追蹤一次。這兩項要一起看：eGFR 反映過濾功能剩多少，UACR 反映腎絲球有沒有在漏蛋白，而蛋白尿往往比 eGFR 更早出現。很多糖友每次回診都驗血糖，卻好幾年沒驗過尿——那等於只顧著看油表，沒在看引擎。"}},
@@ -682,19 +693,26 @@ function renderTabs(){
 function setCat(c){ curCat=c; renderTabs(); renderGrid(); }
 function offPct(p){ return p.o ? Math.round((1-p.p/p.o)*100) : 0; }
 
+/* 附件下載連結（僅已購買者顯示） */
+function attachHTML(p){
+  if(!p.dl) return "";
+  return `<a class="dl att" href="cards/${p.dl}"
+     download="護腎教室_${p.dn.replace(/[「」]/g,"")}.png">⬇ ${p.dn}</a>`;
+}
 function cardHTML(p){
-  const off = offPct(p);
+  const off = offPct(p), has = owned(p.id);
   return `
     <article class="card">
       ${off?`<div class="off">-${off}%</div>`:""}
-      ${owned(p.id)?`<div class="owned">已擁有</div>`:""}
+      ${has?`<div class="owned">已擁有</div>`:""}
       <div class="pic">${p.e}</div>
       <div class="body">
         <div class="name"><b>【${p.b}】</b>${p.n}</div>
-        <div class="meta"><em>★${p.r}</em>(${p.rv.toLocaleString()}) ｜ 已爽買 ${p.s.toLocaleString()} 件</div>
+        <div class="meta"><em>★${p.r}</em>(${p.rv.toLocaleString()}) ｜ 已爽買 ${p.s.toLocaleString()} 件
+          ${p.dl?`<span class="attg">📎 含附件</span>`:""}</div>
         <div class="row">
           <div class="price">${p.o?`<s>${C(p.o)}</s>`:""}${C(p.p)}</div>
-          <button class="add" onclick="addCart('k${p.i}')">爽買</button>
+          ${has && p.dl ? attachHTML(p) : `<button class="add" onclick="addCart('k${p.i}')">爽買</button>`}
         </div>
       </div>
     </article>`;
@@ -925,9 +943,13 @@ function renderLib(){
     html += `<div class="secttl">📚 護腎知識 <span>${lib.length} 篇</span></div>`;
     html += [...lib].reverse().map(k=>{
       const p = full[k.id];
+      const att = p && p.dl
+        ? `<a class="libatt" href="cards/${p.dl}"
+             download="護腎教室_${p.dn.replace(/[「」]/g,"")}.png">⬇ 下載${p.dn}</a>`
+        : "";
       return `<details class="kitem">
-        <summary>${k.e} ${k.t}</summary>
-        <div class="kbody">${p ? p.k.b : (k.b||"")}</div>
+        <summary>${k.e} ${k.t}${p && p.dl ? ' <span class="attg">📎</span>' : ""}</summary>
+        <div class="kbody">${p ? p.k.b : (k.b||"")}${att}</div>
       </details>`;
     }).join("");
   }
