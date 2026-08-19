@@ -868,7 +868,14 @@ gLoop();
    啟用方式：把下面的 null 換成 Firebase console > 專案設定 > 一般 >
    「你的應用程式」SDK 設定物件（apiKey 等為公開識別碼，可放前端）。
    未填入時本區塊自動休眠，網站功能不受影響。 */
-const FIREBASE_CONFIG = null;
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU",
+  authDomain: "kidneygod-ea61e.firebaseapp.com",
+  projectId: "kidneygod-ea61e",
+  storageBucket: "kidneygod-ea61e.firebasestorage.app",
+  messagingSenderId: "494753459903",
+  appId: "1:494753459903:web:281898dfc087dad416600a",
+};
 
 if (FIREBASE_CONFIG) {
   const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js");
