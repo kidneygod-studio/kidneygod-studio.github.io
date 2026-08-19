@@ -1,0 +1,642 @@
+[
+ {
+  "id": "A01",
+  "set": "A",
+  "label": "哈囉！",
+  "file": "stickers/A01.png",
+  "price": 15,
+  "w": 320,
+  "h": 283,
+  "thumb": "stickers/thumb/A01.png"
+ },
+ {
+  "id": "A02",
+  "set": "A",
+  "label": "晚安囉～",
+  "file": "stickers/A02.png",
+  "price": 15,
+  "w": 320,
+  "h": 281,
+  "thumb": "stickers/thumb/A02.png"
+ },
+ {
+  "id": "A03",
+  "set": "A",
+  "label": "謝謝你！",
+  "file": "stickers/A03.png",
+  "price": 15,
+  "w": 320,
+  "h": 304,
+  "thumb": "stickers/thumb/A03.png"
+ },
+ {
+  "id": "A04",
+  "set": "A",
+  "label": "讚！",
+  "file": "stickers/A04.png",
+  "price": 15,
+  "w": 305,
+  "h": 320,
+  "thumb": "stickers/thumb/A04.png"
+ },
+ {
+  "id": "A05",
+  "set": "A",
+  "label": "哇！",
+  "file": "stickers/A05.png",
+  "price": 15,
+  "w": 302,
+  "h": 320,
+  "thumb": "stickers/thumb/A05.png"
+ },
+ {
+  "id": "A06",
+  "set": "A",
+  "label": "嗚嗚…",
+  "file": "stickers/A06.png",
+  "price": 15,
+  "w": 288,
+  "h": 320,
+  "thumb": "stickers/thumb/A06.png"
+ },
+ {
+  "id": "A07",
+  "set": "A",
+  "label": "在嗎？",
+  "file": "stickers/A07.png",
+  "price": 15,
+  "w": 320,
+  "h": 285,
+  "thumb": "stickers/thumb/A07.png"
+ },
+ {
+  "id": "A08",
+  "set": "A",
+  "label": "愛你唷！",
+  "file": "stickers/A08.png",
+  "price": 15,
+  "w": 305,
+  "h": 320,
+  "thumb": "stickers/thumb/A08.png"
+ },
+ {
+  "id": "A09",
+  "set": "A",
+  "label": "先走囉～",
+  "file": "stickers/A09.png",
+  "price": 15,
+  "w": 320,
+  "h": 302,
+  "thumb": "stickers/thumb/A09.png"
+ },
+ {
+  "id": "B01",
+  "set": "B",
+  "label": "哈囉！",
+  "file": "stickers/B01.png",
+  "price": 12,
+  "w": 206,
+  "h": 201,
+  "thumb": "stickers/thumb/B01.png"
+ },
+ {
+  "id": "B02",
+  "set": "B",
+  "label": "謝謝你！",
+  "file": "stickers/B02.png",
+  "price": 12,
+  "w": 211,
+  "h": 213,
+  "thumb": "stickers/thumb/B02.png"
+ },
+ {
+  "id": "B03",
+  "set": "B",
+  "label": "晚安囉～",
+  "file": "stickers/B03.png",
+  "price": 12,
+  "w": 217,
+  "h": 190,
+  "thumb": "stickers/thumb/B03.png"
+ },
+ {
+  "id": "B04",
+  "set": "B",
+  "label": "耶耶耶！",
+  "file": "stickers/B04.png",
+  "price": 12,
+  "w": 225,
+  "h": 210,
+  "thumb": "stickers/thumb/B04.png"
+ },
+ {
+  "id": "B05",
+  "set": "B",
+  "label": "好開心！",
+  "file": "stickers/B05.png",
+  "price": 12,
+  "w": 222,
+  "h": 215,
+  "thumb": "stickers/thumb/B05.png"
+ },
+ {
+  "id": "B06",
+  "set": "B",
+  "label": "讚！",
+  "file": "stickers/B06.png",
+  "price": 12,
+  "w": 199,
+  "h": 249,
+  "thumb": "stickers/thumb/B06.png"
+ },
+ {
+  "id": "B07",
+  "set": "B",
+  "label": "嗚嗚…",
+  "file": "stickers/B07.png",
+  "price": 12,
+  "w": 163,
+  "h": 249,
+  "thumb": "stickers/thumb/B07.png"
+ },
+ {
+  "id": "B08",
+  "set": "B",
+  "label": "哇！",
+  "file": "stickers/B08.png",
+  "price": 12,
+  "w": 214,
+  "h": 249,
+  "thumb": "stickers/thumb/B08.png"
+ },
+ {
+  "id": "B09",
+  "set": "B",
+  "label": "在嗎？",
+  "file": "stickers/B09.png",
+  "price": 12,
+  "w": 212,
+  "h": 249,
+  "thumb": "stickers/thumb/B09.png"
+ },
+ {
+  "id": "B10",
+  "set": "B",
+  "label": "愛你唷！",
+  "file": "stickers/B10.png",
+  "price": 12,
+  "w": 207,
+  "h": 249,
+  "thumb": "stickers/thumb/B10.png"
+ },
+ {
+  "id": "B11",
+  "set": "B",
+  "label": "在幹嘛？",
+  "file": "stickers/B11.png",
+  "price": 12,
+  "w": 223,
+  "h": 248,
+  "thumb": "stickers/thumb/B11.png"
+ },
+ {
+  "id": "B12",
+  "set": "B",
+  "label": "嗯…",
+  "file": "stickers/B12.png",
+  "price": 12,
+  "w": 191,
+  "h": 242,
+  "thumb": "stickers/thumb/B12.png"
+ },
+ {
+  "id": "B13",
+  "set": "B",
+  "label": "對不起…",
+  "file": "stickers/B13.png",
+  "price": 12,
+  "w": 181,
+  "h": 245,
+  "thumb": "stickers/thumb/B13.png"
+ },
+ {
+  "id": "B14",
+  "set": "B",
+  "label": "加油！",
+  "file": "stickers/B14.png",
+  "price": 12,
+  "w": 201,
+  "h": 245,
+  "thumb": "stickers/thumb/B14.png"
+ },
+ {
+  "id": "B15",
+  "set": "B",
+  "label": "辛苦了～",
+  "file": "stickers/B15.png",
+  "price": 12,
+  "w": 212,
+  "h": 249,
+  "thumb": "stickers/thumb/B15.png"
+ },
+ {
+  "id": "B16",
+  "set": "B",
+  "label": "出發囉！",
+  "file": "stickers/B16.png",
+  "price": 12,
+  "w": 216,
+  "h": 241,
+  "thumb": "stickers/thumb/B16.png"
+ },
+ {
+  "id": "B17",
+  "set": "B",
+  "label": "努力中！",
+  "file": "stickers/B17.png",
+  "price": 12,
+  "w": 200,
+  "h": 204,
+  "thumb": "stickers/thumb/B17.png"
+ },
+ {
+  "id": "B18",
+  "set": "B",
+  "label": "餓餓…",
+  "file": "stickers/B18.png",
+  "price": 12,
+  "w": 212,
+  "h": 211,
+  "thumb": "stickers/thumb/B18.png"
+ },
+ {
+  "id": "B19",
+  "set": "B",
+  "label": "抱抱～",
+  "file": "stickers/B19.png",
+  "price": 12,
+  "w": 186,
+  "h": 248,
+  "thumb": "stickers/thumb/B19.png"
+ },
+ {
+  "id": "B20",
+  "set": "B",
+  "label": "工作中…",
+  "file": "stickers/B20.png",
+  "price": 12,
+  "w": 227,
+  "h": 249,
+  "thumb": "stickers/thumb/B20.png"
+ },
+ {
+  "id": "B21",
+  "set": "B",
+  "label": "我可以！",
+  "file": "stickers/B21.png",
+  "price": 12,
+  "w": 219,
+  "h": 198,
+  "thumb": "stickers/thumb/B21.png"
+ },
+ {
+  "id": "B22",
+  "set": "B",
+  "label": "偷看…",
+  "file": "stickers/B22.png",
+  "price": 12,
+  "w": 217,
+  "h": 190,
+  "thumb": "stickers/thumb/B22.png"
+ },
+ {
+  "id": "B23",
+  "set": "B",
+  "label": "生日快樂！",
+  "file": "stickers/B23.png",
+  "price": 12,
+  "w": 249,
+  "h": 232,
+  "thumb": "stickers/thumb/B23.png"
+ },
+ {
+  "id": "B24",
+  "set": "B",
+  "label": "累癱了…",
+  "file": "stickers/B24.png",
+  "price": 12,
+  "w": 228,
+  "h": 179,
+  "thumb": "stickers/thumb/B24.png"
+ },
+ {
+  "id": "B25",
+  "set": "B",
+  "label": "先走囉～",
+  "file": "stickers/B25.png",
+  "price": 12,
+  "w": 220,
+  "h": 194,
+  "thumb": "stickers/thumb/B25.png"
+ },
+ {
+  "id": "C01",
+  "set": "C",
+  "label": "哈囉！",
+  "file": "stickers/C01.png",
+  "price": 10,
+  "w": 189,
+  "h": 202,
+  "thumb": "stickers/thumb/C01.png"
+ },
+ {
+  "id": "C02",
+  "set": "C",
+  "label": "謝謝你！",
+  "file": "stickers/C02.png",
+  "price": 10,
+  "w": 207,
+  "h": 209,
+  "thumb": "stickers/thumb/C02.png"
+ },
+ {
+  "id": "C03",
+  "set": "C",
+  "label": "晚安囉～",
+  "file": "stickers/C03.png",
+  "price": 10,
+  "w": 207,
+  "h": 205,
+  "thumb": "stickers/thumb/C03.png"
+ },
+ {
+  "id": "C04",
+  "set": "C",
+  "label": "耶耶耶！",
+  "file": "stickers/C04.png",
+  "price": 10,
+  "w": 207,
+  "h": 209,
+  "thumb": "stickers/thumb/C04.png"
+ },
+ {
+  "id": "C05",
+  "set": "C",
+  "label": "好開心！",
+  "file": "stickers/C05.png",
+  "price": 10,
+  "w": 207,
+  "h": 204,
+  "thumb": "stickers/thumb/C05.png"
+ },
+ {
+  "id": "C06",
+  "set": "C",
+  "label": "讚！",
+  "file": "stickers/C06.png",
+  "price": 10,
+  "w": 199,
+  "h": 204,
+  "thumb": "stickers/thumb/C06.png"
+ },
+ {
+  "id": "C07",
+  "set": "C",
+  "label": "在幹嘛？",
+  "file": "stickers/C07.png",
+  "price": 10,
+  "w": 179,
+  "h": 198,
+  "thumb": "stickers/thumb/C07.png"
+ },
+ {
+  "id": "C08",
+  "set": "C",
+  "label": "嗯？",
+  "file": "stickers/C08.png",
+  "price": 10,
+  "w": 207,
+  "h": 198,
+  "thumb": "stickers/thumb/C08.png"
+ },
+ {
+  "id": "C09",
+  "set": "C",
+  "label": "嗚嗚…",
+  "file": "stickers/C09.png",
+  "price": 10,
+  "w": 200,
+  "h": 198,
+  "thumb": "stickers/thumb/C09.png"
+ },
+ {
+  "id": "C10",
+  "set": "C",
+  "label": "哇！",
+  "file": "stickers/C10.png",
+  "price": 10,
+  "w": 176,
+  "h": 198,
+  "thumb": "stickers/thumb/C10.png"
+ },
+ {
+  "id": "C11",
+  "set": "C",
+  "label": "愛你唷！",
+  "file": "stickers/C11.png",
+  "price": 10,
+  "w": 207,
+  "h": 207,
+  "thumb": "stickers/thumb/C11.png"
+ },
+ {
+  "id": "C12",
+  "set": "C",
+  "label": "嘿嘿～",
+  "file": "stickers/C12.png",
+  "price": 10,
+  "w": 190,
+  "h": 191,
+  "thumb": "stickers/thumb/C12.png"
+ },
+ {
+  "id": "C13",
+  "set": "C",
+  "label": "我可以！",
+  "file": "stickers/C13.png",
+  "price": 10,
+  "w": 182,
+  "h": 194,
+  "thumb": "stickers/thumb/C13.png"
+ },
+ {
+  "id": "C14",
+  "set": "C",
+  "label": "認真中…",
+  "file": "stickers/C14.png",
+  "price": 10,
+  "w": 207,
+  "h": 197,
+  "thumb": "stickers/thumb/C14.png"
+ },
+ {
+  "id": "C15",
+  "set": "C",
+  "label": "加油！",
+  "file": "stickers/C15.png",
+  "price": 10,
+  "w": 202,
+  "h": 195,
+  "thumb": "stickers/thumb/C15.png"
+ },
+ {
+  "id": "C16",
+  "set": "C",
+  "label": "累癱了…",
+  "file": "stickers/C16.png",
+  "price": 10,
+  "w": 187,
+  "h": 176,
+  "thumb": "stickers/thumb/C16.png"
+ },
+ {
+  "id": "C17",
+  "set": "C",
+  "label": "抱抱～",
+  "file": "stickers/C17.png",
+  "price": 10,
+  "w": 207,
+  "h": 196,
+  "thumb": "stickers/thumb/C17.png"
+ },
+ {
+  "id": "C18",
+  "set": "C",
+  "label": "工作中…",
+  "file": "stickers/C18.png",
+  "price": 10,
+  "w": 183,
+  "h": 194,
+  "thumb": "stickers/thumb/C18.png"
+ },
+ {
+  "id": "C19",
+  "set": "C",
+  "label": "辛苦了～",
+  "file": "stickers/C19.png",
+  "price": 10,
+  "w": 171,
+  "h": 194,
+  "thumb": "stickers/thumb/C19.png"
+ },
+ {
+  "id": "C20",
+  "set": "C",
+  "label": "好餓喔…",
+  "file": "stickers/C20.png",
+  "price": 10,
+  "w": 157,
+  "h": 197,
+  "thumb": "stickers/thumb/C20.png"
+ },
+ {
+  "id": "C21",
+  "set": "C",
+  "label": "生日快樂！",
+  "file": "stickers/C21.png",
+  "price": 10,
+  "w": 200,
+  "h": 201,
+  "thumb": "stickers/thumb/C21.png"
+ },
+ {
+  "id": "C22",
+  "set": "C",
+  "label": "哼哼！",
+  "file": "stickers/C22.png",
+  "price": 10,
+  "w": 193,
+  "h": 195,
+  "thumb": "stickers/thumb/C22.png"
+ },
+ {
+  "id": "C23",
+  "set": "C",
+  "label": "蛤?!",
+  "file": "stickers/C23.png",
+  "price": 10,
+  "w": 200,
+  "h": 194,
+  "thumb": "stickers/thumb/C23.png"
+ },
+ {
+  "id": "C24",
+  "set": "C",
+  "label": "得意～",
+  "file": "stickers/C24.png",
+  "price": 10,
+  "w": 185,
+  "h": 199,
+  "thumb": "stickers/thumb/C24.png"
+ },
+ {
+  "id": "C25",
+  "set": "C",
+  "label": "偷偷看…",
+  "file": "stickers/C25.png",
+  "price": 10,
+  "w": 166,
+  "h": 193,
+  "thumb": "stickers/thumb/C25.png"
+ },
+ {
+  "id": "C26",
+  "set": "C",
+  "label": "放鬆一下～",
+  "file": "stickers/C26.png",
+  "price": 10,
+  "w": 179,
+  "h": 197,
+  "thumb": "stickers/thumb/C26.png"
+ },
+ {
+  "id": "C27",
+  "set": "C",
+  "label": "哇嗚～",
+  "file": "stickers/C27.png",
+  "price": 10,
+  "w": 177,
+  "h": 208,
+  "thumb": "stickers/thumb/C27.png"
+ },
+ {
+  "id": "C28",
+  "set": "C",
+  "label": "瘋掉了啦！",
+  "file": "stickers/C28.png",
+  "price": 10,
+  "w": 197,
+  "h": 200,
+  "thumb": "stickers/thumb/C28.png"
+ },
+ {
+  "id": "C29",
+  "set": "C",
+  "label": "拜託嘛～",
+  "file": "stickers/C29.png",
+  "price": 10,
+  "w": 188,
+  "h": 201,
+  "thumb": "stickers/thumb/C29.png"
+ },
+ {
+  "id": "C30",
+  "set": "C",
+  "label": "先走囉～",
+  "file": "stickers/C30.png",
+  "price": 10,
+  "w": 162,
+  "h": 191,
+  "thumb": "stickers/thumb/C30.png"
+ }
+]

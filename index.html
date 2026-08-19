@@ -119,6 +119,19 @@
        font-size:13px;font-weight:800;padding:6px 13px;border-radius:99px;transition:.15s;}
   .add:active{transform:scale(.93);}
 
+  /* ── 貼圖卡：未購買顯示剪影 ── */
+  .spic{height:150px;display:flex;align-items:center;justify-content:center;
+        background:linear-gradient(135deg,#f7f2ff,#ffeef4);position:relative;padding:8px;}
+  .spic img{max-width:100%;max-height:100%;object-fit:contain;transition:.3s;}
+  .spic.locked img{filter:brightness(0) opacity(.78);}
+  .spic.locked::after{content:"？";position:absolute;right:10px;bottom:6px;
+        font-size:20px;font-weight:900;color:rgba(124,92,255,.45);}
+  .dl{display:inline-block;background:var(--ok);color:#fff;font-size:12.5px;
+      font-weight:800;padding:6px 12px;border-radius:99px;text-decoration:none;}
+  .dl:active{transform:scale(.93);}
+  .setg{font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:5px;
+        background:#f0eaff;color:var(--accent);border:1px solid #ddd0ff;}
+
   /* ── Drawer / Modal ── */
   .veil{position:fixed;inset:0;background:rgba(61,44,41,.45);z-index:80;
         opacity:0;pointer-events:none;transition:.25s;}
@@ -203,6 +216,20 @@
   .kitem summary::-webkit-details-marker{display:none;}
   .kitem[open] summary{border-bottom:1px dashed var(--line);color:var(--accent);}
   .kbody{padding:12px 16px;font-size:13.5px;color:#5a4a44;line-height:1.8;}
+  /* 收藏抽屜的區塊標題與貼圖冊 */
+  .secttl{display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:900;
+          color:var(--accent);margin:16px 0 10px;padding-bottom:6px;
+          border-bottom:2px solid var(--line);}
+  .secttl span{font-size:12px;font-weight:700;color:var(--dim);}
+  .dlall{margin-left:auto;background:var(--ok);color:#fff;font-size:11.5px;
+         font-weight:800;padding:4px 10px;border-radius:99px;}
+  .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;}
+  .sitem{background:#fff;border:1px solid var(--line);border-radius:12px;
+         padding:8px 6px 10px;text-align:center;position:relative;}
+  .sitem img{width:100%;height:70px;object-fit:contain;}
+  .sitem figcaption{font-size:11.5px;font-weight:700;margin-top:4px;
+                    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sitem .dl{position:absolute;top:4px;right:4px;padding:2px 7px;font-size:11px;}
 
   footer{border-top:1px solid var(--line);background:#fff;padding:34px 20px 44px;}
   .fwrap{max-width:760px;margin:0 auto;font-size:13.5px;color:var(--dim);}
@@ -284,9 +311,9 @@
 
 <!-- 知識庫 -->
 <aside class="drawer" id="libDrawer">
-  <div class="dhead"><h2>📚 我的護腎知識庫</h2><button class="x" onclick="closeAll()">✕</button></div>
+  <div class="dhead"><h2>📚 我的收藏</h2><button class="x" onclick="closeAll()">✕</button></div>
   <div class="dbody" id="libBody"></div>
-  <div class="dfoot"><div class="hint">知識存在你自己的瀏覽器裡，清除瀏覽資料會消失 — 但存進腦子的不會。</div></div>
+  <div class="dfoot"><div class="hint">收藏存在你的瀏覽器（登入後同步雲端）。貼圖可下載原圖，存進腦子的知識不用下載。</div></div>
 </aside>
 
 <!-- 結帳 -->
@@ -423,9 +450,79 @@ const PRODUCTS = [
   k:{t:"「洗腎是西藥吃太多」？真相恰恰相反",b:"台灣人進入透析的最主要原因是糖尿病與高血壓控制不良，不是「按醫囑吃藥」。這個迷思最大的傷害在於：病人因為怕「吃藥傷腎」自行停掉降壓藥降糖藥，改吃來路不明的偏方——結果血壓血糖失控，腎臟加速報銷，反而應驗了預言。事實是：正規的降壓藥（ACEI/ARB）與排糖藥（SGLT2i）是目前實證最強的「護腎藥」。真正該怕的是不明藥物、NSAID 濫用與擅自停藥。相信你的腎臟科醫師，規律回診，這是保住腎功能最可靠的路。"}},
 ];
 
-const CATS = ["全部","用藥安全","飲食護腎","生活習慣","檢查數值","警訊與迷思"];
+/* ═══════════ 貓咪貼圖（購買後可下載原圖）═══════════ */
+const STICKERS = [
+{id:"A01",s:"A",l:"哈囉！",p:15},
+{id:"A02",s:"A",l:"晚安囉～",p:15},
+{id:"A03",s:"A",l:"謝謝你！",p:15},
+{id:"A04",s:"A",l:"讚！",p:15},
+{id:"A05",s:"A",l:"哇！",p:15},
+{id:"A06",s:"A",l:"嗚嗚…",p:15},
+{id:"A07",s:"A",l:"在嗎？",p:15},
+{id:"A08",s:"A",l:"愛你唷！",p:15},
+{id:"A09",s:"A",l:"先走囉～",p:15},
+{id:"B01",s:"B",l:"哈囉！",p:12},
+{id:"B02",s:"B",l:"謝謝你！",p:12},
+{id:"B03",s:"B",l:"晚安囉～",p:12},
+{id:"B04",s:"B",l:"耶耶耶！",p:12},
+{id:"B05",s:"B",l:"好開心！",p:12},
+{id:"B06",s:"B",l:"讚！",p:12},
+{id:"B07",s:"B",l:"嗚嗚…",p:12},
+{id:"B08",s:"B",l:"哇！",p:12},
+{id:"B09",s:"B",l:"在嗎？",p:12},
+{id:"B10",s:"B",l:"愛你唷！",p:12},
+{id:"B11",s:"B",l:"在幹嘛？",p:12},
+{id:"B12",s:"B",l:"嗯…",p:12},
+{id:"B13",s:"B",l:"對不起…",p:12},
+{id:"B14",s:"B",l:"加油！",p:12},
+{id:"B15",s:"B",l:"辛苦了～",p:12},
+{id:"B16",s:"B",l:"出發囉！",p:12},
+{id:"B17",s:"B",l:"努力中！",p:12},
+{id:"B18",s:"B",l:"餓餓…",p:12},
+{id:"B19",s:"B",l:"抱抱～",p:12},
+{id:"B20",s:"B",l:"工作中…",p:12},
+{id:"B21",s:"B",l:"我可以！",p:12},
+{id:"B22",s:"B",l:"偷看…",p:12},
+{id:"B23",s:"B",l:"生日快樂！",p:12},
+{id:"B24",s:"B",l:"累癱了…",p:12},
+{id:"B25",s:"B",l:"先走囉～",p:12},
+{id:"C01",s:"C",l:"哈囉！",p:10},
+{id:"C02",s:"C",l:"謝謝你！",p:10},
+{id:"C03",s:"C",l:"晚安囉～",p:10},
+{id:"C04",s:"C",l:"耶耶耶！",p:10},
+{id:"C05",s:"C",l:"好開心！",p:10},
+{id:"C06",s:"C",l:"讚！",p:10},
+{id:"C07",s:"C",l:"在幹嘛？",p:10},
+{id:"C08",s:"C",l:"嗯？",p:10},
+{id:"C09",s:"C",l:"嗚嗚…",p:10},
+{id:"C10",s:"C",l:"哇！",p:10},
+{id:"C11",s:"C",l:"愛你唷！",p:10},
+{id:"C12",s:"C",l:"嘿嘿～",p:10},
+{id:"C13",s:"C",l:"我可以！",p:10},
+{id:"C14",s:"C",l:"認真中…",p:10},
+{id:"C15",s:"C",l:"加油！",p:10},
+{id:"C16",s:"C",l:"累癱了…",p:10},
+{id:"C17",s:"C",l:"抱抱～",p:10},
+{id:"C18",s:"C",l:"工作中…",p:10},
+{id:"C19",s:"C",l:"辛苦了～",p:10},
+{id:"C20",s:"C",l:"好餓喔…",p:10},
+{id:"C21",s:"C",l:"生日快樂！",p:10},
+{id:"C22",s:"C",l:"哼哼！",p:10},
+{id:"C23",s:"C",l:"蛤?!",p:10},
+{id:"C24",s:"C",l:"得意～",p:10},
+{id:"C25",s:"C",l:"偷偷看…",p:10},
+{id:"C26",s:"C",l:"放鬆一下～",p:10},
+{id:"C27",s:"C",l:"哇嗚～",p:10},
+{id:"C28",s:"C",l:"瘋掉了啦！",p:10},
+{id:"C29",s:"C",l:"拜託嘛～",p:10},
+{id:"C30",s:"C",l:"先走囉～",p:10},
+];
+const SET_NAME = {A:"氈貼款", B:"蓬鬆款", C:"迷你款"};
+
+const CATS = ["全部","用藥安全","飲食護腎","生活習慣","檢查數值","警訊與迷思","🐱 貓咪貼圖"];
+const STICKER_CAT = "🐱 貓咪貼圖";
 const FLASH = ["nsaid","starfruit","five-signs","egfr","water","dialysis-myth"];
-const MARQ = ["🫘 小腎臟大冒險:躲過 NSAID 大隊,每個 +3 腎元","📚 知識到貨率 100%,本站唯一會出貨的東西","🫘 腎元賺不了真錢,但賺得了腎","🧂 今日特賣:少吃一口鹽,免費","🚰 白開水永久 0 元,全站最強護腎商品其實是它","⚕️ 衛教內容不取代就醫,有症狀請看腎臟科","🔬 冷知識:每顆腎臟約有一百萬個腎元(Nephron),這也是本站貨幣的由來"];
+const MARQ = ["🫘 小腎臟大冒險:躲過 NSAID 大隊,每個 +3 腎元","📚 知識到貨率 100%,本站唯一會出貨的東西","🫘 腎元賺不了真錢,但賺得了腎","🧂 今日特賣:少吃一口鹽,免費","🚰 白開水永久 0 元,全站最強護腎商品其實是它","⚕️ 衛教內容不取代就醫,有症狀請看腎臟科","🔬 冷知識:每顆腎臟約有一百萬個腎元(Nephron),這也是本站貨幣的由來","🐱 新上架:貓咪貼圖 64 張,買前是剪影,買後可下載原圖"];
 const GIFTS = [
   {id:0,t:"新手禮包",d:"開站禮,人人有份",s:"限領一次",amt:30,daily:false},
   {id:1,t:"每日簽到",d:"每天回來看一篇知識",s:"每日可領",amt:15,daily:true},
@@ -454,6 +551,8 @@ const store = {
   set gifts(v){ localStorage.msd_gifts = JSON.stringify(v); syncPush(); },
   get best(){ return parseInt(localStorage.msd_best)||0; },
   set best(v){ localStorage.msd_best = v; syncPush(); },
+  get stk(){ try{return JSON.parse(localStorage.msd_stickers||"[]")}catch(e){return[]} },
+  set stk(v){ localStorage.msd_stickers = JSON.stringify(v); syncPush(); },
 };
 if(localStorage.msd_coins === undefined) localStorage.msd_coins = 100;
 
@@ -465,21 +564,23 @@ function syncPush(){
   syncT = setTimeout(()=>window.cloud.push(), 1500);
 }
 function getLocalState(){
-  return {coins:store.coins, lib:store.lib, gifts:store.gifts, best:store.best};
+  return {coins:store.coins, lib:store.lib, gifts:store.gifts, best:store.best, stk:store.stk};
 }
 function applyState(s){
   if(!s) return;
-  localStorage.msd_coins = Math.max(0, s.coins ?? 100);
-  localStorage.msd_lib   = JSON.stringify(s.lib || []);
-  localStorage.msd_gifts = JSON.stringify(s.gifts || {});
-  localStorage.msd_best  = s.best || 0;
+  localStorage.msd_coins    = Math.max(0, s.coins ?? 100);
+  localStorage.msd_lib      = JSON.stringify(s.lib || []);
+  localStorage.msd_gifts    = JSON.stringify(s.gifts || {});
+  localStorage.msd_best     = s.best || 0;
+  localStorage.msd_stickers = JSON.stringify(s.stk || []);
   syncCoins(); renderGrid(); renderGifts();
   $("gBest").textContent = store.best;
 }
-/* 合併雲端與本機：腎元/最高分取大者、知識庫取聯集、禮包取已領狀態 */
+/* 合併雲端與本機：腎元/最高分取大者、知識庫與貼圖取聯集、禮包取已領狀態 */
 function mergeState(cloud, local){
   const lib = [...(cloud.lib||[])];
   (local.lib||[]).forEach(k=>{ if(!lib.some(x=>x.id===k.id)) lib.push(k); });
+  const stk = [...new Set([...(cloud.stk||[]), ...(local.stk||[])])];
   const gifts = {...(cloud.gifts||{})};
   Object.entries(local.gifts||{}).forEach(([k,v])=>{
     if(!gifts[k] || (typeof v==="string" && v > gifts[k])) gifts[k]=v;
@@ -487,7 +588,7 @@ function mergeState(cloud, local){
   return {
     coins: Math.max(cloud.coins ?? 0, local.coins ?? 0),
     best:  Math.max(cloud.best ?? 0,  local.best ?? 0),
-    lib, gifts,
+    lib, gifts, stk,
   };
 }
 function openAccount(){
@@ -496,10 +597,12 @@ function openAccount(){
 }
 
 function owned(id){ return store.lib.some(k=>k.id===id); }
+function ownedStk(id){ return store.stk.includes(id); }
 function syncCoins(){
   $("coinBal").textContent = store.coins.toLocaleString();
-  $("libBadge").textContent = store.lib.length;
-  $("libBadge").classList.toggle("show", store.lib.length>0);
+  const n = store.lib.length + store.stk.length;
+  $("libBadge").textContent = n;
+  $("libBadge").classList.toggle("show", n>0);
 }
 
 /* ── 渲染 ── */
@@ -522,13 +625,45 @@ function cardHTML(p){
         <div class="meta"><em>★${p.r}</em>(${p.rv.toLocaleString()}) ｜ 已爽買 ${p.s.toLocaleString()} 件</div>
         <div class="row">
           <div class="price">${p.o?`<s>${C(p.o)}</s>`:""}${C(p.p)}</div>
-          <button class="add" onclick="addCart(${p.i})">爽買</button>
+          <button class="add" onclick="addCart('k${p.i}')">爽買</button>
         </div>
       </div>
     </article>`;
 }
+/* 貼圖卡：未購買只顯示剪影，購買後現出原圖並可下載 */
+function stickerHTML(k){
+  const has = ownedStk(k.id);
+  return `
+    <article class="card">
+      ${has?`<div class="owned">已擁有</div>`:""}
+      <div class="spic ${has?"":"locked"}">
+        <img src="stickers/thumb/${k.id}.png" alt="${has?k.l:"未解鎖貼圖"}" loading="lazy">
+      </div>
+      <div class="body">
+        <div class="name">${has?k.l:"？？？"}　<span class="setg">${SET_NAME[k.s]}</span></div>
+        <div class="meta">${has?"已收藏，可下載原圖":"購買後現出原圖並可下載"}</div>
+        <div class="row">
+          <div class="price">${C(k.p)}</div>
+          ${has
+            ? `<a class="dl" href="stickers/${k.id}.png" download="貓咪貼圖_${k.l.replace(/[！？…～?!]/g,"")}_${k.id}.png">⬇ 下載</a>`
+            : `<button class="add" onclick="addCart('s${k.id}')">爽買</button>`}
+        </div>
+      </div>
+    </article>`;
+}
+
 function renderGrid(){
   const kw = ($("q").value||"").trim().toLowerCase();
+
+  if(curCat === STICKER_CAT){
+    const list = STICKERS.filter(k => !kw || (k.l + SET_NAME[k.s]).toLowerCase().includes(kw));
+    $("grid").innerHTML = list.map(stickerHTML).join("") ||
+      `<div class="empty" style="grid-column:1/-1"><span class="e">🐱</span>找不到相關貼圖</div>`;
+    const got = STICKERS.filter(k=>ownedStk(k.id)).length;
+    $("cnt").textContent = `共 ${list.length} 張貓咪貼圖 — 已收藏 ${got}/${STICKERS.length}，購買後可下載原圖`;
+    return;
+  }
+
   const list = PRODUCTS.map((p,i)=>({...p,i}))
     .filter(p => curCat==="全部" || p.c===curCat)
     .filter(p => !kw || (p.b+p.n+p.c+p.k.t).toLowerCase().includes(kw));
@@ -563,19 +698,31 @@ function claimGift(id){
 }
 function scrollGame(){ $("gameSec").scrollIntoView({behavior:"smooth",block:"center"}); }
 
-/* ── 購物車 ── */
-function cartCount(){ return Object.values(cart).reduce((a,b)=>a+b,0); }
-function cartSum(){ return Object.keys(cart).reduce((s,i)=>s+PRODUCTS[i].p,0); }
-
-function addCart(i){
-  const p = PRODUCTS[i];
-  if(owned(p.id)){ toast(`「${p.k.t}」已在你的知識庫裡 📚`); return; }
-  if(cart[i]){ toast("知識買一份就夠了，重讀免費 😄"); return; }
-  cart[i] = 1;
-  syncBadge();
-  toast(`已加入 — ${p.k.t} 🫘`);
+/* ── 購物車（key 前綴 k=知識 / s=貼圖）── */
+function itemOf(key){
+  if(key[0] === "s"){
+    const k = STICKERS.find(x => x.id === key.slice(1));
+    return k && {type:"s", price:k.p, name:`${k.l}（${SET_NAME[k.s]}）`,
+                 thumb:`stickers/thumb/${k.id}.png`, data:k};
+  }
+  const p = PRODUCTS[+key.slice(1)];
+  return p && {type:"k", price:p.p, name:p.k.t, emoji:p.e, data:p};
 }
-function rmCart(i){ delete cart[i]; syncBadge(); renderCart(); }
+function cartCount(){ return Object.keys(cart).length; }
+function cartSum(){ return Object.keys(cart).reduce((s,key)=>s + (itemOf(key)?.price||0), 0); }
+
+function addCart(key){
+  key = String(key);
+  const it = itemOf(key);
+  if(!it) return;
+  if(it.type === "k" && owned(it.data.id)){ toast(`「${it.name}」已在你的收藏裡 📚`); return; }
+  if(it.type === "s" && ownedStk(it.data.id)){ toast(`「${it.name}」已經收藏了 🐱`); return; }
+  if(cart[key]){ toast("這件買一份就夠了 😄"); return; }
+  cart[key] = 1;
+  syncBadge();
+  toast(`已加入 — ${it.name}`);
+}
+function rmCart(key){ delete cart[String(key)]; syncBadge(); renderCart(); }
 function syncBadge(){
   const n = cartCount();
   $("badge").textContent = n;
@@ -583,21 +730,24 @@ function syncBadge(){
 }
 function renderCart(){
   const keys = Object.keys(cart);
-  $("cartBody").innerHTML = keys.length ? keys.map(i=>{
-    const p = PRODUCTS[i];
-    return `<div class="item"><div class="e">${p.e}</div>
-      <div class="info"><div class="nm">${p.k.t}</div><div class="pr">${C(p.p)}</div></div>
-      <div class="qty"><button onclick="rmCart(${i})">✕</button></div>
+  $("cartBody").innerHTML = keys.length ? keys.map(key=>{
+    const it = itemOf(key);
+    const pic = it.type === "s"
+      ? `<img src="${it.thumb}" alt="" style="width:34px;height:34px;object-fit:contain">`
+      : it.emoji;
+    return `<div class="item"><div class="e">${pic}</div>
+      <div class="info"><div class="nm">${it.name}</div><div class="pr">${C(it.price)}</div></div>
+      <div class="qty"><button onclick="rmCart('${key}')">✕</button></div>
     </div>`;
   }).join("") :
-  `<div class="empty"><span class="e">🛒</span>購物車空空的<br>去挑幾篇護腎知識吧</div>`;
+  `<div class="empty"><span class="e">🛒</span>購物車空空的<br>去挑幾篇護腎知識或貓咪貼圖吧</div>`;
   const sum = cartSum(), bal = store.coins;
   $("cartTotal").innerHTML = C(sum);
   $("cartBal").innerHTML = C(bal);
   const short = sum > bal;
   $("payHint").innerHTML = short
     ? `腎元不足，還差 ${C(sum-bal)} — 去玩小腎臟大冒險賺！`
-    : "結帳後知識立即送達知識庫";
+    : "結帳後立即送達你的收藏";
   $("payHint").classList.toggle("bad", short);
   $("checkoutBtn").disabled = !keys.length || short;
   if(short){
@@ -623,22 +773,28 @@ function openCheckout(){
 }
 function closeAll(){ ["drawer","libDrawer","checkout","doneModal","account"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
 
-/* ── 下單：扣腎元、知識入庫 ── */
+/* ── 下單：扣腎元，知識與貼圖入收藏 ── */
 function placeOrder(){
   const sum = cartSum();
   if(sum > store.coins) return;
-  const items = Object.keys(cart).map(i=>PRODUCTS[i]);
+  const items = Object.keys(cart).map(itemOf).filter(Boolean);
   store.coins = store.coins - sum;
 
-  const lib = store.lib;
-  const added = [];
-  items.forEach(p=>{
-    if(!lib.some(k=>k.id===p.id)){
-      lib.push({id:p.id, t:p.k.t, b:p.k.b, e:p.e, c:p.c, at:Date.now()});
-      added.push(p);
+  const lib = store.lib, stk = store.stk;
+  const addedK = [], addedS = [];
+  items.forEach(it=>{
+    if(it.type === "k"){
+      const p = it.data;
+      if(!lib.some(k=>k.id===p.id)){
+        lib.push({id:p.id, t:p.k.t, b:p.k.b, e:p.e, c:p.c, at:Date.now()});
+        addedK.push(p);
+      }
+    }else{
+      if(!stk.includes(it.data.id)){ stk.push(it.data.id); addedS.push(it.data); }
     }
   });
   store.lib = lib;
+  store.stk = stk;
 
   const no = "KD" + Date.now().toString(36).toUpperCase();
   const orders = store.orders;
@@ -648,8 +804,17 @@ function placeOrder(){
   cart = {}; syncBadge(); syncCoins(); renderGrid();
   $("checkout").classList.remove("on");
   $("ordNo").textContent = no;
-  $("newk").innerHTML = `<b>📬 本次送達 ${added.length} 篇知識：</b><br>` +
-    added.map(p=>`・${p.e} ${p.k.t}`).join("<br>");
+
+  let html = "";
+  if(addedK.length) html += `<b>📬 本次送達 ${addedK.length} 篇知識：</b><br>` +
+    addedK.map(p=>`・${p.e} ${p.k.t}`).join("<br>");
+  if(addedS.length){
+    if(html) html += "<br><br>";
+    html += `<b>🐱 本次收藏 ${addedS.length} 張貼圖：</b><br>` +
+      addedS.map(k=>`・${k.l}（${SET_NAME[k.s]}）`).join("<br>") +
+      `<br><span style="color:var(--dim)">到「我的收藏」即可下載原圖</span>`;
+  }
+  $("newk").innerHTML = html;
   renderTrack(Date.now());
   $("doneModal").classList.add("on");
   confetti();
@@ -677,22 +842,52 @@ function renderTrack(t0){
   tick(); trackTimer = setInterval(tick, 300);
 }
 
-/* ── 知識庫 ── */
+/* ── 我的收藏：護腎知識 + 貓咪貼圖 ── */
 function renderLib(){
-  const lib = store.lib;
-  if(!lib.length){
-    $("libBody").innerHTML = `<div class="empty"><span class="e">📚</span>知識庫還是空的<br>去商城買幾篇，或先玩遊戲賺腎元</div>`;
+  const lib = store.lib, mine = STICKERS.filter(k=>ownedStk(k.id));
+  if(!lib.length && !mine.length){
+    $("libBody").innerHTML = `<div class="empty"><span class="e">📚</span>收藏還是空的<br>去商城買幾篇知識或貓咪貼圖，<br>腎元不夠就先玩遊戲</div>`;
     return;
   }
   const full = Object.fromEntries(PRODUCTS.map(p=>[p.id,p]));
-  $("libBody").innerHTML = [...lib].reverse().map(k=>{
-    const p = full[k.id];
-    const body = p ? p.k.b : (k.b || "");
-    return `<details class="kitem">
-      <summary>${k.e} ${k.t}</summary>
-      <div class="kbody">${body}</div>
-    </details>`;
-  }).join("");
+  let html = "";
+
+  if(lib.length){
+    html += `<div class="secttl">📚 護腎知識 <span>${lib.length} 篇</span></div>`;
+    html += [...lib].reverse().map(k=>{
+      const p = full[k.id];
+      return `<details class="kitem">
+        <summary>${k.e} ${k.t}</summary>
+        <div class="kbody">${p ? p.k.b : (k.b||"")}</div>
+      </details>`;
+    }).join("");
+  }
+
+  if(mine.length){
+    html += `<div class="secttl">🐱 貓咪貼圖 <span>${mine.length}/${STICKERS.length} 張</span>
+             <button class="dlall" onclick="downloadAll()">⬇ 全部下載</button></div>`;
+    html += `<div class="sgrid">` + mine.map(k=>`
+      <figure class="sitem">
+        <img src="stickers/thumb/${k.id}.png" alt="${k.l}" loading="lazy">
+        <figcaption>${k.l}</figcaption>
+        <a class="dl" href="stickers/${k.id}.png"
+           download="貓咪貼圖_${k.l.replace(/[！？…～?!]/g,"")}_${k.id}.png">⬇</a>
+      </figure>`).join("") + `</div>`;
+  }
+  $("libBody").innerHTML = html;
+}
+
+/* 逐一觸發下載（瀏覽器可能詢問是否允許多檔下載） */
+function downloadAll(){
+  const mine = STICKERS.filter(k=>ownedStk(k.id));
+  if(!mine.length) return;
+  toast(`開始下載 ${mine.length} 張貼圖…`);
+  mine.forEach((k,i)=>setTimeout(()=>{
+    const a = document.createElement("a");
+    a.href = `stickers/${k.id}.png`;
+    a.download = `貓咪貼圖_${k.l.replace(/[！？…～?!]/g,"")}_${k.id}.png`;
+    document.body.appendChild(a); a.click(); a.remove();
+  }, i*280));
 }
 
 /* ═══════════ 小腎臟大冒險（小恐龍式跑酷）═══════════ */
