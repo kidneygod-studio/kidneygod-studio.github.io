@@ -19,7 +19,7 @@ if (FIREBASE_CONFIG) {
           signInWithPopup, linkWithPopup, signOut } =
     await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js");
   const { getFirestore, doc, getDoc, setDoc, deleteDoc, collection,
-          addDoc, getDocs, query, orderBy, limit, increment, serverTimestamp } =
+          getDocs, query, orderBy, limit, increment, serverTimestamp } =
     await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
 
   const app  = initializeApp(FIREBASE_CONFIG);
@@ -84,6 +84,8 @@ if (FIREBASE_CONFIG) {
       if(!user) return;
       try{
         await deleteDoc(userDoc());
+        /* 排行榜成績也一併下架（可能從未上榜，失敗不影響刪除流程） */
+        try{ await deleteDoc(doc(db, "leaderboard", auth.currentUser.uid)); }catch(e){}
         const u = auth.currentUser;
         await signOut(auth);
         try{ await u.delete(); }catch(e){ /* 需重新驗證時僅刪文件 */ }
@@ -96,6 +98,8 @@ if (FIREBASE_CONFIG) {
   const statsDoc = () => doc(db, "stats", "site");
 
   window.site = {
+    /* 自己在排行榜上那筆的 id；算名次時要先排除，否則會被自己的舊成績擠掉 */
+    myId(){ return auth.currentUser ? auth.currentUser.uid : null; },
     /* 每個瀏覽階段只計一次，避免重整灌水也節省寫入配額 */
     async bumpViews(){
       try{
@@ -114,24 +118,38 @@ if (FIREBASE_CONFIG) {
     },
     async getTop(n = 10){
       /* 只用單欄排序（score）以免需要複合索引；同分者在前端依時間先後排，
-         多抓一些再截斷，確保同分時較早達成者排前面。 */
+         多抓一些再截斷，確保同分時較早達成者排前面。
+         每位玩家一筆（文件 id 即 uid），舊版 addDoc 產生的重複紀錄在此以
+         uid 欄位收斂，只留最高分那筆。 */
       try{
-        const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(n * 3));
+        const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(n * 5));
         const snap = await getDocs(q);
-        const rows = snap.docs.map(d => ({id: d.id, ...d.data()}));
+        const byUser = new Map();
+        for(const d of snap.docs){
+          const row = {id: d.id, ...d.data()};
+          const key = row.uid || d.id;
+          const cur = byUser.get(key);
+          if(!cur || row.score > cur.score) byUser.set(key, row);
+        }
+        const rows = [...byUser.values()];
         rows.sort((a, b) =>
           (b.score - a.score) ||
           ((a.at && a.at.seconds || 0) - (b.at && b.at.seconds || 0)));
         return rows.slice(0, n);
       }catch(e){ console.debug("leaderboard read", e); return null; }
     },
+    /* 一位玩家一筆紀錄，重複送出就更新同一筆，不會洗版排行榜。
+       中途成績也能送，成績提高時再呼叫一次即可。 */
     async submitScore(name, score, rounds){
       try{
         if(!auth.currentUser) await signInAnonymously(auth);   // 匿名身分即可，仍不需個資
+        const uid = auth.currentUser.uid;
         const clean = String(name || "").trim().slice(0, 16) || "匿名者";
-        await addDoc(collection(db, "leaderboard"), {
-          name: clean, score: Math.max(0, Math.min(100, score|0)),
-          rounds: rounds|0, at: serverTimestamp(),
+        await setDoc(doc(db, "leaderboard", uid), {
+          uid, name: clean,
+          score: Math.max(0, Math.min(100, score|0)),
+          rounds: Math.max(0, Math.min(10, rounds|0)),
+          at: serverTimestamp(),
         });
         return clean;
       }catch(e){ console.debug("leaderboard write", e); return null; }

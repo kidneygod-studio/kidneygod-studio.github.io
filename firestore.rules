@@ -1,0 +1,50 @@
+rules_version = '2';
+
+/* 護腎教室 KidneyGod.Studio — Firestore 安全規則
+   貼到 Firebase console > Firestore Database > 規則 > 發布。
+
+   原則：
+     users       只有本人讀寫自己那份進度，任何人都看不到別人的
+     stats/site  任何人可讀（頁尾瀏覽次數），寫入只允許 +1，擋灌水
+     leaderboard 任何人可讀，但只能寫「文件 id 等於自己 uid」的那一筆，
+                 且分數只能往上更新 —— 這樣中途成績可以一路刷新同一筆，
+                 不會每輪新增一筆把排行榜洗版，也不能改別人的成績
+*/
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* ── 個人進度：完全私有 ── */
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    /* ── 站台計數器：公開讀，寫入只能 +1 ── */
+    match /stats/site {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['views'])
+                    && request.resource.data.views == 1;
+      allow update: if request.resource.data.keys().hasOnly(['views'])
+                    && request.resource.data.views == resource.data.views + 1;
+      allow delete: if false;
+    }
+
+    /* ── 小學堂排行榜：公開讀，一人一筆，分數只升不降 ── */
+    match /leaderboard/{uid} {
+      function valid() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['uid', 'name', 'score', 'rounds', 'at'])
+            && d.uid == uid
+            && d.name is string && d.name.size() > 0 && d.name.size() <= 16
+            && d.score is int  && d.score  >= 0 && d.score  <= 100
+            && d.rounds is int && d.rounds >= 0 && d.rounds <= 10
+            && d.at == request.time;
+      }
+      allow read:   if true;
+      allow create: if request.auth != null && request.auth.uid == uid && valid();
+      allow update: if request.auth != null && request.auth.uid == uid && valid()
+                    && request.resource.data.score >= resource.data.score;
+      /* 讓「刪除雲端資料」也能把自己的成績下架 */
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}

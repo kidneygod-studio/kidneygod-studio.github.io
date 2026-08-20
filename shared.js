@@ -41,6 +41,9 @@ const store = {
   set qBestTotal(v){ localStorage.msd_qbesttotal = v; syncPush(); },
   get qName(){ return localStorage.msd_qname || ""; },
   set qName(v){ localStorage.msd_qname = v; syncPush(); },
+  /* 已同意上榜：名字只問一次，之後每輪自動更新成績（留空者為匿名者） */
+  get qOptIn(){ return localStorage.msd_qoptin === "1"; },
+  set qOptIn(v){ localStorage.msd_qoptin = v ? "1" : "0"; syncPush(); },
   get stk(){ try{return JSON.parse(localStorage.msd_stickers||"[]")}catch(e){return[]} },
   set stk(v){ localStorage.msd_stickers = JSON.stringify(v); syncPush(); },
 };
@@ -60,7 +63,7 @@ function getLocalState(){
   return {coins:store.coins, lib:store.lib, gifts:store.gifts,
           best:store.best, best2:store.best2, best3:store.best3, stk:store.stk,
           qRounds:store.qRounds, qCorrect:store.qCorrect,
-          qBestTotal:store.qBestTotal, qName:store.qName};
+          qBestTotal:store.qBestTotal, qName:store.qName, qOptIn:store.qOptIn};
 }
 function applyState(s){
   if(!s) return;
@@ -74,6 +77,7 @@ function applyState(s){
   localStorage.msd_qcorrect    = s.qCorrect || 0;
   localStorage.msd_qbesttotal  = s.qBestTotal || 0;
   localStorage.msd_qname       = s.qName || "";
+  localStorage.msd_qoptin      = s.qOptIn ? "1" : "0";
   localStorage.msd_stickers = JSON.stringify(s.stk || []);
   if(typeof window.onStateApplied === "function") window.onStateApplied();
 }
@@ -95,6 +99,7 @@ function mergeState(cloud, local){
     qRounds:  Math.max(cloud.qRounds  ?? 0, local.qRounds  ?? 0),
     qCorrect: Math.max(cloud.qCorrect ?? 0, local.qCorrect ?? 0),
     qName: local.qName || cloud.qName || "",
+    qOptIn: !!(local.qOptIn || cloud.qOptIn),
     lib, gifts, stk,
   };
 }

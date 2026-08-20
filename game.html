@@ -381,8 +381,10 @@ function renderTips(){
       依據的臨床指引（2022 台灣高血壓治療指引、2022 台灣血脂指引、KDIGO 2024、
       KDOQI 2020、國健署調查、台灣腎病年報等），答完可直接點進商城看完整知識卡。<br>
       <b>答錯不扣分</b>　結算時會把答錯的題目與解說再列一次 —— 這個遊戲的目的是記住，不是考倒你。<br>
-      <b>十輪挑戰與排行榜</b>　累計玩滿 10 輪（100 題）會結算總成績。若成績進入前十名，
-      畫面會邀請你留下代號或綽號登上排行榜；留空就顯示為「匿名者」。
+      <b>排行榜</b>　每輪結束都會結算一次累計答對題數 —— <b>不必打滿十輪，中途的總分一樣能上榜</b>。
+      成績進得了前十名，畫面就會邀請你留下代號或綽號；留空顯示為「匿名者」。
+      同意上榜後不會再問第二次，之後每輪成績提高都自動更新你那一筆，不會洗版。
+      十輪（100 題）打完就是滿分 100，題目不重複；打完歸零可以重新挑戰。
       第一名的名字會出現在商城首頁的跑馬燈上。
       <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">🏆 看排行榜</button></div>`;
     return;
@@ -910,9 +912,10 @@ function quizEnd(){
   store.coins = store.coins + Q.earned;
   if(Q.right > store.best3) store.best3 = Q.right;
 
-  // 累計進度
+  // 累計進度（中途總分即可進榜，不必等十輪打完）
   store.qRounds  = store.qRounds + 1;
   store.qCorrect = store.qCorrect + Q.right;
+  if(store.qCorrect > store.qBestTotal) store.qBestTotal = store.qCorrect;
   syncCoinBar();
 
   const perfect = Q.right === Q.list.length;
@@ -939,54 +942,69 @@ function quizEnd(){
       </div>
     </div>`;
   quizStats();
-  if(done) finishChallenge();
+  rankCheck(store.qCorrect, store.qRounds, done);
+  if(done){                       // 十輪打完：歸零，下次重新洗牌出題
+    store.qRounds = 0; store.qCorrect = 0;
+    delete sessionStorage.kg_deck;
+  }
 }
 
-/* 十輪完成：結算總分、檢查是否進榜 */
-async function finishChallenge(){
-  const total = store.qCorrect;                 // 100 題中答對幾題
-  if(total > store.qBestTotal) store.qBestTotal = total;
-  store.qRounds = 0; store.qCorrect = 0;        // 歸零，可再挑戰
-  delete sessionStorage.kg_deck;                // 重新洗牌，下次挑戰題序不同
-
+/* 每輪結束都結算一次排名：中途的累計總分同樣能進榜。
+   名字只在第一次進榜時問，之後成績變高就自動更新同一筆紀錄。 */
+async function rankCheck(total, rounds, done){
   const box = document.createElement("div");
   box.className = "qchallenge";
-  box.innerHTML = `<div class="ct">🏆 十輪挑戰完成</div>
-     <div class="cs">總成績 <b>${total}</b> / 100 題</div>
+  box.innerHTML = `<div class="ct">${done ? "🏆 十輪挑戰完成" : "📊 目前累計成績"}</div>
+     <div class="cs">總成績 <b>${total}</b> / 100 題　<span class="dimtxt">（已完成 ${rounds} 輪）</span></div>
      <div class="cw" id="cwrap">查詢排行榜中…</div>`;
   $("qend").insertBefore(box, $("qend").querySelector(".qnav"));
-  confetti(["🏆","🎓","✨","🎊","💯","⭐"]);
+  if(done) confetti(["🏆","🎓","✨","🎊","💯","⭐"]);
 
   const top = window.site ? await window.site.getTop(10) : null;
   const wrap = $("cwrap");
+  if(!wrap) return;                       // 玩家已離開這個畫面
   if(!top){
     wrap.innerHTML = `<span class="dimtxt">排行榜暫時無法連線，成績已保留在本機。</span>`;
     return;
   }
-  const rank = top.filter(t => t.score > total).length + 1;
-  if(top.length >= 10 && rank > 10){
-    wrap.innerHTML = `<span class="dimtxt">目前第 10 名為 ${top[9].score} 題，
-       再接再厲！你的最佳成績是 ${store.qBestTotal} 題。</span>
-       <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">看排行榜</button></div>`;
+  const board = () =>
+    `<div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">看排行榜</button></div>`;
+
+  /* 自己那筆已在榜上時，名次要排除舊紀錄再算，否則會被自己擠掉 */
+  const mine = window.site.myId ? window.site.myId() : null;
+  const others = top.filter(t => (t.uid || t.id) !== mine);
+  const rank = others.filter(t => t.score > total).length + 1;
+  const full = others.length >= 10 && rank > 10;
+
+  if(full){
+    wrap.innerHTML = `<span class="dimtxt">目前第 10 名為 ${others[9].score} 題，
+       還差 ${others[9].score - total + 1} 題就能進榜${done ? "" : "，繼續往下一輪衝"}。</span>` + board();
+    return;
+  }
+  if(store.qOptIn){                       // 已同意上榜：直接更新，不再打擾
+    const saved = await window.site.submitScore(store.qName, total, rounds);
+    wrap.innerHTML = saved
+      ? `<div class="inrank">✅ 排行榜已更新：<b>${escapeHTML(saved)}</b>　${total} / 100 題　目前第 ${rank} 名</div>` + board()
+      : `<span class="dimtxt">排行榜暫時無法連線，成績已保留在本機。</span>`;
     return;
   }
   wrap.innerHTML = `
-    <div class="inrank">🎉 你目前是<b>第 ${rank} 名</b>！要把名字放上排行榜嗎？</div>
+    <div class="inrank">🎉 這個成績是<b>第 ${rank} 名</b>！要把名字放上排行榜嗎？</div>
     <div class="namerow">
       <input id="lbName" maxlength="16" placeholder="輸入代號或綽號（可留空）"
              value="${(store.qName || "").replace(/"/g,"&quot;")}">
       <button class="qbtn" id="lbOk">送出</button>
     </div>
-    <div class="dimtxt">留空送出就會顯示為「匿名者」。名稱會公開顯示於排行榜。</div>`;
+    <div class="dimtxt">留空送出就會顯示為「匿名者」。名稱會公開顯示於排行榜；
+      同意後每輪成績提高都會自動更新這一筆，不會重複洗版。</div>`;
   $("lbOk").addEventListener("click", async () => {
-    const el = $("lbName");
-    const nm = el.value.trim();
+    const nm = $("lbName").value.trim();
     $("lbOk").disabled = true; $("lbOk").textContent = "送出中…";
-    const saved = await window.site.submitScore(nm, total, QUIZ_CHALLENGE);
+    const saved = await window.site.submitScore(nm, total, rounds);
     if(saved){
       if(nm) store.qName = nm;
-      wrap.innerHTML = `<div class="inrank">✅ 已登上排行榜：<b>${saved}</b>　${total} / 100 題</div>
-        <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">看排行榜</button></div>`;
+      store.qOptIn = true;
+      wrap.innerHTML = `<div class="inrank">✅ 已登上排行榜：<b>${escapeHTML(saved)}</b>　${total} / 100 題　第 ${rank} 名</div>` + board();
     }else{
       $("lbOk").disabled = false; $("lbOk").textContent = "送出";
       toast("排行榜暫時無法連線，請稍後再試");
@@ -999,7 +1017,7 @@ async function showBoard(){
   const w = $("quizWrap");
   w.innerHTML = `<div class="qend"><div class="big">🏆</div>
      <h3>小學堂排行榜</h3>
-     <div class="sc">十輪 100 題的總成績・前十名</div>
+     <div class="sc">累計答對題數・前十名（中途成績也算，打越多輪分數越高）</div>
      <div id="boardList">讀取中…</div>
      <div class="qnav" style="justify-content:center">
        <button class="qbtn" onclick="quizStart()">開始挑戰</button>
@@ -1008,12 +1026,12 @@ async function showBoard(){
   const top = window.site ? await window.site.getTop(10) : null;
   const el = $("boardList");
   if(!top){ el.innerHTML = `<span class="dimtxt">排行榜暫時無法連線。</span>`; return; }
-  if(!top.length){ el.innerHTML = `<span class="dimtxt">還沒有人完成十輪挑戰，第一名等你來拿。</span>`; return; }
+  if(!top.length){ el.innerHTML = `<span class="dimtxt">還沒有人上榜，第一名等你來拿。</span>`; return; }
   el.innerHTML = `<ol class="board">` + top.map((t, i) =>
     `<li class="${i<3?"medal m"+(i+1):""}">
        <span class="rk">${["🥇","🥈","🥉"][i] || (i+1)}</span>
        <span class="nm">${escapeHTML(t.name || "匿名者")}</span>
-       <span class="sv">${t.score} / 100</span>
+       <span class="sv">${t.score} / 100${t.rounds ? `<small class="dimtxt">　${t.rounds} 輪</small>` : ""}</span>
      </li>`).join("") + `</ol>`;
 }
 function escapeHTML(s){
