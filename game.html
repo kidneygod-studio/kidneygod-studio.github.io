@@ -976,16 +976,29 @@ async function rankCheck(total, rounds, done){
   const rank = others.filter(t => t.score > total).length + 1;
   const full = others.length >= 10 && rank > 10;
 
+  /* 已同意上榜者一律逐輪送出（即使目前排不進前十）。
+     規則限制每次寫入最多 +10，等到擠進前十才補送會被一次跳太多而擋下。 */
+  if(store.qOptIn && total > store.qSubmitted){
+    const saved = await window.site.submitScore(store.qName, total, rounds);
+    if(saved){
+      store.qSubmitted = total;
+      wrap.innerHTML = full
+        ? `<span class="dimtxt">成績已記錄 ${total} 題。目前第 10 名為 ${others[9].score} 題，
+           還差 ${others[9].score - total + 1} 題就能進榜。</span>` + board()
+        : `<div class="inrank">✅ 排行榜已更新：<b>${escapeHTML(saved)}</b>　${total} / 100 題　目前第 ${rank} 名</div>` + board();
+    }else{
+      wrap.innerHTML = `<span class="dimtxt">排行榜暫時無法連線，成績已保留在本機。</span>`;
+    }
+    return;
+  }
   if(full){
     wrap.innerHTML = `<span class="dimtxt">目前第 10 名為 ${others[9].score} 題，
        還差 ${others[9].score - total + 1} 題就能進榜${done ? "" : "，繼續往下一輪衝"}。</span>` + board();
     return;
   }
-  if(store.qOptIn){                       // 已同意上榜：直接更新，不再打擾
-    const saved = await window.site.submitScore(store.qName, total, rounds);
-    wrap.innerHTML = saved
-      ? `<div class="inrank">✅ 排行榜已更新：<b>${escapeHTML(saved)}</b>　${total} / 100 題　目前第 ${rank} 名</div>` + board()
-      : `<span class="dimtxt">排行榜暫時無法連線，成績已保留在本機。</span>`;
+  if(store.qOptIn){                       // 已上榜但本輪沒突破自己的紀錄
+    wrap.innerHTML = `<span class="dimtxt">榜上成績為 ${store.qSubmitted} 題（第 ${rank} 名），
+      本輪累計 ${total} 題還沒超過，繼續加油。</span>` + board();
     return;
   }
   wrap.innerHTML = `
@@ -995,15 +1008,15 @@ async function rankCheck(total, rounds, done){
              value="${(store.qName || "").replace(/"/g,"&quot;")}">
       <button class="qbtn" id="lbOk">送出</button>
     </div>
-    <div class="dimtxt">留空送出就會顯示為「匿名者」。名稱會公開顯示於排行榜；
-      同意後每輪成績提高都會自動更新這一筆，不會重複洗版。</div>`;
+    <div class="dimtxt">名稱隨你高興取，會公開顯示於排行榜，留空就是「匿名者」；
+      分數則必須是實際玩出來的。同意後每輪成績提高都會自動更新這一筆，不會重複洗版。</div>`;
   $("lbOk").addEventListener("click", async () => {
     const nm = $("lbName").value.trim();
     $("lbOk").disabled = true; $("lbOk").textContent = "送出中…";
     const saved = await window.site.submitScore(nm, total, rounds);
     if(saved){
       if(nm) store.qName = nm;
-      store.qOptIn = true;
+      store.qOptIn = true; store.qSubmitted = total;
       wrap.innerHTML = `<div class="inrank">✅ 已登上排行榜：<b>${escapeHTML(saved)}</b>　${total} / 100 題　第 ${rank} 名</div>` + board();
     }else{
       $("lbOk").disabled = false; $("lbOk").textContent = "送出";

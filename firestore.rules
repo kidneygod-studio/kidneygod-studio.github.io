@@ -7,8 +7,19 @@ rules_version = '2';
      users       只有本人讀寫自己那份進度，任何人都看不到別人的
      stats/site  任何人可讀（頁尾瀏覽次數），寫入只允許 +1，擋灌水
      leaderboard 任何人可讀，但只能寫「文件 id 等於自己 uid」的那一筆，
-                 且分數只能往上更新 —— 這樣中途成績可以一路刷新同一筆，
-                 不會每輪新增一筆把排行榜洗版，也不能改別人的成績
+                 不能改別人的成績
+
+   名稱是自由欄位（本來就允許取任何綽號），要守住的是分數。以下限制讓
+   分數只能用「一輪一輪玩上去」的節奏累積：
+     ・只升不降，上限 100
+     ・每次寫入最多 +10（一輪十題的上限），不能一次跳到滿分
+     ・兩次寫入至少間隔 10 秒，十題不可能在十秒內答完
+     ・分數不得超過「已完成輪數 × 10」
+   合計：要從零爬到 100 至少得寫入十次、耗時 90 秒以上。
+
+   ※ 誠實說明：這是提高成本，不是證明。安全規則只看得到單次寫入內容，
+     無法驗證題目是否真的答對。要真正保證分數是玩出來的，必須把出題與
+     計分搬到伺服器（Cloud Functions，需升級 Blaze 方案）。
 */
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -28,23 +39,29 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    /* ── 小學堂排行榜：公開讀，一人一筆，分數只升不降 ── */
+    /* ── 小學堂排行榜：公開讀，一人一筆，分數只能一輪一輪爬上去 ── */
     match /leaderboard/{uid} {
+      function mine() {
+        return request.auth != null && request.auth.uid == uid;
+      }
       function valid() {
         let d = request.resource.data;
         return d.keys().hasOnly(['uid', 'name', 'score', 'rounds', 'at'])
             && d.uid == uid
             && d.name is string && d.name.size() > 0 && d.name.size() <= 16
             && d.score is int  && d.score  >= 0 && d.score  <= 100
-            && d.rounds is int && d.rounds >= 0 && d.rounds <= 10
-            && d.at == request.time;
+            && d.rounds is int && d.rounds >= 1 && d.rounds <= 10
+            && d.score <= d.rounds * 10        // 一輪十題，分數不能超過已玩輪數
+            && d.at == request.time;           // 時間戳必須由伺服器產生
       }
       allow read:   if true;
-      allow create: if request.auth != null && request.auth.uid == uid && valid();
-      allow update: if request.auth != null && request.auth.uid == uid && valid()
-                    && request.resource.data.score >= resource.data.score;
+      allow create: if mine() && valid();
+      allow update: if mine() && valid()
+                    && request.resource.data.score > resource.data.score
+                    && request.resource.data.score <= resource.data.score + 10
+                    && request.time > resource.data.at + duration.value(10, 's');
       /* 讓「刪除雲端資料」也能把自己的成績下架 */
-      allow delete: if request.auth != null && request.auth.uid == uid;
+      allow delete: if mine();
     }
   }
 }

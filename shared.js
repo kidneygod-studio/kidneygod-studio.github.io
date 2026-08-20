@@ -44,6 +44,10 @@ const store = {
   /* 已同意上榜：名字只問一次，之後每輪自動更新成績（留空者為匿名者） */
   get qOptIn(){ return localStorage.msd_qoptin === "1"; },
   set qOptIn(v){ localStorage.msd_qoptin = v ? "1" : "0"; syncPush(); },
+  /* 已送上排行榜的最高分。規則限制每次寫入最多 +10（一輪的上限），
+     所以必須逐輪送出、只送比這個高的分數，不能等到最後一次補齊。 */
+  get qSubmitted(){ return parseInt(localStorage.msd_qsubmitted)||0; },
+  set qSubmitted(v){ localStorage.msd_qsubmitted = v; syncPush(); },
   get stk(){ try{return JSON.parse(localStorage.msd_stickers||"[]")}catch(e){return[]} },
   set stk(v){ localStorage.msd_stickers = JSON.stringify(v); syncPush(); },
 };
@@ -63,7 +67,8 @@ function getLocalState(){
   return {coins:store.coins, lib:store.lib, gifts:store.gifts,
           best:store.best, best2:store.best2, best3:store.best3, stk:store.stk,
           qRounds:store.qRounds, qCorrect:store.qCorrect,
-          qBestTotal:store.qBestTotal, qName:store.qName, qOptIn:store.qOptIn};
+          qBestTotal:store.qBestTotal, qName:store.qName, qOptIn:store.qOptIn,
+          qSubmitted:store.qSubmitted};
 }
 function applyState(s){
   if(!s) return;
@@ -78,6 +83,7 @@ function applyState(s){
   localStorage.msd_qbesttotal  = s.qBestTotal || 0;
   localStorage.msd_qname       = s.qName || "";
   localStorage.msd_qoptin      = s.qOptIn ? "1" : "0";
+  localStorage.msd_qsubmitted  = s.qSubmitted || 0;
   localStorage.msd_stickers = JSON.stringify(s.stk || []);
   if(typeof window.onStateApplied === "function") window.onStateApplied();
 }
@@ -100,6 +106,7 @@ function mergeState(cloud, local){
     qCorrect: Math.max(cloud.qCorrect ?? 0, local.qCorrect ?? 0),
     qName: local.qName || cloud.qName || "",
     qOptIn: !!(local.qOptIn || cloud.qOptIn),
+    qSubmitted: Math.max(cloud.qSubmitted ?? 0, local.qSubmitted ?? 0),
     lib, gifts, stk,
   };
 }
