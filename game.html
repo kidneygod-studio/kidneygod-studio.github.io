@@ -84,7 +84,7 @@
   .pad button:active{background:#fff;transform:scale(.94);}
   .pad .u{grid-area:1/2;} .pad .l{grid-area:2/1;}
   .pad .r{grid-area:2/3;} .pad .d{grid-area:3/2;}
-  body.touch .pad.show{display:grid;}
+  .pad.show{display:grid;}
 
   .tips{background:#fff;border:1px solid var(--line);border-radius:14px;
         padding:14px 16px;margin-top:14px;font-size:13.5px;color:#5a4a44;line-height:1.8;}
@@ -154,10 +154,10 @@
     <canvas id="cv"></canvas>
     <div class="stats" id="statBar"></div>
     <div class="pad" id="pad">
-      <button class="u" onpointerdown="dir(0,-1)">▲</button>
-      <button class="l" onpointerdown="dir(-1,0)">◀</button>
-      <button class="r" onpointerdown="dir(1,0)">▶</button>
-      <button class="d" onpointerdown="dir(0,1)">▼</button>
+      <button class="u" data-d="0,-1" aria-label="上">▲</button>
+      <button class="l" data-d="-1,0" aria-label="左">◀</button>
+      <button class="r" data-d="1,0" aria-label="右">▶</button>
+      <button class="d" data-d="0,1" aria-label="下">▼</button>
     </div>
   </section>
 
@@ -532,7 +532,7 @@ const passable = (x,y) => {
   const row = M.grid[y];
   return row[((x % COLS()) + COLS()) % COLS()] !== "#";
 };
-function dir(dx,dy){ M.nx = dx; M.ny = dy; if(!M.running){ M.running = true; } }
+function setDir(dx,dy){ M.nx = dx; M.ny = dy; if(!M.running){ M.running = true; } }
 
 function stepMaze(){
   M.tick++;
@@ -715,7 +715,7 @@ addEventListener("keydown", e=>{
   }else{
     const map = {arrowup:[0,-1], w:[0,-1], arrowdown:[0,1], s:[0,1],
                  arrowleft:[-1,0], a:[-1,0], arrowright:[1,0], d:[1,0]};
-    if(map[k]){ e.preventDefault(); dir(...map[k]); }
+    if(map[k]){ e.preventDefault(); setDir(...map[k]); }
     if(k === " " && M.over){ e.preventDefault(); mazeReset(true); M.running = true; }
   }
 });
@@ -729,12 +729,20 @@ cv.addEventListener("pointerup", e=>{
   if(MODE !== 2 || !TS) return;
   const dx = e.clientX - TS.x, dy = e.clientY - TS.y;
   if(Math.hypot(dx,dy) > 22){
-    if(Math.abs(dx) > Math.abs(dy)) dir(dx>0?1:-1, 0);
-    else dir(0, dy>0?1:-1);
+    if(Math.abs(dx) > Math.abs(dy)) setDir(dx>0?1:-1, 0);
+    else setDir(0, dy>0?1:-1);
   }
   TS = null;
 });
 cv.addEventListener("contextmenu", e=>e.preventDefault());
+
+/* 方向鍵面板：以程式綁定（inline handler 會被 document.dir 遮蔽） */
+$("pad").querySelectorAll("button").forEach(b=>{
+  const [dx,dy] = b.dataset.d.split(",").map(Number);
+  const fire = e => { e.preventDefault(); setDir(dx,dy); };
+  b.addEventListener("pointerdown", fire);
+  b.addEventListener("click", fire);          // 滑鼠與輔助工具的備援
+});
 
 /* ═══════════ 啟動 ═══════════ */
 window.onStateApplied = () => { syncCoinBar(); };
