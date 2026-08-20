@@ -30,6 +30,8 @@ const store = {
   set best(v){ localStorage.msd_best = v; syncPush(); },
   get best2(){ return parseInt(localStorage.msd_best2)||0; },
   set best2(v){ localStorage.msd_best2 = v; syncPush(); },
+  get best3(){ return parseInt(localStorage.msd_best3)||0; },
+  set best3(v){ localStorage.msd_best3 = v; syncPush(); },
   get stk(){ try{return JSON.parse(localStorage.msd_stickers||"[]")}catch(e){return[]} },
   set stk(v){ localStorage.msd_stickers = JSON.stringify(v); syncPush(); },
 };
@@ -47,7 +49,7 @@ function syncPush(){
 }
 function getLocalState(){
   return {coins:store.coins, lib:store.lib, gifts:store.gifts,
-          best:store.best, best2:store.best2, stk:store.stk};
+          best:store.best, best2:store.best2, best3:store.best3, stk:store.stk};
 }
 function applyState(s){
   if(!s) return;
@@ -56,6 +58,7 @@ function applyState(s){
   localStorage.msd_gifts    = JSON.stringify(s.gifts || {});
   localStorage.msd_best     = s.best || 0;
   localStorage.msd_best2    = s.best2 || 0;
+  localStorage.msd_best3    = s.best3 || 0;
   localStorage.msd_stickers = JSON.stringify(s.stk || []);
   if(typeof window.onStateApplied === "function") window.onStateApplied();
 }
@@ -72,6 +75,7 @@ function mergeState(cloud, local){
     coins: Math.max(cloud.coins ?? 0, local.coins ?? 0),
     best:  Math.max(cloud.best  ?? 0, local.best  ?? 0),
     best2: Math.max(cloud.best2 ?? 0, local.best2 ?? 0),
+    best3: Math.max(cloud.best3 ?? 0, local.best3 ?? 0),
     lib, gifts, stk,
   };
 }
