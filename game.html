@@ -84,7 +84,7 @@
   .pad button:active{background:#fff;transform:scale(.94);}
   .pad .u{grid-area:1/2;} .pad .l{grid-area:2/1;}
   .pad .r{grid-area:2/3;} .pad .d{grid-area:3/2;}
-  .pad.show{display:grid;}
+  body.touch .pad.show{display:grid;}   /* 桌機用鍵盤即可，不顯示方向鍵 */
 
   .tips{background:#fff;border:1px solid var(--line);border-radius:14px;
         padding:14px 16px;margin-top:14px;font-size:13.5px;color:#5a4a44;line-height:1.8;}
