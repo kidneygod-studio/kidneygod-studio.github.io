@@ -160,6 +160,10 @@
   footer{border-top:1px solid var(--line);background:#fff;padding:24px 16px 40px;margin-top:24px;}
   .fw{max-width:1000px;margin:0 auto;font-size:13px;color:var(--dim);}
   .fw a{color:var(--accent);font-weight:700;}
+  /* 純資訊，刻意不做成按鈕外觀（在 header 當藥丸時會被誤認為可點） */
+  .fmeta{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);
+         text-align:center;font-size:12.5px;letter-spacing:.03em;cursor:default;}
+  .fmeta b{color:var(--ink);font-variant-numeric:tabular-nums;}
 
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);
          background:var(--ink);color:#fff;font-size:14px;font-weight:600;
@@ -196,7 +200,6 @@
     <a class="logo" href="index.html">護腎教室<small>KIDNEYGOD.STUDIO</small></a>
     <div class="spacer"></div>
     <span class="hbtn coin"><img class="ki" alt=""><span id="coinBal">100</span> 腎元</span>
-    <span class="hbtn" id="viewBox" style="display:none">👀 <span id="viewCnt">–</span></span>
     <a class="hbtn" href="index.html">🛒 回商城</a>
     <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
   </div>
@@ -242,6 +245,7 @@
   <div class="fw">
     <p>腎元只能在<a href="index.html">護腎教室商城</a>兌換護腎知識與貓咪貼圖，不具任何金錢價值。</p>
     <p style="margin-top:6px">⚕️ 遊戲中的衛教內容為一般性健康知識，不能取代醫師診斷與治療建議；有症狀請就醫。</p>
+    <div class="fmeta" id="viewBox" style="display:none">累計瀏覽 <b id="viewCnt">–</b> 次</div>
   </div>
 </footer>
 

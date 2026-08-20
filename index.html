@@ -275,6 +275,10 @@
   .fwrap{max-width:760px;margin:0 auto;font-size:13.5px;color:var(--dim);}
   .fwrap h3{color:var(--ink);font-size:16px;margin-bottom:8px;}
   .fwrap p{margin:8px 0;}
+  /* 純資訊，刻意不做成按鈕外觀（在 header 當藥丸時會被誤認為可點） */
+  .fmeta{margin-top:22px;padding-top:16px;border-top:1px solid var(--line);
+         text-align:center;font-size:12.5px;letter-spacing:.03em;cursor:default;}
+  .fmeta b{color:var(--ink);font-variant-numeric:tabular-nums;}
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);
          background:var(--ink);color:#fff;font-size:14px;font-weight:600;
          padding:11px 22px;border-radius:99px;z-index:99;transition:.3s;opacity:0;}
@@ -297,7 +301,6 @@
     </div>
     <button class="hbtn coin" onclick="scrollGame()"><img class="ki" id="coinIco" alt=""><span id="coinBal">100</span> 腎元</button>
     <button class="hbtn" onclick="openLib()">📚 知識庫<span class="badge" id="libBadge">0</span></button>
-    <span class="hbtn" id="viewBox" style="display:none">👀 <span id="viewCnt">–</span></span>
     <button class="hbtn" onclick="openCart()">🛒<span class="badge" id="badge">0</span></button>
     <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
   </div>
@@ -330,6 +333,7 @@
     <p>🔐 <strong>隱私說明：</strong>未登入時，你的進度（腎元、知識庫、最高分）只存在你自己瀏覽器的 localStorage，本站不會取得。若你<strong>選擇</strong>使用雲端同步：「匿名開始」只會產生一組隨機識別碼，不涉及任何個人資料；「Google 登入」會取得你的 email 與顯示名稱，<strong>僅用於帳號識別與進度同步</strong>，不作行銷使用、不提供第三人，資料儲存於 Google Firebase。本站不經手任何密碼（登入視窗由 Google 官方提供）。你可隨時在帳號視窗登出，或使用「刪除雲端資料」將同步資料自伺服器移除。本站另有一個<strong>不記名的瀏覽次數計數器</strong>（每個瀏覽階段僅計一次，不記錄 IP、不追蹤個人）；小學堂排行榜只儲存你自行輸入的代號與成績，留空則顯示為「匿名者」。</p>
     <p>⚕️ <strong>醫療免責聲明：</strong>本站衛教內容為一般性健康知識，不能取代醫師診斷與治療建議。腎功能異常、用藥問題請諮詢腎臟科醫師或藥師；有症狀請就醫。</p>
     <p style="margin-top:14px">🧾 檢舉前請先看這段：本站無任何付款功能，不符合詐欺構成要件（無財物交付、無詐術）。真正的購物詐騙網站不會教你保護腎臟。</p>
+    <div class="fmeta" id="viewBox" style="display:none">累計瀏覽 <b id="viewCnt">–</b> 次</div>
   </div>
 </footer>
 
