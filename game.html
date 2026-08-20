@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>遊戲場 — 護腎教室 KidneyGod.Studio</title>
+<meta name="description" content="護腎教室遊戲場：小腎臟大冒險、小腎臟吃豆人 — 躲開傷腎因子、收集腎元，玩遊戲順便學護腎。">
+<style>
+  :root{
+    --bg:#fff7f0; --card:#fff; --ink:#3d2c29; --dim:#8a7268;
+    --brand:#ff5d73; --brand2:#ff9a3c; --accent:#7c5cff; --ok:#2ec27e;
+    --line:#f3e2d7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);
+       font-family:"Segoe UI","Microsoft JhengHei",system-ui,sans-serif;line-height:1.6;
+       -webkit-text-size-adjust:100%;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  a{color:inherit;}
+
+  .honest{position:sticky;top:0;z-index:60;background:#3d2c29;color:#ffe9d6;
+          text-align:center;font-size:13px;padding:7px 12px;}
+  .honest b{color:#ffc857;}
+  .ki{width:1.15em;height:1.15em;border-radius:50%;vertical-align:-.24em;
+      margin-right:.18em;object-fit:cover;box-shadow:0 0 0 1px rgba(61,44,41,.13);background:#fff;}
+  .bki{box-shadow:0 0 0 1.5px rgba(255,233,214,.7);margin-right:.4em;
+       width:1.45em;height:1.45em;vertical-align:-.38em;}
+
+  header{position:sticky;top:34px;z-index:50;background:rgba(255,247,240,.94);
+         backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .hwrap{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:10px;
+         padding:10px 16px;flex-wrap:wrap;}
+  .logo{font-size:20px;font-weight:900;letter-spacing:1px;text-decoration:none;
+        background:linear-gradient(90deg,var(--brand),var(--brand2));
+        -webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap;}
+  .logo small{font-size:10px;color:var(--dim);-webkit-text-fill-color:var(--dim);
+              display:block;letter-spacing:2px;font-weight:600;}
+  .spacer{flex:1;}
+  .hbtn{font-size:13.5px;font-weight:700;background:#fff;border:2px solid var(--line);
+        border-radius:99px;padding:7px 14px;white-space:nowrap;text-decoration:none;
+        display:inline-flex;align-items:center;}
+  .coin{background:linear-gradient(90deg,#7c5cff,#a78bfa);color:#fff;border:none;font-weight:900;}
+  .coin .ki{box-shadow:0 0 0 1.5px rgba(255,255,255,.75);margin-right:.3em;
+            width:1.35em;height:1.35em;vertical-align:-.32em;}
+
+  .wrap{max-width:1000px;margin:0 auto;padding:16px;}
+  @media(max-width:560px){
+    .wrap{padding:10px;}
+    .stage{padding:9px;border-radius:14px;}
+    .shead h2{font-size:17px;}
+    .snote{font-size:11.5px;}
+  }
+
+  /* ── 遊戲選單 ── */
+  .picker{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+  @media(max-width:640px){ .picker{grid-template-columns:1fr;} }
+  .gcard{background:var(--card);border:2px solid var(--line);border-radius:16px;
+         padding:14px 16px;text-align:left;transition:.16s;display:flex;gap:12px;align-items:center;}
+  .gcard:hover{border-color:var(--accent);transform:translateY(-2px);}
+  .gcard.on{border-color:var(--accent);background:#f6f2ff;
+            box-shadow:0 4px 16px rgba(124,92,255,.18);}
+  .gcard .em{font-size:34px;line-height:1;flex-shrink:0;}
+  .gcard b{display:block;font-size:16.5px;font-weight:900;}
+  .gcard span{display:block;font-size:12.5px;color:var(--dim);margin-top:2px;}
+
+  /* ── 遊戲舞台 ── */
+  .stage{background:linear-gradient(120deg,#7c5cff,#a78bfa);border-radius:18px;
+         padding:14px;color:#fff;}
+  .shead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+  .shead h2{font-size:19px;font-weight:900;letter-spacing:.5px;display:flex;
+            align-items:center;gap:8px;}
+  .gki{box-shadow:0 0 0 2px rgba(255,255,255,.85);margin:0;
+       width:1.35em;height:1.35em;vertical-align:-.3em;}
+  .snote{font-size:12.5px;opacity:.92;flex:1;min-width:180px;}
+  canvas{display:block;width:100%;background:#fffdf8;border-radius:12px;
+         touch-action:none;cursor:pointer;}
+  .stats{display:flex;gap:16px;margin-top:9px;font-size:13px;font-weight:700;flex-wrap:wrap;}
+
+  /* 手機方向鍵 */
+  .pad{display:none;grid-template-columns:repeat(3,60px);grid-template-rows:repeat(3,52px);
+       gap:6px;justify-content:center;margin-top:12px;}
+  .pad button{background:rgba(255,255,255,.9);border-radius:12px;font-size:22px;
+              font-weight:900;color:var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.12);}
+  .pad button:active{background:#fff;transform:scale(.94);}
+  .pad .u{grid-area:1/2;} .pad .l{grid-area:2/1;}
+  .pad .r{grid-area:2/3;} .pad .d{grid-area:3/2;}
+  body.touch .pad.show{display:grid;}
+
+  .tips{background:#fff;border:1px solid var(--line);border-radius:14px;
+        padding:14px 16px;margin-top:14px;font-size:13.5px;color:#5a4a44;line-height:1.8;}
+  .tips b{color:var(--accent);}
+  footer{border-top:1px solid var(--line);background:#fff;padding:24px 16px 40px;margin-top:24px;}
+  .fw{max-width:1000px;margin:0 auto;font-size:13px;color:var(--dim);}
+  .fw a{color:var(--accent);font-weight:700;}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);
+         background:var(--ink);color:#fff;font-size:14px;font-weight:600;
+         padding:11px 22px;border-radius:99px;z-index:99;transition:.3s;opacity:0;}
+  .toast.on{transform:translateX(-50%);opacity:1;}
+  .confetti{position:fixed;top:-12px;z-index:98;font-size:20px;pointer-events:none;
+            animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.6;}}
+
+  /* 帳號視窗 */
+  .veil{position:fixed;inset:0;background:rgba(61,44,41,.45);z-index:80;
+        opacity:0;pointer-events:none;transition:.25s;}
+  .veil.on{opacity:1;pointer-events:auto;}
+  .modal{position:fixed;inset:0;z-index:95;display:flex;align-items:center;
+         justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:.22s;}
+  .modal.on{opacity:1;pointer-events:auto;}
+  .sheet{background:#fff;border-radius:22px;width:min(460px,96vw);max-height:92vh;
+         overflow-y:auto;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.25);}
+  .sheet h2{font-size:19px;font-weight:900;margin-bottom:4px;}
+  .sheet .sub{font-size:13px;color:var(--dim);margin-bottom:14px;}
+  .cta{width:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;
+       font-size:15px;font-weight:900;padding:12px;border-radius:14px;letter-spacing:1px;}
+  .cta.alt{background:linear-gradient(90deg,#7c5cff,#a78bfa);}
+  .note{font-size:11.5px;color:var(--dim);background:#fff7ee;border:1px dashed #f0d8bf;
+        border-radius:10px;padding:9px 12px;margin:12px 0;}
+</style>
+</head>
+<body>
+
+<div class="honest"><img class="ki bki" alt="">這裡的腎元只能在<b>護腎教室</b>換知識與貼圖 — 不是真錢，也換不了真錢</div>
+
+<header>
+  <div class="hwrap">
+    <a class="logo" href="index.html">護腎教室<small>KIDNEYGOD.STUDIO</small></a>
+    <div class="spacer"></div>
+    <span class="hbtn coin"><img class="ki" alt=""><span id="coinBal">100</span> 腎元</span>
+    <a class="hbtn" href="index.html">🛒 回商城</a>
+    <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="picker">
+    <button class="gcard on" id="tab1" onclick="pick(1)">
+      <span class="em">🏃</span>
+      <span><b>小腎臟大冒險</b><span>跳躍閃避 ・ 躲開傷腎因子 +3、撿腎元 +5</span></span>
+    </button>
+    <button class="gcard" id="tab2" onclick="pick(2)">
+      <span class="em">👾</span>
+      <span><b>小腎臟吃豆人</b><span>迷宮吃腎元 ・ 躲開傷腎因子怪獸</span></span>
+    </button>
+  </div>
+
+  <section class="stage">
+    <div class="shead">
+      <h2><img class="ki gki" alt=""><span id="gTitle">小腎臟大冒險</span></h2>
+      <div class="snote" id="gNote">按空白鍵或點擊畫面跳躍 — 躲開傷腎因子 +3 腎元，跳起來撿腎元 +5</div>
+    </div>
+    <canvas id="cv"></canvas>
+    <div class="stats" id="statBar"></div>
+    <div class="pad" id="pad">
+      <button class="u" onpointerdown="dir(0,-1)">▲</button>
+      <button class="l" onpointerdown="dir(-1,0)">◀</button>
+      <button class="r" onpointerdown="dir(1,0)">▶</button>
+      <button class="d" onpointerdown="dir(0,1)">▼</button>
+    </div>
+  </section>
+
+  <div class="tips" id="tips"></div>
+</div>
+
+<footer>
+  <div class="fw">
+    <p>腎元只能在<a href="index.html">護腎教室商城</a>兌換護腎知識與貓咪貼圖，不具任何金錢價值。</p>
+    <p style="margin-top:6px">⚕️ 遊戲中的衛教內容為一般性健康知識，不能取代醫師診斷與治療建議；有症狀請就醫。</p>
+  </div>
+</footer>
+
+<div class="veil" id="veil" onclick="closeAll()"></div>
+<div class="modal" id="account">
+  <div class="sheet">
+    <h2>☁️ 雲端進度同步</h2>
+    <div class="sub" id="accStatus">未登入 — 進度目前只存在這台裝置的瀏覽器裡</div>
+    <div id="accActions"></div>
+    <div class="note">🔒 本站<b>不經手任何密碼</b>：Google 登入視窗由 Google 官方提供。匿名開始不需要提供任何資料。</div>
+    <button style="width:100%;padding:10px;color:var(--dim);font-size:13px;margin-top:6px" onclick="closeAll()">關閉</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="shared.js"></script>
+<script>
+"use strict";
+
+/* ═══════════ 傷腎因子（兩個遊戲共用）═══════════ */
+const OBS = [
+  {l:"NSAID",e:"💊",tip:"NSAID 止痛藥會減少腎臟血流，脫水時服用風險加倍。"},
+  {l:"不明止痛藥",e:"🏴",tip:"來路不明的止痛複方是止痛藥腎病變的主因，買藥認明許可證。"},
+  {l:"脫水",e:"🏜️",tip:"脫水是急性腎損傷最常見的開場，尿變深變少就要補水。"},
+  {l:"心衰竭",e:"💔",tip:"心臟打不出血，腎臟就缺血——心腎是命運共同體。"},
+  {l:"休克",e:"⚡",tip:"休克時腎臟血流驟降，是加護病房急性腎損傷的常見原因。"},
+  {l:"楊桃",e:"🌟",tip:"腎功能不全者吃楊桃可能中毒：頑固打嗝、意識改變，嚴重可致命。"},
+  {l:"馬兜鈴酸",e:"🌿",tip:"馬兜鈴酸造成不可逆腎纖維化與泌尿道癌，不明草藥不要碰。"},
+  {l:"顯影劑",e:"💉",tip:"顯影劑檢查前主動告知腎功能，檢查前後多補水。"},
+  {l:"高鹽",e:"🧂",tip:"吃太鹹讓腎絲球長期高壓過濾，每天鹽分控制在 6 克以下。"},
+  {l:"橫紋肌溶解",e:"🏋️",tip:"突然過度運動可能橫紋肌溶解，可樂色尿液請立刻就醫。"},
+  {l:"糖尿病",e:"🍬",tip:"糖尿病是台灣新進入透析的第一大原因，血糖失控會默默侵蝕腎絲球。"},
+  {l:"高血壓",e:"🩺",tip:"血壓長期偏高讓腎絲球持續高壓過濾，慢性腎病患者目標 130/80 以下。"},
+  {l:"代謝症候群",e:"🍔",tip:"腹部肥胖加上三高群聚，是慢性腎臟病最肥沃的溫床。"},
+  {l:"高血脂",e:"🧈",tip:"血脂異常加速腎臟微血管硬化，與蛋白尿惡化相互拉抬。"},
+  {l:"高尿酸",e:"🍺",tip:"尿酸過高造成痛風與尿酸結石，腎功能變差又更排不掉，惡性循環。"},
+  {l:"含糖飲料",e:"🧋",tip:"果糖是被低估的兇手，推高肥胖、糖尿病與尿酸——腎病的三大上游。"},
+  {l:"蛋白尿",e:"🫧",tip:"蛋白尿是腎絲球受損最早的訊號，也是惡化速度最強的預測指標。"},
+  {l:"血尿",e:"🩸",tip:"無痛性血尿可能來自腎絲球腎炎或泌尿道腫瘤，別當作火氣大。"},
+  {l:"腎結石",e:"🪨",tip:"反覆結石與尿路阻塞會造成腎實質損傷，水喝夠是最便宜的預防。"},
+  {l:"水腎",e:"🚱",tip:"尿路阻塞讓尿液回堵撐大腎盂，拖久了腎功能回不來。"},
+  {l:"攝護腺肥大",e:"🚹",tip:"排尿不順造成餘尿與回堵，是長者水腎與感染的常見源頭。"},
+  {l:"泌尿道感染",e:"🦠",tip:"感染往上蔓延成腎盂腎炎，會發燒腰痛，還可能留下腎臟疤痕。"},
+  {l:"敗血症",e:"☣️",tip:"敗血症造成血壓與腎血流驟降，是住院急性腎損傷的頭號原因。"},
+  {l:"多囊腎",e:"🧬",tip:"遺傳性多囊腎讓囊泡逐步取代正常腎組織，有家族史請及早追蹤。"},
+  {l:"腎絲球腎炎",e:"🛡️",tip:"免疫系統誤攻腎絲球，常以泡泡尿或水腫表現，需要專科評估。"},
+  {l:"電台藥",e:"📻",tip:"地下電台與遊覽車販售的不明藥品常摻類固醇與止痛成分，最傷腎。"},
+  {l:"來路不明保健品",e:"🧪",tip:"標榜顧腰顧腎的偏方藥粉成分不明，吃下去的往往是腎臟在買單。"},
+  {l:"減肥藥",e:"⚖️",tip:"速效減肥產品被驗出利尿劑與瀉藥，脫水與電解質失衡直通急性腎損傷。"},
+  {l:"抽菸",e:"🚬",tip:"尼古丁收縮血管、加速動脈硬化與蛋白尿，讓腎病惡化明顯變快。"},
+  {l:"酗酒",e:"🍶",tip:"長期過量飲酒推高血壓與尿酸，急性大量飲酒還可能引發橫紋肌溶解。"},
+  {l:"憋尿",e:"🚻",tip:"尿液滯留讓細菌繁殖，反覆感染有機會往上燒成腎盂腎炎。"},
+  {l:"熬夜",e:"🌙",tip:"長期睡眠不足與高血壓、蛋白尿、腎功能下降的風險上升有關。"},
+  {l:"睡眠呼吸中止",e:"😴",tip:"夜間反覆缺氧與血壓飆升，是被嚴重低估的腎臟壓力源。"},
+  {l:"自行停藥",e:"🙅",tip:"怕吃藥傷腎而自行停降壓降糖藥，血壓血糖失控才是真正的洗腎捷徑。"},
+  {l:"高磷加工食品",e:"🌭",tip:"添加磷酸鹽幾乎百分百吸收，高血磷導致血管鈣化與腎性骨病變。"},
+  {l:"過量蛋白",e:"🥩",tip:"已有腎病時大量蛋白質增加腎臟負擔，該吃多少請與營養師討論。"},
+];
+/* 護腎道具（吃豆人的能量丸）*/
+const POWER = [
+  {l:"ACEI/ARB", tip:"ACEI／ARB 降腎絲球內壓，能降血壓也能降蛋白尿，是護腎首選用藥。"},
+  {l:"SGLT2i",   tip:"SGLT2 抑制劑能延緩腎功能惡化，已是慢性腎臟病的主力用藥。"},
+  {l:"多喝水",   tip:"足夠尿量能稀釋代謝廢物、降低結石與感染風險（心衰竭與透析患者需限水）。"},
+  {l:"規律回診", tip:"每年驗 UACR 與 eGFR，早期發現是唯一能改變結果的窗口。"},
+];
+
+const cv = $("cv"), cx = cv.getContext("2d");
+let MODE = 1, RAF = null;
+const isTouch = matchMedia("(pointer:coarse)").matches;
+if(isTouch) document.body.classList.add("touch");
+
+/* ═══════════ 響應式畫布 ═══════════
+   以「邏輯座標」繪圖，實際像素依裝置像素比放大，手機才不會糊。
+   直式手機給比較高的畫面比，橫向空間夠時才拉寬。 */
+let VW = 760, VH = 320;
+function fitCanvas(){
+  const pad = parseFloat(getComputedStyle(cv.parentElement).paddingLeft) || 14;
+  const cssW = cv.parentElement.clientWidth - pad*2;
+  const narrow = cssW < 560;
+  const ratio = MODE === 2
+      ? (narrow ? 0.80 : 1.25)          // 吃豆人：手機拉高，格子才夠大
+      : (narrow ? 0.72 : 2.35);         // 跑酷：手機直式改成高一點
+  const cssH = Math.round(cssW / ratio);
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  cv.style.height = cssH + "px";
+  cv.width  = Math.round(cssW * dpr);
+  cv.height = Math.round(cssH * dpr);
+  VW = cssW; VH = cssH;
+  cx.setTransform(dpr, 0, 0, dpr, 0, 0);   // 之後都用 CSS px 當邏輯座標
+  if(MODE === 1) layoutRunner();
+  else layoutMaze();
+}
+addEventListener("resize", ()=>{ fitCanvas(); });
+
+function pick(m){
+  if(MODE === m) return;
+  MODE = m;
+  $("tab1").classList.toggle("on", m===1);
+  $("tab2").classList.toggle("on", m===2);
+  $("gTitle").textContent = m===1 ? "小腎臟大冒險" : "小腎臟吃豆人";
+  $("gNote").textContent = m===1
+    ? (isTouch ? "點擊畫面跳躍 — 躲開傷腎因子 +3 腎元，跳起來撿腎元 +5"
+               : "按空白鍵或點擊畫面跳躍 — 躲開傷腎因子 +3 腎元，跳起來撿腎元 +5")
+    : (isTouch ? "滑動或用下方方向鍵移動 — 吃到腎元 +2，吃到護腎道具可反制怪獸 10 秒"
+               : "方向鍵或 WASD 移動 — 吃到腎元 +2，吃到護腎道具可反制怪獸 10 秒");
+  $("pad").classList.toggle("show", m===2);
+  cancelAnimationFrame(RAF);
+  fitCanvas();
+  if(m===1){ R.running=false; R.over=false; drawRunner(); loopRunner(); }
+  else { mazeReset(true); loopMaze(); }
+  renderTips();
+}
+
+function renderTips(){
+  $("tips").innerHTML = MODE === 1
+    ? `<b>玩法</b>　小腎臟會自己往前跑，你只要決定何時跳。撞到傷腎因子就結束，
+       但結束畫面會告訴你那個因子為什麼傷腎 —— 輸一次就學一個。<br>
+       <b>計分</b>　躲過一個傷腎因子 +3 腎元，撿到一枚腎元 +5。空中的腎元要跳起來拿，
+       但跳躍中就沒辦法應付突然出現的障礙，貪心是有代價的。`
+    : `<b>玩法</b>　在迷宮裡吃光所有腎元，同時躲開四隻傷腎因子怪獸。
+       吃到<b>護腎道具</b>（ACEI/ARB、SGLT2i、多喝水、規律回診）後 10 秒內怪獸會變虛弱，
+       這時反過來可以吃掉它們 —— 就像用對的藥去反制傷腎因子。<br>
+       <b>計分</b>　腎元 +2，吃掉虛弱怪獸 +20。被怪獸碰到會少一條命，並顯示該因子的衛教。`;
+}
+
+/* ═══════════════════════════════════════════
+   遊戲一：小腎臟大冒險（跑酷）
+   ═══════════════════════════════════════════ */
+const COIN_VALUE = 5;
+const R = {
+  running:false, over:false, t:0, speed:5, y:0, vy:0,
+  ground:0, kid:{x:0,w:0,h:0}, S:1, SS:1,
+  obs:[], coins:[], nextIn:0, nextCoin:0,
+  score:0, dodged:0, picked:0, earned:0, deadBy:null,
+};
+function layoutRunner(){
+  R.S  = Math.max(0.70, Math.min(1.25, VH / 320));          // 垂直距離與文字
+  R.SS = Math.max(0.50, Math.min(1.15, VW * 0.13 / 64));    // 角色與障礙物：綁畫面寬
+  R.ground = VH - Math.round(70 * R.S);
+  R.kid = {x: Math.round(30*R.SS), w: Math.round(64*R.SS), h: Math.round(58*R.SS)};
+  if(!R.running) R.y = R.ground;
+}
+function runnerReset(){
+  R.running=true; R.over=false; R.t=0; R.speed=VW/175;
+  R.y=R.ground; R.vy=0; R.obs=[]; R.coins=[];
+  R.nextIn=50; R.nextCoin=110;
+  R.score=0; R.dodged=0; R.picked=0; R.earned=0; R.deadBy=null;
+}
+function jump(){
+  if(!R.running){ runnerReset(); return; }
+  if(R.over){ runnerReset(); return; }
+  if(R.y >= R.ground-0.5) R.vy = -13.5 * R.S;   // 滯空約 54 幀
+}
+function spawnObs(){
+  const o = OBS[Math.floor(Math.random()*OBS.length)];
+  const sz = Math.round(30*R.SS);
+  R.obs.push({...o, x:VW+30, w:sz, h:sz, passed:false});
+  R.nextIn = (0.52 + Math.random()*0.5) * VW / R.speed;   // 間距 ≈ 半個到一個螢幕寬
+}
+function spawnCoin(){
+  const near = R.obs.some(o => o.x > VW - 140);
+  R.nextCoin = (0.7 + Math.random()*0.8) * VW / R.speed;
+  if(near) return;
+  const n = 1 + Math.floor(Math.random()*3);
+  const high = Math.random() < 0.65;
+  for(let i=0;i<n;i++){
+    R.coins.push({
+      x: VW + 30 + i*Math.round(52*R.SS),
+      y: high ? R.ground - (40+Math.random()*55)*R.S : R.ground + 14*R.SS,
+      r: 17*R.SS, got:false,
+    });
+  }
+}
+function drawKid(x, y, size){
+  if(SPRITE.complete && SPRITE.naturalWidth){
+    const h = size, w = h * SPRITE.naturalWidth / SPRITE.naturalHeight;
+    cx.drawImage(SPRITE, x - (w - R.kid.w)/2, y, w, h);
+  }else{
+    cx.font = size*0.8 + "px serif"; cx.textAlign="left";
+    cx.fillText("🫘", x, y + size*0.8); cx.textAlign="center";
+  }
+}
+function wrapText(text, x, y, maxW, lh){
+  let line="", yy=y;
+  for(const ch of text){
+    if(cx.measureText(line+ch).width > maxW){ cx.fillText(line,x,yy); line=ch; yy+=lh; }
+    else line += ch;
+  }
+  cx.fillText(line,x,yy);
+}
+function drawRunner(){
+  const S = R.S;
+  cx.clearRect(0,0,VW,VH);
+  cx.strokeStyle="#e8d5c9"; cx.lineWidth=2;
+  cx.beginPath(); cx.moveTo(0,R.ground+30*S); cx.lineTo(VW,R.ground+30*S); cx.stroke();
+  cx.textAlign="center";
+
+  if(!R.running){
+    cx.fillStyle="#3d2c29"; cx.font=`900 ${Math.round(34*S)}px 'Microsoft JhengHei',sans-serif`;
+    cx.fillText("小腎臟大冒險", VW/2, VH*0.28);
+    cx.font=`700 ${Math.round(19*S)}px 'Microsoft JhengHei',sans-serif`; cx.fillStyle="#8a7268";
+    cx.fillText(isTouch ? "點擊畫面開始" : "按空白鍵或點擊開始", VW/2, VH*0.28+34*S);
+    cx.font=`700 ${Math.round(17*S)}px 'Microsoft JhengHei',sans-serif`; cx.fillStyle="#7c5cff";
+    cx.fillText("躲開傷腎因子 +3　撿到腎元 +5", VW/2, VH*0.28+62*S);
+    drawKid(VW/2 - 42*R.SS, VH*0.28+82*S, 86*R.SS);
+    return;
+  }
+
+  if(!R.over){
+    R.t++;
+    R.speed = VW/175 * (1 + Math.min(0.95, R.t/900));   // 橫越時間固定，難度隨時間上升
+    R.score = Math.floor(R.t/5);
+    R.vy += 0.5*S; R.y += R.vy;
+    if(R.y > R.ground){ R.y = R.ground; R.vy = 0; }
+
+    if(--R.nextIn <= 0) spawnObs();
+    R.obs.forEach(o=>{ o.x -= R.speed; });
+    R.obs = R.obs.filter(o=>o.x > -60);
+    R.obs.forEach(o=>{
+      if(!o.passed && o.x + o.w < R.kid.x){ o.passed=true; R.dodged++; }
+      // 判定盒比外觀內縮，避免「看起來閃過了卻算撞到」
+      const ix = R.kid.w*0.24, iy = R.kid.h*0.16, ox = o.w*0.20;
+      const kidBot = R.y + R.kid.h, obTop = R.ground + 34*R.SS - o.h, obBot = R.ground + 34*R.SS;
+      if(kidBot-iy > obTop && R.y+iy < obBot &&
+         o.x+ox < R.kid.x+R.kid.w-ix && o.x+o.w-ox > R.kid.x+ix){
+        R.over = true; R.deadBy = o;
+        R.earned = R.dodged*3 + R.picked*COIN_VALUE;
+        store.coins = store.coins + R.earned;
+        if(R.score > store.best) store.best = R.score;
+        syncCoinBar();
+      }
+    });
+
+    if(--R.nextCoin <= 0) spawnCoin();
+    R.coins.forEach(c=>{ c.x -= R.speed; });
+    R.coins = R.coins.filter(c => c.x > -40 && !c.got);
+    R.coins.forEach(c=>{
+      const nx = Math.max(R.kid.x, Math.min(c.x, R.kid.x+R.kid.w));
+      const ny = Math.max(R.y, Math.min(c.y, R.y+R.kid.h));
+      if((c.x-nx)**2 + (c.y-ny)**2 < c.r*c.r){
+        c.got = true; R.picked++; toast(`＋${COIN_VALUE} 腎元`);
+      }
+    });
+    statsRunner();
+  }
+
+  R.coins.forEach(c=>{
+    const sc = 0.72 + 0.28*Math.abs(Math.cos((R.t + c.x)/22));
+    const w = c.r*2*sc, h = c.r*2;
+    if(COIN_IMG.complete && COIN_IMG.naturalWidth) cx.drawImage(COIN_IMG, c.x-w/2, c.y-h/2, w, h);
+    else { cx.beginPath(); cx.ellipse(c.x,c.y,w/2,h/2,0,0,7); cx.fillStyle="#ffc857"; cx.fill(); }
+  });
+
+  R.obs.forEach(o=>{
+    cx.font = `${Math.round(40*R.SS)}px serif`; cx.fillStyle="#3d2c29";
+    cx.fillText(o.e, o.x+o.w/2, R.ground+32*R.SS);
+    cx.font = `800 ${Math.round(17*S)}px 'Microsoft JhengHei',sans-serif`;
+    const tw = cx.measureText(o.l).width;
+    cx.fillStyle="rgba(255,255,255,.94)";
+    cx.beginPath(); cx.roundRect(o.x+o.w/2-tw/2-10, R.ground-34*S, tw+20, 28*S, 14); cx.fill();
+    cx.fillStyle="#d63357"; cx.fillText(o.l, o.x+o.w/2, R.ground-14*S);
+  });
+
+  drawKid(R.kid.x, R.y - 8*R.SS, 70*R.SS);
+
+  if(R.over){
+    cx.fillStyle="rgba(61,44,41,.9)"; cx.fillRect(0,0,VW,VH);
+    cx.fillStyle="#fff"; cx.font=`900 ${Math.round(27*S)}px 'Microsoft JhengHei',sans-serif`;
+    cx.fillText(`你被「${R.deadBy.l}」擊倒了！`, VW/2, VH*0.18);
+    cx.font=`600 ${Math.round(18*S)}px 'Microsoft JhengHei',sans-serif`; cx.fillStyle="#ffe9d6";
+    wrapText(R.deadBy.tip, VW/2, VH*0.18+34*S, VW-60, 28*S);
+    cx.fillStyle="#ffc857"; cx.font=`900 ${Math.round(22*S)}px 'Microsoft JhengHei',sans-serif`;
+    cx.fillText(`本局獲得 ${Cp(R.earned)}`, VW/2, VH*0.72);
+    cx.fillStyle="#e8d9ff"; cx.font=`700 ${Math.round(15*S)}px 'Microsoft JhengHei',sans-serif`;
+    cx.fillText(`躲過 ${R.dodged} 個 × 3　＋　撿到 ${R.picked} 枚 × ${COIN_VALUE}`, VW/2, VH*0.72+26*S);
+    cx.fillStyle="#c4b5fd"; cx.font=`700 ${Math.round(16*S)}px 'Microsoft JhengHei',sans-serif`;
+    cx.fillText(isTouch ? "點擊再來一局" : "按空白鍵或點擊再來一局", VW/2, VH*0.72+56*S);
+  }
+}
+function statsRunner(){
+  $("statBar").innerHTML =
+    `<span>分數：${R.score}</span><span>躲過：${R.dodged}</span>` +
+    `<span>撿到腎元：${R.picked}</span><span>最高分：${store.best}</span>`;
+}
+function loopRunner(){
+  if(MODE !== 1) return;
+  RAF = requestAnimationFrame(loopRunner);
+  drawRunner();
+}
+
+/* ═══════════════════════════════════════════
+   遊戲二：小腎臟吃豆人
+   # 牆　. 腎元　o 護腎道具　空白 通道
+   ═══════════════════════════════════════════ */
+const MAZE = [
+"###################",
+"#........#........#",
+"#o##.###.#.###.##o#",
+"#.................#",
+"#.##.#.#####.#.##.#",
+"#....#...#...#....#",
+"####.###.#.###.####",
+"#..#.#.......#.#..#",
+"#.##.#.##G##.#.##.#",
+".......#GGG#.......",
+"#.##.#.##G##.#.##.#",
+"#..#.#.......#.#..#",
+"####.###.#.###.####",
+"#....#...#...#....#",
+"#.##.#.#####.#.##.#",
+"#.................#",
+"#o##.###.#.###.##o#",
+"#..#.....P.....#..#",
+"##.#.#.#####.#.#.##",
+"#.................#",
+"###################",
+];
+const M = {
+  grid:[], cell:22, ox:0, oy:0,
+  px:0, py:0, dx:0, dy:0, nx:0, ny:0,   // 玩家格座標與方向
+  ghosts:[], dots:0, eaten:0, lives:3,
+  power:0, score:0, earned:0, running:false, over:false, win:false,
+  msg:null, tick:0, mouth:0,
+};
+function layoutMaze(){
+  const cols = MAZE[0].length, rows = MAZE.length;
+  M.cell = Math.floor(Math.min(VW/cols, (VH-30)/rows));
+  M.ox = Math.round((VW - M.cell*cols)/2);
+  M.oy = Math.round((VH - 26 - M.cell*rows)/2) + 26;
+}
+let START = {x:9, y:17}, HOMES = [];
+function scanMaze(){
+  HOMES = [];
+  MAZE.forEach((row,y)=>[...row].forEach((c,x)=>{
+    if(c === "P") START = {x, y};
+    if(c === "G") HOMES.push([x, y]);
+  }));
+}
+scanMaze();
+function mazeReset(full){
+  M.grid = MAZE.map(r => r.split("").map(c => (c==="P"||c==="G") ? " " : c));
+  M.dots = M.grid.flat().filter(c => c==="." || c==="o").length;
+  M.eaten = 0;
+  M.px = START.x; M.py = START.y; M.dx = 0; M.dy = 0; M.nx = 0; M.ny = 0;
+  M.power = 0; M.msg = null; M.over = false; M.win = false; M.tick = 0;
+  if(full){ M.lives = 3; M.score = 0; M.earned = 0; M.running = false; }
+  // 洗牌取 4 隻不重複，避免 while 迴圈在極端情況卡死
+  const pool = OBS.slice();
+  for(let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]]; }
+  const picks = pool.slice(0,4);
+  const homes = HOMES.slice(0,4);
+  M.ghosts = picks.map((o,i)=>({
+    ...o, x:homes[i][0], y:homes[i][1], dx:[0,1,-1,0][i], dy:[-1,0,0,1][i],
+    weak:0, out:i*70 + 40, home:homes[i],
+  }));
+  layoutMaze();
+}
+const COLS = () => MAZE[0].length;
+const passable = (x,y) => {
+  if(y < 0 || y >= M.grid.length) return false;
+  const row = M.grid[y];
+  return row[((x % COLS()) + COLS()) % COLS()] !== "#";
+};
+function dir(dx,dy){ M.nx = dx; M.ny = dy; if(!M.running){ M.running = true; } }
+
+function stepMaze(){
+  M.tick++;
+  if(M.tick % 6) return;                 // 移動節奏
+  M.mouth = (M.mouth+1) % 4;
+  if(M.power > 0) M.power--;
+
+  /* 玩家 */
+  if(passable(M.px+M.nx, M.py+M.ny) && (M.nx||M.ny)){ M.dx = M.nx; M.dy = M.ny; }
+  if(passable(M.px+M.dx, M.py+M.dy)){ M.px += M.dx; M.py += M.dy; }
+  M.px = ((M.px % COLS()) + COLS()) % COLS();            // 左右穿越
+
+  const c = M.grid[M.py][M.px];
+  if(c === "."){
+    M.grid[M.py][M.px] = " "; M.eaten++; M.score += 2; M.earned += 2;
+  }else if(c === "o"){
+    M.grid[M.py][M.px] = " "; M.eaten++; M.power = 100;
+    const p = POWER[Math.floor(Math.random()*POWER.length)];
+    M.msg = {t:`護腎道具：${p.l}`, b:p.tip, until:M.tick+220, good:true};
+    M.ghosts.forEach(g=>{ g.weak = 100; });   // 還在鬼屋的也算，出來就是虛弱狀態
+  }
+  if(M.eaten >= M.dots){ M.win = true; M.over = true; settleMaze(); return; }
+
+  /* 怪獸 */
+  M.ghosts.forEach(g=>{
+    if(g.out > 0){ g.out--; return; }
+    if(g.weak > 0) g.weak--;
+    if(g.weak > 0 && M.tick % 12) return;               // 虛弱時變慢
+    const opts = [[1,0],[-1,0],[0,1],[0,-1]].filter(([dx,dy]) =>
+      passable(g.x+dx, g.y+dy) && !(dx === -g.dx && dy === -g.dy));
+    const cand = opts.length ? opts : [[-g.dx,-g.dy]];
+    // 七成追玩家、三成隨機
+    let best = cand[Math.floor(Math.random()*cand.length)];
+    if(Math.random() < 0.7){
+      let bd = 1e9;
+      for(const [dx,dy] of cand){
+        const d = (g.x+dx-M.px)**2 + (g.y+dy-M.py)**2;
+        const score = g.weak > 0 ? -d : d;              // 虛弱時逃跑
+        if(score < bd){ bd = score; best = [dx,dy]; }
+      }
+    }
+    g.dx = best[0]; g.dy = best[1];
+    g.x += g.dx; g.y += g.dy;
+    g.x = ((g.x % COLS()) + COLS()) % COLS();
+  });
+
+  /* 碰撞 */
+  M.ghosts.forEach(g=>{
+    if(g.out > 0 || g.x !== M.px || g.y !== M.py) return;
+    if(g.weak > 0){
+      g.weak = 0; g.x = g.home[0]; g.y = g.home[1]; g.out = 90;
+      M.score += 20; M.earned += 20;
+      M.msg = {t:`反制成功：${g.l}`, b:g.tip, until:M.tick+220, good:true};
+    }else{
+      M.lives--;
+      M.msg = {t:`被「${g.l}」碰到了`, b:g.tip, until:M.tick+260, good:false};
+      if(M.lives <= 0){ M.over = true; settleMaze(); }
+      else { M.px = START.x; M.py = START.y; M.dx = M.dy = M.nx = M.ny = 0;
+             M.ghosts.forEach((gg,i)=>{ gg.x=gg.home[0]; gg.y=gg.home[1]; gg.out=i*50+60; }); }
+    }
+  });
+}
+function settleMaze(){
+  store.coins = store.coins + M.earned;
+  if(M.score > store.best2) store.best2 = M.score;
+  syncCoinBar();
+  if(M.win) confetti();
+}
+function drawMaze(){
+  const s = M.cell;
+  cx.clearRect(0,0,VW,VH);
+  cx.textAlign="center"; cx.textBaseline="middle";
+
+  /* 迷宮 */
+  for(let y=0;y<M.grid.length;y++){
+    for(let x=0;x<M.grid[y].length;x++){
+      const ch = M.grid[y][x];
+      const px = M.ox + x*s, py = M.oy + y*s;
+      if(ch === "#"){
+        cx.fillStyle = "#7c5cff";
+        cx.beginPath(); cx.roundRect(px+1, py+1, s-2, s-2, Math.max(2, s*0.18)); cx.fill();
+      }else if(ch === "."){
+        if(COIN_IMG.complete && COIN_IMG.naturalWidth)
+          cx.drawImage(COIN_IMG, px+s*0.28, py+s*0.28, s*0.44, s*0.44);
+        else { cx.fillStyle="#ffc857"; cx.beginPath();
+               cx.arc(px+s/2, py+s/2, s*0.16, 0, 7); cx.fill(); }
+      }else if(ch === "o"){
+        const pulse = 1 + 0.18*Math.sin(M.tick/6);
+        cx.fillStyle = "#2ec27e";
+        cx.beginPath(); cx.arc(px+s/2, py+s/2, s*0.3*pulse, 0, 7); cx.fill();
+        cx.fillStyle = "#fff"; cx.font = `900 ${Math.round(s*0.34)}px 'Microsoft JhengHei',sans-serif`;
+        cx.fillText("藥", px+s/2, py+s/2+1);
+      }
+    }
+  }
+
+  /* 玩家 */
+  const kx = M.ox + M.px*s, ky = M.oy + M.py*s;
+  if(SPRITE.complete && SPRITE.naturalWidth){
+    const h = s*1.12, w = h * SPRITE.naturalWidth / SPRITE.naturalHeight;
+    cx.drawImage(SPRITE, kx + s/2 - w/2, ky + s/2 - h/2, w, h);
+  }else{
+    cx.fillStyle="#ff5d73"; cx.beginPath(); cx.arc(kx+s/2, ky+s/2, s*0.42, 0, 7); cx.fill();
+  }
+
+  /* 怪獸 */
+  M.ghosts.forEach(g=>{
+    if(g.out > 0) return;
+    const gx = M.ox + g.x*s, gy = M.oy + g.y*s;
+    if(g.weak > 0){
+      cx.fillStyle = g.weak < 30 && M.tick%8 < 4 ? "#ffffff" : "#5b6ee1";
+      cx.beginPath(); cx.arc(gx+s/2, gy+s/2, s*0.42, 0, 7); cx.fill();
+      cx.fillStyle="#fff"; cx.font=`${Math.round(s*0.5)}px serif`;
+      cx.fillText("😖", gx+s/2, gy+s/2);
+    }else{
+      cx.font = `${Math.round(s*0.72)}px serif`;
+      cx.fillText(g.e, gx+s/2, gy+s/2);
+    }
+  });
+
+  /* 頂部資訊 */
+  cx.textAlign="left"; cx.textBaseline="alphabetic";
+  cx.fillStyle="#3d2c29"; cx.font="800 14px 'Microsoft JhengHei',sans-serif";
+  cx.fillText(`腎元 ${M.earned}`, 8, 17);
+  cx.fillText(`❤ ${"●".repeat(Math.max(0,M.lives))}`, 110, 17);
+  if(M.power > 0){
+    cx.fillStyle="#2ec27e";
+    cx.fillText(`護腎道具生效 ${Math.ceil(M.power/10)}s`, 190, 17);
+  }
+  cx.textAlign="center";
+
+  /* 衛教訊息條 */
+  if(M.msg && M.tick < M.msg.until){
+    const h = Math.min(78, VH*0.3);
+    cx.fillStyle = M.msg.good ? "rgba(46,194,126,.95)" : "rgba(214,51,87,.95)";
+    cx.beginPath(); cx.roundRect(10, VH-h-8, VW-20, h, 12); cx.fill();
+    cx.fillStyle="#fff"; cx.font="900 15px 'Microsoft JhengHei',sans-serif";
+    cx.fillText(M.msg.t, VW/2, VH-h+14);
+    cx.font="600 12.5px 'Microsoft JhengHei',sans-serif";
+    wrapText(M.msg.b, VW/2, VH-h+36, VW-52, 18);
+  }
+
+  /* 開始／結束 */
+  if(!M.running || M.over){
+    cx.fillStyle="rgba(61,44,41,.88)"; cx.fillRect(0,0,VW,VH);
+    cx.fillStyle="#fff"; cx.font="900 26px 'Microsoft JhengHei',sans-serif";
+    if(!M.over){
+      cx.fillText("小腎臟吃豆人", VW/2, VH*0.34);
+      cx.font="700 15px 'Microsoft JhengHei',sans-serif"; cx.fillStyle="#e8d9ff";
+      cx.fillText(isTouch ? "滑動畫面或按方向鍵開始" : "按方向鍵或 WASD 開始", VW/2, VH*0.34+32);
+      cx.fillStyle="#ffc857"; cx.font="700 14px 'Microsoft JhengHei',sans-serif";
+      cx.fillText("吃腎元 +2　吃掉虛弱怪獸 +20", VW/2, VH*0.34+58);
+    }else{
+      cx.fillText(M.win ? "全部吃光了！" : "三條命用完了", VW/2, VH*0.32);
+      cx.fillStyle="#ffc857"; cx.font="900 20px 'Microsoft JhengHei',sans-serif";
+      cx.fillText(`本局獲得 ${Cp(M.earned)}`, VW/2, VH*0.32+38);
+      cx.fillStyle="#c4b5fd"; cx.font="700 14px 'Microsoft JhengHei',sans-serif";
+      cx.fillText(isTouch ? "點擊再來一局" : "按空白鍵再來一局", VW/2, VH*0.32+70);
+    }
+  }
+}
+function statsMaze(){
+  $("statBar").innerHTML =
+    `<span>本局腎元：${M.earned}</span><span>分數：${M.score}</span>` +
+    `<span>剩餘生命：${Math.max(0,M.lives)}</span><span>最高分：${store.best2}</span>`;
+}
+function loopMaze(){
+  if(MODE !== 2) return;
+  RAF = requestAnimationFrame(loopMaze);
+  if(M.running && !M.over) stepMaze();
+  drawMaze();
+  statsMaze();
+}
+
+/* ═══════════ 輸入 ═══════════ */
+addEventListener("keydown", e=>{
+  const k = e.key.toLowerCase();
+  if(MODE === 1){
+    if(k === " " || k === "arrowup" || k === "w"){ e.preventDefault(); jump(); }
+  }else{
+    const map = {arrowup:[0,-1], w:[0,-1], arrowdown:[0,1], s:[0,1],
+                 arrowleft:[-1,0], a:[-1,0], arrowright:[1,0], d:[1,0]};
+    if(map[k]){ e.preventDefault(); dir(...map[k]); }
+    if(k === " " && M.over){ e.preventDefault(); mazeReset(true); M.running = true; }
+  }
+});
+cv.addEventListener("pointerdown", e=>{
+  if(MODE === 1){ jump(); return; }
+  if(M.over){ mazeReset(true); M.running = true; }
+  TS = {x:e.clientX, y:e.clientY};
+});
+let TS = null;
+cv.addEventListener("pointerup", e=>{
+  if(MODE !== 2 || !TS) return;
+  const dx = e.clientX - TS.x, dy = e.clientY - TS.y;
+  if(Math.hypot(dx,dy) > 22){
+    if(Math.abs(dx) > Math.abs(dy)) dir(dx>0?1:-1, 0);
+    else dir(0, dy>0?1:-1);
+  }
+  TS = null;
+});
+cv.addEventListener("contextmenu", e=>e.preventDefault());
+
+/* ═══════════ 啟動 ═══════════ */
+window.onStateApplied = () => { syncCoinBar(); };
+fillCoinIcons(); syncCoinBar(); renderTips();
+fitCanvas(); statsRunner(); loopRunner();
+function closeAll(){ ["account"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
+</script>
+<script type="module" src="sync.js"></script>
+</body>
+</html>
