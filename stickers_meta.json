@@ -19,7 +19,7 @@
   "price": 200,
   "rare": false,
   "w": 320,
-  "h": 281
+  "h": 299
  },
  {
   "id": "A03",
@@ -29,8 +29,8 @@
   "thumb": "stickers/thumb/A03.png",
   "price": 200,
   "rare": false,
-  "w": 320,
-  "h": 304
+  "w": 318,
+  "h": 320
  },
  {
   "id": "A04",
@@ -51,7 +51,7 @@
   "thumb": "stickers/thumb/A05.png",
   "price": 200,
   "rare": false,
-  "w": 269,
+  "w": 286,
   "h": 320
  },
  {
@@ -63,7 +63,7 @@
   "price": 200,
   "rare": false,
   "w": 320,
-  "h": 304
+  "h": 282
  },
  {
   "id": "A07",
@@ -84,7 +84,7 @@
   "thumb": "stickers/thumb/A08.png",
   "price": 200,
   "rare": false,
-  "w": 305,
+  "w": 302,
   "h": 320
  },
  {
@@ -107,7 +107,7 @@
   "price": 120,
   "rare": false,
   "w": 206,
-  "h": 201
+  "h": 208
  },
  {
   "id": "B02",
@@ -117,8 +117,8 @@
   "thumb": "stickers/thumb/B02.png",
   "price": 120,
   "rare": false,
-  "w": 211,
-  "h": 213
+  "w": 210,
+  "h": 220
  },
  {
   "id": "B03",
@@ -128,8 +128,8 @@
   "thumb": "stickers/thumb/B03.png",
   "price": 120,
   "rare": false,
-  "w": 217,
-  "h": 190
+  "w": 216,
+  "h": 201
  },
  {
   "id": "B04",
@@ -140,7 +140,7 @@
   "price": 120,
   "rare": false,
   "w": 225,
-  "h": 210
+  "h": 221
  },
  {
   "id": "B05",
@@ -151,7 +151,7 @@
   "price": 120,
   "rare": false,
   "w": 222,
-  "h": 215
+  "h": 225
  },
  {
   "id": "B06",
@@ -162,7 +162,7 @@
   "price": 120,
   "rare": false,
   "w": 199,
-  "h": 202
+  "h": 207
  },
  {
   "id": "B07",
@@ -173,7 +173,7 @@
   "price": 120,
   "rare": false,
   "w": 160,
-  "h": 196
+  "h": 202
  },
  {
   "id": "B08",
@@ -184,7 +184,7 @@
   "price": 120,
   "rare": false,
   "w": 214,
-  "h": 202
+  "h": 209
  },
  {
   "id": "B09",
@@ -195,7 +195,7 @@
   "price": 120,
   "rare": false,
   "w": 212,
-  "h": 198
+  "h": 204
  },
  {
   "id": "B10",
@@ -206,7 +206,7 @@
   "price": 120,
   "rare": false,
   "w": 207,
-  "h": 206
+  "h": 211
  },
  {
   "id": "B11",
@@ -216,8 +216,8 @@
   "thumb": "stickers/thumb/B11.png",
   "price": 120,
   "rare": false,
-  "w": 223,
-  "h": 199
+  "w": 222,
+  "h": 202
  },
  {
   "id": "B12",
@@ -227,8 +227,8 @@
   "thumb": "stickers/thumb/B12.png",
   "price": 120,
   "rare": false,
-  "w": 191,
-  "h": 191
+  "w": 176,
+  "h": 183
  },
  {
   "id": "B13",
@@ -249,8 +249,8 @@
   "thumb": "stickers/thumb/B14.png",
   "price": 160,
   "rare": true,
-  "w": 201,
-  "h": 209
+  "w": 203,
+  "h": 213
  },
  {
   "id": "B15",
@@ -261,7 +261,7 @@
   "price": 120,
   "rare": false,
   "w": 212,
-  "h": 205
+  "h": 213
  },
  {
   "id": "B16",
@@ -294,7 +294,7 @@
   "price": 120,
   "rare": false,
   "w": 212,
-  "h": 211
+  "h": 215
  },
  {
   "id": "B19",
@@ -337,7 +337,7 @@
   "thumb": "stickers/thumb/B22.png",
   "price": 120,
   "rare": false,
-  "w": 160,
+  "w": 110,
   "h": 190
  },
  {
@@ -348,7 +348,7 @@
   "thumb": "stickers/thumb/B23.png",
   "price": 160,
   "rare": true,
-  "w": 209,
+  "w": 214,
   "h": 199
  },
  {
@@ -359,7 +359,7 @@
   "thumb": "stickers/thumb/B24.png",
   "price": 120,
   "rare": false,
-  "w": 228,
+  "w": 242,
   "h": 179
  },
  {
@@ -381,7 +381,7 @@
   "thumb": "stickers/thumb/C01.png",
   "price": 80,
   "rare": false,
-  "w": 189,
+  "w": 202,
   "h": 202
  },
  {
@@ -392,7 +392,7 @@
   "thumb": "stickers/thumb/C02.png",
   "price": 80,
   "rare": false,
-  "w": 180,
+  "w": 188,
   "h": 209
  },
  {
@@ -403,7 +403,7 @@
   "thumb": "stickers/thumb/C03.png",
   "price": 80,
   "rare": false,
-  "w": 174,
+  "w": 206,
   "h": 205
  },
  {
@@ -414,7 +414,7 @@
   "thumb": "stickers/thumb/C04.png",
   "price": 80,
   "rare": false,
-  "w": 168,
+  "w": 194,
   "h": 209
  },
  {
@@ -425,7 +425,7 @@
   "thumb": "stickers/thumb/C05.png",
   "price": 80,
   "rare": false,
-  "w": 184,
+  "w": 190,
   "h": 204
  },
  {
@@ -447,8 +447,8 @@
   "thumb": "stickers/thumb/C07.png",
   "price": 80,
   "rare": false,
-  "w": 179,
-  "h": 198
+  "w": 195,
+  "h": 197
  },
  {
   "id": "C08",
@@ -458,7 +458,7 @@
   "thumb": "stickers/thumb/C08.png",
   "price": 80,
   "rare": false,
-  "w": 148,
+  "w": 156,
   "h": 198
  },
  {
@@ -480,7 +480,7 @@
   "thumb": "stickers/thumb/C10.png",
   "price": 80,
   "rare": false,
-  "w": 176,
+  "w": 186,
   "h": 198
  },
  {
@@ -491,7 +491,7 @@
   "thumb": "stickers/thumb/C11.png",
   "price": 80,
   "rare": false,
-  "w": 181,
+  "w": 189,
   "h": 207
  },
  {
@@ -513,7 +513,7 @@
   "thumb": "stickers/thumb/C13.png",
   "price": 110,
   "rare": true,
-  "w": 182,
+  "w": 198,
   "h": 194
  },
  {
@@ -524,7 +524,7 @@
   "thumb": "stickers/thumb/C14.png",
   "price": 110,
   "rare": true,
-  "w": 179,
+  "w": 187,
   "h": 197
  },
  {
@@ -546,7 +546,7 @@
   "thumb": "stickers/thumb/C16.png",
   "price": 80,
   "rare": false,
-  "w": 187,
+  "w": 201,
   "h": 176
  },
  {
@@ -557,7 +557,7 @@
   "thumb": "stickers/thumb/C17.png",
   "price": 80,
   "rare": false,
-  "w": 166,
+  "w": 168,
   "h": 196
  },
  {
@@ -569,7 +569,7 @@
   "price": 80,
   "rare": false,
   "w": 183,
-  "h": 194
+  "h": 193
  },
  {
   "id": "C19",
@@ -601,7 +601,7 @@
   "thumb": "stickers/thumb/C21.png",
   "price": 110,
   "rare": true,
-  "w": 200,
+  "w": 214,
   "h": 201
  },
  {
@@ -623,7 +623,7 @@
   "thumb": "stickers/thumb/C23.png",
   "price": 80,
   "rare": false,
-  "w": 200,
+  "w": 179,
   "h": 194
  },
  {
@@ -678,7 +678,7 @@
   "thumb": "stickers/thumb/C28.png",
   "price": 80,
   "rare": false,
-  "w": 197,
+  "w": 165,
   "h": 200
  },
  {
@@ -689,7 +689,7 @@
   "thumb": "stickers/thumb/C29.png",
   "price": 80,
   "rare": false,
-  "w": 188,
+  "w": 172,
   "h": 201
  },
  {
@@ -702,5 +702,973 @@
   "rare": false,
   "w": 162,
   "h": 191
+ },
+ {
+  "id": "F01",
+  "set": "F",
+  "label": "哈囉！",
+  "file": "stickers/F01.png",
+  "thumb": "stickers/thumb/F01.png",
+  "price": 80,
+  "rare": false,
+  "w": 148,
+  "h": 158
+ },
+ {
+  "id": "F02",
+  "set": "F",
+  "label": "謝謝你！",
+  "file": "stickers/F02.png",
+  "thumb": "stickers/thumb/F02.png",
+  "price": 80,
+  "rare": false,
+  "w": 141,
+  "h": 157
+ },
+ {
+  "id": "F03",
+  "set": "F",
+  "label": "晚安囉～",
+  "file": "stickers/F03.png",
+  "thumb": "stickers/thumb/F03.png",
+  "price": 80,
+  "rare": false,
+  "w": 152,
+  "h": 160
+ },
+ {
+  "id": "F04",
+  "set": "F",
+  "label": "耶耶耶！",
+  "file": "stickers/F04.png",
+  "thumb": "stickers/thumb/F04.png",
+  "price": 80,
+  "rare": false,
+  "w": 138,
+  "h": 160
+ },
+ {
+  "id": "F05",
+  "set": "F",
+  "label": "好開心！",
+  "file": "stickers/F05.png",
+  "thumb": "stickers/thumb/F05.png",
+  "price": 80,
+  "rare": false,
+  "w": 112,
+  "h": 159
+ },
+ {
+  "id": "F06",
+  "set": "F",
+  "label": "讚！",
+  "file": "stickers/F06.png",
+  "thumb": "stickers/thumb/F06.png",
+  "price": 80,
+  "rare": false,
+  "w": 132,
+  "h": 130
+ },
+ {
+  "id": "F07",
+  "set": "F",
+  "label": "愛你喔！",
+  "file": "stickers/F07.png",
+  "thumb": "stickers/thumb/F07.png",
+  "price": 80,
+  "rare": false,
+  "w": 126,
+  "h": 161
+ },
+ {
+  "id": "F08",
+  "set": "F",
+  "label": "嘿嘿～",
+  "file": "stickers/F08.png",
+  "thumb": "stickers/thumb/F08.png",
+  "price": 80,
+  "rare": false,
+  "w": 134,
+  "h": 116
+ },
+ {
+  "id": "F09",
+  "set": "F",
+  "label": "在嗎？",
+  "file": "stickers/F09.png",
+  "thumb": "stickers/thumb/F09.png",
+  "price": 80,
+  "rare": false,
+  "w": 144,
+  "h": 165
+ },
+ {
+  "id": "F10",
+  "set": "F",
+  "label": "嗯？",
+  "file": "stickers/F10.png",
+  "thumb": "stickers/thumb/F10.png",
+  "price": 80,
+  "rare": false,
+  "w": 117,
+  "h": 139
+ },
+ {
+  "id": "F11",
+  "set": "F",
+  "label": "嗚嗚…",
+  "file": "stickers/F11.png",
+  "thumb": "stickers/thumb/F11.png",
+  "price": 80,
+  "rare": false,
+  "w": 120,
+  "h": 135
+ },
+ {
+  "id": "F12",
+  "set": "F",
+  "label": "哇！",
+  "file": "stickers/F12.png",
+  "thumb": "stickers/thumb/F12.png",
+  "price": 80,
+  "rare": false,
+  "w": 150,
+  "h": 166
+ },
+ {
+  "id": "F13",
+  "set": "F",
+  "label": "真的嗎？",
+  "file": "stickers/F13.png",
+  "thumb": "stickers/thumb/F13.png",
+  "price": 80,
+  "rare": false,
+  "w": 117,
+  "h": 167
+ },
+ {
+  "id": "F14",
+  "set": "F",
+  "label": "太棒了！",
+  "file": "stickers/F14.png",
+  "thumb": "stickers/thumb/F14.png",
+  "price": 80,
+  "rare": false,
+  "w": 151,
+  "h": 168
+ },
+ {
+  "id": "F15",
+  "set": "F",
+  "label": "拜託嘛～",
+  "file": "stickers/F15.png",
+  "thumb": "stickers/thumb/F15.png",
+  "price": 80,
+  "rare": false,
+  "w": 124,
+  "h": 166
+ },
+ {
+  "id": "F16",
+  "set": "F",
+  "label": "好呀！",
+  "file": "stickers/F16.png",
+  "thumb": "stickers/thumb/F16.png",
+  "price": 80,
+  "rare": false,
+  "w": 142,
+  "h": 158
+ },
+ {
+  "id": "F17",
+  "set": "F",
+  "label": "必勝！",
+  "file": "stickers/F17.png",
+  "thumb": "stickers/thumb/F17.png",
+  "price": 110,
+  "rare": true,
+  "w": 147,
+  "h": 155
+ },
+ {
+  "id": "F18",
+  "set": "F",
+  "label": "認真中…",
+  "file": "stickers/F18.png",
+  "thumb": "stickers/thumb/F18.png",
+  "price": 110,
+  "rare": true,
+  "w": 153,
+  "h": 159
+ },
+ {
+  "id": "F19",
+  "set": "F",
+  "label": "加油！",
+  "file": "stickers/F19.png",
+  "thumb": "stickers/thumb/F19.png",
+  "price": 110,
+  "rare": true,
+  "w": 154,
+  "h": 158
+ },
+ {
+  "id": "F20",
+  "set": "F",
+  "label": "累癱了…",
+  "file": "stickers/F20.png",
+  "thumb": "stickers/thumb/F20.png",
+  "price": 80,
+  "rare": false,
+  "w": 149,
+  "h": 122
+ },
+ {
+  "id": "F21",
+  "set": "F",
+  "label": "抱抱～",
+  "file": "stickers/F21.png",
+  "thumb": "stickers/thumb/F21.png",
+  "price": 80,
+  "rare": false,
+  "w": 118,
+  "h": 157
+ },
+ {
+  "id": "F22",
+  "set": "F",
+  "label": "工作中…",
+  "file": "stickers/F22.png",
+  "thumb": "stickers/thumb/F22.png",
+  "price": 110,
+  "rare": true,
+  "w": 133,
+  "h": 157
+ },
+ {
+  "id": "F23",
+  "set": "F",
+  "label": "辛苦了～",
+  "file": "stickers/F23.png",
+  "thumb": "stickers/thumb/F23.png",
+  "price": 110,
+  "rare": true,
+  "w": 114,
+  "h": 158
+ },
+ {
+  "id": "F24",
+  "set": "F",
+  "label": "好餓喔…",
+  "file": "stickers/F24.png",
+  "thumb": "stickers/thumb/F24.png",
+  "price": 80,
+  "rare": false,
+  "w": 133,
+  "h": 161
+ },
+ {
+  "id": "F25",
+  "set": "F",
+  "label": "偷看…",
+  "file": "stickers/F25.png",
+  "thumb": "stickers/thumb/F25.png",
+  "price": 80,
+  "rare": false,
+  "w": 108,
+  "h": 109
+ },
+ {
+  "id": "F26",
+  "set": "F",
+  "label": "放鬆一下～",
+  "file": "stickers/F26.png",
+  "thumb": "stickers/thumb/F26.png",
+  "price": 110,
+  "rare": true,
+  "w": 142,
+  "h": 108
+ },
+ {
+  "id": "F27",
+  "set": "F",
+  "label": "哇嗚～",
+  "file": "stickers/F27.png",
+  "thumb": "stickers/thumb/F27.png",
+  "price": 110,
+  "rare": true,
+  "w": 142,
+  "h": 143
+ },
+ {
+  "id": "F28",
+  "set": "F",
+  "label": "生日快樂！",
+  "file": "stickers/F28.png",
+  "thumb": "stickers/thumb/F28.png",
+  "price": 110,
+  "rare": true,
+  "w": 143,
+  "h": 139
+ },
+ {
+  "id": "F29",
+  "set": "F",
+  "label": "蛤?!",
+  "file": "stickers/F29.png",
+  "thumb": "stickers/thumb/F29.png",
+  "price": 80,
+  "rare": false,
+  "w": 117,
+  "h": 103
+ },
+ {
+  "id": "F30",
+  "set": "F",
+  "label": "嗚嗚嗚！",
+  "file": "stickers/F30.png",
+  "thumb": "stickers/thumb/F30.png",
+  "price": 80,
+  "rare": false,
+  "w": 140,
+  "h": 133
+ },
+ {
+  "id": "F31",
+  "set": "F",
+  "label": "得意～",
+  "file": "stickers/F31.png",
+  "thumb": "stickers/thumb/F31.png",
+  "price": 80,
+  "rare": false,
+  "w": 135,
+  "h": 131
+ },
+ {
+  "id": "F32",
+  "set": "F",
+  "label": "先走囉～",
+  "file": "stickers/F32.png",
+  "thumb": "stickers/thumb/F32.png",
+  "price": 80,
+  "rare": false,
+  "w": 116,
+  "h": 102
+ },
+ {
+  "id": "F33",
+  "set": "F",
+  "label": "我不懂…",
+  "file": "stickers/F33.png",
+  "thumb": "stickers/thumb/F33.png",
+  "price": 80,
+  "rare": false,
+  "w": 128,
+  "h": 111
+ },
+ {
+  "id": "F34",
+  "set": "F",
+  "label": "讓我想想…",
+  "file": "stickers/F34.png",
+  "thumb": "stickers/thumb/F34.png",
+  "price": 80,
+  "rare": false,
+  "w": 120,
+  "h": 109
+ },
+ {
+  "id": "F35",
+  "set": "F",
+  "label": "有了！",
+  "file": "stickers/F35.png",
+  "thumb": "stickers/thumb/F35.png",
+  "price": 80,
+  "rare": false,
+  "w": 134,
+  "h": 96
+ },
+ {
+  "id": "F36",
+  "set": "F",
+  "label": "哈哈哈！",
+  "file": "stickers/F36.png",
+  "thumb": "stickers/thumb/F36.png",
+  "price": 80,
+  "rare": false,
+  "w": 141,
+  "h": 78
+ },
+ {
+  "id": "F37",
+  "set": "F",
+  "label": "拜託你了～",
+  "file": "stickers/F37.png",
+  "thumb": "stickers/thumb/F37.png",
+  "price": 80,
+  "rare": false,
+  "w": 122,
+  "h": 110
+ },
+ {
+  "id": "F38",
+  "set": "F",
+  "label": "好可愛！",
+  "file": "stickers/F38.png",
+  "thumb": "stickers/thumb/F38.png",
+  "price": 80,
+  "rare": false,
+  "w": 140,
+  "h": 113
+ },
+ {
+  "id": "F39",
+  "set": "F",
+  "label": "生氣氣！",
+  "file": "stickers/F39.png",
+  "thumb": "stickers/thumb/F39.png",
+  "price": 80,
+  "rare": false,
+  "w": 137,
+  "h": 89
+ },
+ {
+  "id": "F40",
+  "set": "F",
+  "label": "哼！",
+  "file": "stickers/F40.png",
+  "thumb": "stickers/thumb/F40.png",
+  "price": 80,
+  "rare": false,
+  "w": 119,
+  "h": 86
+ },
+ {
+  "id": "F41",
+  "set": "F",
+  "label": "好累喔…",
+  "file": "stickers/F41.png",
+  "thumb": "stickers/thumb/F41.png",
+  "price": 80,
+  "rare": false,
+  "w": 132,
+  "h": 123
+ },
+ {
+  "id": "F42",
+  "set": "F",
+  "label": "不敢相信！",
+  "file": "stickers/F42.png",
+  "thumb": "stickers/thumb/F42.png",
+  "price": 80,
+  "rare": false,
+  "w": 111,
+  "h": 126
+ },
+ {
+  "id": "F43",
+  "set": "F",
+  "label": "沒問題！",
+  "file": "stickers/F43.png",
+  "thumb": "stickers/thumb/F43.png",
+  "price": 80,
+  "rare": false,
+  "w": 130,
+  "h": 128
+ },
+ {
+  "id": "F44",
+  "set": "F",
+  "label": "討厭啦～",
+  "file": "stickers/F44.png",
+  "thumb": "stickers/thumb/F44.png",
+  "price": 80,
+  "rare": false,
+  "w": 124,
+  "h": 127
+ },
+ {
+  "id": "F45",
+  "set": "F",
+  "label": "要抱抱～",
+  "file": "stickers/F45.png",
+  "thumb": "stickers/thumb/F45.png",
+  "price": 80,
+  "rare": false,
+  "w": 124,
+  "h": 126
+ },
+ {
+  "id": "F46",
+  "set": "F",
+  "label": "看到美食！",
+  "file": "stickers/F46.png",
+  "thumb": "stickers/thumb/F46.png",
+  "price": 80,
+  "rare": false,
+  "w": 142,
+  "h": 136
+ },
+ {
+  "id": "F47",
+  "set": "F",
+  "label": "追劇中…",
+  "file": "stickers/F47.png",
+  "thumb": "stickers/thumb/F47.png",
+  "price": 110,
+  "rare": true,
+  "w": 125,
+  "h": 133
+ },
+ {
+  "id": "F48",
+  "set": "F",
+  "label": "晚安～",
+  "file": "stickers/F48.png",
+  "thumb": "stickers/thumb/F48.png",
+  "price": 110,
+  "rare": true,
+  "w": 140,
+  "h": 135
+ },
+ {
+  "id": "F49",
+  "set": "F",
+  "label": "送你花花！",
+  "file": "stickers/F49.png",
+  "thumb": "stickers/thumb/F49.png",
+  "price": 110,
+  "rare": true,
+  "w": 134,
+  "h": 136
+ },
+ {
+  "id": "F50",
+  "set": "F",
+  "label": "OK！",
+  "file": "stickers/F50.png",
+  "thumb": "stickers/thumb/F50.png",
+  "price": 80,
+  "rare": false,
+  "w": 122,
+  "h": 130
+ },
+ {
+  "id": "F51",
+  "set": "F",
+  "label": "收到！",
+  "file": "stickers/F51.png",
+  "thumb": "stickers/thumb/F51.png",
+  "price": 80,
+  "rare": false,
+  "w": 116,
+  "h": 133
+ },
+ {
+  "id": "F52",
+  "set": "F",
+  "label": "感謝！",
+  "file": "stickers/F52.png",
+  "thumb": "stickers/thumb/F52.png",
+  "price": 80,
+  "rare": false,
+  "w": 119,
+  "h": 136
+ },
+ {
+  "id": "F53",
+  "set": "F",
+  "label": "對不起…",
+  "file": "stickers/F53.png",
+  "thumb": "stickers/thumb/F53.png",
+  "price": 80,
+  "rare": false,
+  "w": 115,
+  "h": 132
+ },
+ {
+  "id": "F54",
+  "set": "F",
+  "label": "萬歲！",
+  "file": "stickers/F54.png",
+  "thumb": "stickers/thumb/F54.png",
+  "price": 80,
+  "rare": false,
+  "w": 134,
+  "h": 133
+ },
+ {
+  "id": "F55",
+  "set": "F",
+  "label": "怎麼辦…",
+  "file": "stickers/F55.png",
+  "thumb": "stickers/thumb/F55.png",
+  "price": 80,
+  "rare": false,
+  "w": 131,
+  "h": 132
+ },
+ {
+  "id": "F56",
+  "set": "F",
+  "label": "愛你們喔！",
+  "file": "stickers/F56.png",
+  "thumb": "stickers/thumb/F56.png",
+  "price": 80,
+  "rare": false,
+  "w": 137,
+  "h": 126
+ },
+ {
+  "id": "D01",
+  "set": "D",
+  "label": "哈囉！",
+  "file": "stickers/D01.png",
+  "thumb": "stickers/thumb/D01.png",
+  "price": 150,
+  "rare": false,
+  "w": 320,
+  "h": 278
+ },
+ {
+  "id": "D02",
+  "set": "D",
+  "label": "謝謝你！",
+  "file": "stickers/D02.png",
+  "thumb": "stickers/thumb/D02.png",
+  "price": 150,
+  "rare": false,
+  "w": 287,
+  "h": 301
+ },
+ {
+  "id": "D03",
+  "set": "D",
+  "label": "晚安囉～",
+  "file": "stickers/D03.png",
+  "thumb": "stickers/thumb/D03.png",
+  "price": 150,
+  "rare": false,
+  "w": 320,
+  "h": 298
+ },
+ {
+  "id": "D04",
+  "set": "D",
+  "label": "耶耶耶！",
+  "file": "stickers/D04.png",
+  "thumb": "stickers/thumb/D04.png",
+  "price": 150,
+  "rare": false,
+  "w": 304,
+  "h": 303
+ },
+ {
+  "id": "D05",
+  "set": "D",
+  "label": "在嗎？",
+  "file": "stickers/D05.png",
+  "thumb": "stickers/thumb/D05.png",
+  "price": 190,
+  "rare": true,
+  "w": 302,
+  "h": 284
+ },
+ {
+  "id": "D06",
+  "set": "D",
+  "label": "讚！",
+  "file": "stickers/D06.png",
+  "thumb": "stickers/thumb/D06.png",
+  "price": 150,
+  "rare": false,
+  "w": 292,
+  "h": 283
+ },
+ {
+  "id": "D07",
+  "set": "D",
+  "label": "好開心！",
+  "file": "stickers/D07.png",
+  "thumb": "stickers/thumb/D07.png",
+  "price": 150,
+  "rare": false,
+  "w": 275,
+  "h": 281
+ },
+ {
+  "id": "D08",
+  "set": "D",
+  "label": "辛苦了～",
+  "file": "stickers/D08.png",
+  "thumb": "stickers/thumb/D08.png",
+  "price": 150,
+  "rare": false,
+  "w": 291,
+  "h": 282
+ },
+ {
+  "id": "D09",
+  "set": "D",
+  "label": "嗯？",
+  "file": "stickers/D09.png",
+  "thumb": "stickers/thumb/D09.png",
+  "price": 150,
+  "rare": false,
+  "w": 286,
+  "h": 278
+ },
+ {
+  "id": "D10",
+  "set": "D",
+  "label": "嗚嗚嗚…",
+  "file": "stickers/D10.png",
+  "thumb": "stickers/thumb/D10.png",
+  "price": 150,
+  "rare": false,
+  "w": 300,
+  "h": 269
+ },
+ {
+  "id": "D11",
+  "set": "D",
+  "label": "我要吃！",
+  "file": "stickers/D11.png",
+  "thumb": "stickers/thumb/D11.png",
+  "price": 190,
+  "rare": true,
+  "w": 320,
+  "h": 261
+ },
+ {
+  "id": "D12",
+  "set": "D",
+  "label": "好可愛！",
+  "file": "stickers/D12.png",
+  "thumb": "stickers/thumb/D12.png",
+  "price": 150,
+  "rare": false,
+  "w": 265,
+  "h": 270
+ },
+ {
+  "id": "D13",
+  "set": "D",
+  "label": "放鬆一下～",
+  "file": "stickers/D13.png",
+  "thumb": "stickers/thumb/D13.png",
+  "price": 190,
+  "rare": true,
+  "w": 309,
+  "h": 297
+ },
+ {
+  "id": "D14",
+  "set": "D",
+  "label": "先走囉～",
+  "file": "stickers/D14.png",
+  "thumb": "stickers/thumb/D14.png",
+  "price": 150,
+  "rare": false,
+  "w": 278,
+  "h": 293
+ },
+ {
+  "id": "D15",
+  "set": "D",
+  "label": "生日快樂！",
+  "file": "stickers/D15.png",
+  "thumb": "stickers/thumb/D15.png",
+  "price": 190,
+  "rare": true,
+  "w": 312,
+  "h": 305
+ },
+ {
+  "id": "D16",
+  "set": "D",
+  "label": "累癱了…",
+  "file": "stickers/D16.png",
+  "thumb": "stickers/thumb/D16.png",
+  "price": 150,
+  "rare": false,
+  "w": 304,
+  "h": 258
+ },
+ {
+  "id": "E01",
+  "set": "E",
+  "label": "超開心！",
+  "file": "stickers/E01.png",
+  "thumb": "stickers/thumb/E01.png",
+  "price": 150,
+  "rare": false,
+  "w": 296,
+  "h": 278
+ },
+ {
+  "id": "E02",
+  "set": "E",
+  "label": "讚爆！",
+  "file": "stickers/E02.png",
+  "thumb": "stickers/thumb/E02.png",
+  "price": 150,
+  "rare": false,
+  "w": 302,
+  "h": 280
+ },
+ {
+  "id": "E03",
+  "set": "E",
+  "label": "偷偷看～",
+  "file": "stickers/E03.png",
+  "thumb": "stickers/thumb/E03.png",
+  "price": 150,
+  "rare": false,
+  "w": 245,
+  "h": 279
+ },
+ {
+  "id": "E04",
+  "set": "E",
+  "label": "哈哈哈！",
+  "file": "stickers/E04.png",
+  "thumb": "stickers/thumb/E04.png",
+  "price": 150,
+  "rare": false,
+  "w": 299,
+  "h": 278
+ },
+ {
+  "id": "E05",
+  "set": "E",
+  "label": "我先睡了…",
+  "file": "stickers/E05.png",
+  "thumb": "stickers/thumb/E05.png",
+  "price": 150,
+  "rare": false,
+  "w": 320,
+  "h": 251
+ },
+ {
+  "id": "E06",
+  "set": "E",
+  "label": "蛤?!",
+  "file": "stickers/E06.png",
+  "thumb": "stickers/thumb/E06.png",
+  "price": 150,
+  "rare": false,
+  "w": 292,
+  "h": 274
+ },
+ {
+  "id": "E07",
+  "set": "E",
+  "label": "衝啊～",
+  "file": "stickers/E07.png",
+  "thumb": "stickers/thumb/E07.png",
+  "price": 190,
+  "rare": true,
+  "w": 298,
+  "h": 275
+ },
+ {
+  "id": "E08",
+  "set": "E",
+  "label": "人家錯了…",
+  "file": "stickers/E08.png",
+  "thumb": "stickers/thumb/E08.png",
+  "price": 150,
+  "rare": false,
+  "w": 278,
+  "h": 277
+ },
+ {
+  "id": "E09",
+  "set": "E",
+  "label": "愛你喔！",
+  "file": "stickers/E09.png",
+  "thumb": "stickers/thumb/E09.png",
+  "price": 150,
+  "rare": false,
+  "w": 315,
+  "h": 275
+ },
+ {
+  "id": "E10",
+  "set": "E",
+  "label": "帥啦～",
+  "file": "stickers/E10.png",
+  "thumb": "stickers/thumb/E10.png",
+  "price": 190,
+  "rare": true,
+  "w": 300,
+  "h": 268
+ },
+ {
+  "id": "E11",
+  "set": "E",
+  "label": "在嗎？",
+  "file": "stickers/E11.png",
+  "thumb": "stickers/thumb/E11.png",
+  "price": 190,
+  "rare": true,
+  "w": 285,
+  "h": 263
+ },
+ {
+  "id": "E12",
+  "set": "E",
+  "label": "加油！",
+  "file": "stickers/E12.png",
+  "thumb": "stickers/thumb/E12.png",
+  "price": 190,
+  "rare": true,
+  "w": 299,
+  "h": 271
+ },
+ {
+  "id": "E13",
+  "set": "E",
+  "label": "嗯？？",
+  "file": "stickers/E13.png",
+  "thumb": "stickers/thumb/E13.png",
+  "price": 150,
+  "rare": false,
+  "w": 293,
+  "h": 296
+ },
+ {
+  "id": "E14",
+  "set": "E",
+  "label": "嘻嘻～",
+  "file": "stickers/E14.png",
+  "thumb": "stickers/thumb/E14.png",
+  "price": 150,
+  "rare": false,
+  "w": 309,
+  "h": 291
+ },
+ {
+  "id": "E15",
+  "set": "E",
+  "label": "哼！",
+  "file": "stickers/E15.png",
+  "thumb": "stickers/thumb/E15.png",
+  "price": 150,
+  "rare": false,
+  "w": 304,
+  "h": 295
+ },
+ {
+  "id": "E16",
+  "set": "E",
+  "label": "先走囉～",
+  "file": "stickers/E16.png",
+  "thumb": "stickers/thumb/E16.png",
+  "price": 150,
+  "rare": false,
+  "w": 275,
+  "h": 292
  }
 ]
