@@ -159,6 +159,12 @@
   .attg{font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:5px;margin-left:4px;
         background:#e9f9f1;color:var(--ok);border:1px solid #bfeeda;white-space:nowrap;}
   .dl.att{font-size:12px;padding:6px 11px;}
+  .pic.kcard{background:#fff;padding:6px;}
+  .pic.kcard img{max-width:100%;max-height:100%;object-fit:contain;
+                 border-radius:6px;box-shadow:0 2px 8px rgba(61,44,41,.16);}
+  .kcardwrap{margin-top:12px;text-align:center;}
+  .kcardwrap img{max-width:190px;width:100%;border-radius:10px;
+                 box-shadow:0 3px 12px rgba(61,44,41,.18);display:block;margin:0 auto 8px;}
   .libatt{display:inline-block;margin-top:8px;background:var(--ok);color:#fff;
           font-size:12.5px;font-weight:800;padding:5px 12px;border-radius:99px;
           text-decoration:none;}
@@ -751,14 +757,18 @@ function cardHTML(p){
     <article class="card">
       ${off?`<div class="off">-${off}%</div>`:""}
       ${has?`<div class="owned">已擁有</div>`:""}
-      <div class="pic">${p.e}</div>
+      <div class="pic${has?" kcard":""}">${has
+        ? `<img src="cards/k/thumb/${p.id}.png" alt="${p.k.t}" loading="lazy">`
+        : p.e}</div>
       <div class="body">
         <div class="name"><b>【${p.b}】</b>${p.n}</div>
         <div class="meta"><em>★${p.r}</em>(${p.rv.toLocaleString()}) ｜ 已爽買 ${p.s.toLocaleString()} 件
           ${p.dl?`<span class="attg">📎 含附件</span>`:""}</div>
         <div class="row">
           <div class="price">${p.o?`<s>${C(p.o)}</s>`:""}${C(p.p)}</div>
-          ${has && p.dl ? attachHTML(p) : `<button class="add" onclick="addCart('k${p.i}')">爽買</button>`}
+          ${has
+            ? `<a class="dl" href="cards/k/${p.id}.png" download="護腎教室_${p.k.t.replace(/[：、，。！？「」]/g,"")}.png">⬇ 知識卡</a>`
+            : `<button class="add" onclick="addCart('k${p.i}')">爽買</button>`}
         </div>
       </div>
     </article>`;
@@ -989,13 +999,18 @@ function renderLib(){
     html += `<div class="secttl">📚 護腎知識 <span>${lib.length} 篇</span></div>`;
     html += [...lib].reverse().map(k=>{
       const p = full[k.id];
+      const card = p ? `<div class="kcardwrap">
+            <img src="cards/k/thumb/${p.id}.png" alt="${p.k.t}" loading="lazy">
+            <a class="libatt" href="cards/k/${p.id}.png"
+               download="護腎教室_${p.k.t.replace(/[：、，。！？「」]/g,"")}.png">⬇ 下載知識卡</a>
+          </div>` : "";
       const att = p && p.dl
         ? `<a class="libatt" href="cards/${p.dl}"
              download="護腎教室_${p.dn.replace(/[「」]/g,"")}.png">⬇ 下載${p.dn}</a>`
         : "";
       return `<details class="kitem">
         <summary>${k.e} ${k.t}${p && p.dl ? ' <span class="attg">📎</span>' : ""}</summary>
-        <div class="kbody">${p ? p.k.b : (k.b||"")}${att}</div>
+        <div class="kbody">${p ? p.k.b : (k.b||"")}${card}${att}</div>
       </details>`;
     }).join("");
   }
