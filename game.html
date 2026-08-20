@@ -816,10 +816,31 @@ function loopMaze(){
 const QUIZ_LEN = 10, QUIZ_REWARD = 8;
 const Q = {list:[], i:0, right:0, streak:0, best:0, earned:0, answered:false, wrong:[]};
 
+/* 一次挑戰＝把 100 題洗牌後分成 10 輪，每輪 10 題且全程不重複。
+   洗好的順序存在 sessionStorage，中途離開再回來仍接得下去。 */
+function quizDeck(){
+  try{
+    const raw = sessionStorage.kg_deck;
+    if(raw){
+      const d = JSON.parse(raw);
+      if(Array.isArray(d) && d.length === QUIZ.length) return d;
+    }
+  }catch(e){}
+  const idx = QUIZ.map((_, i) => i);
+  for(let i=idx.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; }
+  sessionStorage.kg_deck = JSON.stringify(idx);
+  return idx;
+}
 function quizStart(){
-  const pool = QUIZ.slice();
-  for(let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]]; }
-  Q.list = pool.slice(0, QUIZ_LEN);
+  const deck = quizDeck();
+  const roundNo = store.qRounds % QUIZ_CHALLENGE;      // 這是本次挑戰的第幾輪
+  const from = roundNo * QUIZ_LEN;
+  let picked = deck.slice(from, from + QUIZ_LEN).map(i => QUIZ[i]);
+  if(picked.length < QUIZ_LEN){                        // 題庫不足時退回隨機補齊
+    const rest = QUIZ.slice().sort(() => Math.random()-0.5);
+    picked = picked.concat(rest.slice(0, QUIZ_LEN - picked.length));
+  }
+  Q.list = picked;
   Q.i = 0; Q.right = 0; Q.streak = 0; Q.best = 0; Q.earned = 0; Q.answered = false; Q.wrong = [];
   quizRender();
 }
@@ -922,6 +943,7 @@ async function finishChallenge(){
   const total = store.qCorrect;                 // 100 題中答對幾題
   if(total > store.qBestTotal) store.qBestTotal = total;
   store.qRounds = 0; store.qCorrect = 0;        // 歸零，可再挑戰
+  delete sessionStorage.kg_deck;                // 重新洗牌，下次挑戰題序不同
 
   const box = document.createElement("div");
   box.className = "qchallenge";
