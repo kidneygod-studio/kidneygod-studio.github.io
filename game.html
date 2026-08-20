@@ -89,6 +89,10 @@
   .tips{background:#fff;border:1px solid var(--line);border-radius:14px;
         padding:14px 16px;margin-top:14px;font-size:13.5px;color:#5a4a44;line-height:1.8;}
   .tips b{color:var(--accent);}
+  .tips .hint{display:block;margin-top:10px;padding:9px 12px;background:#f6f2ff;
+              border:1px dashed #ddd0ff;border-radius:10px;font-size:13px;color:#5a4a44;}
+  .tips kbd{display:inline-block;background:#3d2c29;color:#fff;font-size:12px;font-weight:800;
+            padding:2px 8px;border-radius:6px;font-family:inherit;margin:0 2px;}
   footer{border-top:1px solid var(--line);background:#fff;padding:24px 16px 40px;margin-top:24px;}
   .fw{max-width:1000px;margin:0 auto;font-size:13px;color:var(--dim);}
   .fw a{color:var(--accent);font-weight:700;}
@@ -251,7 +255,12 @@ function fitCanvas(){
   const ratio = MODE === 2
       ? (narrow ? 0.80 : 1.25)          // 吃豆人：手機拉高，格子才夠大
       : (narrow ? 0.72 : 2.35);         // 跑酷：手機直式改成高一點
-  const cssH = Math.round(cssW / ratio);
+  let cssH = Math.round(cssW / ratio);
+  if(MODE === 2){
+    // 迷宮較高：限制在視窗可視範圍內，不用全螢幕也能一眼看完整張迷宮
+    const reserve = 132;                      // 置頂橫幅＋頁首＋計分列與邊距
+    cssH = Math.max(300, Math.min(cssH, innerHeight - reserve));
+  }
   const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
   cv.style.height = cssH + "px";
   cv.width  = Math.round(cssW * dpr);
@@ -291,7 +300,9 @@ function renderTips(){
     : `<b>玩法</b>　在迷宮裡吃光所有腎元，同時躲開四隻傷腎因子怪獸。
        吃到<b>護腎道具</b>（ACEI/ARB、SGLT2i、多喝水、規律回診）後 10 秒內怪獸會變虛弱，
        這時反過來可以吃掉它們 —— 就像用對的藥去反制傷腎因子。<br>
-       <b>計分</b>　腎元 +2，吃掉虛弱怪獸 +20。被怪獸碰到會少一條命，並顯示該因子的衛教。`;
+       <b>計分</b>　腎元 +2，吃掉虛弱怪獸 +20。被怪獸碰到會少一條命，並顯示該因子的衛教。` +
+      (isTouch ? "" : `<br><span class="hint">💡 <b>電腦版小提醒</b>：迷宮格子越大越好操作，
+       建議按 <kbd>F11</kbd> 進入全螢幕模式再玩，畫面會更大更舒服（再按一次 F11 可離開）。</span>`);
 }
 
 /* ═══════════════════════════════════════════
