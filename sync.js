@@ -18,7 +18,8 @@ if (FIREBASE_CONFIG) {
   const { getAuth, onAuthStateChanged, signInAnonymously, GoogleAuthProvider,
           signInWithPopup, linkWithPopup, signOut } =
     await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js");
-  const { getFirestore, doc, getDoc, setDoc, deleteDoc } =
+  const { getFirestore, doc, getDoc, setDoc, deleteDoc, collection,
+          addDoc, getDocs, query, orderBy, limit, increment, serverTimestamp } =
     await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
 
   const app  = initializeApp(FIREBASE_CONFIG);
@@ -88,6 +89,52 @@ if (FIREBASE_CONFIG) {
         try{ await u.delete(); }catch(e){ /* 需重新驗證時僅刪文件 */ }
         closeAll(); toast("☁️ 雲端資料已刪除，本機進度保留");
       }catch(e){ console.error(e); toast("⚠️ 刪除失敗，稍後再試"); }
+    },
+  };
+
+  /* ── 站台統計與排行榜（公開讀取）── */
+  const statsDoc = () => doc(db, "stats", "site");
+
+  window.site = {
+    /* 每個瀏覽階段只計一次，避免重整灌水也節省寫入配額 */
+    async bumpViews(){
+      try{
+        if(!sessionStorage.kg_counted){
+          sessionStorage.kg_counted = "1";
+          await setDoc(statsDoc(), {views: increment(1)}, {merge: true});
+        }
+        return await this.getViews();
+      }catch(e){ console.debug("views bump", e); return null; }
+    },
+    async getViews(){
+      try{
+        const snap = await getDoc(statsDoc());
+        return snap.exists() ? (snap.data().views || 0) : 0;
+      }catch(e){ return null; }
+    },
+    async getTop(n = 10){
+      /* 只用單欄排序（score）以免需要複合索引；同分者在前端依時間先後排，
+         多抓一些再截斷，確保同分時較早達成者排前面。 */
+      try{
+        const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(n * 3));
+        const snap = await getDocs(q);
+        const rows = snap.docs.map(d => ({id: d.id, ...d.data()}));
+        rows.sort((a, b) =>
+          (b.score - a.score) ||
+          ((a.at && a.at.seconds || 0) - (b.at && b.at.seconds || 0)));
+        return rows.slice(0, n);
+      }catch(e){ console.debug("leaderboard read", e); return null; }
+    },
+    async submitScore(name, score, rounds){
+      try{
+        if(!auth.currentUser) await signInAnonymously(auth);   // 匿名身分即可，仍不需個資
+        const clean = String(name || "").trim().slice(0, 16) || "匿名者";
+        await addDoc(collection(db, "leaderboard"), {
+          name: clean, score: Math.max(0, Math.min(100, score|0)),
+          rounds: rounds|0, at: serverTimestamp(),
+        });
+        return clean;
+      }catch(e){ console.debug("leaderboard write", e); return null; }
     },
   };
 

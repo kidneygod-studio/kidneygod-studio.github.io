@@ -32,6 +32,15 @@ const store = {
   set best2(v){ localStorage.msd_best2 = v; syncPush(); },
   get best3(){ return parseInt(localStorage.msd_best3)||0; },
   set best3(v){ localStorage.msd_best3 = v; syncPush(); },
+  /* 小學堂累計：十輪 100 題為一次完整挑戰 */
+  get qRounds(){ return parseInt(localStorage.msd_qrounds)||0; },
+  set qRounds(v){ localStorage.msd_qrounds = v; syncPush(); },
+  get qCorrect(){ return parseInt(localStorage.msd_qcorrect)||0; },
+  set qCorrect(v){ localStorage.msd_qcorrect = v; syncPush(); },
+  get qBestTotal(){ return parseInt(localStorage.msd_qbesttotal)||0; },
+  set qBestTotal(v){ localStorage.msd_qbesttotal = v; syncPush(); },
+  get qName(){ return localStorage.msd_qname || ""; },
+  set qName(v){ localStorage.msd_qname = v; syncPush(); },
   get stk(){ try{return JSON.parse(localStorage.msd_stickers||"[]")}catch(e){return[]} },
   set stk(v){ localStorage.msd_stickers = JSON.stringify(v); syncPush(); },
 };
@@ -49,7 +58,9 @@ function syncPush(){
 }
 function getLocalState(){
   return {coins:store.coins, lib:store.lib, gifts:store.gifts,
-          best:store.best, best2:store.best2, best3:store.best3, stk:store.stk};
+          best:store.best, best2:store.best2, best3:store.best3, stk:store.stk,
+          qRounds:store.qRounds, qCorrect:store.qCorrect,
+          qBestTotal:store.qBestTotal, qName:store.qName};
 }
 function applyState(s){
   if(!s) return;
@@ -59,6 +70,10 @@ function applyState(s){
   localStorage.msd_best     = s.best || 0;
   localStorage.msd_best2    = s.best2 || 0;
   localStorage.msd_best3    = s.best3 || 0;
+  localStorage.msd_qrounds     = s.qRounds || 0;
+  localStorage.msd_qcorrect    = s.qCorrect || 0;
+  localStorage.msd_qbesttotal  = s.qBestTotal || 0;
+  localStorage.msd_qname       = s.qName || "";
   localStorage.msd_stickers = JSON.stringify(s.stk || []);
   if(typeof window.onStateApplied === "function") window.onStateApplied();
 }
@@ -76,6 +91,10 @@ function mergeState(cloud, local){
     best:  Math.max(cloud.best  ?? 0, local.best  ?? 0),
     best2: Math.max(cloud.best2 ?? 0, local.best2 ?? 0),
     best3: Math.max(cloud.best3 ?? 0, local.best3 ?? 0),
+    qBestTotal: Math.max(cloud.qBestTotal ?? 0, local.qBestTotal ?? 0),
+    qRounds:  Math.max(cloud.qRounds  ?? 0, local.qRounds  ?? 0),
+    qCorrect: Math.max(cloud.qCorrect ?? 0, local.qCorrect ?? 0),
+    qName: local.qName || cloud.qName || "",
     lib, gifts, stk,
   };
 }

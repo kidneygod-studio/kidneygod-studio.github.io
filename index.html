@@ -297,6 +297,7 @@
     </div>
     <button class="hbtn coin" onclick="scrollGame()"><img class="ki" id="coinIco" alt=""><span id="coinBal">100</span> 腎元</button>
     <button class="hbtn" onclick="openLib()">📚 知識庫<span class="badge" id="libBadge">0</span></button>
+    <span class="hbtn" id="viewBox" style="display:none">👀 <span id="viewCnt">–</span></span>
     <button class="hbtn" onclick="openCart()">🛒<span class="badge" id="badge">0</span></button>
     <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
   </div>
@@ -326,7 +327,7 @@
     <h3>關於「護腎教室」護腎知識商城</h3>
     <p>這是一個<strong>衛教遊戲化網站</strong>：用完整的網購體驗包裝護腎知識 — 逛街、比價、賺腎元、結帳、追蹤出貨 — 全程不涉及任何金錢，而且這次真的會出貨：<strong>出的是護腎知識，直接送進你的知識庫。</strong></p>
     <p><strong>我們不收費、沒有金流、不會要求你輸入信用卡。</strong>腎元是純遊戲幣，賺不了真錢也買不了真商品。銷售量與好評數是編的，但衛教內容是認真的。</p>
-    <p>🔐 <strong>隱私說明：</strong>未登入時，你的進度（腎元、知識庫、最高分）只存在你自己瀏覽器的 localStorage，本站不會取得。若你<strong>選擇</strong>使用雲端同步：「匿名開始」只會產生一組隨機識別碼，不涉及任何個人資料；「Google 登入」會取得你的 email 與顯示名稱，<strong>僅用於帳號識別與進度同步</strong>，不作行銷使用、不提供第三人，資料儲存於 Google Firebase。本站不經手任何密碼（登入視窗由 Google 官方提供）。你可隨時在帳號視窗登出，或使用「刪除雲端資料」將同步資料自伺服器移除。</p>
+    <p>🔐 <strong>隱私說明：</strong>未登入時，你的進度（腎元、知識庫、最高分）只存在你自己瀏覽器的 localStorage，本站不會取得。若你<strong>選擇</strong>使用雲端同步：「匿名開始」只會產生一組隨機識別碼，不涉及任何個人資料；「Google 登入」會取得你的 email 與顯示名稱，<strong>僅用於帳號識別與進度同步</strong>，不作行銷使用、不提供第三人，資料儲存於 Google Firebase。本站不經手任何密碼（登入視窗由 Google 官方提供）。你可隨時在帳號視窗登出，或使用「刪除雲端資料」將同步資料自伺服器移除。本站另有一個<strong>不記名的瀏覽次數計數器</strong>（每個瀏覽階段僅計一次，不記錄 IP、不追蹤個人）；小學堂排行榜只儲存你自行輸入的代號與成績，留空則顯示為「匿名者」。</p>
     <p>⚕️ <strong>醫療免責聲明：</strong>本站衛教內容為一般性健康知識，不能取代醫師診斷與治療建議。腎功能異常、用藥問題請諮詢腎臟科醫師或藥師；有症狀請就醫。</p>
     <p style="margin-top:14px">🧾 檢舉前請先看這段：本站無任何付款功能，不符合詐欺構成要件（無財物交付、無詐術）。真正的購物詐騙網站不會教你保護腎臟。</p>
   </div>
@@ -814,8 +815,34 @@ function renderGrid(){
     `<div class="empty" style="grid-column:1/-1"><span class="e">🔍</span>找不到相關知識<br>但少吃鹽多喝水永遠適用</div>`;
   $("cnt").textContent = `護腎知識持續上架中 — 全部買得起，腎元不夠就去玩遊戲`;
 }
+let CHAMP = null;                       // 小學堂目前第一名
 function renderMarq(){
-  $("marq").innerHTML = [...MARQ,...MARQ].map(m=>`<span>${m}</span>`).join("");
+  const items = CHAMP
+    ? [`🏆 小學堂目前第一名：${CHAMP.name}　${CHAMP.score}/100 題`, ...MARQ]
+    : [...MARQ];
+  $("marq").innerHTML = [...items, ...items].map(m=>`<span>${m}</span>`).join("");
+}
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+/* 瀏覽次數與冠軍：sync.js 載入後才有 window.site */
+function initSiteBits(tries = 0){
+  if(!window.site){
+    if(tries < 40) return setTimeout(() => initSiteBits(tries+1), 250);
+    return;
+  }
+  window.site.bumpViews().then(n => {
+    if(n == null) return;
+    $("viewCnt").textContent = n.toLocaleString("zh-Hant-TW");
+    $("viewBox").style.display = "";
+  });
+  window.site.getTop(1).then(top => {
+    if(top && top.length){
+      CHAMP = {name: esc(top[0].name || "匿名者"), score: top[0].score};
+      renderMarq();
+    }
+  });
 }
 function renderGifts(){
   const g = store.gifts;
@@ -1051,6 +1078,7 @@ function downloadAll(){
 window.onStateApplied = () => { syncCoins(); renderGrid(); renderGifts(); };
 fillCoinIcons();
 renderTabs(); renderGrid(); renderMarq(); renderGifts(); renderCart();
+initSiteBits();
 syncBadge(); syncCoins();
 </script>
 

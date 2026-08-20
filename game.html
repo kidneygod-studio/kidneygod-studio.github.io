@@ -125,6 +125,30 @@
   .qwrong{text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;
           padding:12px 14px;margin-top:12px;font-size:13.5px;line-height:1.8;}
   .qwrong b{color:var(--brand);}
+  .qprog{margin:12px auto;max-width:420px;font-size:13px;color:var(--dim);
+         display:flex;flex-direction:column;gap:6px;align-items:center;}
+  .qchallenge{background:#f6f2ff;border:2px solid #ddd0ff;border-radius:14px;
+              padding:16px;margin:14px 0;}
+  .qchallenge .ct{font-size:18px;font-weight:900;color:var(--accent);}
+  .qchallenge .cs{font-size:15px;margin:6px 0 12px;}
+  .qchallenge .cs b{font-size:22px;color:var(--brand);}
+  .inrank{font-size:15px;font-weight:800;margin-bottom:10px;}
+  .namerow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .namerow input{flex:1;min-width:170px;max-width:260px;padding:10px 13px;font-size:15px;
+                 font-family:inherit;border:2px solid #ddd0ff;border-radius:11px;
+                 background:#fff;color:var(--ink);}
+  .namerow input:focus{outline:none;border-color:var(--accent);}
+  .dimtxt{font-size:12.5px;color:var(--dim);display:block;margin-top:8px;line-height:1.7;}
+  ol.board{list-style:none;max-width:420px;margin:12px auto;text-align:left;}
+  ol.board li{display:flex;align-items:center;gap:12px;padding:10px 14px;
+              background:#fff;border:1px solid var(--line);border-radius:11px;margin-bottom:7px;}
+  ol.board li.medal{border-width:2px;}
+  ol.board li.m1{border-color:#f0b850;background:#fffbf0;}
+  ol.board li.m2{border-color:#c9ccd4;background:#fafbfc;}
+  ol.board li.m3{border-color:#d6a37a;background:#fdf8f4;}
+  ol.board .rk{width:32px;text-align:center;font-weight:900;font-size:17px;color:var(--dim);}
+  ol.board .nm{flex:1;font-weight:800;font-size:15px;word-break:break-all;}
+  ol.board .sv{font-weight:900;color:var(--accent);font-size:15px;white-space:nowrap;}
 
   .tips{background:#fff;border:1px solid var(--line);border-radius:14px;
         padding:14px 16px;margin-top:14px;font-size:13.5px;color:#5a4a44;line-height:1.8;}
@@ -172,6 +196,7 @@
     <a class="logo" href="index.html">護腎教室<small>KIDNEYGOD.STUDIO</small></a>
     <div class="spacer"></div>
     <span class="hbtn coin"><img class="ki" alt=""><span id="coinBal">100</span> 腎元</span>
+    <span class="hbtn" id="viewBox" style="display:none">👀 <span id="viewCnt">–</span></span>
     <a class="hbtn" href="index.html">🛒 回商城</a>
     <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
   </div>
@@ -351,7 +376,11 @@ function renderTips(){
       <b>為什麼每題都附出處</b>　衛教內容若沒有來源就只是說法。這裡的每一題與解說都標明
       依據的臨床指引（2022 台灣高血壓治療指引、2022 台灣血脂指引、KDIGO 2024、
       KDOQI 2020、國健署調查、台灣腎病年報等），答完可直接點進商城看完整知識卡。<br>
-      <b>答錯不扣分</b>　結算時會把答錯的題目與解說再列一次 —— 這個遊戲的目的是記住，不是考倒你。`;
+      <b>答錯不扣分</b>　結算時會把答錯的題目與解說再列一次 —— 這個遊戲的目的是記住，不是考倒你。<br>
+      <b>十輪挑戰與排行榜</b>　累計玩滿 10 輪（100 題）會結算總成績。若成績進入前十名，
+      畫面會邀請你留下代號或綽號登上排行榜；留空就顯示為「匿名者」。
+      第一名的名字會出現在商城首頁的跑馬燈上。
+      <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">🏆 看排行榜</button></div>`;
     return;
   }
   $("tips").innerHTML = MODE === 1
@@ -850,33 +879,129 @@ function quizAnswer(n){
   $("qnext").addEventListener("click", () => { Q.i++; Q.answered = false; quizRender(); });
   quizStats();
 }
+const QUIZ_CHALLENGE = 10;          // 十輪 100 題為一次完整挑戰
+
 function quizEnd(){
   store.coins = store.coins + Q.earned;
   if(Q.right > store.best3) store.best3 = Q.right;
+
+  // 累計進度
+  store.qRounds  = store.qRounds + 1;
+  store.qCorrect = store.qCorrect + Q.right;
   syncCoinBar();
+
   const perfect = Q.right === Q.list.length;
+  const done = store.qRounds >= QUIZ_CHALLENGE;
   if(perfect) confetti(["📖","✨","🎓","🎊","💯","⭐"]);
-  $("quizWrap").innerHTML = `
-    <div class="qend">
+
+  const roundHTML = `
       <div class="big">${perfect ? "🎓" : Q.right >= 7 ? "👏" : "📖"}</div>
       <h3>${perfect ? "全對！你根本可以去衛教了" : Q.right >= 7 ? "表現很好！" : "再來一輪會更熟"}</h3>
       <div class="sc">答對 <b>${Q.right}</b> / ${Q.list.length} 題　｜　最高連續 ${Q.best} 題　｜　獲得 ${Cp(Q.earned)}</div>
+      <div class="qprog">
+        <span>挑戰進度：第 ${Math.min(store.qRounds, QUIZ_CHALLENGE)} / ${QUIZ_CHALLENGE} 輪
+          ・累計答對 ${store.qCorrect} 題</span>
+        <span class="qbar"><b style="width:${Math.min(100, store.qRounds/QUIZ_CHALLENGE*100)}%"></b></span>
+      </div>
       ${Q.wrong.length ? `<div class="qwrong"><b>這幾題再看一次：</b><br>` +
         Q.wrong.map(it => `・${it.q}<br>　<span style="color:var(--dim)">${it.e}</span>`).join("<br>") +
-        `</div>` : ""}
+        `</div>` : ""}`;
+
+  $("quizWrap").innerHTML = `<div class="qend" id="qend">${roundHTML}
       <div class="qnav" style="justify-content:center">
         <button class="qbtn" onclick="quizStart()">再來一輪</button>
         <a class="qbtn ghost" href="index.html">去商城換知識卡</a>
       </div>
     </div>`;
   quizStats();
+  if(done) finishChallenge();
+}
+
+/* 十輪完成：結算總分、檢查是否進榜 */
+async function finishChallenge(){
+  const total = store.qCorrect;                 // 100 題中答對幾題
+  if(total > store.qBestTotal) store.qBestTotal = total;
+  store.qRounds = 0; store.qCorrect = 0;        // 歸零，可再挑戰
+
+  const box = document.createElement("div");
+  box.className = "qchallenge";
+  box.innerHTML = `<div class="ct">🏆 十輪挑戰完成</div>
+     <div class="cs">總成績 <b>${total}</b> / 100 題</div>
+     <div class="cw" id="cwrap">查詢排行榜中…</div>`;
+  $("qend").insertBefore(box, $("qend").querySelector(".qnav"));
+  confetti(["🏆","🎓","✨","🎊","💯","⭐"]);
+
+  const top = window.site ? await window.site.getTop(10) : null;
+  const wrap = $("cwrap");
+  if(!top){
+    wrap.innerHTML = `<span class="dimtxt">排行榜暫時無法連線，成績已保留在本機。</span>`;
+    return;
+  }
+  const rank = top.filter(t => t.score > total).length + 1;
+  if(top.length >= 10 && rank > 10){
+    wrap.innerHTML = `<span class="dimtxt">目前第 10 名為 ${top[9].score} 題，
+       再接再厲！你的最佳成績是 ${store.qBestTotal} 題。</span>
+       <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">看排行榜</button></div>`;
+    return;
+  }
+  wrap.innerHTML = `
+    <div class="inrank">🎉 你目前是<b>第 ${rank} 名</b>！要把名字放上排行榜嗎？</div>
+    <div class="namerow">
+      <input id="lbName" maxlength="16" placeholder="輸入代號或綽號（可留空）"
+             value="${(store.qName || "").replace(/"/g,"&quot;")}">
+      <button class="qbtn" id="lbOk">送出</button>
+    </div>
+    <div class="dimtxt">留空送出就會顯示為「匿名者」。名稱會公開顯示於排行榜。</div>`;
+  $("lbOk").addEventListener("click", async () => {
+    const el = $("lbName");
+    const nm = el.value.trim();
+    $("lbOk").disabled = true; $("lbOk").textContent = "送出中…";
+    const saved = await window.site.submitScore(nm, total, QUIZ_CHALLENGE);
+    if(saved){
+      if(nm) store.qName = nm;
+      wrap.innerHTML = `<div class="inrank">✅ 已登上排行榜：<b>${saved}</b>　${total} / 100 題</div>
+        <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">看排行榜</button></div>`;
+    }else{
+      $("lbOk").disabled = false; $("lbOk").textContent = "送出";
+      toast("排行榜暫時無法連線，請稍後再試");
+    }
+  });
+}
+
+/* 排行榜面板 */
+async function showBoard(){
+  const w = $("quizWrap");
+  w.innerHTML = `<div class="qend"><div class="big">🏆</div>
+     <h3>小學堂排行榜</h3>
+     <div class="sc">十輪 100 題的總成績・前十名</div>
+     <div id="boardList">讀取中…</div>
+     <div class="qnav" style="justify-content:center">
+       <button class="qbtn" onclick="quizStart()">開始挑戰</button>
+       <a class="qbtn ghost" href="index.html">回商城</a>
+     </div></div>`;
+  const top = window.site ? await window.site.getTop(10) : null;
+  const el = $("boardList");
+  if(!top){ el.innerHTML = `<span class="dimtxt">排行榜暫時無法連線。</span>`; return; }
+  if(!top.length){ el.innerHTML = `<span class="dimtxt">還沒有人完成十輪挑戰，第一名等你來拿。</span>`; return; }
+  el.innerHTML = `<ol class="board">` + top.map((t, i) =>
+    `<li class="${i<3?"medal m"+(i+1):""}">
+       <span class="rk">${["🥇","🥈","🥉"][i] || (i+1)}</span>
+       <span class="nm">${escapeHTML(t.name || "匿名者")}</span>
+       <span class="sv">${t.score} / 100</span>
+     </li>`).join("") + `</ol>`;
+}
+function escapeHTML(s){
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 function quizStats(){
   $("statBar").innerHTML =
     `<span>本輪答對：${Q.right}/${Q.list.length}</span>` +
     `<span>連續答對：${Q.streak}</span>` +
     `<span>本輪腎元：${Q.earned}</span>` +
-    `<span>最佳紀錄：${store.best3}/${QUIZ_LEN}</span>`;
+    `<span>最佳紀錄：${store.best3}/${QUIZ_LEN}</span>` +
+    `<span>挑戰進度：${store.qRounds}/${QUIZ_CHALLENGE} 輪</span>` +
+    `<span>總成績最佳：${store.qBestTotal}/100</span>`;
 }
 
 /* ═══════════ 輸入 ═══════════ */
@@ -920,6 +1045,19 @@ $("pad").querySelectorAll("button").forEach(b=>{
 
 /* ═══════════ 啟動 ═══════════ */
 window.onStateApplied = () => { syncCoinBar(); };
+/* 瀏覽次數：sync.js 載入後才有 window.site，稍等再試 */
+function initViews(tries = 0){
+  if(!window.site){
+    if(tries < 40) return setTimeout(() => initViews(tries+1), 250);
+    return;
+  }
+  window.site.bumpViews().then(n => {
+    if(n == null) return;
+    $("viewCnt").textContent = n.toLocaleString("zh-Hant-TW");
+    $("viewBox").style.display = "";
+  });
+}
+initViews();
 fillCoinIcons(); syncCoinBar(); renderTips();
 fitCanvas(); statsRunner(); loopRunner();
 function closeAll(){ ["account"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
