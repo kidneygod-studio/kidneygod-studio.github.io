@@ -5,8 +5,8 @@ A4 @150dpi = 1240x1754。醫學依據：
 - ADAG study, Diabetes Care 2008：eAG(mg/dL) = 28.7 x A1C - 46.7
 - KDIGO / 糖尿病照護指引：UACR 30 / 300 分級
 """
-import os, sys
-from PIL import Image, ImageDraw, ImageFont
+import os, sys, json, random
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 sys.stdout.reconfigure(encoding="utf-8")
 os.makedirs("cards", exist_ok=True)
@@ -28,9 +28,78 @@ A4 = (1240, 1754)
 M  = 92
 
 
-def canvas(size=A4, bg=BG):
-    im = Image.new("RGB", size, bg)
-    return im, ImageDraw.Draw(im)
+# ══════════ Greed Island 外框 ══════════
+# 附件是 A4 可列印文件，整頁鋪深色會非常吃墨，所以反過來用：
+# 主體維持米色卡紙（就是卡片上文字框的顏色），套上卡牌的外框語彙
+# —— 黑框銀線、三格標頭、大理石色帶、分類章。
+FRAME_C  = (13, 13, 15)
+SILVER_C = (176, 176, 184)
+CREAM_P  = (243, 236, 218)      # 卡紙
+CREAM_C  = (250, 245, 230)      # 標頭格
+CREAM_D  = (196, 184, 150)
+FR = 16                          # 外框厚度
+
+# 分類 →（主色, 章印字）
+CAT_ACCENT = {
+    "用藥安全": ((124, 92, 255), "藥"), "警訊與迷思": ((178, 58, 72), "警"),
+    "飲食護腎": ((46, 160, 110), "食"), "生活習慣": ((59, 130, 196), "習"),
+    "檢查數值": ((91, 110, 225), "檢"), "血壓管理": ((214, 51, 87), "壓"),
+    "血糖管理": ((222, 132, 30), "糖"), "血脂代謝": ((190, 150, 30), "脂"),
+}
+
+_gi_index = None
+def gi_meta(pid):
+    """卡片編號與等級，與卡面印的一致（gi/index.json 由 make_gi_cards.py 產生）。"""
+    global _gi_index
+    if _gi_index is None:
+        try:
+            _gi_index = json.load(open("gi/index.json", encoding="utf-8"))
+        except Exception:
+            _gi_index = {}
+    return _gi_index.get(pid, {})
+
+
+def marble_strip(size, base, seed=7):
+    """細長的大理石色帶，用來當標頭下方的分隔。"""
+    w, h = size
+    rnd = random.Random(seed)
+    small = Image.new("L", (max(2, w // 22), max(2, h)))
+    small.putdata([rnd.randint(0, 255) for _ in range(small.width * small.height)])
+    n = small.resize((w, h), Image.BICUBIC).filter(ImageFilter.GaussianBlur(3))
+    im = Image.new("RGB", (w, h))
+    px, q = im.load(), n.load()
+    r0, g0, b0 = base
+    for y in range(h):
+        for x in range(w):
+            k = 0.74 + q[x, y] / 255.0 * 0.44
+            px[x, y] = (min(255, int(r0*k)), min(255, int(g0*k)), min(255, int(b0*k)))
+    return im
+
+
+def canvas(size=A4, bg=None):
+    """米色卡紙 + 黑色外框 + 銀色細內線。"""
+    im = Image.new("RGB", size, FRAME_C)
+    d = ImageDraw.Draw(im)
+    W, H = size
+    d.rectangle([FR, FR, W-1-FR, H-1-FR], fill=bg or CREAM_P,
+                outline=SILVER_C, width=2)
+    return im, d
+
+
+def cell(d, box_, fill=CREAM_C, gap=5):
+    """雙線外框的格子，卡牌標頭的樣式。"""
+    x0, y0, x1, y1 = box_
+    d.rectangle([x0, y0, x1, y1], fill=fill, outline=FRAME_C, width=4)
+    d.rectangle([x0+gap, y0+gap, x1-gap, y1-gap], outline=FRAME_C, width=2)
+
+
+def corner_marks(d, w, h, accent, m=44, L=30):
+    """四角的直角裝飾。"""
+    for sx, sy in ((1, 1), (-1, 1), (1, -1), (-1, -1)):
+        x = m if sx > 0 else w - m
+        y = m if sy > 0 else h - m
+        d.line([x, y, x + sx*L, y], fill=accent, width=3)
+        d.line([x, y, x, y + sy*L], fill=accent, width=3)
 
 
 def text(d, xy, s, size=26, bold=False, color=INK, anchor="la"):
@@ -55,18 +124,52 @@ def wrap(d, xy, s, size, maxw, lh=1.65, color=INK, bold=False):
     return y
 
 
-def header(d, title, sub, w=A4[0]):
-    d.rectangle([0, 0, w, 150], fill=ACCENT)
-    text(d, (M, 46), title, 44, True, (255, 255, 255))
-    text(d, (M, 104), sub, 20, False, (226, 216, 255))
-    text(d, (w - M, 62), "護腎教室", 26, True, (255, 255, 255), anchor="ra")
-    text(d, (w - M, 100), "KidneyGod.Studio", 16, False, (216, 204, 255), anchor="ra")
+def header(d, title, sub, w=A4[0], cat="用藥安全", pid=None, im=None):
+    """三格標頭：[編號] [標題／副標] [等級]，下方一條大理石色帶。
+       編號與等級取自對應的知識卡，附件與卡片才對得起來。"""
+    accent, mark = CAT_ACCENT.get(cat, ((124, 92, 255), "附"))
+    g = gi_meta(pid) if pid else {}
+    no = f"No.{g['no']:02d}" if g.get("no") else "附錄"
+    rank = g.get("rank", "ATT")
+
+    y0, y1 = 52, 160
+    x_no1 = M + 152
+    x_rk0 = w - M - 176
+    cell(d, [M, y0, x_no1, y1])
+    cell(d, [x_no1 + 10, y0, x_rk0 - 10, y1])
+    cell(d, [x_rk0, y0, w - M, y1])
+
+    text(d, ((M + x_no1)//2, (y0+y1)//2 - 1), no, 34, True, INK, anchor="mm")
+    tf = 34
+    while tf > 20 and d.textlength(title, font=F(tf, True)) > (x_rk0 - x_no1 - 60):
+        tf -= 1
+    text(d, ((x_no1 + x_rk0)//2, y0 + 40), title, tf, True, INK, anchor="mm")
+    sf = 17
+    while sf > 12 and d.textlength(sub, font=F(sf)) > (x_rk0 - x_no1 - 60):
+        sf -= 1
+    text(d, ((x_no1 + x_rk0)//2, y0 + 82), sub, sf, False, DIM, anchor="mm")
+    text(d, ((x_rk0 + w - M)//2, (y0+y1)//2 - 1), rank, 30, True, INK, anchor="mm")
+
+    # 大理石色帶 + 分類章 + 站名
+    if im is not None:
+        band = marble_strip((w - 2*M, 30), accent)
+        im.paste(band, (M, 172))
+    d.rectangle([M, 172, w - M, 202], outline=FRAME_C, width=3)
+    sr = 22
+    d.ellipse([M + 16, 172 + 15 - sr, M + 16 + 2*sr, 172 + 15 + sr],
+              fill=accent, outline=(255, 255, 255), width=3)
+    text(d, (M + 16 + sr, 172 + 14), mark, 22, True, (255, 255, 255), anchor="mm")
+    text(d, (w - M - 16, 172 + 14), "護腎教室 KIDNEYGOD.STUDIO", 15, True,
+         (255, 255, 255), anchor="rm")
 
 
-def footer(d, note, w=A4[0], h=A4[1]):
-    d.line([M, h - 118, w - M, h - 118], fill=LINE, width=2)
-    y = wrap(d, (M, h - 100), note, 15, w - 2 * M, 1.5, DIM)
+def footer(d, note, w=A4[0], h=A4[1], cat="用藥安全"):
+    accent = CAT_ACCENT.get(cat, ((124, 92, 255), ""))[0]
+    d.line([M, h - 122, w - M, h - 122], fill=FRAME_C, width=3)
+    d.line([M, h - 116, w - M, h - 116], fill=CREAM_D, width=1)
+    wrap(d, (M, h - 100), note, 15, w - 2 * M, 1.5, DIM)
     text(d, (w - M, h - 46), "kidneygod-studio.github.io", 15, False, DIM, anchor="ra")
+    corner_marks(d, w, h, accent)
 
 
 def box(d, x0, y0, x1, y1, fill=None, outline=LINE, r=16, width=2):
@@ -103,16 +206,26 @@ def table(d, x, y, cols, rows, widths, rowh=64, head_bg=(246, 242, 255)):
 
 # ══════════ 1. 「先問藥師」提示卡 ══════════
 def card_pharmacist():
-    W, H = 1050, 660
-    im, d = canvas((W, H), (255, 255, 255))
-    d.rounded_rectangle([8, 8, W - 8, H - 8], radius=28, outline=ACCENT, width=5)
-    d.rounded_rectangle([8, 8, W - 8, 124], radius=28, fill=ACCENT)
-    d.rectangle([8, 96, W - 8, 124], fill=ACCENT)
-    text(d, (46, 40), "用藥前，先問藥師", 42, True, (255, 255, 255))
-    text(d, (W - 46, 52), "腎臟保護卡", 22, True, (226, 216, 255), anchor="ra")
+    W, H = 1050, 748       # 標頭改成三格後變高，卡片跟著加高才不會撞到頁尾
+    im, d = canvas((W, H))
+    accent, mark = CAT_ACCENT["用藥安全"]
+    g = gi_meta("nsaid")
+    cell(d, [44, 42, 202, 132])
+    cell(d, [212, 42, W - 214, 132])
+    cell(d, [W - 204, 42, W - 44, 132])
+    text(d, (123, 86), f"No.{g.get('no', 0):02d}", 30, True, INK, anchor="mm")
+    text(d, ((212 + W - 214)//2, 74), "用藥前，先問藥師", 34, True, INK, anchor="mm")
+    text(d, ((212 + W - 214)//2, 110), "腎臟保護卡", 16, False, DIM, anchor="mm")
+    text(d, (W - 124, 86), g.get("rank", "ATT"), 26, True, INK, anchor="mm")
+    im.paste(marble_strip((W - 88, 26), accent), (44, 144))
+    d.rectangle([44, 144, W - 44, 170], outline=FRAME_C, width=3)
+    d.ellipse([58, 138, 100, 176], fill=accent, outline=(255, 255, 255), width=3)
+    text(d, (79, 156), mark, 20, True, (255, 255, 255), anchor="mm")
+    text(d, (W - 58, 156), "護腎教室 KIDNEYGOD.STUDIO", 14, True,
+         (255, 255, 255), anchor="rm")
 
-    y = 156
-    text(d, (46, y), "① 主動告訴藥師／醫師", 24, True, ACCENT); y += 44
+    y = 198
+    text(d, (46, y), "① 主動告訴藥師／醫師", 24, True, accent); y += 44
     for s in ("我有腎臟病／腎功能不好（可出示最近一次 eGFR）",
               "我正在吃的藥：降壓藥、利尿劑、糖尿病藥、中草藥、保健食品",
               "我最近有腹瀉、嘔吐、發燒或流汗很多（可能脫水）"):
@@ -121,7 +234,7 @@ def card_pharmacist():
         y += 40
 
     y += 18
-    text(d, (46, y), "② 一定要問的三句話", 24, True, ACCENT); y += 44
+    text(d, (46, y), "② 一定要問的三句話", 24, True, accent); y += 44
     for s in ("這個藥傷腎嗎？", "以我的腎功能，可以吃嗎？", "劑量需要調整嗎？"):
         d.ellipse([50, y + 10, 62, y + 22], fill=INK)
         wrap(d, (78, y), s, 21, W - 130, 1.5)
@@ -133,8 +246,11 @@ def card_pharmacist():
     wrap(d, (62, y + 48), "不自行購買止痛藥（NSAID）、不吃來路不明的止痛粉與草藥。"
                           "止痛請先問過藥師或醫師。", 18, W - 130, 1.45, INK)
 
-    text(d, (46, H - 46), "護腎教室 KidneyGod.Studio｜衛教用途，不取代醫囑",
+    assert y + 96 < H - 90, f"提示卡內容溢出：內容底 {y+96} vs 頁尾 {H-90}"
+    d.line([44, H - 74, W - 44, H - 74], fill=FRAME_C, width=3)
+    text(d, (46, H - 60), "護腎教室 KidneyGod.Studio｜衛教用途，不取代醫囑",
          15, False, DIM)
+    corner_marks(d, W, H, accent, m=30, L=22)
     im.save("cards/card-nsaid.png", optimize=True)
     return "cards/card-nsaid.png"
 
@@ -142,8 +258,9 @@ def card_pharmacist():
 # ══════════ 2. 居家血壓量測對照表 ══════════
 def table_bp():
     im, d = canvas()
-    header(d, "居家血壓對照表", "依 2022 台灣高血壓治療指引｜以居家血壓為判讀依據")
-    y = 210
+    header(d, "居家血壓對照表", "依 2022 台灣高血壓治療指引｜以居家血壓為判讀依據",
+           cat="血壓管理", pid="bp-130", im=im)
+    y = 226
     y = wrap(d, (M, y), "新版指引改以「居家血壓」為主要判斷依據，"
                         "並把高血壓診斷標準下修至 130/80 mmHg。"
                         "請以連續 7 天的平均值判讀，而非單次數值。", 22, A4[0] - 2 * M, 1.7)
@@ -185,8 +302,9 @@ def table_bp():
 # ══════════ 3. 722 血壓紀錄表 ══════════
 def sheet_722():
     im, d = canvas()
-    header(d, "722 居家血壓紀錄表", "連續 7 天．早晚各 2 次．每次量 2 遍取平均")
-    y = 196
+    header(d, "722 居家血壓紀錄表", "連續 7 天．早晚各 2 次．每次量 2 遍取平均",
+           cat="血壓管理", pid="bp-722", im=im)
+    y = 226
     text(d, (M, y), "姓名：", 22, True); d.line([M + 76, y + 34, M + 380, y + 34], fill=INK, width=2)
     text(d, (M + 420, y), "紀錄期間：", 22, True)
     d.line([M + 540, y + 34, A4[0] - M, y + 34], fill=INK, width=2)
@@ -243,8 +361,9 @@ def sheet_722():
 # ══════════ 4. HbA1c 換算表 ══════════
 def table_a1c():
     im, d = canvas()
-    header(d, "HbA1c 平均血糖換算表", "依 ADAG 研究：eAG(mg/dL) = 28.7 × A1C - 46.7")
-    y = 210
+    header(d, "HbA1c 平均血糖換算表", "依 ADAG 研究：eAG(mg/dL) = 28.7 × A1C - 46.7",
+           cat="血糖管理", pid="dm-a1c", im=im)
+    y = 226
     y = wrap(d, (M, y), "糖化血色素（HbA1c）反映近二至三個月的平均血糖。"
                         "下表把 HbA1c 換算成「估計平均血糖（eAG）」，"
                         "讓你把化驗數字對應到平常自測的血糖機讀數。", 22, A4[0] - 2 * M, 1.7)
@@ -282,8 +401,9 @@ def table_a1c():
 # ══════════ 5. 糖尿病腎病變路徑圖 ══════════
 def chart_dn():
     im, d = canvas()
-    header(d, "糖尿病腎病變 進程路徑圖", "越早發現，越有機會延緩甚至逆轉")
-    y = 206
+    header(d, "糖尿病腎病變 進程路徑圖", "越早發現，越有機會延緩甚至逆轉",
+           cat="血糖管理", pid="dm-no1", im=im)
+    y = 226
     y = wrap(d, (M, y), "糖尿病傷腎的過程幾乎沒有症狀。下圖標出各階段的檢驗表現與可介入程度——"
                         "真正能改變結果的窗口，在前兩個階段。", 22, A4[0] - 2 * M, 1.7)
     y += 30

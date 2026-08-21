@@ -15,8 +15,10 @@ import os, sys
 
 from PIL import ImageFont
 
-from make_cards import (canvas, text, wrap, box, A4, M,
-                        INK, DIM, LINE, RED, OK, AMBER, F)
+from make_cards import (canvas, text, wrap, box, table as _t, A4, M,
+                        INK, DIM, LINE, RED, OK, AMBER, F,
+                        header as gi_header, footer as gi_footer,
+                        CAT_ACCENT, CREAM_C, FRAME_C, cell, gi_meta)
 
 sys.stdout.reconfigure(encoding="utf-8")
 os.makedirs("cards", exist_ok=True)
@@ -29,21 +31,6 @@ CAT_COLOR = {
     "血糖管理": (222, 132, 30), "血脂代謝": (190, 150, 30),
 }
 TINT = lambda c: tuple(min(255, int(v + (255 - v) * 0.90)) for v in c)
-
-
-def header(d, title, sub, accent):
-    d.rectangle([0, 0, A4[0], 150], fill=accent)
-    text(d, (M, 44), title, 42, True, (255, 255, 255))
-    text(d, (M, 102), sub, 19, False, (255, 255, 255))
-    text(d, (A4[0] - M, 60), "護腎教室", 26, True, (255, 255, 255), anchor="ra")
-    text(d, (A4[0] - M, 100), "KidneyGod.Studio", 16, False, (255, 255, 255), anchor="ra")
-
-
-def foot(d, note):
-    d.line([M, A4[1] - 118, A4[0] - M, A4[1] - 118], fill=LINE, width=2)
-    wrap(d, (M, A4[1] - 100), note, 15, A4[0] - 2 * M, 1.5, DIM)
-    text(d, (A4[0] - M, A4[1] - 46), "kidneygod-studio.github.io",
-         15, False, DIM, anchor="ra")
 
 
 def table(d, x, y, cols, rows, widths, accent, rowh=62):
@@ -104,8 +91,9 @@ def table(d, x, y, cols, rows, widths, accent, rowh=62):
 def render(spec):
     accent = CAT_COLOR[spec["cat"]]
     im, d = canvas()
-    header(d, spec["title"], spec["sub"], accent)
-    y = 210
+    gi_header(d, spec["title"], spec["sub"], cat=spec["cat"],
+              pid=spec.get("pid"), im=im)
+    y = 226
     W = A4[0] - 2 * M
     for blk in spec["blocks"]:
         kind = blk[0]
@@ -142,7 +130,7 @@ def render(spec):
             y += h + 26
         elif kind == "gap":
             y += blk[1]
-    foot(d, spec["foot"])
+    gi_footer(d, spec["foot"], cat=spec["cat"])
     out = "cards/" + spec["file"]
     im.save(out, optimize=True)
     return out, y
