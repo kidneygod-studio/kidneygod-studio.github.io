@@ -141,6 +141,15 @@
   .sdl a{background:#17734a;color:#fff;font-size:12.5px;font-weight:800;
          padding:7px 14px;border-radius:99px;text-decoration:none;}
   .sdl a.att{background:var(--card2);color:#14663f;border:1.5px solid #9fd8bd;}
+  /* 貼圖檢視：放在深色收納格上，白色的貓才看得清楚 */
+  .stkview{margin:6px 0 4px;padding:18px;border-radius:10px;border:2px solid #0f0c0a;
+           background:radial-gradient(ellipse at 50% 25%,#241c17,var(--slot));
+           box-shadow:inset 0 3px 12px rgba(0,0,0,.7);text-align:center;}
+  .stkview img{max-width:100%;max-height:46vh;display:inline-block;}
+  .stknote{font-size:11.5px;color:var(--dim);margin-top:10px;line-height:1.7;}
+  .rarechip{background:linear-gradient(90deg,#ffd76e,#ffb03a);color:#6b4200;
+            border:1px solid #d9a43c;border-radius:5px;padding:1px 7px;
+            font-size:10.5px;font-weight:800;font-family:inherit;}
 
   footer{border-top:2px solid #0f0c0a;background:var(--card);color:var(--ink);
          padding:26px 20px 40px;}
@@ -254,7 +263,7 @@ function renderS(){
   $("sSlots").innerHTML = STICKERS.map(k=>{
     const has = got.includes(k.id);
     return `<div class="cell"><div class="slot ${has?"got":""}"
-        ${has?`onclick="dlSticker('${k.id}')"`:""}>
+        ${has?`onclick="openSticker('${k.id}')"`:""}>
         ${has ? `<img src="stickers/thumb/${k.id}.png" alt="${k.l}" loading="lazy">`
               : `<div class="empty"><div class="no">${k.id}</div><div class="lb">未取得</div></div>`}
       </div><div class="cap${has?"":" dim"}"><span class="cc">${SET_NAME[k.s]}</span><span class="ct">${has?k.l:"？？？"}</span></div></div>`;
@@ -280,6 +289,22 @@ function openCard(id){
       ${p.dl?`<a class="att" href="cards/${p.dl}"
          download="護腎教室_${p.dn.replace(/[「」]/g,"")}.png">📎 ${p.dn}</a>`:""}
     </div>`;
+  $("veil").classList.add("on"); $("detail").classList.add("on");
+}
+
+function openSticker(id){
+  const k = STICKERS.find(x=>x.id===id);
+  if(!k) return;
+  $("detailBody").innerHTML = `
+    <div class="shead"><h3>${k.l}</h3>
+      <button class="x" onclick="closeAll()">✕</button></div>
+    <div class="smeta">${k.id}　${SET_NAME[k.s]}${k.r?'　<span class="rarechip">稀有款</span>':""}</div>
+    <div class="stkview"><img src="stickers/${id}.png" alt="${k.l}"></div>
+    <div class="sdl">
+      <a href="stickers/${id}.png"
+         download="貓咪貼圖_${k.l.replace(/[！？…～?!]/g,"")}_${id}.png">⬇ 下載原圖</a>
+    </div>
+    <div class="stknote">長按圖片可直接存到相簿（行動裝置）；電腦請用上方的下載按鈕。</div>`;
   $("veil").classList.add("on"); $("detail").classList.add("on");
 }
 
