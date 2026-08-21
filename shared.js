@@ -18,7 +18,7 @@ SPRITE.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJwAAACMCAYAAACJbsDW
 
 /* ── 進度儲存 ── */
 const store = {
-  get coins(){ const v = parseInt(localStorage.msd_coins); return isNaN(v) ? 100 : v; },
+  get coins(){ const v = parseInt(localStorage.msd_coins); return isNaN(v) ? 200 : v; },
   set coins(v){ localStorage.msd_coins = Math.max(0, v); syncPush(); },
   get lib(){ try{return JSON.parse(localStorage.msd_lib||"[]")}catch(e){return[]} },
   set lib(v){ localStorage.msd_lib = JSON.stringify(v); syncPush(); },
@@ -51,7 +51,7 @@ const store = {
   get stk(){ try{return JSON.parse(localStorage.msd_stickers||"[]")}catch(e){return[]} },
   set stk(v){ localStorage.msd_stickers = JSON.stringify(v); syncPush(); },
 };
-if(localStorage.msd_coins === undefined) localStorage.msd_coins = 100;
+if(localStorage.msd_coins === undefined) localStorage.msd_coins = 200;
 
 function owned(id){ return store.lib.some(k=>k.id===id); }
 function ownedStk(id){ return store.stk.includes(id); }
@@ -72,7 +72,7 @@ function getLocalState(){
 }
 function applyState(s){
   if(!s) return;
-  localStorage.msd_coins    = Math.max(0, s.coins ?? 100);
+  localStorage.msd_coins    = Math.max(0, s.coins ?? 200);
   localStorage.msd_lib      = JSON.stringify(s.lib || []);
   localStorage.msd_gifts    = JSON.stringify(s.gifts || {});
   localStorage.msd_best     = s.best || 0;

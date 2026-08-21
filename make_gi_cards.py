@@ -16,9 +16,9 @@
   gi/art/{id}.png  外部繪製（Gemini 等）的插圖，有檔案就直接用
   程式繪製          深藍底 + 放射線 + 網點 + 腎臟剪影 + 主題符號章
 
-等級由價格換算（35→SS、30→S、25→A、20→B），編號依分類排序後給定。
+等級由價格換算（350→SS、300→S、250→A、200→B），編號依分類排序後給定。
 """
-import os, sys, json, math, random
+import os, sys, json, math, random, zlib
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -62,7 +62,7 @@ THEME = {
     "血糖管理":  ((255, 214, 160), (74, 40, 12),  (196, 112, 26), "糖"),
     "血脂代謝":  ((250, 230, 160), (66, 54, 12),  (168, 132, 26), "脂"),
 }
-RANK = {35: "SS", 30: "S", 25: "A", 20: "B"}
+RANK = {350: "SS", 300: "S", 250: "A", 200: "B"}
 
 
 # ═══════════ 基本繪圖工具 ═══════════
@@ -114,6 +114,13 @@ def double_box(d, box, fill, outer=(18,18,20), gap=6):
     x0, y0, x1, y1 = box
     d.rectangle([x0, y0, x1, y1], fill=fill, outline=outer, width=4)
     d.rectangle([x0+gap, y0+gap, x1-gap, y1-gap], outline=outer, width=2)
+
+
+def stable_seed(text):
+    """Python 的 hash() 對字串每個行程都不一樣（PYTHONHASHSEED），
+    拿來當亂數種子會導致同一張卡每次重跑都長得不同、git 每次都有 diff。
+    改用 crc32，跨行程穩定。"""
+    return zlib.crc32(text.encode("utf-8")) & 0xffff
 
 
 def marble(size, base, seed):
@@ -170,7 +177,7 @@ def draw_art(size, item):
                fill=accent + (22 if i % 2 else 44,), width=3)
 
     # 網點（越外圈越密，做出印刷感）
-    rnd = random.Random(hash(item["id"]) & 0xffff)
+    rnd = random.Random(stable_seed(item["id"]))
     for _ in range(420):
         a = rnd.random() * 2 * math.pi
         rr = (0.34 + rnd.random() ** 0.5 * 0.70) * w * 0.55
@@ -271,7 +278,7 @@ def make_card(item, no, rank, out):
 
     # ── 說明：大理石色帶包白框 ──
     ty0, ty1 = 668, 1026
-    tex = marble((W-2*M, ty1-ty0), band, seed=hash(item["id"]) & 0xffff)
+    tex = marble((W-2*M, ty1-ty0), band, seed=stable_seed(item["id"]))
     im.paste(tex, (M, ty0))
     d.rectangle([M, ty0, W-M, ty1], outline=INK, width=4)
     bd = 30
