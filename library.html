@@ -101,8 +101,16 @@
   .slot .rk{position:absolute;top:0;left:0;background:#0f0c0a;color:var(--gold2);
             font-size:9.5px;font-weight:800;padding:1px 6px;border-bottom-right-radius:7px;
             letter-spacing:.5px;font-family:Consolas,monospace;}
-  .cap{font-size:11px;font-weight:700;color:var(--onboard);text-align:center;
-       margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  /* 說明：原本單行截斷，但標題最長有 32 字，看不出是哪一篇。
+     改成分類一行、標題最多三行；高度固定，冊頁的格子才會對齊。 */
+  .cap{margin-top:6px;text-align:center;}
+  .cap .cc{display:block;font-size:10px;font-weight:800;color:var(--gold);
+           letter-spacing:.5px;margin-bottom:2px;}
+  .cap .ct{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+           overflow:hidden;font-size:11.5px;font-weight:700;line-height:1.45;
+           color:var(--onboard);height:calc(11.5px * 1.45 * 3);}
+  .cap.dim .ct,.cap.dim .cc{color:var(--dimboard);}
+  .slots.stk .cap .ct{-webkit-line-clamp:2;height:calc(11.5px * 1.45 * 2);}
   .cell{position:relative;z-index:1;}
 
   .none{grid-column:1/-1;text-align:center;color:var(--dimboard);padding:40px 10px;}
@@ -229,12 +237,12 @@ function renderK(){
       return `<div class="cell"><div class="slot got" onclick="openCard('${p.id}')">
           ${g.rank?`<span class="rk">${g.rank}</span>`:""}
           <img src="cards/gi/thumb/${p.id}.png" alt="${p.k.t}" loading="lazy">
-        </div><div class="cap">${p.k.t}</div></div>`;
+        </div><div class="cap"><span class="cc">【${p.c}】</span><span class="ct">${p.k.t}</span></div></div>`;
     return `<div class="cell"><div class="slot">
         <div class="empty"><div class="si">${p.e}</div>
           <div class="no">${g.no ? String(g.no).padStart(2,"0") : "—"}</div>
           <div class="lb">未取得</div></div>
-      </div><div class="cap" style="color:var(--dimboard)">？？？</div></div>`;
+      </div><div class="cap dim"><span class="cc">【${p.c}】</span><span class="ct">？？？</span></div></div>`;
   }).join("");
   $("kCnt").textContent = `${owned.size} / ${PRODUCTS.length}`;
   $("kBar").style.width = (owned.size / PRODUCTS.length * 100) + "%";
@@ -249,7 +257,7 @@ function renderS(){
         ${has?`onclick="dlSticker('${k.id}')"`:""}>
         ${has ? `<img src="stickers/thumb/${k.id}.png" alt="${k.l}" loading="lazy">`
               : `<div class="empty"><div class="no">${k.id}</div><div class="lb">未取得</div></div>`}
-      </div><div class="cap"${has?"":' style="color:var(--dimboard)"'}>${has?k.l:"？？？"}</div></div>`;
+      </div><div class="cap${has?"":" dim"}"><span class="cc">${SET_NAME[k.s]}</span><span class="ct">${has?k.l:"？？？"}</span></div></div>`;
   }).join("");
   $("sCnt").textContent = `${got.length} / ${STICKERS.length}`;
   $("sBar").style.width = (got.length / STICKERS.length * 100) + "%";
