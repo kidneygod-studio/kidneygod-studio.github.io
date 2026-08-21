@@ -384,7 +384,8 @@ function renderTips(){
       <b>排行榜</b>　每輪結束都會結算一次累計答對題數 —— <b>不必打滿十輪，中途的總分一樣能上榜</b>。
       成績進得了前十名，畫面就會邀請你留下代號或綽號；留空顯示為「匿名者」。
       同意上榜後不會再問第二次，之後每輪成績提高都自動更新你那一筆，不會洗版。
-      十輪（100 題）打完就是滿分 100，題目不重複；打完歸零可以重新挑戰。
+      <b>累計最多算十輪</b>（100 題，題目不重複，全對就是滿分 100）。第十輪一結算，
+      累計就歸零、題庫重新洗牌，再玩算新的一次挑戰 —— 分數不會無限往上疊。
       第一名的名字會出現在商城首頁的跑馬燈上。
       <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">🏆 看排行榜</button></div>`;
     return;
@@ -955,7 +956,9 @@ async function rankCheck(total, rounds, done){
   const box = document.createElement("div");
   box.className = "qchallenge";
   box.innerHTML = `<div class="ct">${done ? "🏆 十輪挑戰完成" : "📊 目前累計成績"}</div>
-     <div class="cs">總成績 <b>${total}</b> / 100 題　<span class="dimtxt">（已完成 ${rounds} 輪）</span></div>
+     <div class="cs">總成績 <b>${total}</b> / 100 題　<span class="dimtxt">（已完成 ${rounds} / ${QUIZ_CHALLENGE} 輪）</span></div>
+     ${done ? `<div class="dimtxt">累計最多算十輪，這次已結算完畢；再玩就是新的一輪挑戰，
+       累計從零重新開始。排行榜保留你最好的那次成績。</div>` : ""}
      <div class="cw" id="cwrap">查詢排行榜中…</div>`;
   $("qend").insertBefore(box, $("qend").querySelector(".qnav"));
   if(done) confetti(["🏆","🎓","✨","🎊","💯","⭐"]);
