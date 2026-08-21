@@ -62,8 +62,11 @@ SCENE = {
            "shadow over a distant dialysis-style spiral of tubing.",
  "dm-sglt2": "A kidney acting as a sluice gate, releasing a bright stream of sugar crystals safely out and "
              "away, with a heart shape glowing protected in the background.",
- "dm-a1c": "A report card shaped like a stained-glass panel divided into three month-segments, a red blood "
-           "cell motif repeated across it.",
+ # 初版寫「圓形分成三等份＋紅色圓點」，Gemini 畫出來是一個臘腸披薩 ——
+ # 放在血糖衛教卡上意思完全相反。改成直立血滴分層，並明講不要圓形食物。
+ "dm-a1c": "A large stylised blood droplet standing upright, its interior divided into three horizontal "
+           "sediment layers in different amber tones like a core sample, a slim unmarked measuring gauge "
+           "along one side, soft glow behind. Strictly no circular sliced food, no pizza, no pie shapes.",
  "dm-glp1": "A single arrow splitting into three ribbons that curve toward a sugar cube, a scale, and a heart "
             "with a small kidney beside it.",
  "dm-keep": "A bridge held up by pillars made of capsules; one pillar being removed and the bridge deck "

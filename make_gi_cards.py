@@ -193,14 +193,6 @@ def draw_art(size, item):
     if emo is not None:
         im.paste(emo, (cx - emo.width//2, cy - emo.height//2), emo)
 
-    # 分類章：右下角的小圓印，像卡牌的系列符號
-    sr = int(h * 0.078)
-    sx_, sy_ = w - sr - 26, h - sr - 26
-    d.ellipse([sx_-sr, sy_-sr, sx_+sr, sy_+sr], fill=band + (235,),
-              outline=(255, 255, 255, 210), width=4)
-    d.text((sx_, sy_ - 1), mark, font=F("bold", int(sr * 1.05)),
-           fill=(255, 255, 255), anchor="mm")
-
     # 四角裝飾
     for sx, sy in ((1,1), (-1,1), (1,-1), (-1,-1)):
         px_, py_ = (w*0.06 if sx>0 else w*0.94), (h*0.08 if sy>0 else h*0.92)
@@ -209,18 +201,35 @@ def draw_art(size, item):
     return im
 
 
+def seal(im, item):
+    """右下角的分類小圓印，像卡牌的系列符號。外部插圖與程式繪製都會蓋上。"""
+    w, h = im.size
+    band, mark = THEME[item["cat"]][2], THEME[item["cat"]][3]
+    d = ImageDraw.Draw(im, "RGBA")
+    sr = int(h * 0.078)
+    sx_, sy_ = w - sr - 26, h - sr - 26
+    d.ellipse([sx_-sr, sy_-sr, sx_+sr, sy_+sr], fill=band + (235,),
+              outline=(255, 255, 255, 210), width=4)
+    d.text((sx_, sy_ - 1), mark, font=F("bold", int(sr * 1.05)),
+           fill=(255, 255, 255), anchor="mm")
+    return im
+
+
 def load_art(size, item):
-    """有外部插圖就用外部的，否則程式繪製。"""
-    p = os.path.join(ART_DIR, item["id"] + ".png")
-    if os.path.exists(p):
-        art = Image.open(p).convert("RGB")
-        # 置中裁切成需要的比例
-        tw, th = size
-        r = max(tw / art.width, th / art.height)
-        art = art.resize((round(art.width*r), round(art.height*r)), Image.LANCZOS)
-        l, t = (art.width - tw)//2, (art.height - th)//2
-        return art.crop((l, t, l+tw, t+th))
-    return draw_art(size, item)
+    """有外部插圖就用外部的，否則程式繪製。副檔名 png/jpg 都收。"""
+    art = None
+    for ext in (".png", ".jpg", ".jpeg", ".webp"):
+        p = os.path.join(ART_DIR, item["id"] + ext)
+        if os.path.exists(p):
+            art = Image.open(p).convert("RGB"); break
+    if art is None:
+        return seal(draw_art(size, item), item)
+    # 置中裁切成插圖區的比例
+    tw, th = size
+    r = max(tw / art.width, th / art.height)
+    art = art.resize((round(art.width*r), round(art.height*r)), Image.LANCZOS)
+    l, t = (art.width - tw)//2, (art.height - th)//2
+    return seal(art.crop((l, t, l+tw, t+th)), item)
 
 
 # ═══════════ 卡片 ═══════════
@@ -313,7 +322,8 @@ def main():
         th.quantize(colors=96, method=Image.FASTOCTREE).save(
             f"{OUT_DIR}/thumb/{item['id']}.png", optimize=True)
         made += 1
-    ext = len([f for f in os.listdir(ART_DIR) if f.endswith(".png")])
+    ext = len([f for f in os.listdir(ART_DIR)
+               if f.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))])
     tot = sum(os.path.getsize(f"{OUT_DIR}/{f}")
               for f in os.listdir(OUT_DIR) if f.endswith(".png"))
     print(f"完成 {made} 張｜外部插圖 {ext} 張，其餘程式繪製｜合計 {tot//1024} KB")
