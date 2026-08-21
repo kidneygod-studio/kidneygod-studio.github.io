@@ -22,6 +22,8 @@ OUT = "logo.png"
 FLOOD_T = 215      # 這個亮度以上、且與邊緣連通者視為背景
 FADE_LO = 215      # alpha 漸變的下限（比這暗就是完全不透明）
 MAX_W = 480        # 頁首顯示約 100–160px 寬，480 已足夠三倍圖
+CROP_T = 55        # 裁切時視為「實心內容」的 alpha 門檻（低於此的只是暈光）
+CROP_PAD = 0.025   # 裁切框外留的邊，讓光暈自然收尾
 
 
 def main():
@@ -42,17 +44,37 @@ def main():
 
     rgba = im.convert("RGBA")
     rgba.putalpha(Image.fromarray(alpha))
-    bb = rgba.getbbox()
-    rgba = rgba.crop(bb)
+
+    # 裁切基準用「實心內容」而不是 getbbox()。光暈拖得很遠，用 alpha>0 去裁
+    # 會讓四成的高度都是幾乎看不見的暈光，字在頁首就顯得很小。
+    # 抓 alpha > CROP_T 的範圍再留一點邊，光暈收在邊緣不會出現硬切口。
+    ys, xs = np.where(alpha > CROP_T)
+    pad = int(min(xs.max() - xs.min(), ys.max() - ys.min()) * CROP_PAD)
+    box = (max(0, xs.min() - pad), max(0, ys.min() - pad),
+           min(alpha.shape[1], xs.max() + 1 + pad),
+           min(alpha.shape[0], ys.max() + 1 + pad))
+    rgba = rgba.crop(box)
     if rgba.width > MAX_W:
         rgba = rgba.resize((MAX_W, round(rgba.height * MAX_W / rgba.width)),
                            Image.LANCZOS)
     # 光暈是平滑漸層，量化到 200 色看不出色階，但體積差一個量級（169→25 KB）
     rgba.quantize(colors=200, method=Image.FASTOCTREE).save(OUT, optimize=True)
 
-    kept = (alpha > 8).mean() * 100
-    print(f"{OUT}  {rgba.size}  {os.path.getsize(OUT)//1024} KB")
-    print(f"裁切前保留（alpha>8）{kept:.1f}%；比例 {rgba.width/rgba.height:.2f}")
+    # 把實際尺寸同步進 <img> 的 width/height，否則裁切一改就對不上，
+    # 這兩個屬性是用來預留版面、避免載入時跳動的，寫錯等於沒寫。
+    import re
+    for page in ("index.html", "game.html"):
+        if not os.path.exists(page):
+            continue
+        s = open(page, encoding="utf-8").read()
+        s2 = re.sub(r'(src="logo\.png"[^>]*?width=")\d+("\s+height=")\d+"',
+                    lambda m: f'{m.group(1)}{rgba.width}{m.group(2)}{rgba.height}"', s)
+        if s2 != s:
+            open(page, "w", encoding="utf-8").write(s2)
+            print(f"  已同步 {page} 的 width/height")
+
+    print(f"{OUT}  {rgba.size}  {os.path.getsize(OUT)//1024} KB"
+          f"  比例 {rgba.width/rgba.height:.2f}")
 
 
 if __name__ == "__main__":
