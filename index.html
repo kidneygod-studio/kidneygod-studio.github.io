@@ -554,7 +554,7 @@ function cardHTML(p){
           <div class="price">${p.o?`<s>${C(p.o)}</s>`:""}${C(p.p)}</div>
           ${has
             ? `<a class="dl" href="cards/gi/${p.id}.png" download="護腎教室_${p.k.t.replace(/[：、，。！？「」]/g,"")}.png">⬇ 知識卡</a>`
-            : `<button class="add" onclick="addCart('k${p.i}')">爽買</button>`}
+            : `<button class="add" onclick="addCart('k${p.i}')">獲取</button>`}
         </div>
         ${has ? attachHTML(p) : ""}
       </div>
@@ -576,7 +576,7 @@ function stickerHTML(k){
           <div class="price">${C(k.p)}</div>
           ${has
             ? `<a class="dl" href="stickers/${k.id}.png" download="貓咪貼圖_${k.l.replace(/[！？…～?!]/g,"")}_${k.id}.png">⬇ 下載</a>`
-            : `<button class="add" onclick="addCart('s${k.id}')">爽買</button>`}
+            : `<button class="add" onclick="addCart('s${k.id}')">獲取</button>`}
         </div>
       </div>
     </article>`;
