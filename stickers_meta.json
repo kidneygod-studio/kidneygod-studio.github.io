@@ -5,7 +5,7 @@
   "label": "哈囉！",
   "file": "stickers/A01.png",
   "thumb": "stickers/thumb/A01.png",
-  "price": 200,
+  "price": 1000,
   "rare": false,
   "w": 320,
   "h": 283
@@ -16,7 +16,7 @@
   "label": "晚安囉～",
   "file": "stickers/A02.png",
   "thumb": "stickers/thumb/A02.png",
-  "price": 200,
+  "price": 1000,
   "rare": false,
   "w": 320,
   "h": 299
@@ -27,7 +27,7 @@
   "label": "謝謝你！",
   "file": "stickers/A03.png",
   "thumb": "stickers/thumb/A03.png",
-  "price": 200,
+  "price": 1000,
   "rare": false,
   "w": 318,
   "h": 320
@@ -38,7 +38,7 @@
   "label": "讚！",
   "file": "stickers/A04.png",
   "thumb": "stickers/thumb/A04.png",
-  "price": 200,
+  "price": 1000,
   "rare": false,
   "w": 320,
   "h": 299
@@ -49,7 +49,7 @@
   "label": "哇！",
   "file": "stickers/A05.png",
   "thumb": "stickers/thumb/A05.png",
-  "price": 200,
+  "price": 1000,
   "rare": false,
   "w": 286,
   "h": 320
@@ -60,7 +60,7 @@
   "label": "嗚嗚…",
   "file": "stickers/A06.png",
   "thumb": "stickers/thumb/A06.png",
-  "price": 200,
+  "price": 1000,
   "rare": false,
   "w": 320,
   "h": 282
@@ -71,7 +71,7 @@
   "label": "在嗎？",
   "file": "stickers/A07.png",
   "thumb": "stickers/thumb/A07.png",
-  "price": 200,
+  "price": 1000,
   "rare": false,
   "w": 320,
   "h": 285
@@ -82,7 +82,7 @@
   "label": "愛你唷！",
   "file": "stickers/A08.png",
   "thumb": "stickers/thumb/A08.png",
-  "price": 200,
+  "price": 1000,
   "rare": false,
   "w": 302,
   "h": 320
@@ -93,7 +93,7 @@
   "label": "先走囉～",
   "file": "stickers/A09.png",
   "thumb": "stickers/thumb/A09.png",
-  "price": 200,
+  "price": 1000,
   "rare": false,
   "w": 320,
   "h": 302
@@ -104,7 +104,7 @@
   "label": "哈囉！",
   "file": "stickers/B01.png",
   "thumb": "stickers/thumb/B01.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 206,
   "h": 208
@@ -115,7 +115,7 @@
   "label": "謝謝你！",
   "file": "stickers/B02.png",
   "thumb": "stickers/thumb/B02.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 210,
   "h": 220
@@ -126,7 +126,7 @@
   "label": "晚安囉～",
   "file": "stickers/B03.png",
   "thumb": "stickers/thumb/B03.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 216,
   "h": 201
@@ -137,7 +137,7 @@
   "label": "耶耶耶！",
   "file": "stickers/B04.png",
   "thumb": "stickers/thumb/B04.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 225,
   "h": 221
@@ -148,7 +148,7 @@
   "label": "好開心！",
   "file": "stickers/B05.png",
   "thumb": "stickers/thumb/B05.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 222,
   "h": 225
@@ -159,7 +159,7 @@
   "label": "讚！",
   "file": "stickers/B06.png",
   "thumb": "stickers/thumb/B06.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 199,
   "h": 207
@@ -170,7 +170,7 @@
   "label": "嗚嗚…",
   "file": "stickers/B07.png",
   "thumb": "stickers/thumb/B07.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 160,
   "h": 202
@@ -181,7 +181,7 @@
   "label": "哇！",
   "file": "stickers/B08.png",
   "thumb": "stickers/thumb/B08.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 214,
   "h": 209
@@ -192,7 +192,7 @@
   "label": "在嗎？",
   "file": "stickers/B09.png",
   "thumb": "stickers/thumb/B09.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 212,
   "h": 204
@@ -203,7 +203,7 @@
   "label": "愛你唷！",
   "file": "stickers/B10.png",
   "thumb": "stickers/thumb/B10.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 207,
   "h": 211
@@ -214,7 +214,7 @@
   "label": "在幹嘛？",
   "file": "stickers/B11.png",
   "thumb": "stickers/thumb/B11.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 222,
   "h": 202
@@ -225,7 +225,7 @@
   "label": "嗯…",
   "file": "stickers/B12.png",
   "thumb": "stickers/thumb/B12.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 176,
   "h": 183
@@ -236,7 +236,7 @@
   "label": "對不起…",
   "file": "stickers/B13.png",
   "thumb": "stickers/thumb/B13.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 181,
   "h": 202
@@ -247,7 +247,7 @@
   "label": "加油！",
   "file": "stickers/B14.png",
   "thumb": "stickers/thumb/B14.png",
-  "price": 160,
+  "price": 750,
   "rare": true,
   "w": 203,
   "h": 213
@@ -258,7 +258,7 @@
   "label": "辛苦了～",
   "file": "stickers/B15.png",
   "thumb": "stickers/thumb/B15.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 212,
   "h": 213
@@ -269,7 +269,7 @@
   "label": "出發囉！",
   "file": "stickers/B16.png",
   "thumb": "stickers/thumb/B16.png",
-  "price": 160,
+  "price": 750,
   "rare": true,
   "w": 216,
   "h": 193
@@ -280,7 +280,7 @@
   "label": "努力中！",
   "file": "stickers/B17.png",
   "thumb": "stickers/thumb/B17.png",
-  "price": 160,
+  "price": 750,
   "rare": true,
   "w": 200,
   "h": 204
@@ -291,7 +291,7 @@
   "label": "餓餓…",
   "file": "stickers/B18.png",
   "thumb": "stickers/thumb/B18.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 212,
   "h": 215
@@ -302,7 +302,7 @@
   "label": "抱抱～",
   "file": "stickers/B19.png",
   "thumb": "stickers/thumb/B19.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 186,
   "h": 209
@@ -313,7 +313,7 @@
   "label": "工作中…",
   "file": "stickers/B20.png",
   "thumb": "stickers/thumb/B20.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 227,
   "h": 209
@@ -324,7 +324,7 @@
   "label": "我可以！",
   "file": "stickers/B21.png",
   "thumb": "stickers/thumb/B21.png",
-  "price": 160,
+  "price": 750,
   "rare": true,
   "w": 219,
   "h": 198
@@ -335,7 +335,7 @@
   "label": "偷看…",
   "file": "stickers/B22.png",
   "thumb": "stickers/thumb/B22.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 110,
   "h": 190
@@ -346,7 +346,7 @@
   "label": "生日快樂！",
   "file": "stickers/B23.png",
   "thumb": "stickers/thumb/B23.png",
-  "price": 160,
+  "price": 750,
   "rare": true,
   "w": 214,
   "h": 199
@@ -357,7 +357,7 @@
   "label": "累癱了…",
   "file": "stickers/B24.png",
   "thumb": "stickers/thumb/B24.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 242,
   "h": 179
@@ -368,7 +368,7 @@
   "label": "先走囉～",
   "file": "stickers/B25.png",
   "thumb": "stickers/thumb/B25.png",
-  "price": 120,
+  "price": 600,
   "rare": false,
   "w": 220,
   "h": 194
@@ -379,7 +379,7 @@
   "label": "哈囉！",
   "file": "stickers/C01.png",
   "thumb": "stickers/thumb/C01.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 202,
   "h": 202
@@ -390,7 +390,7 @@
   "label": "謝謝你！",
   "file": "stickers/C02.png",
   "thumb": "stickers/thumb/C02.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 188,
   "h": 209
@@ -401,7 +401,7 @@
   "label": "晚安囉～",
   "file": "stickers/C03.png",
   "thumb": "stickers/thumb/C03.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 206,
   "h": 205
@@ -412,7 +412,7 @@
   "label": "耶耶耶！",
   "file": "stickers/C04.png",
   "thumb": "stickers/thumb/C04.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 194,
   "h": 209
@@ -423,7 +423,7 @@
   "label": "好開心！",
   "file": "stickers/C05.png",
   "thumb": "stickers/thumb/C05.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 190,
   "h": 204
@@ -434,7 +434,7 @@
   "label": "讚！",
   "file": "stickers/C06.png",
   "thumb": "stickers/thumb/C06.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 165,
   "h": 204
@@ -445,7 +445,7 @@
   "label": "在幹嘛？",
   "file": "stickers/C07.png",
   "thumb": "stickers/thumb/C07.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 195,
   "h": 197
@@ -456,7 +456,7 @@
   "label": "嗯？",
   "file": "stickers/C08.png",
   "thumb": "stickers/thumb/C08.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 156,
   "h": 198
@@ -467,7 +467,7 @@
   "label": "嗚嗚…",
   "file": "stickers/C09.png",
   "thumb": "stickers/thumb/C09.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 152,
   "h": 198
@@ -478,7 +478,7 @@
   "label": "哇！",
   "file": "stickers/C10.png",
   "thumb": "stickers/thumb/C10.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 186,
   "h": 198
@@ -489,7 +489,7 @@
   "label": "愛你唷！",
   "file": "stickers/C11.png",
   "thumb": "stickers/thumb/C11.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 189,
   "h": 207
@@ -500,7 +500,7 @@
   "label": "嘿嘿～",
   "file": "stickers/C12.png",
   "thumb": "stickers/thumb/C12.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 166,
   "h": 191
@@ -511,7 +511,7 @@
   "label": "我可以！",
   "file": "stickers/C13.png",
   "thumb": "stickers/thumb/C13.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 198,
   "h": 194
@@ -522,7 +522,7 @@
   "label": "認真中…",
   "file": "stickers/C14.png",
   "thumb": "stickers/thumb/C14.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 187,
   "h": 197
@@ -533,7 +533,7 @@
   "label": "加油！",
   "file": "stickers/C15.png",
   "thumb": "stickers/thumb/C15.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 175,
   "h": 195
@@ -544,7 +544,7 @@
   "label": "累癱了…",
   "file": "stickers/C16.png",
   "thumb": "stickers/thumb/C16.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 201,
   "h": 176
@@ -555,7 +555,7 @@
   "label": "抱抱～",
   "file": "stickers/C17.png",
   "thumb": "stickers/thumb/C17.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 168,
   "h": 196
@@ -566,7 +566,7 @@
   "label": "工作中…",
   "file": "stickers/C18.png",
   "thumb": "stickers/thumb/C18.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 183,
   "h": 193
@@ -577,7 +577,7 @@
   "label": "辛苦了～",
   "file": "stickers/C19.png",
   "thumb": "stickers/thumb/C19.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 171,
   "h": 194
@@ -588,7 +588,7 @@
   "label": "好餓喔…",
   "file": "stickers/C20.png",
   "thumb": "stickers/thumb/C20.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 157,
   "h": 197
@@ -599,7 +599,7 @@
   "label": "生日快樂！",
   "file": "stickers/C21.png",
   "thumb": "stickers/thumb/C21.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 214,
   "h": 201
@@ -610,7 +610,7 @@
   "label": "哼哼！",
   "file": "stickers/C22.png",
   "thumb": "stickers/thumb/C22.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 152,
   "h": 195
@@ -621,7 +621,7 @@
   "label": "蛤?!",
   "file": "stickers/C23.png",
   "thumb": "stickers/thumb/C23.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 179,
   "h": 194
@@ -632,7 +632,7 @@
   "label": "得意～",
   "file": "stickers/C24.png",
   "thumb": "stickers/thumb/C24.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 185,
   "h": 199
@@ -643,7 +643,7 @@
   "label": "偷偷看…",
   "file": "stickers/C25.png",
   "thumb": "stickers/thumb/C25.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 166,
   "h": 193
@@ -654,7 +654,7 @@
   "label": "放鬆一下～",
   "file": "stickers/C26.png",
   "thumb": "stickers/thumb/C26.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 179,
   "h": 197
@@ -665,7 +665,7 @@
   "label": "哇嗚～",
   "file": "stickers/C27.png",
   "thumb": "stickers/thumb/C27.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 177,
   "h": 208
@@ -676,7 +676,7 @@
   "label": "瘋掉了啦！",
   "file": "stickers/C28.png",
   "thumb": "stickers/thumb/C28.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 165,
   "h": 200
@@ -687,7 +687,7 @@
   "label": "拜託嘛～",
   "file": "stickers/C29.png",
   "thumb": "stickers/thumb/C29.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 172,
   "h": 201
@@ -698,7 +698,7 @@
   "label": "先走囉～",
   "file": "stickers/C30.png",
   "thumb": "stickers/thumb/C30.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 162,
   "h": 191
@@ -709,7 +709,7 @@
   "label": "哈囉！",
   "file": "stickers/F01.png",
   "thumb": "stickers/thumb/F01.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 148,
   "h": 158
@@ -720,7 +720,7 @@
   "label": "謝謝你！",
   "file": "stickers/F02.png",
   "thumb": "stickers/thumb/F02.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 141,
   "h": 157
@@ -731,7 +731,7 @@
   "label": "晚安囉～",
   "file": "stickers/F03.png",
   "thumb": "stickers/thumb/F03.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 152,
   "h": 160
@@ -742,7 +742,7 @@
   "label": "耶耶耶！",
   "file": "stickers/F04.png",
   "thumb": "stickers/thumb/F04.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 138,
   "h": 160
@@ -753,7 +753,7 @@
   "label": "好開心！",
   "file": "stickers/F05.png",
   "thumb": "stickers/thumb/F05.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 112,
   "h": 159
@@ -764,7 +764,7 @@
   "label": "讚！",
   "file": "stickers/F06.png",
   "thumb": "stickers/thumb/F06.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 132,
   "h": 130
@@ -775,7 +775,7 @@
   "label": "愛你喔！",
   "file": "stickers/F07.png",
   "thumb": "stickers/thumb/F07.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 126,
   "h": 161
@@ -786,7 +786,7 @@
   "label": "嘿嘿～",
   "file": "stickers/F08.png",
   "thumb": "stickers/thumb/F08.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 134,
   "h": 116
@@ -797,7 +797,7 @@
   "label": "在嗎？",
   "file": "stickers/F09.png",
   "thumb": "stickers/thumb/F09.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 144,
   "h": 165
@@ -808,7 +808,7 @@
   "label": "嗯？",
   "file": "stickers/F10.png",
   "thumb": "stickers/thumb/F10.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 117,
   "h": 139
@@ -819,7 +819,7 @@
   "label": "嗚嗚…",
   "file": "stickers/F11.png",
   "thumb": "stickers/thumb/F11.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 120,
   "h": 135
@@ -830,7 +830,7 @@
   "label": "哇！",
   "file": "stickers/F12.png",
   "thumb": "stickers/thumb/F12.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 150,
   "h": 166
@@ -841,7 +841,7 @@
   "label": "真的嗎？",
   "file": "stickers/F13.png",
   "thumb": "stickers/thumb/F13.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 117,
   "h": 167
@@ -852,7 +852,7 @@
   "label": "太棒了！",
   "file": "stickers/F14.png",
   "thumb": "stickers/thumb/F14.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 151,
   "h": 168
@@ -863,7 +863,7 @@
   "label": "拜託嘛～",
   "file": "stickers/F15.png",
   "thumb": "stickers/thumb/F15.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 124,
   "h": 166
@@ -874,7 +874,7 @@
   "label": "好呀！",
   "file": "stickers/F16.png",
   "thumb": "stickers/thumb/F16.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 142,
   "h": 158
@@ -885,7 +885,7 @@
   "label": "必勝！",
   "file": "stickers/F17.png",
   "thumb": "stickers/thumb/F17.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 147,
   "h": 155
@@ -896,7 +896,7 @@
   "label": "認真中…",
   "file": "stickers/F18.png",
   "thumb": "stickers/thumb/F18.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 153,
   "h": 159
@@ -907,7 +907,7 @@
   "label": "加油！",
   "file": "stickers/F19.png",
   "thumb": "stickers/thumb/F19.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 154,
   "h": 158
@@ -918,7 +918,7 @@
   "label": "累癱了…",
   "file": "stickers/F20.png",
   "thumb": "stickers/thumb/F20.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 149,
   "h": 122
@@ -929,7 +929,7 @@
   "label": "抱抱～",
   "file": "stickers/F21.png",
   "thumb": "stickers/thumb/F21.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 118,
   "h": 157
@@ -940,7 +940,7 @@
   "label": "工作中…",
   "file": "stickers/F22.png",
   "thumb": "stickers/thumb/F22.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 133,
   "h": 157
@@ -951,7 +951,7 @@
   "label": "辛苦了～",
   "file": "stickers/F23.png",
   "thumb": "stickers/thumb/F23.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 114,
   "h": 158
@@ -962,7 +962,7 @@
   "label": "好餓喔…",
   "file": "stickers/F24.png",
   "thumb": "stickers/thumb/F24.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 133,
   "h": 161
@@ -973,7 +973,7 @@
   "label": "偷看…",
   "file": "stickers/F25.png",
   "thumb": "stickers/thumb/F25.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 108,
   "h": 109
@@ -984,7 +984,7 @@
   "label": "放鬆一下～",
   "file": "stickers/F26.png",
   "thumb": "stickers/thumb/F26.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 142,
   "h": 108
@@ -995,7 +995,7 @@
   "label": "哇嗚～",
   "file": "stickers/F27.png",
   "thumb": "stickers/thumb/F27.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 142,
   "h": 143
@@ -1006,7 +1006,7 @@
   "label": "生日快樂！",
   "file": "stickers/F28.png",
   "thumb": "stickers/thumb/F28.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 143,
   "h": 139
@@ -1017,7 +1017,7 @@
   "label": "蛤?!",
   "file": "stickers/F29.png",
   "thumb": "stickers/thumb/F29.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 117,
   "h": 103
@@ -1028,7 +1028,7 @@
   "label": "嗚嗚嗚！",
   "file": "stickers/F30.png",
   "thumb": "stickers/thumb/F30.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 140,
   "h": 133
@@ -1039,7 +1039,7 @@
   "label": "得意～",
   "file": "stickers/F31.png",
   "thumb": "stickers/thumb/F31.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 135,
   "h": 131
@@ -1050,7 +1050,7 @@
   "label": "先走囉～",
   "file": "stickers/F32.png",
   "thumb": "stickers/thumb/F32.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 116,
   "h": 102
@@ -1061,7 +1061,7 @@
   "label": "我不懂…",
   "file": "stickers/F33.png",
   "thumb": "stickers/thumb/F33.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 128,
   "h": 111
@@ -1072,7 +1072,7 @@
   "label": "讓我想想…",
   "file": "stickers/F34.png",
   "thumb": "stickers/thumb/F34.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 120,
   "h": 109
@@ -1083,7 +1083,7 @@
   "label": "有了！",
   "file": "stickers/F35.png",
   "thumb": "stickers/thumb/F35.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 134,
   "h": 96
@@ -1094,7 +1094,7 @@
   "label": "哈哈哈！",
   "file": "stickers/F36.png",
   "thumb": "stickers/thumb/F36.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 141,
   "h": 78
@@ -1105,7 +1105,7 @@
   "label": "拜託你了～",
   "file": "stickers/F37.png",
   "thumb": "stickers/thumb/F37.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 122,
   "h": 110
@@ -1116,7 +1116,7 @@
   "label": "好可愛！",
   "file": "stickers/F38.png",
   "thumb": "stickers/thumb/F38.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 140,
   "h": 113
@@ -1127,7 +1127,7 @@
   "label": "生氣氣！",
   "file": "stickers/F39.png",
   "thumb": "stickers/thumb/F39.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 137,
   "h": 89
@@ -1138,7 +1138,7 @@
   "label": "哼！",
   "file": "stickers/F40.png",
   "thumb": "stickers/thumb/F40.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 119,
   "h": 86
@@ -1149,7 +1149,7 @@
   "label": "好累喔…",
   "file": "stickers/F41.png",
   "thumb": "stickers/thumb/F41.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 132,
   "h": 123
@@ -1160,7 +1160,7 @@
   "label": "不敢相信！",
   "file": "stickers/F42.png",
   "thumb": "stickers/thumb/F42.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 111,
   "h": 126
@@ -1171,7 +1171,7 @@
   "label": "沒問題！",
   "file": "stickers/F43.png",
   "thumb": "stickers/thumb/F43.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 130,
   "h": 128
@@ -1182,7 +1182,7 @@
   "label": "討厭啦～",
   "file": "stickers/F44.png",
   "thumb": "stickers/thumb/F44.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 124,
   "h": 127
@@ -1193,7 +1193,7 @@
   "label": "要抱抱～",
   "file": "stickers/F45.png",
   "thumb": "stickers/thumb/F45.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 124,
   "h": 126
@@ -1204,7 +1204,7 @@
   "label": "看到美食！",
   "file": "stickers/F46.png",
   "thumb": "stickers/thumb/F46.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 142,
   "h": 136
@@ -1215,7 +1215,7 @@
   "label": "追劇中…",
   "file": "stickers/F47.png",
   "thumb": "stickers/thumb/F47.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 125,
   "h": 133
@@ -1226,7 +1226,7 @@
   "label": "晚安～",
   "file": "stickers/F48.png",
   "thumb": "stickers/thumb/F48.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 140,
   "h": 135
@@ -1237,7 +1237,7 @@
   "label": "送你花花！",
   "file": "stickers/F49.png",
   "thumb": "stickers/thumb/F49.png",
-  "price": 110,
+  "price": 620,
   "rare": true,
   "w": 134,
   "h": 136
@@ -1248,7 +1248,7 @@
   "label": "OK！",
   "file": "stickers/F50.png",
   "thumb": "stickers/thumb/F50.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 122,
   "h": 130
@@ -1259,7 +1259,7 @@
   "label": "收到！",
   "file": "stickers/F51.png",
   "thumb": "stickers/thumb/F51.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 116,
   "h": 133
@@ -1270,7 +1270,7 @@
   "label": "感謝！",
   "file": "stickers/F52.png",
   "thumb": "stickers/thumb/F52.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 119,
   "h": 136
@@ -1281,7 +1281,7 @@
   "label": "對不起…",
   "file": "stickers/F53.png",
   "thumb": "stickers/thumb/F53.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 115,
   "h": 132
@@ -1292,7 +1292,7 @@
   "label": "萬歲！",
   "file": "stickers/F54.png",
   "thumb": "stickers/thumb/F54.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 134,
   "h": 133
@@ -1303,7 +1303,7 @@
   "label": "怎麼辦…",
   "file": "stickers/F55.png",
   "thumb": "stickers/thumb/F55.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 131,
   "h": 132
@@ -1314,7 +1314,7 @@
   "label": "愛你們喔！",
   "file": "stickers/F56.png",
   "thumb": "stickers/thumb/F56.png",
-  "price": 80,
+  "price": 500,
   "rare": false,
   "w": 137,
   "h": 126
@@ -1325,7 +1325,7 @@
   "label": "哈囉！",
   "file": "stickers/D01.png",
   "thumb": "stickers/thumb/D01.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 320,
   "h": 278
@@ -1336,7 +1336,7 @@
   "label": "謝謝你！",
   "file": "stickers/D02.png",
   "thumb": "stickers/thumb/D02.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 287,
   "h": 301
@@ -1347,7 +1347,7 @@
   "label": "晚安囉～",
   "file": "stickers/D03.png",
   "thumb": "stickers/thumb/D03.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 320,
   "h": 298
@@ -1358,7 +1358,7 @@
   "label": "耶耶耶！",
   "file": "stickers/D04.png",
   "thumb": "stickers/thumb/D04.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 304,
   "h": 303
@@ -1369,7 +1369,7 @@
   "label": "在嗎？",
   "file": "stickers/D05.png",
   "thumb": "stickers/thumb/D05.png",
-  "price": 190,
+  "price": 900,
   "rare": true,
   "w": 302,
   "h": 284
@@ -1380,7 +1380,7 @@
   "label": "讚！",
   "file": "stickers/D06.png",
   "thumb": "stickers/thumb/D06.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 292,
   "h": 283
@@ -1391,7 +1391,7 @@
   "label": "好開心！",
   "file": "stickers/D07.png",
   "thumb": "stickers/thumb/D07.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 275,
   "h": 281
@@ -1402,7 +1402,7 @@
   "label": "辛苦了～",
   "file": "stickers/D08.png",
   "thumb": "stickers/thumb/D08.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 291,
   "h": 282
@@ -1413,7 +1413,7 @@
   "label": "嗯？",
   "file": "stickers/D09.png",
   "thumb": "stickers/thumb/D09.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 286,
   "h": 278
@@ -1424,7 +1424,7 @@
   "label": "嗚嗚嗚…",
   "file": "stickers/D10.png",
   "thumb": "stickers/thumb/D10.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 300,
   "h": 269
@@ -1435,7 +1435,7 @@
   "label": "我要吃！",
   "file": "stickers/D11.png",
   "thumb": "stickers/thumb/D11.png",
-  "price": 190,
+  "price": 900,
   "rare": true,
   "w": 320,
   "h": 261
@@ -1446,7 +1446,7 @@
   "label": "好可愛！",
   "file": "stickers/D12.png",
   "thumb": "stickers/thumb/D12.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 265,
   "h": 270
@@ -1457,7 +1457,7 @@
   "label": "放鬆一下～",
   "file": "stickers/D13.png",
   "thumb": "stickers/thumb/D13.png",
-  "price": 190,
+  "price": 900,
   "rare": true,
   "w": 309,
   "h": 297
@@ -1468,7 +1468,7 @@
   "label": "先走囉～",
   "file": "stickers/D14.png",
   "thumb": "stickers/thumb/D14.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 278,
   "h": 293
@@ -1479,7 +1479,7 @@
   "label": "生日快樂！",
   "file": "stickers/D15.png",
   "thumb": "stickers/thumb/D15.png",
-  "price": 190,
+  "price": 900,
   "rare": true,
   "w": 312,
   "h": 305
@@ -1490,7 +1490,7 @@
   "label": "累癱了…",
   "file": "stickers/D16.png",
   "thumb": "stickers/thumb/D16.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 304,
   "h": 258
@@ -1501,7 +1501,7 @@
   "label": "超開心！",
   "file": "stickers/E01.png",
   "thumb": "stickers/thumb/E01.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 296,
   "h": 278
@@ -1512,7 +1512,7 @@
   "label": "讚爆！",
   "file": "stickers/E02.png",
   "thumb": "stickers/thumb/E02.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 302,
   "h": 280
@@ -1523,7 +1523,7 @@
   "label": "偷偷看～",
   "file": "stickers/E03.png",
   "thumb": "stickers/thumb/E03.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 245,
   "h": 279
@@ -1534,7 +1534,7 @@
   "label": "哈哈哈！",
   "file": "stickers/E04.png",
   "thumb": "stickers/thumb/E04.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 299,
   "h": 278
@@ -1545,7 +1545,7 @@
   "label": "我先睡了…",
   "file": "stickers/E05.png",
   "thumb": "stickers/thumb/E05.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 320,
   "h": 251
@@ -1556,7 +1556,7 @@
   "label": "蛤?!",
   "file": "stickers/E06.png",
   "thumb": "stickers/thumb/E06.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 292,
   "h": 274
@@ -1567,7 +1567,7 @@
   "label": "衝啊～",
   "file": "stickers/E07.png",
   "thumb": "stickers/thumb/E07.png",
-  "price": 190,
+  "price": 900,
   "rare": true,
   "w": 298,
   "h": 275
@@ -1578,7 +1578,7 @@
   "label": "人家錯了…",
   "file": "stickers/E08.png",
   "thumb": "stickers/thumb/E08.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 278,
   "h": 277
@@ -1589,7 +1589,7 @@
   "label": "愛你喔！",
   "file": "stickers/E09.png",
   "thumb": "stickers/thumb/E09.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 315,
   "h": 275
@@ -1600,7 +1600,7 @@
   "label": "帥啦～",
   "file": "stickers/E10.png",
   "thumb": "stickers/thumb/E10.png",
-  "price": 190,
+  "price": 900,
   "rare": true,
   "w": 300,
   "h": 268
@@ -1611,7 +1611,7 @@
   "label": "在嗎？",
   "file": "stickers/E11.png",
   "thumb": "stickers/thumb/E11.png",
-  "price": 190,
+  "price": 900,
   "rare": true,
   "w": 285,
   "h": 263
@@ -1622,7 +1622,7 @@
   "label": "加油！",
   "file": "stickers/E12.png",
   "thumb": "stickers/thumb/E12.png",
-  "price": 190,
+  "price": 900,
   "rare": true,
   "w": 299,
   "h": 271
@@ -1633,7 +1633,7 @@
   "label": "嗯？？",
   "file": "stickers/E13.png",
   "thumb": "stickers/thumb/E13.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 293,
   "h": 296
@@ -1644,7 +1644,7 @@
   "label": "嘻嘻～",
   "file": "stickers/E14.png",
   "thumb": "stickers/thumb/E14.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 309,
   "h": 291
@@ -1655,7 +1655,7 @@
   "label": "哼！",
   "file": "stickers/E15.png",
   "thumb": "stickers/thumb/E15.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 304,
   "h": 295
@@ -1666,7 +1666,7 @@
   "label": "先走囉～",
   "file": "stickers/E16.png",
   "thumb": "stickers/thumb/E16.png",
-  "price": 150,
+  "price": 750,
   "rare": false,
   "w": 275,
   "h": 292
