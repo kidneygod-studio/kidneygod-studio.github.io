@@ -158,7 +158,13 @@
         background:#f0eaff;color:var(--accent);border:1px solid #ddd0ff;}
   .attg{font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:5px;margin-left:4px;
         background:#e9f9f1;color:var(--ok);border:1px solid #bfeeda;white-space:nowrap;}
-  .dl.att{font-size:12px;padding:6px 11px;}
+  /* 附件是次要下載，做成整寬外框樣式排在知識卡下面一行。
+     商品格內容區只有約 186px，價格加兩顆藥丸擠不進同一列。 */
+  .dl.att{display:block;margin-top:6px;padding:5px 8px;font-size:11.5px;
+          background:#fff;color:var(--ok);border:1.5px solid #bfeeda;
+          text-align:center;white-space:nowrap;overflow:hidden;
+          text-overflow:ellipsis;}
+  .dl.att:hover{background:#e9f9f1;}
   .pic.kcard{background:#fff;padding:6px;}
   .pic.kcard img{max-width:100%;max-height:100%;object-fit:contain;
                  border-radius:6px;box-shadow:0 2px 8px rgba(61,44,41,.16);}
@@ -769,8 +775,13 @@ function renderTabs(){
 function setCat(c){ curCat=c; renderTabs(); renderGrid(); }
 function offPct(p){ return p.o ? Math.round((1-p.p/p.o)*100) : 0; }
 
-/* 附件的下載入口在知識庫（renderLib 的 .libatt），商品格只放知識卡下載，
-   免得那一列擠成兩顆按鈕。原本這裡有個 attachHTML() 從沒被呼叫過，已移除。 */
+/* 附件下載：買了才出現，排在知識卡下面一行（知識庫裡也有一份入口） */
+function attachHTML(p){
+  if(!p.dl) return "";
+  return `<a class="dl att" href="cards/${p.dl}"
+     download="護腎教室_${p.dn.replace(/[「」]/g,"")}.png"
+     title="下載${p.dn}">📎 ${p.dn}</a>`;
+}
 function cardHTML(p){
   const off = offPct(p), has = owned(p.id);
   return `
@@ -790,6 +801,7 @@ function cardHTML(p){
             ? `<a class="dl" href="cards/gi/${p.id}.png" download="護腎教室_${p.k.t.replace(/[：、，。！？「」]/g,"")}.png">⬇ 知識卡</a>`
             : `<button class="add" onclick="addCart('k${p.i}')">爽買</button>`}
         </div>
+        ${has ? attachHTML(p) : ""}
       </div>
     </article>`;
 }
