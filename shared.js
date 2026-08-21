@@ -59,16 +59,23 @@ function ownedStk(id){ return store.stk.includes(id); }
 /* ── 雲端同步掛鉤（sync.js 載入後接手；未設定時為空操作）── */
 let syncT;
 function syncPush(){
+  // 每次異動都蓋時間戳：合併時要靠它判斷哪一邊比較新（見 mergeState）
+  localStorage.msd_updated = Date.now();
   if(!window.cloud) return;
   clearTimeout(syncT);
   syncT = setTimeout(()=>window.cloud.push(), 1500);
 }
+/* 關頁前把還沒送出的異動補推上去，避免剛花完腎元就重整而漏掉 */
+addEventListener("pagehide", ()=>{
+  if(window.cloud && syncT){ clearTimeout(syncT); syncT = null; window.cloud.push(); }
+});
 function getLocalState(){
   return {coins:store.coins, lib:store.lib, gifts:store.gifts,
           best:store.best, best2:store.best2, best3:store.best3, stk:store.stk,
           qRounds:store.qRounds, qCorrect:store.qCorrect,
           qBestTotal:store.qBestTotal, qName:store.qName, qOptIn:store.qOptIn,
-          qSubmitted:store.qSubmitted};
+          qSubmitted:store.qSubmitted,
+          updatedAt: parseInt(localStorage.msd_updated) || 0};
 }
 function applyState(s){
   if(!s) return;
@@ -85,10 +92,21 @@ function applyState(s){
   localStorage.msd_qoptin      = s.qOptIn ? "1" : "0";
   localStorage.msd_qsubmitted  = s.qSubmitted || 0;
   localStorage.msd_stickers = JSON.stringify(s.stk || []);
+  // 時間戳跟著狀態走，否則下次合併會誤判哪一邊比較新
+  localStorage.msd_updated  = s.updatedAt || Date.now();
   if(typeof window.onStateApplied === "function") window.onStateApplied();
 }
-/* 合併雲端與本機：腎元/最高分取大者、知識庫與貼圖取聯集、禮包取已領狀態 */
+/* 合併雲端與本機。欄位分兩類，混用會出事：
+
+   只增不減（取大者／聯集）：最高分、知識庫、貼圖、已領禮包、已上榜分數
+   可增可減（取「比較新」的那一邊）：腎元餘額、挑戰輪數與累計答對
+
+   腎元原本也用取大者，等於把「餘額」當成「最高分」——花掉 350 之後
+   本機是 650、雲端還是 1000，一合併又變回 1000，購買形同免費。
+   挑戰輪數在打完十輪歸零後也會被雲端的 10 還原。這兩個都要看時間戳。 */
 function mergeState(cloud, local){
+  const cAt = cloud.updatedAt ?? 0, lAt = local.updatedAt ?? 0;
+  const newer = lAt >= cAt ? local : cloud;   // 平手時以本機為準
   const lib = [...(cloud.lib||[])];
   (local.lib||[]).forEach(k=>{ if(!lib.some(x=>x.id===k.id)) lib.push(k); });
   const stk = [...new Set([...(cloud.stk||[]), ...(local.stk||[])])];
@@ -97,17 +115,20 @@ function mergeState(cloud, local){
     if(!gifts[k] || (typeof v==="string" && v > gifts[k])) gifts[k]=v;
   });
   return {
-    coins: Math.max(cloud.coins ?? 0, local.coins ?? 0),
+    // ── 可增可減：以較新的一邊為準 ──
+    coins:    newer.coins    ?? local.coins ?? 200,
+    qRounds:  newer.qRounds  ?? 0,
+    qCorrect: newer.qCorrect ?? 0,
+    // ── 只增不減：取大者／聯集 ──
     best:  Math.max(cloud.best  ?? 0, local.best  ?? 0),
     best2: Math.max(cloud.best2 ?? 0, local.best2 ?? 0),
     best3: Math.max(cloud.best3 ?? 0, local.best3 ?? 0),
     qBestTotal: Math.max(cloud.qBestTotal ?? 0, local.qBestTotal ?? 0),
-    qRounds:  Math.max(cloud.qRounds  ?? 0, local.qRounds  ?? 0),
-    qCorrect: Math.max(cloud.qCorrect ?? 0, local.qCorrect ?? 0),
+    qSubmitted: Math.max(cloud.qSubmitted ?? 0, local.qSubmitted ?? 0),
     qName: local.qName || cloud.qName || "",
     qOptIn: !!(local.qOptIn || cloud.qOptIn),
-    qSubmitted: Math.max(cloud.qSubmitted ?? 0, local.qSubmitted ?? 0),
     lib, gifts, stk,
+    updatedAt: Math.max(cAt, lAt),
   };
 }
 function openAccount(){
