@@ -14,7 +14,15 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
-  body{background:var(--bg);color:var(--ink);
+  /* 背景：極淡的半調網點，呼應知識卡插圖的印刷質感。
+     兩層交錯排列做出網版印刷的斜向感；透明度壓到幾乎看不見，
+     長段落的閱讀負擔不變（讀者多是中高齡的三高與腎病患者）。 */
+  body{background-color:var(--bg);color:var(--ink);
+       background-image:
+         radial-gradient(rgba(61,44,41,.055) 1px, transparent 1.6px),
+         radial-gradient(rgba(61,44,41,.04)  1px, transparent 1.6px);
+       background-size:14px 14px,14px 14px;
+       background-position:0 0,7px 7px;
        font-family:"Segoe UI","Microsoft JhengHei",system-ui,sans-serif;
        line-height:1.6;}
   button{font-family:inherit;cursor:pointer;border:none;background:none;}
@@ -100,7 +108,15 @@
 
   /* ── 商品 ── */
   .grid{max-width:1180px;margin:18px auto 60px;padding:0 20px;display:grid;
-        grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;}
+        grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;
+        position:relative;}
+  /* 商品區上方的放射狀光暈，呼應每張卡插圖中央的放射線，
+     讓商品格看起來像鋪在展示墊上。絕對定位所以不會佔掉一個格子。 */
+  .grid::before{content:"";position:absolute;left:0;right:0;top:-46px;height:540px;
+        background:radial-gradient(ellipse 68% 58% at 50% 0%,
+                   rgba(255,154,60,.15),rgba(255,93,115,.075) 45%,transparent 72%);
+        pointer-events:none;z-index:0;}
+  .grid > *{position:relative;z-index:1;}
   .count{max-width:1180px;margin:16px auto 0;padding:0 20px;font-size:13px;color:var(--dim);}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
         overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;
