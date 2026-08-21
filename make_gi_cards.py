@@ -314,13 +314,14 @@ def main():
 
     os.makedirs(OUT_DIR + "/thumb", exist_ok=True)
     os.makedirs(ART_DIR, exist_ok=True)
-    seq = {}
+    seq, meta = {}, {}
     only = sys.argv[1] if len(sys.argv) > 1 else None
     made = 0
     for i, item in enumerate(data, 1):
         r = RANK[item["price"]]
         seq[r] = seq.get(r, 0) + 1
         rank = f"{r}-{seq[r]}"
+        meta[item["id"]] = {"no": i, "rank": rank}
         if only and item["id"] != only: continue
         out = f"{OUT_DIR}/{item['id']}.png"
         make_card(item, i, rank, out)
@@ -329,6 +330,10 @@ def main():
         th.quantize(colors=96, method=Image.FASTOCTREE).save(
             f"{OUT_DIR}/thumb/{item['id']}.png", optimize=True)
         made += 1
+    # 編號與等級輸出一份給網頁用，知識庫的收納格才會顯示與卡面相同的編號
+    json.dump(meta, open("gi/index.json", "w", encoding="utf-8"),
+              ensure_ascii=False, indent=0)
+
     ext = len([f for f in os.listdir(ART_DIR)
                if f.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))])
     tot = sum(os.path.getsize(f"{OUT_DIR}/{f}")

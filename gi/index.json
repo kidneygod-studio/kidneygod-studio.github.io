@@ -1,0 +1,242 @@
+{
+"bp-acei": {
+"no": 1,
+"rank": "SS-1"
+},
+"bp-stop": {
+"no": 2,
+"rank": "SS-2"
+},
+"bp-130": {
+"no": 3,
+"rank": "S-1"
+},
+"bp-ckd": {
+"no": 4,
+"rank": "S-2"
+},
+"bp-salt": {
+"no": 5,
+"rank": "S-3"
+},
+"bp-whitecoat": {
+"no": 6,
+"rank": "S-4"
+},
+"bp-722": {
+"no": 7,
+"rank": "A-1"
+},
+"bp-night": {
+"no": 8,
+"rank": "A-2"
+},
+"bp-silent": {
+"no": 9,
+"rank": "A-3"
+},
+"bp-howto": {
+"no": 10,
+"rank": "B-1"
+},
+"dm-fine": {
+"no": 11,
+"rank": "SS-3"
+},
+"dm-no1": {
+"no": 12,
+"rank": "SS-4"
+},
+"dm-sglt2": {
+"no": 13,
+"rank": "SS-5"
+},
+"dm-a1c": {
+"no": 14,
+"rank": "S-5"
+},
+"dm-glp1": {
+"no": 15,
+"rank": "S-6"
+},
+"dm-keep": {
+"no": 16,
+"rank": "S-7"
+},
+"dm-met": {
+"no": 17,
+"rank": "S-8"
+},
+"dm-screen": {
+"no": 18,
+"rank": "S-9"
+},
+"dm-uacr": {
+"no": 19,
+"rank": "S-10"
+},
+"dm-hypo": {
+"no": 20,
+"rank": "A-4"
+},
+"lp-ldl": {
+"no": 21,
+"rank": "SS-6"
+},
+"ms-kidney": {
+"no": 22,
+"rank": "SS-7"
+},
+"lp-muscle": {
+"no": 23,
+"rank": "S-11"
+},
+"lp-statin": {
+"no": 24,
+"rank": "S-12"
+},
+"lp-tg": {
+"no": 25,
+"rank": "S-13"
+},
+"ms-cluster": {
+"no": 26,
+"rank": "S-14"
+},
+"ms-def": {
+"no": 27,
+"rank": "S-15"
+},
+"ms-unaware": {
+"no": 28,
+"rank": "S-16"
+},
+"lp-hdl": {
+"no": 29,
+"rank": "A-5"
+},
+"ms-waist": {
+"no": 30,
+"rank": "A-6"
+},
+"egfr": {
+"no": 31,
+"rank": "SS-8"
+},
+"hba1c": {
+"no": 32,
+"rank": "SS-9"
+},
+"bp": {
+"no": 33,
+"rank": "S-17"
+},
+"proteinuria": {
+"no": 34,
+"rank": "S-18"
+},
+"echo": {
+"no": 35,
+"rank": "A-7"
+},
+"nsaid": {
+"no": 36,
+"rank": "SS-10"
+},
+"aristo": {
+"no": 37,
+"rank": "S-19"
+},
+"unknown-med": {
+"no": 38,
+"rank": "S-20"
+},
+"contrast": {
+"no": 39,
+"rank": "A-8"
+},
+"abx": {
+"no": 40,
+"rank": "B-2"
+},
+"ppi": {
+"no": 41,
+"rank": "B-3"
+},
+"protein": {
+"no": 42,
+"rank": "SS-11"
+},
+"phosphate": {
+"no": 43,
+"rank": "S-21"
+},
+"starfruit": {
+"no": 44,
+"rank": "S-22"
+},
+"uricacid": {
+"no": 45,
+"rank": "S-23"
+},
+"potassium": {
+"no": 46,
+"rank": "A-9"
+},
+"salt": {
+"no": 47,
+"rank": "A-10"
+},
+"sportsdrink": {
+"no": 48,
+"rank": "B-4"
+},
+"water": {
+"no": 49,
+"rank": "B-5"
+},
+"smoking": {
+"no": 50,
+"rank": "S-24"
+},
+"dehydration": {
+"no": 51,
+"rank": "A-11"
+},
+"dietpill": {
+"no": 52,
+"rank": "A-12"
+},
+"exercise": {
+"no": 53,
+"rank": "A-13"
+},
+"sleep": {
+"no": 54,
+"rank": "A-14"
+},
+"holdurine": {
+"no": 55,
+"rank": "B-6"
+},
+"dialysis-myth": {
+"no": 56,
+"rank": "SS-12"
+},
+"five-signs": {
+"no": 57,
+"rank": "SS-13"
+},
+"edema": {
+"no": 58,
+"rank": "S-25"
+},
+"backpain": {
+"no": 59,
+"rank": "A-15"
+},
+"organ-food": {
+"no": 60,
+"rank": "A-16"
+}
+}

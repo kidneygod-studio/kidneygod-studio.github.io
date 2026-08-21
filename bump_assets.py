@@ -8,18 +8,20 @@ GitHub Pages 對 html 與 js 都送 Cache-Control: max-age=600，改完 js 推�
 每次改動這三支 js 之後執行一次：
     python bump_assets.py
 """
-import io, re, sys, hashlib
+import io, os, re, sys, hashlib
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-ASSETS = ("shared.js", "sync.js", "quiz.js")
-PAGES = ("index.html", "game.html")
+ASSETS = ("shared.js", "data.js", "sync.js", "quiz.js")
+PAGES = ("index.html", "game.html", "library.html")
 
 
 def main():
     ver = {f: hashlib.md5(io.open(f, "rb").read()).hexdigest()[:8] for f in ASSETS}
     changed = []
     for page in PAGES:
+        if not os.path.exists(page):
+            continue
         s = old = io.open(page, encoding="utf-8").read()
         for f, v in ver.items():
             s = re.sub(r'src="' + re.escape(f) + r'(\?v=[0-9a-f]+)?"',
