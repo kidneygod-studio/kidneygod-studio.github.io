@@ -20,7 +20,7 @@
     --onboard:#e6d9c2;         /* 冊頁上的淺字 */
     --dim:#6e5f4c;          /* 卡紙上的次要字，5.27:1 */
     --dimboard:#a8977f;    /* 冊頁上的次要字 */
-    --brand:#ff5d73; --brand2:#ff9a3c; --accent:#7c5cff; --ok:#2ec27e;
+    --brand:#ff5d73; --brand2:#ff9a3c; --ok:#2ec27e;
     --line:#d9cdae;            /* 卡紙上的分隔線 */
     --shadow:0 6px 18px rgba(0,0,0,.45);
     --r:12px;
@@ -76,9 +76,11 @@
   /* 頂部深色橫幅上的同一枚圖示 */
   .bki{box-shadow:0 0 0 1.5px rgba(255,233,214,.7);margin-right:.4em;
        width:1.45em;height:1.45em;vertical-align:-.38em;}
-  .coin{background:linear-gradient(90deg,#7c5cff,#a78bfa);color:#fff;border:none;
+  /* 腎元：金牌質感，與卡冊的金線呼應 */
+  .coin{background:linear-gradient(180deg,#e0bb44,#a8801a);color:#231a06;
+        border:2px solid #6b5208;text-shadow:0 1px 0 rgba(255,255,255,.35);
         font-weight:900;}
-  .coin:hover{color:#fff;}
+  .coin:hover{color:#231a06;}
   .badge{position:absolute;top:-8px;right:-6px;background:var(--brand);
          color:#fff;font-size:12px;font-weight:800;min-width:22px;height:22px;
          border-radius:99px;display:flex;align-items:center;justify-content:center;
@@ -97,16 +99,8 @@
            font-weight:700;animation:marq 22s linear infinite;width:max-content;}
   @keyframes marq{to{transform:translateX(-50%)}}
 
-  /* ── 小遊戲區 ── */
-  .game{max-width:1180px;margin:14px auto 0;padding:0 20px;}
-  .game-box{background:linear-gradient(120deg,#7c5cff,#a78bfa);border-radius:18px;
-            padding:16px 18px;color:#fff;}
-  .game-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:10px;}
-  .game-head h2{font-size:20px;font-weight:900;letter-spacing:1px;}
-  .game-note{font-size:12.5px;opacity:.92;}
-  canvas{display:block;width:100%;background:#fffdf8;border-radius:12px;
-         touch-action:manipulation;cursor:pointer;}
-  .game-stats{display:flex;gap:18px;margin-top:8px;font-size:13px;font-weight:700;flex-wrap:wrap;}
+  /* 小遊戲已移到 game.html，原本這裡的 .game / .game-box / canvas 等
+     樣式在本頁已無對應標記，移除。 */
 
   /* ── 禮包 ── */
   .coupons{max-width:1180px;margin:14px auto 0;padding:0 20px;display:grid;
@@ -167,8 +161,9 @@
   /* ── 遊戲場入口 ── */
   .hub{max-width:1180px;margin:16px auto 0;padding:0 20px;}
   .hubcard{display:flex;align-items:center;gap:16px;text-decoration:none;
-           background:linear-gradient(120deg,#7c5cff,#a78bfa);color:#fff;
-           border-radius:18px;padding:18px 22px;box-shadow:0 6px 20px rgba(124,92,255,.28);
+           background:linear-gradient(120deg,#33281f,#1e1814);color:var(--gold2);
+           border:2px solid var(--gold);border-radius:14px;padding:18px 22px;
+           box-shadow:inset 0 1px 0 rgba(255,236,200,.12),0 10px 26px rgba(0,0,0,.5);
            transition:.18s;}
   .hubcard:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(124,92,255,.36);}
   .hubico{width:52px !important;height:52px !important;vertical-align:0 !important;
@@ -193,7 +188,7 @@
       font-weight:800;padding:6px 12px;border-radius:99px;text-decoration:none;}
   .dl:active{transform:scale(.93);}
   .setg{font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:5px;
-        background:#f0eaff;color:var(--accent);border:1px solid #ddd0ff;}
+        background:#efe4c2;color:#6b5208;border:1px solid #cbbc95;}
   .attg{font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:5px;margin-left:4px;
         background:#e9f9f1;color:#14663f;border:1px solid #bfeeda;white-space:nowrap;}
   /* 附件是次要下載，做成整寬外框樣式排在知識卡下面一行。
@@ -254,7 +249,8 @@
        letter-spacing:2px;transition:.15s;}
   .cta:active{transform:scale(.97);}
   .cta:disabled{opacity:.4;cursor:not-allowed;}
-  .cta.alt{background:linear-gradient(90deg,#7c5cff,#a78bfa);}
+  .cta.alt{background:linear-gradient(180deg,#3a2e26,#1e1814);color:var(--gold2);
+           border:2px solid #0f0c0a;}
 
   .modal{position:fixed;inset:0;z-index:95;display:flex;align-items:center;
          justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:.22s;}
@@ -274,7 +270,7 @@
   .fld select:focus{outline:none;border-color:var(--brand);}
   .paybox{border:2px solid var(--line);border-radius:12px;padding:12px 14px;
           font-size:14px;display:flex;justify-content:space-between;align-items:center;}
-  .paybox b{color:var(--accent);}
+  .paybox b{color:#5b3fd6;}
   .note{font-size:11.5px;color:#7a6a55;background:var(--card2);
         border:1px dashed var(--line);border-radius:10px;padding:9px 12px;margin:12px 0;}
 
@@ -294,7 +290,7 @@
   .step .td{font-size:12px;color:var(--dim);}
   .newk{margin-top:12px;text-align:left;background:var(--card2);border:1px solid var(--line);
         border-radius:12px;padding:10px 14px;font-size:13px;}
-  .newk b{color:var(--accent);}
+  .newk b{color:#5b3fd6;}
 
   /* ── 知識庫：整個抽屜是翻開的卡冊，每一篇是一個卡套 ── */
   .kitem{border:2px solid #0f0c0a;border-radius:10px;margin-bottom:10px;overflow:hidden;

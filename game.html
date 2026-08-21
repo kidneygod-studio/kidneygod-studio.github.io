@@ -12,7 +12,7 @@
     --gold:#c9a227; --gold2:#e8c65a;
     --bg:var(--board); --card:#f4edd8; --card2:#fbf6e6;
     --ink:#2b221d; --onboard:#e6d9c2; --dim:#6e5f4c; --dimboard:#a8977f;
-    --brand:#ff5d73; --brand2:#ff9a3c; --accent:#7c5cff; --ok:#2ec27e;
+    --brand:#ff5d73; --brand2:#ff9a3c; --ok:#2ec27e;
     --line:#d9cdae;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -54,7 +54,9 @@
         border:2px solid var(--edge);
         border-radius:99px;padding:7px 14px;white-space:nowrap;text-decoration:none;
         display:inline-flex;align-items:center;}
-  .coin{background:linear-gradient(90deg,#7c5cff,#a78bfa);color:#fff;border:none;font-weight:900;}
+  /* 腎元：金牌質感，與卡冊的金線呼應 */
+  .coin{background:linear-gradient(180deg,#e0bb44,#a8801a);color:#231a06;
+        border:2px solid #6b5208;text-shadow:0 1px 0 rgba(255,255,255,.35);font-weight:900;}
   .coin .ki{box-shadow:0 0 0 1.5px rgba(255,255,255,.75);margin-right:.3em;
             width:1.35em;height:1.35em;vertical-align:-.32em;}
 
@@ -91,90 +93,100 @@
   .gki{box-shadow:0 0 0 2px rgba(255,255,255,.85);margin:0;
        width:1.35em;height:1.35em;vertical-align:-.3em;}
   .snote{font-size:12.5px;opacity:.92;flex:1;min-width:180px;}
-  canvas{display:block;width:100%;background:#fffdf8;border-radius:12px;
-         touch-action:none;cursor:pointer;}
-  .stats{display:flex;gap:16px;margin-top:9px;font-size:13px;font-weight:700;flex-wrap:wrap;}
+  /* 畫布：跑酷的繪圖有約 30 處寫死的深色（地面文字、障礙標籤、分數），
+     全都假設畫布是亮的，所以底色維持淺色。改的是外觀 —— 換成全站統一的
+     卡紙色，加黑框與內凹陰影，讓它像「收在卡套裡的面板」而不是浮著的白。 */
+  canvas{display:block;width:100%;background:var(--card);border:2px solid #0f0c0a;
+         border-radius:10px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25),
+         0 8px 22px rgba(0,0,0,.45);touch-action:none;cursor:pointer;}
+  .stats{display:flex;gap:16px;margin-top:9px;font-size:13px;font-weight:700;
+         flex-wrap:wrap;color:var(--onboard);}
 
-  /* 手機方向鍵 */
+  /* 手機方向鍵：冊頁上的金屬按鍵 */
   .pad{display:none;grid-template-columns:repeat(3,60px);grid-template-rows:repeat(3,52px);
        gap:6px;justify-content:center;margin-top:12px;}
-  .pad button{background:rgba(255,255,255,.9);border-radius:12px;font-size:22px;
-              font-weight:900;color:var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.12);}
-  .pad button:active{background:#fff;transform:scale(.94);}
+  .pad button{background:linear-gradient(180deg,#f6efdb,#e4d9b8);border:2px solid #0f0c0a;
+              border-radius:10px;font-size:22px;font-weight:900;color:#4a3d33;
+              box-shadow:0 3px 0 #0f0c0a,0 5px 12px rgba(0,0,0,.45);}
+  .pad button:active{background:var(--gold2);transform:translateY(3px);
+                     box-shadow:0 0 0 #0f0c0a,0 2px 6px rgba(0,0,0,.4);}
   .pad .u{grid-area:1/2;} .pad .l{grid-area:2/1;}
   .pad .r{grid-area:2/3;} .pad .d{grid-area:3/2;}
   body.touch .pad.show{display:grid;}   /* 桌機用鍵盤即可，不顯示方向鍵 */
 
-  /* ── 小學堂 ── */
-  #quizWrap{background:#fffdf8;border-radius:12px;padding:18px 16px;color:var(--ink);}
+  /* ── 小學堂：卡冊配色（原本是舊淺色主題的紫＋粉，與全站不搭）── */
+  #quizWrap{background:var(--card);border:2px solid #0f0c0a;border-radius:10px;
+            box-shadow:0 8px 22px rgba(0,0,0,.45);padding:18px 16px;color:var(--ink);}
   .qtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
         font-size:13px;font-weight:800;color:var(--dim);margin-bottom:12px;}
-  .qcat{background:#f0eaff;color:var(--accent);padding:3px 10px;border-radius:99px;
-        border:1px solid #ddd0ff;}
-  .qbar{flex:1;min-width:110px;height:8px;background:#eee6f7;border-radius:99px;overflow:hidden;}
-  .qbar b{display:block;height:100%;background:linear-gradient(90deg,#7c5cff,#a78bfa);
+  .qcat{background:#efe4c2;color:#6b5208;padding:3px 10px;border-radius:99px;
+        border:1px solid #cbbc95;}
+  .qbar{flex:1;min-width:110px;height:8px;background:#e2d6b8;border-radius:99px;overflow:hidden;}
+  .qbar b{display:block;height:100%;background:linear-gradient(90deg,#a8801a,var(--gold2));
           border-radius:99px;transition:.3s;}
   .qq{font-size:19px;font-weight:900;line-height:1.7;margin:6px 0 16px;}
   .qopts{display:grid;gap:9px;}
   .qopt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;
-        background:#fff;border:2px solid var(--line);border-radius:12px;
-        padding:12px 14px;font-size:15px;line-height:1.6;transition:.14s;}
-  .qopt:hover:not(:disabled){border-color:var(--accent);transform:translateX(3px);}
-  .qopt i{flex-shrink:0;width:26px;height:26px;border-radius:8px;background:#f2eeff;
-          color:var(--accent);font-style:normal;font-weight:900;font-size:14px;
+        background:var(--card2);border:2px solid #cbbc95;border-radius:10px;
+        padding:12px 14px;font-size:15px;line-height:1.6;transition:.14s;color:var(--ink);}
+  .qopt:hover:not(:disabled){border-color:var(--gold);transform:translateX(3px);}
+  .qopt i{flex-shrink:0;width:26px;height:26px;border-radius:7px;background:#e6d9b4;
+          color:#6b5208;font-style:normal;font-weight:900;font-size:14px;
           display:flex;align-items:center;justify-content:center;}
-  .qopt.ok{border-color:var(--ok);background:#eefaf4;}
-  .qopt.ok i{background:var(--ok);color:#fff;}
-  .qopt.no{border-color:var(--brand);background:#fff2f4;}
-  .qopt.no i{background:var(--brand);color:#fff;}
-  .qexp{margin-top:14px;background:#f6f2ff;border:1px dashed #ddd0ff;
-        border-radius:12px;padding:13px 15px;font-size:14px;line-height:1.85;}
+  .qopt.ok{border-color:#17734a;background:#e6f5ec;}
+  .qopt.ok i{background:#17734a;color:#fff;}
+  .qopt.no{border-color:#b82445;background:#fbeaee;}
+  .qopt.no i{background:#b82445;color:#fff;}
+  .qexp{margin-top:14px;background:#efe6c8;border:1px dashed #b9a878;
+        border-radius:10px;padding:13px 15px;font-size:14px;line-height:1.85;}
   .qexp .verdict{font-weight:900;font-size:16px;display:block;margin-bottom:6px;}
-  .qsrc{margin-top:10px;padding-top:9px;border-top:1px dashed #ddd0ff;
+  .qsrc{margin-top:10px;padding-top:9px;border-top:1px dashed #b9a878;
         font-size:12.5px;color:var(--dim);line-height:1.6;}
-  .qsrc b{color:var(--accent);}
+  .qsrc b{color:#6b5208;}
   .qnav{display:flex;gap:9px;margin-top:14px;flex-wrap:wrap;}
-  .qbtn{background:linear-gradient(90deg,#7c5cff,#a78bfa);color:#fff;font-size:15px;
-        font-weight:900;padding:11px 22px;border-radius:12px;}
-  .qbtn.ghost{background:#fff;color:var(--accent);border:2px solid #ddd0ff;}
+  .qbtn{background:linear-gradient(180deg,#3a2e26,#1e1814);color:var(--gold2);
+        border:2px solid #0f0c0a;font-size:15px;font-weight:900;padding:11px 22px;
+        border-radius:10px;letter-spacing:1px;}
+  .qbtn:hover{color:#fff;}
+  .qbtn.ghost{background:var(--card2);color:#6b5208;border:2px solid #b9a878;}
   .qend{text-align:center;padding:14px 4px;}
   .qend .big{font-size:52px;}
   .qend h3{font-size:22px;font-weight:900;margin:6px 0;}
   .qend .sc{font-size:15px;color:var(--dim);margin-bottom:12px;}
-  .qwrong{text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;
+  .qwrong{text-align:left;background:var(--card2);border:1px solid #cbbc95;border-radius:10px;
           padding:12px 14px;margin-top:12px;font-size:13.5px;line-height:1.8;}
-  .qwrong b{color:var(--brand);}
+  .qwrong b{color:#b82445;}
   .qprog{margin:12px auto;max-width:420px;font-size:13px;color:var(--dim);
          display:flex;flex-direction:column;gap:6px;align-items:center;}
-  .qchallenge{background:#f6f2ff;border:2px solid #ddd0ff;border-radius:14px;
+  .qchallenge{background:#efe6c8;border:2px solid #b9a878;border-radius:12px;
               padding:16px;margin:14px 0;}
-  .qchallenge .ct{font-size:18px;font-weight:900;color:var(--accent);}
+  .qchallenge .ct{font-size:18px;font-weight:900;color:#6b5208;letter-spacing:1px;}
   .qchallenge .cs{font-size:15px;margin:6px 0 12px;}
-  .qchallenge .cs b{font-size:22px;color:var(--brand);}
+  .qchallenge .cs b{font-size:22px;color:#b82445;}
   .inrank{font-size:15px;font-weight:800;margin-bottom:10px;}
   .namerow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
   .namerow input{flex:1;min-width:170px;max-width:260px;padding:10px 13px;font-size:15px;
-                 font-family:inherit;border:2px solid #ddd0ff;border-radius:11px;
-                 background:#fff;color:var(--ink);}
-  .namerow input:focus{outline:none;border-color:var(--accent);}
+                 font-family:inherit;border:2px solid #b9a878;border-radius:10px;
+                 background:var(--card2);color:var(--ink);}
+  .namerow input:focus{outline:none;border-color:var(--gold);}
   .dimtxt{font-size:12.5px;color:var(--dim);display:block;margin-top:8px;line-height:1.7;}
   ol.board{list-style:none;max-width:420px;margin:12px auto;text-align:left;}
   ol.board li{display:flex;align-items:center;gap:12px;padding:10px 14px;
-              background:#fff;border:1px solid var(--line);border-radius:11px;margin-bottom:7px;}
+              background:var(--card2);border:1px solid #cbbc95;border-radius:10px;margin-bottom:7px;}
   ol.board li.medal{border-width:2px;}
-  ol.board li.m1{border-color:#f0b850;background:#fffbf0;}
-  ol.board li.m2{border-color:#c9ccd4;background:#fafbfc;}
-  ol.board li.m3{border-color:#d6a37a;background:#fdf8f4;}
+  ol.board li.m1{border-color:#c9a227;background:#f8f0d4;}
+  ol.board li.m2{border-color:#a9a496;background:#f4f1e8;}
+  ol.board li.m3{border-color:#b98a5e;background:#f6ece1;}
   ol.board .rk{width:32px;text-align:center;font-weight:900;font-size:17px;color:var(--dim);}
   ol.board .nm{flex:1;font-weight:800;font-size:15px;word-break:break-all;}
-  ol.board .sv{font-weight:900;color:var(--accent);font-size:15px;white-space:nowrap;}
+  ol.board .sv{font-weight:900;color:#6b5208;font-size:15px;white-space:nowrap;}
 
   .tips{background:var(--card);border:2px solid #0f0c0a;border-radius:12px;
         box-shadow:0 6px 18px rgba(0,0,0,.4);
         padding:14px 16px;margin-top:14px;font-size:13.5px;color:#4a3d33;line-height:1.8;}
   .tips b{color:#5b3fd6;}
   .tips .hint{display:block;margin-top:10px;padding:9px 12px;background:var(--card2);
-              border:1px dashed #ddd0ff;border-radius:10px;font-size:13px;color:#5a4a44;}
+              border:1px dashed #b9a878;border-radius:10px;font-size:13px;color:#5a4a44;}
   .tips kbd{display:inline-block;background:#3d2c29;color:#fff;font-size:12px;font-weight:800;
             padding:2px 8px;border-radius:6px;font-family:inherit;margin:0 2px;}
   footer{border-top:2px solid #0f0c0a;background:var(--card);color:var(--ink);
@@ -208,7 +220,8 @@
   .sheet .sub{font-size:13px;color:var(--dim);margin-bottom:14px;}
   .cta{width:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;
        font-size:15px;font-weight:900;padding:12px;border-radius:14px;letter-spacing:1px;}
-  .cta.alt{background:linear-gradient(90deg,#7c5cff,#a78bfa);}
+  .cta.alt{background:linear-gradient(180deg,#3a2e26,#1e1814);color:var(--gold2);
+           border:2px solid #0f0c0a;}
   .note{font-size:11.5px;color:var(--dim);background:#fff7ee;border:1px dashed #f0d8bf;
         border-radius:10px;padding:9px 12px;margin:12px 0;}
 </style>
@@ -514,7 +527,7 @@ function drawRunner(){
     cx.fillText("小腎臟大冒險", VW/2, VH*0.28);
     cx.font=`700 ${Math.round(19*S)}px 'Microsoft JhengHei',sans-serif`; cx.fillStyle="#8a7268";
     cx.fillText(isTouch ? "點擊畫面開始" : "按空白鍵或點擊開始", VW/2, VH*0.28+34*S);
-    cx.font=`700 ${Math.round(17*S)}px 'Microsoft JhengHei',sans-serif`; cx.fillStyle="#7c5cff";
+    cx.font=`700 ${Math.round(17*S)}px 'Microsoft JhengHei',sans-serif`; cx.fillStyle="#6b5208";
     cx.fillText("躲開傷腎因子 +3　撿到腎元 +5", VW/2, VH*0.28+62*S);
     drawKid(VW/2 - 42*R.SS, VH*0.28+82*S, 86*R.SS);
     return;
@@ -755,7 +768,7 @@ function drawMaze(){
       const ch = M.grid[y][x];
       const px = M.ox + x*s, py = M.oy + y*s;
       if(ch === "#"){
-        cx.fillStyle = "#7c5cff";
+        cx.fillStyle = "#3a2e26";   /* 迷宮牆：配合卡冊主題（此遊戲目前停用） */
         cx.beginPath(); cx.roundRect(px+1, py+1, s-2, s-2, Math.max(2, s*0.18)); cx.fill();
       }else if(ch === "."){
         if(COIN_IMG.complete && COIN_IMG.naturalWidth)
@@ -928,7 +941,7 @@ function quizAnswer(n){
   }
   $("qafter").innerHTML = `
     <div class="qexp">
-      <span class="verdict" style="color:${ok?"var(--ok)":"var(--brand)"}">
+      <span class="verdict" style="color:${ok?"#17734a":"#b82445"}">
         ${ok ? `✅ 答對了！＋${gain} 腎元${Q.streak>=3?"（連續加成）":""}` : "❌ 答錯了，但這題值得記住"}
       </span>
       ${it.e}
