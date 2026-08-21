@@ -91,10 +91,16 @@
          padding:0 5px;transform:scale(0);transition:.2s;}
   .badge.show{transform:scale(1);}
 
+  /* 分類：單行橫向捲動。原本 flex-wrap 在手機會排成三列，
+     把 sticky 頁首撐到 289px、佔掉三分之一螢幕。 */
   .cats{max-width:1180px;margin:0 auto;padding:8px 20px 10px;display:flex;
-        gap:6px;flex-wrap:wrap;}
+        gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+        -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+        position:relative;}   /* 當定位基準，子元素 offsetLeft 才相對於捲動區 */
+  .cats::-webkit-scrollbar{display:none;}
   .tab{padding:6px 14px;border-radius:99px;font-size:13.5px;color:var(--onboard);
-       font-weight:700;transition:.15s;background:var(--board2);border:1px solid var(--edge);}
+       font-weight:700;transition:.15s;background:var(--board2);
+       border:1px solid var(--edge);flex:0 0 auto;scroll-margin-inline:20px;}
   .tab:hover{color:var(--gold2);border-color:var(--gold);}
   .tab.on{background:#c62a4c;color:#fff;border-color:#c62a4c;}                  /* 5.47:1 */
 
@@ -509,7 +515,19 @@ function renderTabs(){
   $("tabs").innerHTML = CATS.map(c =>
     `<button class="tab ${c===curCat?"on":""}" onclick="setCat('${c}')">${c}</button>`).join("");
 }
-function setCat(c){ curCat=c; renderTabs(); renderGrid(); }
+function setCat(c){
+  curCat = c; renderTabs(); renderGrid();
+  // 選中的頁籤可能在捲動區外，把它捲到中間。
+  // 不用 scrollIntoView —— 它會連帶影響整頁捲動位置，實測也沒有作用。
+  const on = document.querySelector(".cats .tab.on");
+  if(on){
+    const box = on.parentElement;
+    // 直接指定 scrollLeft。刻意不用平滑捲動 —— scrollTo({behavior:"smooth"})
+    // 與 CSS scroll-behavior:smooth 都依賴動畫實際執行，實測有環境不會跑，
+    // 結果是捲動位置停在 0、頁籤根本沒進視野。即時跳位反而處處可靠。
+    box.scrollLeft = Math.max(0, on.offsetLeft - (box.clientWidth - on.offsetWidth) / 2);
+  }
+}
 function offPct(p){ return p.o ? Math.round((1-p.p/p.o)*100) : 0; }
 
 /* 附件下載：買了才出現，排在知識卡下面一行（知識庫裡也有一份入口） */
