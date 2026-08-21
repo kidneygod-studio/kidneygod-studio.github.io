@@ -51,12 +51,10 @@
          backdrop-filter:blur(8px);border-bottom:1px solid var(--edge);}
   .hwrap{max-width:1180px;margin:0 auto;display:flex;align-items:center;
          gap:10px;padding:10px 20px;flex-wrap:wrap;}
-  .logo{font-size:22px;font-weight:900;letter-spacing:1px;
-        background:linear-gradient(90deg,var(--brand),var(--brand2));
-        -webkit-background-clip:text;background-clip:text;color:transparent;
-        white-space:nowrap;}
-  .logo small{font-size:10px;color:var(--gold);-webkit-text-fill-color:var(--gold);
-              display:block;letter-spacing:2px;font-weight:600;}
+  /* 標誌：圖片本身已含中英文名稱，寬高寫死避免載入時版面跳動 */
+  .logo{display:block;line-height:0;flex-shrink:0;}
+  .logo img{height:66px;width:auto;display:block;}
+  @media(max-width:640px){ .logo img{height:46px;} }
   .search{flex:1;display:flex;background:var(--card2);border:2px solid var(--brand);
           border-radius:99px;overflow:hidden;min-width:150px;max-width:420px;}
   .search input{flex:1;border:none;padding:8px 15px;font-size:14px;
@@ -351,7 +349,9 @@
 
 <header>
   <div class="hwrap">
-    <div class="logo">護腎教室<small>KIDNEYGOD.STUDIO</small></div>
+    <a class="logo" href="./" aria-label="護腎教室 KidneyGod.Studio">
+      <img src="logo.png" alt="護腎教室 KidneyGod.Studio" width="480" height="268">
+    </a>
     <div class="search">
       <input id="q" type="search" placeholder="搜尋護腎知識…" oninput="renderGrid()">
       <button onclick="renderGrid()">🔍</button>
