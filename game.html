@@ -6,34 +6,43 @@
 <title>遊戲場 — 護腎教室 KidneyGod.Studio</title>
 <meta name="description" content="護腎教室遊戲場：小腎臟大冒險、護腎小學堂 — 躲開傷腎因子、收集腎元，玩遊戲順便學護腎。">
 <style>
+  /* 與商城同一套 Greed Island 集卡冊主題：深色冊頁 + 米色卡紙面板 */
   :root{
-    --bg:#fff7f0; --card:#fff; --ink:#3d2c29; --dim:#8a7268;
+    --board:#1d1713; --board2:#251d18; --slot:#120e0c; --edge:#3d3128;
+    --gold:#c9a227; --gold2:#e8c65a;
+    --bg:var(--board); --card:#f4edd8; --card2:#fbf6e6;
+    --ink:#2b221d; --onboard:#e6d9c2; --dim:#6e5f4c; --dimboard:#a8977f;
     --brand:#ff5d73; --brand2:#ff9a3c; --accent:#7c5cff; --ok:#2ec27e;
-    --line:#f3e2d7;
+    --line:#d9cdae;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  /* 與商城同一套半調網點背景，兩頁看起來才像同一個網站 */
-  body{background-color:var(--bg);color:var(--ink);
+  /* 冊頁：皮革顆粒 + 斜向織紋 + 暈影，與商城完全一致 */
+  body{background-color:var(--board);color:var(--onboard);
        background-image:
-         radial-gradient(rgba(61,44,41,.055) 1px, transparent 1.6px),
-         radial-gradient(rgba(61,44,41,.04)  1px, transparent 1.6px);
-       background-size:14px 14px,14px 14px;
-       background-position:0 0,7px 7px;
+         radial-gradient(ellipse 90% 60% at 50% 0%, rgba(201,162,39,.10), transparent 70%),
+         radial-gradient(rgba(255,236,200,.045) 1px, transparent 1.7px),
+         radial-gradient(rgba(0,0,0,.30)        1px, transparent 1.7px),
+         repeating-linear-gradient(58deg, rgba(255,255,255,.014) 0 2px, transparent 2px 6px),
+         linear-gradient(180deg,#241c17,#171210 60%,#120e0c);
+       background-size:100% 620px,13px 13px,13px 13px,auto,auto;
+       background-position:0 0,0 0,6px 6px,0 0,0 0;
+       background-attachment:scroll,scroll,scroll,scroll,fixed;
        font-family:"Segoe UI","Microsoft JhengHei",system-ui,sans-serif;line-height:1.6;
        -webkit-text-size-adjust:100%;}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
   a{color:inherit;}
 
-  .honest{position:sticky;top:0;z-index:60;background:#3d2c29;color:#ffe9d6;
+  .honest{position:sticky;top:0;z-index:60;background:#0f0c0a;color:#e6d9c2;
+          border-bottom:1px solid var(--edge);
           text-align:center;font-size:13px;padding:7px 12px;}
-  .honest b{color:#ffc857;}
+  .honest b{color:var(--gold2);}
   .ki{width:1.15em;height:1.15em;border-radius:50%;vertical-align:-.24em;
       margin-right:.18em;object-fit:cover;box-shadow:0 0 0 1px rgba(61,44,41,.13);background:#fff;}
   .bki{box-shadow:0 0 0 1.5px rgba(255,233,214,.7);margin-right:.4em;
        width:1.45em;height:1.45em;vertical-align:-.38em;}
 
-  header{position:sticky;top:34px;z-index:50;background:rgba(255,247,240,.94);
-         backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  header{position:sticky;top:34px;z-index:50;background:rgba(23,18,16,.92);
+         backdrop-filter:blur(8px);border-bottom:1px solid var(--edge);}
   .hwrap{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:10px;
          padding:10px 16px;flex-wrap:wrap;}
   .logo{font-size:20px;font-weight:900;letter-spacing:1px;text-decoration:none;
@@ -42,7 +51,8 @@
   .logo small{font-size:10px;color:var(--dim);-webkit-text-fill-color:var(--dim);
               display:block;letter-spacing:2px;font-weight:600;}
   .spacer{flex:1;}
-  .hbtn{font-size:13.5px;font-weight:700;background:#fff;border:2px solid var(--line);
+  .hbtn{font-size:13.5px;font-weight:700;background:var(--card2);color:var(--ink);
+        border:2px solid var(--edge);
         border-radius:99px;padding:7px 14px;white-space:nowrap;text-decoration:none;
         display:inline-flex;align-items:center;}
   .coin{background:linear-gradient(90deg,#7c5cff,#a78bfa);color:#fff;border:none;font-weight:900;}
@@ -60,17 +70,21 @@
   /* ── 遊戲選單 ── */
   .picker{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
   @media(max-width:640px){ .picker{grid-template-columns:1fr;} }
-  .gcard{background:var(--card);border:2px solid var(--line);border-radius:16px;
+  .gcard{background:var(--card);color:var(--ink);border:2px solid #0f0c0a;border-radius:12px;
+         box-shadow:0 6px 18px rgba(0,0,0,.45);
          padding:14px 16px;text-align:left;transition:.16s;display:flex;gap:12px;align-items:center;}
-  .gcard:hover{border-color:var(--accent);transform:translateY(-2px);}
-  .gcard.on{border-color:var(--accent);background:#f6f2ff;
+  .gcard:hover{border-color:var(--gold);transform:translateY(-2px);}
+  .gcard.on{border-color:var(--gold);background:var(--card2);
+            box-shadow:0 0 0 2px var(--gold),0 8px 22px rgba(0,0,0,.5);
             box-shadow:0 4px 16px rgba(124,92,255,.18);}
   .gcard .em{font-size:34px;line-height:1;flex-shrink:0;}
   .gcard b{display:block;font-size:16.5px;font-weight:900;}
   .gcard span{display:block;font-size:12.5px;color:var(--dim);margin-top:2px;}
 
   /* ── 遊戲舞台 ── */
-  .stage{background:linear-gradient(120deg,#7c5cff,#a78bfa);border-radius:18px;
+  .stage{background:linear-gradient(180deg,#2a211b,#1e1814);
+         border:1px solid var(--edge);border-radius:16px;
+         box-shadow:inset 0 2px 0 rgba(255,236,200,.06),0 20px 46px rgba(0,0,0,.5);
          padding:14px;color:#fff;}
   .shead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
   .shead h2{font-size:19px;font-weight:900;letter-spacing:.5px;display:flex;
@@ -156,16 +170,18 @@
   ol.board .nm{flex:1;font-weight:800;font-size:15px;word-break:break-all;}
   ol.board .sv{font-weight:900;color:var(--accent);font-size:15px;white-space:nowrap;}
 
-  .tips{background:#fff;border:1px solid var(--line);border-radius:14px;
-        padding:14px 16px;margin-top:14px;font-size:13.5px;color:#5a4a44;line-height:1.8;}
-  .tips b{color:var(--accent);}
-  .tips .hint{display:block;margin-top:10px;padding:9px 12px;background:#f6f2ff;
+  .tips{background:var(--card);border:2px solid #0f0c0a;border-radius:12px;
+        box-shadow:0 6px 18px rgba(0,0,0,.4);
+        padding:14px 16px;margin-top:14px;font-size:13.5px;color:#4a3d33;line-height:1.8;}
+  .tips b{color:#5b3fd6;}
+  .tips .hint{display:block;margin-top:10px;padding:9px 12px;background:var(--card2);
               border:1px dashed #ddd0ff;border-radius:10px;font-size:13px;color:#5a4a44;}
   .tips kbd{display:inline-block;background:#3d2c29;color:#fff;font-size:12px;font-weight:800;
             padding:2px 8px;border-radius:6px;font-family:inherit;margin:0 2px;}
-  footer{border-top:1px solid var(--line);background:#fff;padding:24px 16px 40px;margin-top:24px;}
+  footer{border-top:2px solid #0f0c0a;background:var(--card);color:var(--ink);
+         padding:24px 16px 40px;margin-top:24px;}
   .fw{max-width:1000px;margin:0 auto;font-size:13px;color:var(--dim);}
-  .fw a{color:var(--accent);font-weight:700;}
+  .fw a{color:#5b3fd6;font-weight:700;}
   /* 純資訊，刻意不做成按鈕外觀（在 header 當藥丸時會被誤認為可點） */
   .fmeta{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);
          text-align:center;font-size:12.5px;letter-spacing:.03em;cursor:default;}
@@ -186,8 +202,9 @@
   .modal{position:fixed;inset:0;z-index:95;display:flex;align-items:center;
          justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:.22s;}
   .modal.on{opacity:1;pointer-events:auto;}
-  .sheet{background:#fff;border-radius:22px;width:min(460px,96vw);max-height:92vh;
-         overflow-y:auto;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.25);}
+  .sheet{background:var(--card);color:var(--ink);border:2px solid #0f0c0a;
+         border-radius:18px;width:min(460px,96vw);max-height:92vh;
+         overflow-y:auto;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.6);}
   .sheet h2{font-size:19px;font-weight:900;margin-bottom:4px;}
   .sheet .sub{font-size:13px;color:var(--dim);margin-bottom:14px;}
   .cta{width:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff;
