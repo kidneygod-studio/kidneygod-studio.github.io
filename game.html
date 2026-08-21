@@ -305,7 +305,7 @@
 <div class="toast" id="toast"></div>
 
 <script src="shared.js?v=7239b576"></script>
-<script src="quiz.js?v=cbec29cf"></script>
+<script src="quiz.js?v=1d5418d1"></script>
 <script>
 "use strict";
 
@@ -427,8 +427,8 @@ function pick(m){
 
 function renderTips(){
   if(MODE === 3){
-    $("tips").innerHTML = `<b>玩法</b>　每輪隨機抽 10 題，涵蓋血壓、血糖、血脂、用藥、飲食、
-      檢查與生活習慣七類。答對 +8 腎元，連續答對 3 題起每題再 +4。<br>
+    $("tips").innerHTML = `<b>玩法</b>　題庫共 <b>200 題</b>，每輪隨機抽 10 題，涵蓋血壓、血糖、
+      血脂、用藥、飲食、檢查與生活習慣七類。答對 +8 腎元，連續答對 3 題起每題再 +4。<br>
       <b>為什麼每題都附出處</b>　衛教內容若沒有來源就只是說法。這裡的每一題與解說都標明
       依據的臨床指引（2022 台灣高血壓治療指引、2022 台灣血脂指引、KDIGO 2024、
       KDOQI 2020、國健署調查、台灣腎病年報等），答完可直接點進商城看完整知識卡。<br>
@@ -436,8 +436,9 @@ function renderTips(){
       <b>排行榜</b>　每輪結束都會結算一次累計答對題數 —— <b>不必打滿十輪，中途的總分一樣能上榜</b>。
       成績進得了前十名，畫面就會邀請你留下代號或綽號；留空顯示為「匿名者」。
       同意上榜後不會再問第二次，之後每輪成績提高都自動更新你那一筆，不會洗版。
-      <b>累計最多算十輪</b>（100 題，題目不重複，全對就是滿分 100）。第十輪一結算，
-      累計就歸零、題庫重新洗牌，再玩算新的一次挑戰 —— 分數不會無限往上疊。
+      <b>累計最多算十輪</b>（100 題，一次挑戰內題目不重複，全對就是滿分 100）。
+      題庫共 200 題，每次挑戰是從中洗牌抽出的 100 題，所以每一輪挑戰的題目組合都不一樣。
+      第十輪一結算，累計就歸零、重新洗牌 —— 分數不會無限往上疊。
       第一名的名字會出現在商城首頁的跑馬燈上。
       <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">🏆 看排行榜</button></div>`;
     return;
@@ -882,7 +883,7 @@ function quizDeck(){
     const raw = sessionStorage.kg_deck;
     if(raw){
       const d = JSON.parse(raw);
-      if(Array.isArray(d) && d.length === QUIZ.length) return d;
+      if(Array.isArray(d) && d.length === QUIZ.length) return d;   // 題庫變動時重洗
     }
   }catch(e){}
   const idx = QUIZ.map((_, i) => i);
