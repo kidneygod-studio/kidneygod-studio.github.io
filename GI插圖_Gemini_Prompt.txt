@@ -1,0 +1,271 @@
+護腎教室 — Greed Island 風格卡片｜中央插圖 生圖 Prompt（共 60 張）
+==============================================================================
+用法：每一段整段複製丟給 Gemini，出圖比例選 16:9，
+      存成 gi/art/<檔名>.png，再執行 python make_gi_cards.py 即可換上。
+插圖區實際尺寸 780x432 px，出圖大一點沒關係，程式會置中裁切。
+==============================================================================
+
+
+■■■ 血壓管理 ■■■
+
+── 01. ACEI／ARB：不只降壓，還會降蛋白尿
+   檔名：gi/art/bp-acei.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep crimson red background. A glowing bean-shaped kidney with a small brass pressure-relief valve on its side, gently venting soft light; two tiny protein droplets drift away and dissolve.
+
+── 02. 血壓正常了，可以自己停藥嗎
+   檔名：gi/art/bp-stop.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep crimson red background. A hand reaching toward a pill bottle whose cap is half open, while behind it a large gauge needle silently creeps back up into the red zone.
+
+── 03. 130/80：台灣的高血壓標準為什麼下修了
+   檔名：gi/art/bp-130.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep crimson red background. A large ornate pressure dial seen head-on, its needle resting just below a clearly marked threshold notch, with a downward arrow sweeping across the face.
+
+── 04. 為什麼腎臟病患的血壓特別難控制
+   檔名：gi/art/bp-ckd.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep crimson red background. A kidney surrounded by three closed taps and rising water, one tap straining under pressure while salt crystals swirl in the current.
+
+── 05. 減鹽降壓：真正的大魔王不在鹽罐裡
+   檔名：gi/art/bp-salt.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep crimson red background. A tiny salt shaker in the foreground dwarfed by an enormous looming bowl of noodle soup and stacked packaged snacks casting a long shadow.
+
+── 06. 白袍高血壓與隱匿性高血壓：哪一個比較危險
+   檔名：gi/art/bp-whitecoat.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep crimson red background. Split composition: on one side a figure sitting stiffly in a clinic chair, on the other the same figure relaxed at a desk; two opposing gauge needles between them.
+
+── 07. 722 原則：血壓要在家量，不是在診間量
+   檔名：gi/art/bp-722.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep crimson red background. A home upper-arm blood pressure monitor on a wooden table, a seven-column calendar grid glowing faintly behind it, morning sun and evening moon at either side.
+
+── 08. 夜間高血壓：睡覺時血壓沒有降下來
+   檔名：gi/art/bp-night.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep crimson red background. A crescent moon over a sleeping city skyline, with a luminous line that should dip at night but stays stubbornly flat and high.
+
+── 09. 高血壓沒有症狀，這正是它可怕的地方
+   檔名：gi/art/bp-silent.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep crimson red background. A calm featureless human silhouette, serene on the outside, with a single pressure gauge glowing hidden deep inside the chest.
+
+── 10. 血壓量錯了，後面的治療都是猜的
+   檔名：gi/art/bp-howto.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep crimson red background. An arm resting on a table with a cuff correctly placed at heart level, feet flat on the floor, clean geometric alignment guides drawn around the posture.
+
+
+■■■ 血糖管理 ■■■
+
+── 11. Finerenone：RASi 加 SGLT2i 之後的第三張牌
+   檔名：gi/art/dm-fine.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep amber brown background. Three playing cards fanned out, the third one being placed down and glowing brighter than the other two, a small kidney crest embossed on its face.
+
+── 12. 糖尿病是台灣洗腎的第一大原因
+   檔名：gi/art/dm-no1.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep amber brown background. A podium with a single tall first-place step, a sugar cube standing on top of it, casting a long shadow over a distant dialysis-style spiral of tubing.
+
+── 13. SGLT2 抑制劑：意外變成護腎主力的排糖藥
+   檔名：gi/art/dm-sglt2.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep amber brown background. A kidney acting as a sluice gate, releasing a bright stream of sugar crystals safely out and away, with a heart shape glowing protected in the background.
+
+── 14. HbA1c：三個月的血糖成績單
+   檔名：gi/art/dm-a1c.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep amber brown background. A report card shaped like a stained-glass panel divided into three month-segments, a red blood cell motif repeated across it.
+
+── 15. GLP-1 受體促效劑：降糖、減重、還護心腎
+   檔名：gi/art/dm-glp1.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep amber brown background. A single arrow splitting into three ribbons that curve toward a sugar cube, a scale, and a heart with a small kidney beside it.
+
+── 16. 血糖控制好了，藥還要繼續吃嗎
+   檔名：gi/art/dm-keep.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep amber brown background. A bridge held up by pillars made of capsules; one pillar being removed and the bridge deck beginning to sag at that point.
+
+── 17. Metformin：好藥，但要看腎功能調整
+   檔名：gi/art/dm-met.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep amber brown background. A classic balance scale with a tablet on one pan and a small kidney on the other, the beam carefully levelled by an adjusting hand.
+
+── 18. 糖尿病患者的護腎行事曆：每年兩項檢查
+   檔名：gi/art/dm-screen.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep amber brown background. A wall calendar with two dates circled and glowing, a urine sample vial and a blood tube standing beside it like sentries.
+
+── 19. UACR 怎麼看：30 和 300 是兩道分水嶺
+   檔名：gi/art/dm-uacr.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep amber brown background. A long ascending staircase with two landings marked by tall stone gateposts, a single droplet climbing from the bottom step.
+
+── 20. 低血糖：腎功能不好的人風險更高
+   檔名：gi/art/dm-hypo.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep amber brown background. A candle flame guttering dangerously low inside a glass lantern, a sugar cube and a glass of juice placed urgently beside it.
+
+
+■■■ 血脂代謝 ■■■
+
+── 21. LDL 沒有統一的「正常值」，只有你的目標值
+   檔名：gi/art/lp-ldl.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep olive gold background. An archery target where the bullseye ring is drawn at a different radius for each of several overlapping targets, one arrow already embedded in the innermost.
+
+── 22. 為什麼三高最後都會走到腎臟
+   檔名：gi/art/ms-kidney.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep olive gold background. Three rivers coloured red, amber and gold converging into one delta that flows into a large bean-shaped kidney basin.
+
+── 23. 吃 statin 肌肉痠痛，是不是要停藥
+   檔名：gi/art/lp-muscle.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep olive gold background. A flexed arm rendered as layered flat muscle bands, one band glowing warm with irritation, a small warning lantern hanging nearby.
+
+── 24. 血脂已經正常了，為什麼醫師還要我吃 statin
+   檔名：gi/art/lp-statin.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep olive gold background. A cross-section of a pipe with a waxy plaque deposit inside being sealed under a smooth protective glaze, calm flow continuing through.
+
+── 25. 三酸甘油酯太高：先擔心的其實是胰臟
+   檔名：gi/art/lp-tg.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep olive gold background. Oil droplets clustering thickly in a stream, and downstream a pancreas-shaped island beginning to glow hot red as an alarm.
+
+── 26. 三高很少單獨出現，它們是一組的
+   檔名：gi/art/ms-cluster.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep olive gold background. Three interlocking rings, red amber and gold, chained together and all anchored to one central weight below.
+
+── 27. 代謝症候群：五項中了三項就算
+   檔名：gi/art/ms-def.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep olive gold background. Five lanterns hanging in a row, exactly three of them lit and glowing, the other two dark.
+
+── 28. 四到七成的人，不知道自己已經有三高
+   檔名：gi/art/ms-unaware.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep olive gold background. A crowd of simple silhouettes, most with a small dim warning light floating unnoticed above their heads, one figure just beginning to look up.
+
+── 29. HDL 是「好膽固醇」，那越高越好嗎
+   檔名：gi/art/lp-hdl.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep olive gold background. A delivery cart carrying waxy cargo away from a pipe, drawn as helpful but ordinary, with a rising arrow that flattens out at the top instead of continuing upward.
+
+── 30. 腰圍比體重更能預測你的腎臟未來
+   檔名：gi/art/ms-waist.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep olive gold background. A measuring tape wrapped around a rounded abdomen shape, the tape trailing off toward a small kidney silhouette on the horizon.
+
+
+■■■ 檢查數值 ■■■
+
+── 31. eGFR：你的腎功能成績單怎麼看
+   檔名：gi/art/egfr.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep indigo blue background. A large circular dial marked into descending zones, a bean-shaped kidney at its centre and a needle resting in the upper zone.
+
+── 32. 血糖控不好，是台灣洗腎的第一大原因
+   檔名：gi/art/hba1c.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep indigo blue background. A sugar cube dissolving inside a glass vial while a faint kidney outline behind it slowly dims.
+
+── 33. 血壓與腎：互相傷害的一對
+   檔名：gi/art/bp.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep indigo blue background. Two interlocked gears, one shaped like a pressure gauge and one like a kidney, grinding against each other with sparks between the teeth.
+
+── 34. 泡泡尿：先別慌，但一定要驗
+   檔名：gi/art/proteinuria.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep indigo blue background. A stream of fine dense bubbles rising in a tall glass vessel, one bubble magnified to reveal a tiny protein crystal inside.
+
+── 35. 腎臟超音波：十分鐘看清你的腎
+   檔名：gi/art/echo.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep indigo blue background. A fan-shaped ultrasound beam sweeping across a bean-shaped kidney, the swept area rendered as clean concentric arcs of light.
+
+
+■■■ 用藥安全 ■■■
+
+── 36. NSAID 止痛藥：腎臟的頭號黑名單
+   檔名：gi/art/nsaid.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep navy blue background. A white capsule with a bold diagonal warning slash across it, and behind it three converging arrows striking a single kidney shape.
+
+── 37. 馬兜鈴酸：一次傷害，終身有效
+   檔名：gi/art/aristo.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep navy blue background. A dried herbal root in an apothecary jar, its shadow on the wall shaped like a cracked kidney that cannot be repaired, a broken chain link nearby.
+
+── 38. 來路不明的止痛藥，成分永遠是驚喜
+   檔名：gi/art/unknown-med.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep navy blue background. A plain unlabelled paper packet spilling mismatched pills of wildly different shapes and colours, each one a question of its own.
+
+── 39. 打顯影劑前，先讓醫師知道你的腎
+   檔名：gi/art/contrast.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep navy blue background. A syringe of luminous contrast fluid beside a small card held up to a scanner ring, a kidney glowing gently as it is checked first.
+
+── 40. 抗生素：該吃就吃好吃滿，不該吃別碰
+   檔名：gi/art/abx.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep navy blue background. A row of capsules laid out as a complete course, the row fully filled to the end, with a shield standing over the last one.
+
+── 41. 胃藥不是保養品：PPI 的腎臟冷知識
+   檔名：gi/art/ppi.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep navy blue background. A comfortable armchair made of stomach-medicine tablets, sitting on a foundation that is quietly cracking beneath it.
+
+
+■■■ 飲食護腎 ■■■
+
+── 42. 蛋白質：吃多傷腎、吃少傷身的兩難
+   檔名：gi/art/protein.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep teal green background. A balance scale with a steak and eggs on one pan and a small kidney on the other, both pans hovering at exactly equal height.
+
+── 43. 隱形磷：包裝食品裡的血管殺手
+   檔名：gi/art/phosphate.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep teal green background. A packaged sausage and a fizzy drink can, each leaking a stream of tiny crystals that settle and harden along a length of pipe.
+
+── 44. 楊桃：腎友的水果黑名單第一名
+   檔名：gi/art/starfruit.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep teal green background. A single star-shaped fruit slice glowing with an ominous aura, sealed behind a crossed barrier, dark leaves around it.
+
+── 45. 高尿酸：痛的是腳，傷的是腎
+   檔名：gi/art/uricacid.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep teal green background. Sharp needle-like crystals radiating from a swollen big toe joint, with the same crystals quietly settling inside a kidney silhouette behind.
+
+── 46. 鉀：正常腎不用怕，晚期腎友要會算
+   檔名：gi/art/potassium.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep teal green background. A banana and leafy greens on a set of scales, perfectly fine on one side, while on the other side a heart rhythm line shows a single dangerous tall spike.
+
+── 47. 鹽：腎臟每天在幫你擦的屁股
+   檔名：gi/art/salt.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep teal green background. A mop and bucket beside an enormous spilled mound of salt, a small kidney figure dutifully cleaning it up, looking tired.
+
+── 48. 運動飲料：沒大量流汗，喝的只是糖水
+   檔名：gi/art/sportsdrink.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep teal green background. A sports drink bottle tipped over, pouring out not liquid but a cascade of sugar cubes, an untouched glass of plain water standing calmly beside it.
+
+── 49. 多喝水護腎，但不是人人適用
+   檔名：gi/art/water.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep teal green background. A glass of water raised in the foreground, and behind it a heart with a small restriction band and a dialysis spiral, both marked as exceptions.
+
+
+■■■ 生活習慣 ■■■
+
+── 50. 抽菸傷腎：血管的事，腎臟全都算一份
+   檔名：gi/art/smoking.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep steel blue background. A lit cigarette whose smoke curls into narrowing blood vessels that constrict as they reach a kidney shape in the distance.
+
+── 51. 脫水：急性腎損傷最常見的開場
+   檔名：gi/art/dehydration.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep steel blue background. A cracked dry riverbed leading to a kidney-shaped basin nearly empty, a single precious water droplet falling from above.
+
+── 52. 來路不明的減肥藥：瘦不瘦不知道，腎臟先抽獎
+   檔名：gi/art/dietpill.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep steel blue background. A slot machine whose reels show pills, a diuretic droplet and a question mark shape, with a kidney sitting where the payout tray should be.
+
+── 53. 運動護腎：控制三高就是保護腎絲球
+   檔名：gi/art/exercise.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep steel blue background. A running figure in mid-stride, three coloured rings for pressure, sugar and lipid shrinking in their wake, a kidney glowing steadily.
+
+── 54. 睡不夠，腎臟也在加班
+   檔名：gi/art/sleep.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep steel blue background. A crescent moon and a pillow, while behind them a kidney sits at a small desk under a lamp, still working through the night.
+
+── 55. 憋尿的代價：從膀胱炎到腎盂腎炎
+   檔名：gi/art/holdurine.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep steel blue background. A dam holding back rising water far past its limit, with a narrow channel leading upward toward a kidney at the top of the valley.
+
+
+■■■ 警訊與迷思 ■■■
+
+── 56. 「洗腎是西藥吃太多」？真相恰恰相反
+   檔名：gi/art/dialysis-myth.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep wine red background. A pointing finger aimed at a bottle of prescription tablets, but the actual long shadow on the ground is cast by an untreated pressure gauge and a sugar cube.
+
+── 57. 泡、水、高、貧、倦：五個字記住腎病警訊
+   檔名：gi/art/five-signs.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep wine red background. Five lanterns hanging in a row, each carrying a distinct simple symbol: bubbles, a swollen foot, a gauge, a pale droplet, and a drooping figure.
+
+── 58. 水腫：用手指壓一下就能做的初步檢查
+   檔名：gi/art/edema.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep wine red background. A thumb pressing into the front of a lower leg, leaving a clear round dent that stays behind after the thumb lifts away.
+
+── 59. 腰痛就是腎不好？大多數時候不是
+   檔名：gi/art/backpain.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep wine red background. A figure clutching the lower back, with the spine and muscle layers glowing as the real source, while a small kidney behind sits quietly unlit.
+
+── 60. 吃腰子補腰子？補到的只有尿酸和磷
+   檔名：gi/art/organ-food.png
+   Prompt：Flat vector illustration in the style of a 1990s Japanese trading card. Bold confident outlines, limited flat colour palette, subtle halftone dot texture, dramatic light rays radiating from the centre. Single centred subject with generous margins. Clean graphic poster look, no gradients on skin, no photorealism, no gore. ABSOLUTELY NO text, letters, numbers, words, logos or watermarks anywhere. deep wine red background. A steaming bowl of braised offal on a table, its rising steam forming sharp uric acid crystals and phosphate specks instead of aroma.
+

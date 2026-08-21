@@ -763,7 +763,7 @@ function cardHTML(p){
       ${off?`<div class="off">-${off}%</div>`:""}
       ${has?`<div class="owned">已擁有</div>`:""}
       <div class="pic${has?" kcard":""}">${has
-        ? `<img src="cards/k/thumb/${p.id}.png" alt="${p.k.t}" loading="lazy">`
+        ? `<img src="cards/gi/thumb/${p.id}.png" alt="${p.k.t}" loading="lazy">`
         : p.e}</div>
       <div class="body">
         <div class="name"><b>【${p.b}】</b>${p.n}</div>
@@ -772,7 +772,7 @@ function cardHTML(p){
         <div class="row">
           <div class="price">${p.o?`<s>${C(p.o)}</s>`:""}${C(p.p)}</div>
           ${has
-            ? `<a class="dl" href="cards/k/${p.id}.png" download="護腎教室_${p.k.t.replace(/[：、，。！？「」]/g,"")}.png">⬇ 知識卡</a>`
+            ? `<a class="dl" href="cards/gi/${p.id}.png" download="護腎教室_${p.k.t.replace(/[：、，。！？「」]/g,"")}.png">⬇ 知識卡</a>`
             : `<button class="add" onclick="addCart('k${p.i}')">爽買</button>`}
         </div>
       </div>
@@ -1031,8 +1031,8 @@ function renderLib(){
     html += [...lib].reverse().map(k=>{
       const p = full[k.id];
       const card = p ? `<div class="kcardwrap">
-            <img src="cards/k/thumb/${p.id}.png" alt="${p.k.t}" loading="lazy">
-            <a class="libatt" href="cards/k/${p.id}.png"
+            <img src="cards/gi/thumb/${p.id}.png" alt="${p.k.t}" loading="lazy">
+            <a class="libatt" href="cards/gi/${p.id}.png"
                download="護腎教室_${p.k.t.replace(/[：、，。！？「」]/g,"")}.png">⬇ 下載知識卡</a>
           </div>` : "";
       const att = p && p.dl
