@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>遊戲場 — 護腎教室 KidneyGod.Studio</title>
-<meta name="description" content="護腎教室遊戲場：小腎臟大冒險、小腎臟吃豆人 — 躲開傷腎因子、收集腎元，玩遊戲順便學護腎。">
+<meta name="description" content="護腎教室遊戲場：小腎臟大冒險、護腎小學堂 — 躲開傷腎因子、收集腎元，玩遊戲順便學護腎。">
 <style>
   :root{
     --bg:#fff7f0; --card:#fff; --ink:#3d2c29; --dim:#8a7268;
@@ -315,6 +315,16 @@ const POWER = [
 ];
 
 const cv = $("cv"), cx = cv.getContext("2d");
+
+/* ═══════════ 遊戲開關 ═══════════
+   要把「小腎臟吃豆人」加回來：把下面的 2 改成 true，存檔即可，
+   其餘程式碼（迷宮、怪獸、方向鍵、最高分 store.best2）都完整保留著，
+   不需要另外還原任何東西。玩家已存的吃豆人最高分也一直留在進度裡。 */
+const GAME_ON = {1: true, 2: false, 3: true};
+for(const n of [1, 2, 3]){
+  if(!GAME_ON[n]) $("tab"+n).style.display = "none";
+}
+
 let MODE = 1, RAF = null;
 const isTouch = matchMedia("(pointer:coarse)").matches;
 if(isTouch) document.body.classList.add("touch");
@@ -348,7 +358,7 @@ function fitCanvas(){
 addEventListener("resize", ()=>{ fitCanvas(); });
 
 function pick(m){
-  if(MODE === m) return;
+  if(MODE === m || !GAME_ON[m]) return;    // 關掉的遊戲連網址列硬叫也進不去
   MODE = m;
   [1,2,3].forEach(n => $("tab"+n).classList.toggle("on", m===n));
   $("gTitle").textContent = {1:"小腎臟大冒險", 2:"小腎臟吃豆人", 3:"護腎小學堂"}[m];
