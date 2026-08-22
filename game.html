@@ -197,6 +197,11 @@
   .fw{max-width:1000px;margin:0 auto;font-size:13px;color:var(--dim);}
   .fw a{color:#5b3fd6;font-weight:700;}
   /* 純資訊，刻意不做成按鈕外觀（在 header 當藥丸時會被誤認為可點） */
+  /* 署名：標示內容作者，字級與頁尾正文一致但加一條分隔線區隔 */
+  .byline{margin:12px 0 10px;padding:10px 0;border-top:1px solid var(--line);
+          border-bottom:1px solid var(--line);font-size:13px;}
+  .byline b{color:var(--ink);letter-spacing:.5px;}
+  .byline span{display:block;font-size:12px;margin-top:3px;}
   .fmeta{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);
          text-align:center;font-size:12.5px;letter-spacing:.03em;cursor:default;}
   .fmeta b{color:var(--ink);font-variant-numeric:tabular-nums;}
@@ -287,6 +292,7 @@
   <div class="fw">
     <p>腎元只能在<a href="index.html">護腎教室商城</a>兌換護腎知識與貓咪貼圖，不具任何金錢價值。</p>
     <p style="margin-top:6px">⚕️ 遊戲中的衛教內容為一般性健康知識，不能取代醫師診斷與治療建議；有症狀請就醫。</p>
+    <p class="byline">✍️ 內容編寫｜<b>護腎專家 吳政哲醫師</b><span>本站衛教內容由本人編寫與審訂，每則皆標註所依據的臨床指引。</span></p>
     <div class="fmeta" id="viewBox" style="display:none">累計瀏覽 <b id="viewCnt">–</b> 次</div>
   </div>
 </footer>

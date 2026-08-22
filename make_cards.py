@@ -38,6 +38,7 @@ CREAM_P  = (243, 236, 218)      # 卡紙
 CREAM_C  = (250, 245, 230)      # 標頭格
 CREAM_D  = (196, 184, 150)
 FR = 16                          # 外框厚度
+BYLINE = "護腎專家 吳政哲醫師"   # 卡片與附件共用的署名
 
 # 分類 →（主色, 章印字）
 CAT_ACCENT = {
@@ -168,6 +169,7 @@ def footer(d, note, w=A4[0], h=A4[1], cat="用藥安全"):
     d.line([M, h - 122, w - M, h - 122], fill=FRAME_C, width=3)
     d.line([M, h - 116, w - M, h - 116], fill=CREAM_D, width=1)
     wrap(d, (M, h - 100), note, 15, w - 2 * M, 1.5, DIM)
+    text(d, (M, h - 46), BYLINE, 15, True, DIM)
     text(d, (w - M, h - 46), "kidneygod-studio.github.io", 15, False, DIM, anchor="ra")
     corner_marks(d, w, h, accent)
 
@@ -248,7 +250,7 @@ def card_pharmacist():
 
     assert y + 96 < H - 90, f"提示卡內容溢出：內容底 {y+96} vs 頁尾 {H-90}"
     d.line([44, H - 74, W - 44, H - 74], fill=FRAME_C, width=3)
-    text(d, (46, H - 60), "護腎教室 KidneyGod.Studio｜衛教用途，不取代醫囑",
+    text(d, (46, H - 60), BYLINE + "｜護腎教室 KidneyGod.Studio｜衛教用途，不取代醫囑",
          15, False, DIM)
     corner_marks(d, W, H, accent, m=30, L=22)
     im.save("cards/card-nsaid.png", optimize=True)

@@ -63,6 +63,7 @@ THEME = {
     "血脂代謝":  ((250, 230, 160), (66, 54, 12),  (168, 132, 26), "脂"),
 }
 RANK = {350: "SS", 300: "S", 250: "A", 200: "B"}
+BYLINE = "護腎專家 吳政哲醫師"   # 卡片與附件共用的署名
 
 
 # ═══════════ 基本繪圖工具 ═══════════
@@ -297,9 +298,12 @@ def make_card(item, no, rank, out):
         d.text((ix0 + 22, y), ln, font=f, fill=(32, 28, 30))
         y += lh
 
-    # 底部細節：分類與站名
+    # 底部細節：分類、署名、站名。署名放中央並降一級字，
+    # 左右兩側原本就有文字，這裡只求「看得到但不搶戲」。
     d.text((M + 10, H - 50), f"【{item['cat']}】{item['brand']}",
            font=F("sans", 17), fill=(150, 150, 158))
+    d.text((W // 2, H - 47), BYLINE,
+           font=F("sans", 13), fill=(126, 126, 134), anchor="ma")
     d.text((W - M - 10, H - 50), "KIDNEYGOD.STUDIO",
            font=F("sans", 17), fill=(150, 150, 158), anchor="ra")
 

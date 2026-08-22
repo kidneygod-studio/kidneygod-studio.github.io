@@ -345,6 +345,11 @@
   .fwrap h3{color:var(--ink);font-size:16px;margin-bottom:8px;}
   .fwrap p{margin:8px 0;}
   /* 純資訊，刻意不做成按鈕外觀（在 header 當藥丸時會被誤認為可點） */
+  /* 署名：標示內容作者，字級與頁尾正文一致但加一條分隔線區隔 */
+  .byline{margin:12px 0 10px;padding:10px 0;border-top:1px solid var(--line);
+          border-bottom:1px solid var(--line);font-size:13px;}
+  .byline b{color:var(--ink);letter-spacing:.5px;}
+  .byline span{display:block;font-size:12px;margin-top:3px;}
   .fmeta{margin-top:22px;padding-top:16px;border-top:1px solid var(--line);
          text-align:center;font-size:12.5px;letter-spacing:.03em;cursor:default;}
   .fmeta b{color:var(--ink);font-variant-numeric:tabular-nums;}
@@ -400,6 +405,7 @@
 <footer>
   <div class="fwrap">
     <h3>關於「護腎教室」護腎知識卡片收集遊戲</h3>
+    <p class="byline">✍️ 內容編寫｜<b>護腎專家 吳政哲醫師</b><span>本站衛教內容由本人編寫與審訂，每則皆標註所依據的臨床指引。</span></p>
     <p>這是一個<strong>衛教遊戲化網站</strong>：用完整的網購體驗包裝護腎知識 — 逛街、比價、賺腎元、結帳、追蹤出貨 — 全程不涉及任何金錢，而且這次真的會出貨：<strong>出的是護腎知識，直接送進你的知識庫。</strong></p>
     <p><strong>我們不收費、沒有金流、不會要求你輸入信用卡。</strong>腎元是純遊戲幣，賺不了真錢也買不了真商品。銷售量與好評數是編的，但衛教內容是認真的。</p>
     <p>🔐 <strong>隱私說明：</strong>未登入時，你的進度（腎元、知識庫、最高分）只存在你自己瀏覽器的 localStorage，本站不會取得。若你<strong>選擇</strong>使用雲端同步：「匿名開始」只會產生一組隨機識別碼，不涉及任何個人資料；「Google 登入」會取得你的 email 與顯示名稱，<strong>僅用於帳號識別與進度同步</strong>，不作行銷使用、不提供第三人，資料儲存於 Google Firebase。本站不經手任何密碼（登入視窗由 Google 官方提供）。你可隨時在帳號視窗登出，或使用「刪除雲端資料」將同步資料自伺服器移除。本站另有一個<strong>不記名的瀏覽次數計數器</strong>（每個瀏覽階段僅計一次，不記錄 IP、不追蹤個人）；小學堂排行榜只儲存你自行輸入的代號與成績，留空則顯示為「匿名者」。</p>
