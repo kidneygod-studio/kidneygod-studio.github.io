@@ -257,7 +257,7 @@ function renderK(){
   $("kBar").style.width = (owned.size / PRODUCTS.length * 100) + "%";
 }
 
-/* 貼圖：未取得顯示剪影 */
+/* 貼圖：未取得只顯示編號，不放圖 */
 function renderS(){
   const got = store.stk;
   $("sSlots").innerHTML = STICKERS.map(k=>{

@@ -191,13 +191,17 @@
     .hubtxt span{font-size:12.5px;}
     .hubgo{padding:6px 12px;font-size:13.5px;}
   }
-  /* ── 貼圖卡：未購買顯示剪影 ── */
+  /* ── 貼圖卡：未購買時模糊鎖定 ── */
   .spic{height:150px;display:flex;align-items:center;justify-content:center;
         background:linear-gradient(135deg,#f7f2ff,#ffeef4);position:relative;padding:8px;}
   .spic img{max-width:100%;max-height:100%;object-fit:contain;transition:.3s;}
-  .spic.locked img{filter:brightness(0) opacity(.78);}
-  .spic.locked::after{content:"？";position:absolute;right:10px;bottom:6px;
-        font-size:20px;font-weight:900;color:rgba(124,92,255,.45);}
+  /* 未購買的鎖定樣式。原本用 brightness(0) 把不透明像素變黑做剪影，
+     但貼圖改成白底不透明後那會變成一整塊黑方塊 —— 改用模糊＋去彩度，
+     看得出輪廓與姿勢，認不出是哪一張。 */
+  .spic.locked img{filter:blur(7px) grayscale(1) brightness(.92);transform:scale(1.04);}
+  .spic.locked::after{content:"🔒";position:absolute;inset:0;display:flex;
+        align-items:center;justify-content:center;font-size:30px;
+        text-shadow:0 2px 8px rgba(0,0,0,.35);}
   .dl{display:inline-block;background:#17734a;color:#fff;font-size:12.5px;        /* 5.85:1 */
       font-weight:800;padding:6px 12px;border-radius:99px;text-decoration:none;}
   .dl:active{transform:scale(.93);}
@@ -487,7 +491,7 @@
 const CATS = ["全部","血壓管理","血糖管理","血脂代謝","用藥安全","飲食護腎","生活習慣","檢查數值","警訊與迷思","🐱 貓咪貼圖"];
 const STICKER_CAT = "🐱 貓咪貼圖";
 const FLASH = ["nsaid","starfruit","five-signs","egfr","water","dialysis-myth"];
-const MARQ = ["🫘 小腎臟大冒險:躲過 NSAID 大隊,每個 +3 腎元","📚 知識到貨率 100%,本站唯一會出貨的東西","🫘 腎元賺不了真錢,但賺得了腎","🧂 今日特賣:少吃一口鹽,免費","🚰 白開水永久 0 元,全站最強護腎商品其實是它","⚕️ 衛教內容不取代就醫,有症狀請看腎臟科","🔬 冷知識:每顆腎臟約有一百萬個腎元(Nephron),這也是本站貨幣的由來","🐱 新上架:貓咪貼圖 64 張,買前是剪影,買後可下載原圖"];
+const MARQ = ["🫘 小腎臟大冒險:躲過 NSAID 大隊,每個 +3 腎元","📚 知識到貨率 100%,本站唯一會出貨的東西","🫘 腎元賺不了真錢,但賺得了腎","🧂 今日特賣:少吃一口鹽,免費","🚰 白開水永久 0 元,全站最強護腎商品其實是它","⚕️ 衛教內容不取代就醫,有症狀請看腎臟科","🔬 冷知識:每顆腎臟約有一百萬個腎元(Nephron),這也是本站貨幣的由來","🐱 貓咪貼圖 152 張,買前模糊鎖定,買後可下載原圖"];
 const GIFTS = [
   {id:0,t:"新手禮包",d:"開站禮,人人有份",s:"限領一次",amt:300,daily:false},
   {id:1,t:"每日簽到",d:"每天回來看一篇知識",s:"每日可領",amt:200,daily:true},
@@ -560,7 +564,7 @@ function cardHTML(p){
       </div>
     </article>`;
 }
-/* 貼圖卡：未購買只顯示剪影，購買後現出原圖並可下載 */
+/* 貼圖卡：未購買時模糊鎖定，購買後現出原圖並可下載 */
 function stickerHTML(k){
   const has = ownedStk(k.id);
   return `

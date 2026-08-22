@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 """從貼圖表切出獨立貼圖。
 
+輸出的是「白底、不透明」的圖：貼圖本身就有一圈模切白框，白底才是它原本
+被設計的樣子。之前做成透明去背，放到深色底上會看到殘留的白邊，像是沒清乾淨。
+遮罩仍然要算 —— 用來把鄰格滲進來的碎片塗白，不是用來做透明通道。
+
 三種來源各有處理方式：
   透明去背圖（5/6.png）→ 直接用 alpha 通道當遮罩，最乾淨
   白底圖（1~3.png）    → 由邊界 flood fill 去白底（貓咪本身也是白的，不能用色階門檻）
@@ -151,19 +155,28 @@ def main():
                 fg, dropped = keep_main_group(fg, rd)
                 if dropped > 300: cleaned.append((sid, dropped))
 
-                rgba = cell.convert("RGBA")
-                rgba.putalpha(Image.fromarray((fg * 255).astype(np.uint8)))
-                bb = rgba.getbbox()
-                if not bb: warn.append((sid, "裁切後為空")); continue
-                rgba = rgba.crop(bb)
+                # 保留白底、不做透明：把「不是主體」的區域（含鄰格滲進來的碎片）
+                # 直接塗白。貼圖本身就有一圈模切白框，白底才是它原本的樣子；
+                # 透明去背在深色底上會露出殘留的白邊，反而像沒清乾淨。
+                arr = np.asarray(cell.convert("RGB")).copy()
+                arr[~fg] = 255
+                ys, xs = np.where(fg)
+                pad = max(6, int(min(cell.size) * 0.03))
+                x0, x1 = max(0, xs.min()-pad), min(arr.shape[1], xs.max()+1+pad)
+                y0, y1 = max(0, ys.min()-pad), min(arr.shape[0], ys.max()+1+pad)
+                out = Image.fromarray(arr[y0:y1, x0:x1])
 
-                m = max(rgba.size)
+                m = max(out.size)
                 if m > 320:
-                    rgba = rgba.resize((round(rgba.width * 320 / m),
-                                        round(rgba.height * 320 / m)), Image.LANCZOS)
-                rgba.save(f"stickers/{sid}.png", optimize=True)
-                th = rgba.copy(); th.thumbnail((150, 150), Image.LANCZOS)
-                th.save(f"stickers/thumb/{sid}.png", optimize=True)
+                    out = out.resize((round(out.width * 320 / m),
+                                      round(out.height * 320 / m)), Image.LANCZOS)
+                # 白底讓 PNG 的壓縮效率變差，用調色盤量化把體積壓回來
+                out.quantize(colors=192, method=Image.FASTOCTREE).save(
+                    f"stickers/{sid}.png", optimize=True)
+                th = out.copy(); th.thumbnail((150, 150), Image.LANCZOS)
+                th.quantize(colors=128, method=Image.FASTOCTREE).save(
+                    f"stickers/thumb/{sid}.png", optimize=True)
+                rgba = out
 
                 meta.append(dict(id=sid, set=cfg["set"], label=cfg["labels"][i],
                                  file=f"stickers/{sid}.png", thumb=f"stickers/thumb/{sid}.png",
