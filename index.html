@@ -643,8 +643,9 @@ function initSiteBits(tries = 0){
 function renderGifts(){
   const g = store.gifts;
   const today = new Date().toISOString().slice(0,10);
-  $("coupons").innerHTML = GIFTS.map(x=>{
-    const done = x.daily ? g["g"+x.id]===today : !!g["g"+x.id];
+  // 限領一次的禮包領完就整張移除；每日的留著，明天會再亮起來
+  $("coupons").innerHTML = GIFTS.filter(x => x.daily || !g["g"+x.id]).map(x=>{
+    const done = x.daily && g["g"+x.id] === today;
     return `<div class="coupon">
       <div class="cl"><b>${x.t} +${C(x.amt)}</b>${x.d}<br><small>${x.s}</small></div>
       <button class="claim" ${done?"disabled":""} onclick="claimGift(${x.id})">${done?"已領取":"領取"}</button>
