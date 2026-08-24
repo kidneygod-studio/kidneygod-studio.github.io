@@ -19,7 +19,8 @@ if (FIREBASE_CONFIG) {
           signInWithPopup, linkWithPopup, signOut } =
     await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js");
   const { getFirestore, doc, getDoc, setDoc, deleteDoc, collection,
-          getDocs, query, orderBy, limit, increment, serverTimestamp } =
+          getDocs, getCountFromServer, query, orderBy, limit, increment,
+          serverTimestamp } =
     await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
 
   const app  = initializeApp(FIREBASE_CONFIG);
@@ -137,6 +138,14 @@ if (FIREBASE_CONFIG) {
           ((a.at && a.at.seconds || 0) - (b.at && b.at.seconds || 0)));
         return rows.slice(0, n);
       }catch(e){ console.debug("leaderboard read", e); return null; }
+    },
+    /* 上榜人數。排行榜是一人一筆（文件 id 即 uid），所以文件數就是人數。
+       用聚合查詢而不是抓全部文件 —— 每 1000 筆才算一次讀取，不會隨人數變貴。 */
+    async playerCount(){
+      try{
+        const snap = await getCountFromServer(collection(db, "leaderboard"));
+        return snap.data().count;
+      }catch(e){ console.debug("player count", e); return null; }
     },
     /* 一位玩家一筆紀錄，重複送出就更新同一筆，不會洗版排行榜。
        中途成績也能送，成績提高時再呼叫一次即可。 */

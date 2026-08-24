@@ -159,6 +159,10 @@
   .qwrong{text-align:left;background:var(--card2);border:1px solid #cbbc95;border-radius:10px;
           padding:12px 14px;margin-top:12px;font-size:13.5px;line-height:1.8;}
   .qwrong b{color:#b82445;}
+  .qstats{margin-top:12px;padding-top:10px;border-top:1px dashed #b9a878;
+          font-size:12.5px;color:var(--dim);letter-spacing:.02em;}
+  .qstats:empty{display:none;}   /* 拿不到人數時整行收起，不留空白邊框 */
+  .qstats b{color:#6b5208;font-size:14px;font-variant-numeric:tabular-nums;}
   .qprog{margin:12px auto;max-width:420px;font-size:13px;color:var(--dim);
          display:flex;flex-direction:column;gap:6px;align-items:center;}
   .qchallenge{background:#efe6c8;border:2px solid #b9a878;border-radius:12px;
@@ -446,7 +450,9 @@ function renderTips(){
       題庫共 200 題，每次挑戰是從中洗牌抽出的 100 題，所以每一輪挑戰的題目組合都不一樣。
       第十輪一結算，累計就歸零、重新洗牌 —— 分數不會無限往上疊。
       第一名的名字會出現在商城首頁的跑馬燈上。
+      <div id="qStats" class="qstats"></div>
       <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">🏆 看排行榜</button></div>`;
+    fillPlayerCount();
     return;
   }
   $("tips").innerHTML = MODE === 1
@@ -1087,17 +1093,40 @@ async function rankCheck(total, rounds, done){
   });
 }
 
+/* 挑戰人數。排行榜一人一筆，所以文件數就是人數；只在有數字時才顯示，
+   拿不到（離線或尚未載入 sync.js）就整行留空，不要出現「0 人」誤導。 */
+let PLAYERS = null;
+async function fillPlayerCount(){
+  const put = () => {
+    const el = $("qStats");
+    if(!el) return;
+    el.innerHTML = PLAYERS === null || PLAYERS === undefined ? "" :
+      (PLAYERS === 0
+        ? `🎯 還沒有人上榜 —— 第一個挑戰者就是你`
+        : `🎯 已有 <b>${PLAYERS.toLocaleString("zh-Hant-TW")}</b> 位挑戰者上榜`);
+  };
+  if(PLAYERS !== null){ put(); return; }
+  put();
+  for(let i = 0; i < 40 && !window.site; i++)
+    await new Promise(r => setTimeout(r, 250));
+  if(!window.site) return;
+  PLAYERS = await window.site.playerCount();
+  put();
+}
+
 /* 排行榜面板 */
 async function showBoard(){
   const w = $("quizWrap");
   w.innerHTML = `<div class="qend"><div class="big">🏆</div>
      <h3>小學堂排行榜</h3>
      <div class="sc">累計答對題數・前十名（中途成績也算，打越多輪分數越高）</div>
+     <div id="qStats" class="qstats"></div>
      <div id="boardList">讀取中…</div>
      <div class="qnav" style="justify-content:center">
        <button class="qbtn" onclick="quizStart()">開始挑戰</button>
        <a class="qbtn ghost" href="index.html">回商城</a>
      </div></div>`;
+  fillPlayerCount();
   const top = window.site ? await window.site.getTop(10) : null;
   const el = $("boardList");
   if(!top){ el.innerHTML = `<span class="dimtxt">排行榜暫時無法連線。</span>`; return; }
@@ -1181,6 +1210,6 @@ fillCoinIcons(); syncCoinBar(); renderTips();
 fitCanvas(); statsRunner(); loopRunner();
 function closeAll(){ ["account"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
 </script>
-<script type="module" src="sync.js?v=2d8211de"></script>
+<script type="module" src="sync.js?v=217d5150"></script>
 </body>
 </html>
