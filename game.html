@@ -159,6 +159,8 @@
   .qwrong{text-align:left;background:var(--card2);border:1px solid #cbbc95;border-radius:10px;
           padding:12px 14px;margin-top:12px;font-size:13.5px;line-height:1.8;}
   .qwrong b{color:#b82445;}
+  .wkinfo{font-size:12.5px;color:var(--dim);margin:6px 0 10px;line-height:1.7;}
+  .wkinfo b{color:#b82445;font-variant-numeric:tabular-nums;}
   .qstats{margin-top:12px;padding-top:10px;border-top:1px dashed #b9a878;
           font-size:12.5px;color:var(--dim);letter-spacing:.02em;}
   .qstats:empty{display:none;}   /* 拿不到人數時整行收起，不留空白邊框 */
@@ -314,7 +316,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="shared.js?v=7239b576"></script>
+<script src="shared.js?v=4aa34131"></script>
 <script src="quiz.js?v=1d5418d1"></script>
 <script>
 "use strict";
@@ -449,10 +451,11 @@ function renderTips(){
       <b>累計最多算十輪</b>（100 題，一次挑戰內題目不重複，全對就是滿分 100）。
       題庫共 200 題，每次挑戰是從中洗牌抽出的 100 題，所以每一輪挑戰的題目組合都不一樣。
       第十輪一結算，累計就歸零、重新洗牌 —— 分數不會無限往上疊。
-      第一名的名字會出現在商城首頁的跑馬燈上。
+      <b>排行榜每週一重新開始</b>，上週前三名可獲得獎金：🥇 2000、🥈 1000、🥉 500 腎元
+      —— 下次進來小學堂時自動入帳。第一名的名字會出現在商城首頁的跑馬燈上。
       <div id="qStats" class="qstats"></div>
       <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">🏆 看排行榜</button></div>`;
-    fillPlayerCount();
+    fillPlayerCount(); claimWeeklyPrize();
     return;
   }
   $("tips").innerHTML = MODE === 1
@@ -1093,6 +1096,46 @@ async function rankCheck(total, rounds, done){
   });
 }
 
+/* 週賽獎金。腎元存在各人自己的雲端文件裡，安全規則只允許本人寫入，
+   所以獎金不可能由別人替得獎者加值 —— 只能等本人回來時自己領。
+   已領的週次記在 wkClaimed，避免重複領。 */
+const WEEK_PRIZE = [2000, 1000, 500];
+async function claimWeeklyPrize(){
+  for(let i = 0; i < 40 && !window.site; i++)
+    await new Promise(r => setTimeout(r, 250));
+  if(!window.site || !window.site.myId) return;
+  const wk = prevWeekId();
+  if(store.wkClaimed.includes(wk)) return;          // 這一週領過了
+  const top3 = await window.site.lastWeekTop3();
+  if(!top3 || !top3.length) return;
+  const me = window.site.myId();
+  const rank = top3.findIndex(t => (t.uid || t.id) === me);
+  // 不論有沒有得獎都記下來，避免每次進來都重查一次上週榜
+  const claimed = store.wkClaimed.concat(wk);
+  store.wkClaimed = claimed.slice(-8);
+  if(rank < 0) return;
+  const prize = WEEK_PRIZE[rank];
+  store.coins = store.coins + prize;
+  syncCoinBar();
+  const medal = ["🥇","🥈","🥉"][rank];
+  $("quizWrap").insertAdjacentHTML("afterbegin",
+    `<div class="qchallenge"><div class="ct">${medal} 上週第 ${rank+1} 名</div>
+       <div class="cs">獎金 <b>${prize}</b> 腎元已入帳</div>
+       <span class="dimtxt">排行榜每週一重新開始，這週再挑戰一次吧。</span></div>`);
+  confetti(["🏆","🥇","✨","🎊","💰","⭐"]);
+  toast(`${medal} 上週第 ${rank+1} 名，獎金 ${prize} 腎元已入帳`);
+}
+
+/* 本週還剩多久 */
+function fillWeekInfo(){
+  const el = $("wkInfo");
+  if(!el) return;
+  const ms = msToNextWeek();
+  const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5);
+  el.innerHTML = `🗓️ 本週結算倒數 <b>${d} 天 ${h} 小時</b>　｜　`
+    + `前三名獎金 🥇 2000・🥈 1000・🥉 500 腎元`;
+}
+
 /* 挑戰人數。排行榜一人一筆，所以文件數就是人數；只在有數字時才顯示，
    拿不到（離線或尚未載入 sync.js）就整行留空，不要出現「0 人」誤導。 */
 let PLAYERS = null;
@@ -1119,14 +1162,15 @@ async function showBoard(){
   const w = $("quizWrap");
   w.innerHTML = `<div class="qend"><div class="big">🏆</div>
      <h3>小學堂排行榜</h3>
-     <div class="sc">累計答對題數・前十名（中途成績也算，打越多輪分數越高）</div>
+     <div class="sc">本週排行・前十名（中途成績也算，打越多輪分數越高）</div>
+     <div class="wkinfo" id="wkInfo"></div>
      <div id="qStats" class="qstats"></div>
      <div id="boardList">讀取中…</div>
      <div class="qnav" style="justify-content:center">
        <button class="qbtn" onclick="quizStart()">開始挑戰</button>
        <a class="qbtn ghost" href="index.html">回商城</a>
      </div></div>`;
-  fillPlayerCount();
+  fillPlayerCount(); fillWeekInfo();
   const top = window.site ? await window.site.getTop(10) : null;
   const el = $("boardList");
   if(!top){ el.innerHTML = `<span class="dimtxt">排行榜暫時無法連線。</span>`; return; }
@@ -1210,6 +1254,6 @@ fillCoinIcons(); syncCoinBar(); renderTips();
 fitCanvas(); statsRunner(); loopRunner();
 function closeAll(){ ["account"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
 </script>
-<script type="module" src="sync.js?v=217d5150"></script>
+<script type="module" src="sync.js?v=f1c5e2fd"></script>
 </body>
 </html>

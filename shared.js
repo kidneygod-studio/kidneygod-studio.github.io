@@ -48,10 +48,30 @@ const store = {
      所以必須逐輪送出、只送比這個高的分數，不能等到最後一次補齊。 */
   get qSubmitted(){ return parseInt(localStorage.msd_qsubmitted)||0; },
   set qSubmitted(v){ localStorage.msd_qsubmitted = v; syncPush(); },
+  /* 已領過週賽獎金的週次，避免重複領（只增不減，合併時取聯集） */
+  get wkClaimed(){ try{return JSON.parse(localStorage.msd_wkclaimed||"[]")}catch(e){return[]} },
+  set wkClaimed(v){ localStorage.msd_wkclaimed = JSON.stringify(v); syncPush(); },
   get stk(){ try{return JSON.parse(localStorage.msd_stickers||"[]")}catch(e){return[]} },
   set stk(v){ localStorage.msd_stickers = JSON.stringify(v); syncPush(); },
 };
 if(localStorage.msd_coins === undefined) localStorage.msd_coins = 200;
+
+/* 週識別：用該週星期一的日期（YYYYMMDD）當 id。
+   不用 ISO 週數是為了避開跨年那幾天的邊界爭議，日期字串直接可比大小。
+   以本地時間計算，對台灣使用者就是週一 00:00 換週。 */
+function weekId(d){
+  const t = new Date(d || Date.now());
+  t.setHours(0, 0, 0, 0);
+  t.setDate(t.getDate() - ((t.getDay() + 6) % 7));   // 退回本週一
+  return `${t.getFullYear()}${String(t.getMonth()+1).padStart(2,"0")}${String(t.getDate()).padStart(2,"0")}`;
+}
+function prevWeekId(){ return weekId(Date.now() - 7 * 864e5); }
+/* 距離下次換週還有多久（毫秒） */
+function msToNextWeek(){
+  const t = new Date(); t.setHours(0,0,0,0);
+  t.setDate(t.getDate() - ((t.getDay()+6)%7) + 7);
+  return t.getTime() - Date.now();
+}
 
 function owned(id){ return store.lib.some(k=>k.id===id); }
 function ownedStk(id){ return store.stk.includes(id); }
@@ -74,7 +94,7 @@ function getLocalState(){
           best:store.best, best2:store.best2, best3:store.best3, stk:store.stk,
           qRounds:store.qRounds, qCorrect:store.qCorrect,
           qBestTotal:store.qBestTotal, qName:store.qName, qOptIn:store.qOptIn,
-          qSubmitted:store.qSubmitted,
+          qSubmitted:store.qSubmitted, wkClaimed:store.wkClaimed,
           updatedAt: parseInt(localStorage.msd_updated) || 0};
 }
 function applyState(s){
@@ -91,6 +111,7 @@ function applyState(s){
   localStorage.msd_qname       = s.qName || "";
   localStorage.msd_qoptin      = s.qOptIn ? "1" : "0";
   localStorage.msd_qsubmitted  = s.qSubmitted || 0;
+  localStorage.msd_wkclaimed   = JSON.stringify(s.wkClaimed || []);
   localStorage.msd_stickers = JSON.stringify(s.stk || []);
   // 時間戳跟著狀態走，否則下次合併會誤判哪一邊比較新
   localStorage.msd_updated  = s.updatedAt || Date.now();
@@ -125,6 +146,7 @@ function mergeState(cloud, local){
     best3: Math.max(cloud.best3 ?? 0, local.best3 ?? 0),
     qBestTotal: Math.max(cloud.qBestTotal ?? 0, local.qBestTotal ?? 0),
     qSubmitted: Math.max(cloud.qSubmitted ?? 0, local.qSubmitted ?? 0),
+    wkClaimed: [...new Set([...(cloud.wkClaimed||[]), ...(local.wkClaimed||[])])],
     qName: local.qName || cloud.qName || "",
     qOptIn: !!(local.qOptIn || cloud.qOptIn),
     lib, gifts, stk,

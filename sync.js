@@ -19,7 +19,7 @@ if (FIREBASE_CONFIG) {
           signInWithPopup, linkWithPopup, signOut } =
     await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js");
   const { getFirestore, doc, getDoc, setDoc, deleteDoc, collection,
-          getDocs, getCountFromServer, query, orderBy, limit, increment,
+          getDocs, getCountFromServer, query, where, orderBy, limit, increment,
           serverTimestamp } =
     await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
 
@@ -85,8 +85,12 @@ if (FIREBASE_CONFIG) {
       if(!user) return;
       try{
         await deleteDoc(userDoc());
-        /* 排行榜成績也一併下架（可能從未上榜，失敗不影響刪除流程） */
-        try{ await deleteDoc(doc(db, "leaderboard", auth.currentUser.uid)); }catch(e){}
+        /* 自己在各週的成績一併下架（可能從未上榜，失敗不影響刪除流程） */
+        try{
+          const mine = await getDocs(query(collection(db, "leaderboard"),
+                                           where("uid", "==", auth.currentUser.uid)));
+          await Promise.all(mine.docs.map(d => deleteDoc(d.ref).catch(()=>{})));
+        }catch(e){}
         const u = auth.currentUser;
         await signOut(auth);
         try{ await u.delete(); }catch(e){ /* 需重新驗證時僅刪文件 */ }
@@ -99,7 +103,7 @@ if (FIREBASE_CONFIG) {
   const statsDoc = () => doc(db, "stats", "site");
 
   window.site = {
-    /* 自己在排行榜上那筆的 id；算名次時要先排除，否則會被自己的舊成績擠掉 */
+    /* 自己的 uid；算名次時要排除自己的舊紀錄，否則會被自己擠掉一名 */
     myId(){ return auth.currentUser ? auth.currentUser.uid : null; },
     /* 每個瀏覽階段只計一次，避免重整灌水也節省寫入配額 */
     async bumpViews(){
@@ -117,13 +121,13 @@ if (FIREBASE_CONFIG) {
         return snap.exists() ? (snap.data().views || 0) : 0;
       }catch(e){ return null; }
     },
-    async getTop(n = 10){
-      /* 只用單欄排序（score）以免需要複合索引；同分者在前端依時間先後排，
-         多抓一些再截斷，確保同分時較早達成者排前面。
-         每位玩家一筆（文件 id 即 uid），舊版 addDoc 產生的重複紀錄在此以
-         uid 欄位收斂，只留最高分那筆。 */
+    /* 排行榜每週重來。不刪資料 —— 每筆成績帶著週識別，查詢只取指定的一週，
+       上週的紀錄留著給發獎用，但不會再出現在榜上。 */
+    async getTop(n = 10, week){
       try{
-        const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(n * 5));
+        const q = query(collection(db, "leaderboard"),
+                        where("week", "==", week || weekId()),
+                        orderBy("score", "desc"), limit(n * 5));
         const snap = await getDocs(q);
         const byUser = new Map();
         for(const d of snap.docs){
@@ -139,25 +143,27 @@ if (FIREBASE_CONFIG) {
         return rows.slice(0, n);
       }catch(e){ console.debug("leaderboard read", e); return null; }
     },
-    /* 上榜人數。排行榜是一人一筆（文件 id 即 uid），所以文件數就是人數。
+    /* 本週上榜人數。一人一週一筆，所以文件數就是人數。
        用聚合查詢而不是抓全部文件 —— 每 1000 筆才算一次讀取，不會隨人數變貴。 */
     async playerCount(){
       try{
-        const snap = await getCountFromServer(collection(db, "leaderboard"));
-        return snap.data().count;
+        const q = query(collection(db, "leaderboard"), where("week", "==", weekId()));
+        return (await getCountFromServer(q)).data().count;
       }catch(e){ console.debug("player count", e); return null; }
     },
-    /* 一位玩家一筆紀錄，重複送出就更新同一筆，不會洗版排行榜。
-       中途成績也能送，成績提高時再呼叫一次即可。 */
+    /* 上週前三名，用來發週賽獎金 */
+    async lastWeekTop3(){ return this.getTop(3, prevWeekId()); },
+    /* 一人一週一筆，同一週內重複送出就更新那一筆，不會洗版排行榜。 */
     async submitScore(name, score, rounds){
       try{
         if(!auth.currentUser) await signInAnonymously(auth);   // 匿名身分即可，仍不需個資
-        const uid = auth.currentUser.uid;
+        const uid = auth.currentUser.uid, week = weekId();
         const clean = String(name || "").trim().slice(0, 16) || "匿名者";
-        await setDoc(doc(db, "leaderboard", uid), {
-          uid, name: clean,
+        // 文件 id 帶週次：換週就是新的一筆，不必和上週的分數比大小
+        await setDoc(doc(db, "leaderboard", `${uid}_${week}`), {
+          uid, week, name: clean,
           score: Math.max(0, Math.min(100, score|0)),
-          rounds: Math.max(0, Math.min(10, rounds|0)),
+          rounds: Math.max(1, Math.min(10, rounds|0)),
           at: serverTimestamp(),
         });
         return clean;

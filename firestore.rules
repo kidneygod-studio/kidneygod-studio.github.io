@@ -6,8 +6,9 @@ rules_version = '2';
    原則：
      users       只有本人讀寫自己那份進度，任何人都看不到別人的
      stats/site  任何人可讀（頁尾瀏覽次數），寫入只允許 +1，擋灌水
-     leaderboard 任何人可讀，但只能寫「文件 id 等於自己 uid」的那一筆，
-                 不能改別人的成績
+     leaderboard 任何人可讀，但只能寫「文件 id 開頭等於自己 uid」的那些筆，
+                 不能改別人的成績。排行榜每週重來，文件 id 是 {uid}_{週一日期}，
+                 一人一週一筆；換週就是新的一筆，上週的留著發獎用。
 
    名稱是自由欄位（本來就允許取任何綽號），要守住的是分數。以下限制讓
    分數只能用「一輪一輪玩上去」的節奏累積：
@@ -39,15 +40,17 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    /* ── 小學堂排行榜：公開讀，一人一筆，分數只能一輪一輪爬上去 ── */
-    match /leaderboard/{uid} {
+    /* ── 小學堂排行榜：公開讀，一人「一週」一筆 ── */
+    match /leaderboard/{docId} {
       function mine() {
-        return request.auth != null && request.auth.uid == uid;
+        return request.auth != null
+            && docId.matches('^' + request.auth.uid + '_[0-9]{8}$');
       }
       function valid() {
         let d = request.resource.data;
-        return d.keys().hasOnly(['uid', 'name', 'score', 'rounds', 'at'])
-            && d.uid == uid
+        return d.keys().hasOnly(['uid', 'week', 'name', 'score', 'rounds', 'at'])
+            && d.uid == request.auth.uid
+            && d.week is string && d.week.matches('^[0-9]{8}$')
             && d.name is string && d.name.size() > 0 && d.name.size() <= 16
             && d.score is int  && d.score  >= 0 && d.score  <= 100
             && d.rounds is int && d.rounds >= 1 && d.rounds <= 10
@@ -57,6 +60,7 @@ service cloud.firestore {
       allow read:   if true;
       allow create: if mine() && valid();
       allow update: if mine() && valid()
+                    && request.resource.data.week == resource.data.week
                     && request.resource.data.score > resource.data.score
                     && request.resource.data.score <= resource.data.score + 10
                     && request.time > resource.data.at + duration.value(10, 's');
