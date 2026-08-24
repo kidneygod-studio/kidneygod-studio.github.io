@@ -1100,7 +1100,15 @@ async function rankCheck(total, rounds, done){
    所以獎金不可能由別人替得獎者加值 —— 只能等本人回來時自己領。
    已領的週次記在 wkClaimed，避免重複領。 */
 const WEEK_PRIZE = [2000, 1000, 500];
-async function claimWeeklyPrize(){
+/* 重入防護：wkClaimed 是在 await 之後才寫入的，兩次呼叫同時在飛時
+   會雙雙通過「已領過」檢查而發兩次獎（實測快速切換模式就會觸發）。
+   共用同一個 promise，確保一個載入週期內只真正結算一次。 */
+let prizeRun = null;
+function claimWeeklyPrize(){
+  if(!prizeRun) prizeRun = doClaimWeeklyPrize();
+  return prizeRun;
+}
+async function doClaimWeeklyPrize(){
   for(let i = 0; i < 40 && !window.site; i++)
     await new Promise(r => setTimeout(r, 250));
   if(!window.site || !window.site.myId) return;
