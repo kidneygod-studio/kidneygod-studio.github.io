@@ -105,6 +105,12 @@ if (FIREBASE_CONFIG) {
   window.site = {
     /* 自己的 uid；算名次時要排除自己的舊紀錄，否則會被自己擠掉一名 */
     myId(){ return auth.currentUser ? auth.currentUser.uid : null; },
+    /* 目前 Google 登入的信箱（匿名或未登入時為空字串）。
+       站長後門用它認人 —— 認的是帳號，不是代碼，代碼被看到也沒用。 */
+    myEmail(){
+      const u = auth.currentUser;
+      return u && !u.isAnonymous && u.email ? u.email.trim().toLowerCase() : "";
+    },
     /* 每個瀏覽階段只計一次，避免重整灌水也節省寫入配額 */
     async bumpViews(){
       try{

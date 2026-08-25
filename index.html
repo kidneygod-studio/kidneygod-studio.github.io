@@ -384,7 +384,8 @@
     </a>
     <span class="homehint">← 點標誌回首頁</span>
     <div class="search">
-      <input id="q" type="search" placeholder="搜尋護腎知識…" oninput="renderGrid()">
+      <input id="q" type="search" placeholder="搜尋護腎知識…" oninput="onSearch()"
+             autocomplete="off" spellcheck="false">
       <button onclick="renderGrid()">🔍</button>
     </div>
     <button class="hbtn coin" onclick="scrollGame()"><img class="ki" id="coinIco" alt=""><span id="coinBal">200</span> 腎元</button>
@@ -503,7 +504,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="shared.js?v=4aa34131"></script>
+<script src="shared.js?v=4b2d16ec"></script>
 <script src="data.js?v=3c015b55"></script>
 
 <script>
@@ -637,6 +638,69 @@ function stickerHTML(k){
         </div>
       </div>
     </article>`;
+}
+
+/* ═══════════ 外掛密技 ═══════════
+   在搜尋框輸入代碼即可觸發。一組代碼每個帳號只能用一次 ——
+   腎元有經濟意義（知識卡 200–350、貼圖 500–1000、週賽獎金 2000），
+   可無限重複的話整套收集與排行榜就沒有份量了。 */
+const CHEATS = {
+  "kidney.god": {amt: 2000, msg: "🎉 密技啟動：護腎之神降臨"},
+};
+/* 站長後門：輸入 kidney.god.master 可自行輸入金額增減腎元，不限次數。
+   認的是「有沒有用站長的 Google 帳號登入」，不是代碼本身 ——
+   代碼寫在前端一定會被看到，但別人拿不到帳號就過不了這關。
+   信箱存雜湊不存明文，免得被爬信箱寄垃圾信。
+   非站長輸入這組代碼時完全不給反應，直接當一般搜尋，不透露後門存在。 */
+const OWNER_CODE = "kidney.god.master";
+const OWNER_HASH = "5cb52ea32ac279efe1d77500e9203173320d6a0ee2366b11ab8e0ded3d544912";
+
+async function sha256(s){
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+async function isOwner(){
+  const raw = window.site && window.site.myEmail ? window.site.myEmail() : "";
+  const mail = String(raw || "").trim().toLowerCase();   // 大小寫、前後空白都要能認得
+  return !!mail && (await sha256(mail)) === OWNER_HASH;
+}
+async function ownerGrant(){
+  if(!(await isOwner())) return false;                 // 不是站長就當作沒這回事
+  $("q").value = "";
+  const n = parseInt(prompt("站長後門 — 要增加多少腎元？（可填負數扣款）\n目前："
+                            + store.coins.toLocaleString() + " 腎元", "10000"), 10);
+  if(!Number.isFinite(n)){ renderGrid(); return true; } // 按取消或亂填就當沒事
+  store.coins = Math.max(0, store.coins + n);
+  syncCoins();
+  toast(`🔑 站長後門：${n >= 0 ? "+" : ""}${n.toLocaleString()} 腎元 — 現有 ${store.coins.toLocaleString()}`);
+  if(n > 0) confetti(["🔑","💰","🫘","✨","👑"]);
+  renderGrid();
+  return true;
+}
+
+function onSearch(){
+  const raw = ($("q").value || "").trim().toLowerCase();
+
+  if(raw === OWNER_CODE){
+    /* 非站長時 ownerGrant() 回 false，這裡才照一般搜尋處理 */
+    ownerGrant().then(ok => { if(!ok) renderGrid(); });
+    return;
+  }
+
+  const c = CHEATS[raw];
+  if(c){
+    $("q").value = "";                       // 清掉，免得代碼一直卡在搜尋條件裡
+    if(store.cheats.includes(raw)){
+      toast("這組密技已經用過了 😄");
+    }else{
+      store.cheats = store.cheats.concat(raw);
+      store.coins = store.coins + c.amt;
+      syncCoins();
+      toast(`${c.msg} — ${c.amt} 腎元入帳`);
+      confetti(["💰","🫘","✨","🎉","⭐","🏆"]);
+    }
+  }
+  renderGrid();
 }
 
 function renderGrid(){
@@ -884,6 +948,6 @@ syncBadge(); syncCoins();
 </script>
 
 
-<script type="module" src="sync.js?v=f1c5e2fd"></script>
+<script type="module" src="sync.js?v=33e62689"></script>
 </body>
 </html>

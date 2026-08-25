@@ -48,6 +48,9 @@ const store = {
      所以必須逐輪送出、只送比這個高的分數，不能等到最後一次補齊。 */
   get qSubmitted(){ return parseInt(localStorage.msd_qsubmitted)||0; },
   set qSubmitted(v){ localStorage.msd_qsubmitted = v; syncPush(); },
+  /* 已使用過的密技代碼。做成清單，之後要再加別的密技不必改資料結構 */
+  get cheats(){ try{return JSON.parse(localStorage.msd_cheats||"[]")}catch(e){return[]} },
+  set cheats(v){ localStorage.msd_cheats = JSON.stringify(v); syncPush(); },
   /* 已領過週賽獎金的週次，避免重複領（只增不減，合併時取聯集） */
   get wkClaimed(){ try{return JSON.parse(localStorage.msd_wkclaimed||"[]")}catch(e){return[]} },
   set wkClaimed(v){ localStorage.msd_wkclaimed = JSON.stringify(v); syncPush(); },
@@ -95,6 +98,7 @@ function getLocalState(){
           qRounds:store.qRounds, qCorrect:store.qCorrect,
           qBestTotal:store.qBestTotal, qName:store.qName, qOptIn:store.qOptIn,
           qSubmitted:store.qSubmitted, wkClaimed:store.wkClaimed,
+          cheats:store.cheats,
           updatedAt: parseInt(localStorage.msd_updated) || 0};
 }
 function applyState(s){
@@ -112,6 +116,7 @@ function applyState(s){
   localStorage.msd_qoptin      = s.qOptIn ? "1" : "0";
   localStorage.msd_qsubmitted  = s.qSubmitted || 0;
   localStorage.msd_wkclaimed   = JSON.stringify(s.wkClaimed || []);
+  localStorage.msd_cheats      = JSON.stringify(s.cheats || []);
   localStorage.msd_stickers = JSON.stringify(s.stk || []);
   // 時間戳跟著狀態走，否則下次合併會誤判哪一邊比較新
   localStorage.msd_updated  = s.updatedAt || Date.now();
@@ -147,6 +152,7 @@ function mergeState(cloud, local){
     qBestTotal: Math.max(cloud.qBestTotal ?? 0, local.qBestTotal ?? 0),
     qSubmitted: Math.max(cloud.qSubmitted ?? 0, local.qSubmitted ?? 0),
     wkClaimed: [...new Set([...(cloud.wkClaimed||[]), ...(local.wkClaimed||[])])],
+    cheats: [...new Set([...(cloud.cheats||[]), ...(local.cheats||[])])],
     qName: local.qName || cloud.qName || "",
     qOptIn: !!(local.qOptIn || cloud.qOptIn),
     lib, gifts, stk,
