@@ -641,7 +641,10 @@ function stickerHTML(k){
 }
 
 /* ═══════════ 外掛密技 ═══════════
-   在搜尋框輸入代碼即可觸發。一組代碼每個帳號只能用一次 ——
+   在搜尋框輸入代碼即可觸發。逐字輸入時每打一個字都會比對一次，所以
+   ★ 任何代碼都不能是另一組代碼的前置字串 ★ —— 否則短的那組會先被觸發，
+   長的那組永遠打不完（欄位還會被清空）。下方有開發用的檢查會提醒。
+   一組代碼每個帳號只能用一次 ——
    腎元有經濟意義（知識卡 200–350、貼圖 500–1000、週賽獎金 2000），
    可無限重複的話整套收集與排行榜就沒有份量了。 */
 const CHEATS = {
@@ -652,7 +655,7 @@ const CHEATS = {
    代碼寫在前端一定會被看到，但別人拿不到帳號就過不了這關。
    信箱存雜湊不存明文，免得被爬信箱寄垃圾信。
    非站長輸入這組代碼時完全不給反應，直接當一般搜尋，不透露後門存在。 */
-const OWNER_CODE = "kidney.god.master";
+const OWNER_CODE = "kidneygodmaster";   // 不能寫成 kidney.god… 開頭：逐字輸入會先中上面那組
 const OWNER_HASH = "5cb52ea32ac279efe1d77500e9203173320d6a0ee2366b11ab8e0ded3d544912";
 
 async function sha256(s){
@@ -677,6 +680,14 @@ async function ownerGrant(){
   renderGrid();
   return true;
 }
+
+/* 開發用：代碼互為前置字串是很容易犯的錯，載入時先叫一聲 */
+(function checkCodes(){
+  const all = [...Object.keys(CHEATS), OWNER_CODE];
+  for(const a of all) for(const b of all)
+    if(a !== b && b.startsWith(a))
+      console.warn(`密技代碼衝突：「${a}」是「${b}」的前置字串，後者永遠觸發不到`);
+})();
 
 function onSearch(){
   const raw = ($("q").value || "").trim().toLowerCase();
