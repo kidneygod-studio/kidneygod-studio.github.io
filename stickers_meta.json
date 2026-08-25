@@ -8,7 +8,7 @@
   "price": 1000,
   "rare": false,
   "w": 320,
-  "h": 283
+  "h": 293
  },
  {
   "id": "A02",
@@ -19,7 +19,7 @@
   "price": 1000,
   "rare": false,
   "w": 320,
-  "h": 299
+  "h": 311
  },
  {
   "id": "A03",
@@ -29,8 +29,8 @@
   "thumb": "stickers/thumb/A03.png",
   "price": 1000,
   "rare": false,
-  "w": 318,
-  "h": 320
+  "w": 320,
+  "h": 312
  },
  {
   "id": "A04",
@@ -41,7 +41,7 @@
   "price": 1000,
   "rare": false,
   "w": 320,
-  "h": 299
+  "h": 300
  },
  {
   "id": "A05",
@@ -51,7 +51,7 @@
   "thumb": "stickers/thumb/A05.png",
   "price": 1000,
   "rare": false,
-  "w": 286,
+  "w": 288,
   "h": 320
  },
  {
@@ -63,7 +63,7 @@
   "price": 1000,
   "rare": false,
   "w": 320,
-  "h": 282
+  "h": 283
  },
  {
   "id": "A07",
@@ -74,7 +74,7 @@
   "price": 1000,
   "rare": false,
   "w": 320,
-  "h": 285
+  "h": 288
  },
  {
   "id": "A08",
@@ -84,7 +84,7 @@
   "thumb": "stickers/thumb/A08.png",
   "price": 1000,
   "rare": false,
-  "w": 302,
+  "w": 305,
   "h": 320
  },
  {
@@ -96,7 +96,7 @@
   "price": 1000,
   "rare": false,
   "w": 320,
-  "h": 302
+  "h": 303
  },
  {
   "id": "B01",
@@ -106,8 +106,8 @@
   "thumb": "stickers/thumb/B01.png",
   "price": 600,
   "rare": false,
-  "w": 206,
-  "h": 208
+  "w": 220,
+  "h": 220
  },
  {
   "id": "B02",
@@ -117,8 +117,8 @@
   "thumb": "stickers/thumb/B02.png",
   "price": 600,
   "rare": false,
-  "w": 210,
-  "h": 220
+  "w": 218,
+  "h": 232
  },
  {
   "id": "B03",
@@ -128,8 +128,8 @@
   "thumb": "stickers/thumb/B03.png",
   "price": 600,
   "rare": false,
-  "w": 216,
-  "h": 201
+  "w": 224,
+  "h": 209
  },
  {
   "id": "B04",
@@ -139,8 +139,8 @@
   "thumb": "stickers/thumb/B04.png",
   "price": 600,
   "rare": false,
-  "w": 225,
-  "h": 221
+  "w": 234,
+  "h": 229
  },
  {
   "id": "B05",
@@ -150,8 +150,8 @@
   "thumb": "stickers/thumb/B05.png",
   "price": 600,
   "rare": false,
-  "w": 222,
-  "h": 225
+  "w": 236,
+  "h": 234
  },
  {
   "id": "B06",
@@ -161,8 +161,8 @@
   "thumb": "stickers/thumb/B06.png",
   "price": 600,
   "rare": false,
-  "w": 199,
-  "h": 207
+  "w": 213,
+  "h": 217
  },
  {
   "id": "B07",
@@ -172,8 +172,8 @@
   "thumb": "stickers/thumb/B07.png",
   "price": 600,
   "rare": false,
-  "w": 160,
-  "h": 202
+  "w": 174,
+  "h": 211
  },
  {
   "id": "B08",
@@ -183,8 +183,8 @@
   "thumb": "stickers/thumb/B08.png",
   "price": 600,
   "rare": false,
-  "w": 214,
-  "h": 209
+  "w": 228,
+  "h": 217
  },
  {
   "id": "B09",
@@ -194,8 +194,8 @@
   "thumb": "stickers/thumb/B09.png",
   "price": 600,
   "rare": false,
-  "w": 212,
-  "h": 204
+  "w": 221,
+  "h": 213
  },
  {
   "id": "B10",
@@ -205,8 +205,8 @@
   "thumb": "stickers/thumb/B10.png",
   "price": 600,
   "rare": false,
-  "w": 207,
-  "h": 211
+  "w": 221,
+  "h": 221
  },
  {
   "id": "B11",
@@ -216,8 +216,8 @@
   "thumb": "stickers/thumb/B11.png",
   "price": 600,
   "rare": false,
-  "w": 222,
-  "h": 202
+  "w": 230,
+  "h": 215
  },
  {
   "id": "B12",
@@ -227,8 +227,8 @@
   "thumb": "stickers/thumb/B12.png",
   "price": 600,
   "rare": false,
-  "w": 176,
-  "h": 183
+  "w": 187,
+  "h": 197
  },
  {
   "id": "B13",
@@ -238,8 +238,8 @@
   "thumb": "stickers/thumb/B13.png",
   "price": 600,
   "rare": false,
-  "w": 181,
-  "h": 202
+  "w": 195,
+  "h": 216
  },
  {
   "id": "B14",
@@ -249,8 +249,8 @@
   "thumb": "stickers/thumb/B14.png",
   "price": 750,
   "rare": true,
-  "w": 203,
-  "h": 213
+  "w": 217,
+  "h": 226
  },
  {
   "id": "B15",
@@ -260,8 +260,8 @@
   "thumb": "stickers/thumb/B15.png",
   "price": 600,
   "rare": false,
-  "w": 212,
-  "h": 213
+  "w": 226,
+  "h": 221
  },
  {
   "id": "B16",
@@ -271,8 +271,8 @@
   "thumb": "stickers/thumb/B16.png",
   "price": 750,
   "rare": true,
-  "w": 216,
-  "h": 193
+  "w": 230,
+  "h": 207
  },
  {
   "id": "B17",
@@ -282,8 +282,8 @@
   "thumb": "stickers/thumb/B17.png",
   "price": 750,
   "rare": true,
-  "w": 200,
-  "h": 204
+  "w": 214,
+  "h": 218
  },
  {
   "id": "B18",
@@ -293,8 +293,8 @@
   "thumb": "stickers/thumb/B18.png",
   "price": 600,
   "rare": false,
-  "w": 212,
-  "h": 215
+  "w": 226,
+  "h": 223
  },
  {
   "id": "B19",
@@ -304,8 +304,8 @@
   "thumb": "stickers/thumb/B19.png",
   "price": 600,
   "rare": false,
-  "w": 186,
-  "h": 209
+  "w": 200,
+  "h": 222
  },
  {
   "id": "B20",
@@ -315,8 +315,8 @@
   "thumb": "stickers/thumb/B20.png",
   "price": 600,
   "rare": false,
-  "w": 227,
-  "h": 209
+  "w": 241,
+  "h": 221
  },
  {
   "id": "B21",
@@ -326,8 +326,8 @@
   "thumb": "stickers/thumb/B21.png",
   "price": 750,
   "rare": true,
-  "w": 219,
-  "h": 198
+  "w": 233,
+  "h": 212
  },
  {
   "id": "B22",
@@ -337,8 +337,8 @@
   "thumb": "stickers/thumb/B22.png",
   "price": 600,
   "rare": false,
-  "w": 110,
-  "h": 190
+  "w": 124,
+  "h": 204
  },
  {
   "id": "B23",
@@ -348,8 +348,8 @@
   "thumb": "stickers/thumb/B23.png",
   "price": 750,
   "rare": true,
-  "w": 214,
-  "h": 199
+  "w": 228,
+  "h": 213
  },
  {
   "id": "B24",
@@ -359,8 +359,8 @@
   "thumb": "stickers/thumb/B24.png",
   "price": 600,
   "rare": false,
-  "w": 242,
-  "h": 179
+  "w": 245,
+  "h": 193
  },
  {
   "id": "B25",
@@ -370,8 +370,8 @@
   "thumb": "stickers/thumb/B25.png",
   "price": 600,
   "rare": false,
-  "w": 220,
-  "h": 194
+  "w": 234,
+  "h": 208
  },
  {
   "id": "C01",
@@ -381,8 +381,8 @@
   "thumb": "stickers/thumb/C01.png",
   "price": 500,
   "rare": false,
-  "w": 202,
-  "h": 202
+  "w": 212,
+  "h": 213
  },
  {
   "id": "C02",
@@ -392,8 +392,8 @@
   "thumb": "stickers/thumb/C02.png",
   "price": 500,
   "rare": false,
-  "w": 188,
-  "h": 209
+  "w": 195,
+  "h": 218
  },
  {
   "id": "C03",
@@ -403,8 +403,8 @@
   "thumb": "stickers/thumb/C03.png",
   "price": 500,
   "rare": false,
-  "w": 206,
-  "h": 205
+  "w": 213,
+  "h": 213
  },
  {
   "id": "C04",
@@ -414,8 +414,8 @@
   "thumb": "stickers/thumb/C04.png",
   "price": 500,
   "rare": false,
-  "w": 194,
-  "h": 209
+  "w": 201,
+  "h": 218
  },
  {
   "id": "C05",
@@ -425,8 +425,8 @@
   "thumb": "stickers/thumb/C05.png",
   "price": 500,
   "rare": false,
-  "w": 190,
-  "h": 204
+  "w": 192,
+  "h": 212
  },
  {
   "id": "C06",
@@ -436,8 +436,8 @@
   "thumb": "stickers/thumb/C06.png",
   "price": 500,
   "rare": false,
-  "w": 165,
-  "h": 204
+  "w": 177,
+  "h": 211
  },
  {
   "id": "C07",
@@ -447,8 +447,8 @@
   "thumb": "stickers/thumb/C07.png",
   "price": 500,
   "rare": false,
-  "w": 195,
-  "h": 197
+  "w": 202,
+  "h": 204
  },
  {
   "id": "C08",
@@ -458,8 +458,8 @@
   "thumb": "stickers/thumb/C08.png",
   "price": 500,
   "rare": false,
-  "w": 156,
-  "h": 198
+  "w": 163,
+  "h": 209
  },
  {
   "id": "C09",
@@ -469,8 +469,8 @@
   "thumb": "stickers/thumb/C09.png",
   "price": 500,
   "rare": false,
-  "w": 152,
-  "h": 198
+  "w": 164,
+  "h": 208
  },
  {
   "id": "C10",
@@ -480,8 +480,8 @@
   "thumb": "stickers/thumb/C10.png",
   "price": 500,
   "rare": false,
-  "w": 186,
-  "h": 198
+  "w": 193,
+  "h": 206
  },
  {
   "id": "C11",
@@ -491,8 +491,8 @@
   "thumb": "stickers/thumb/C11.png",
   "price": 500,
   "rare": false,
-  "w": 189,
-  "h": 207
+  "w": 192,
+  "h": 216
  },
  {
   "id": "C12",
@@ -502,8 +502,8 @@
   "thumb": "stickers/thumb/C12.png",
   "price": 500,
   "rare": false,
-  "w": 166,
-  "h": 191
+  "w": 178,
+  "h": 202
  },
  {
   "id": "C13",
@@ -513,8 +513,8 @@
   "thumb": "stickers/thumb/C13.png",
   "price": 620,
   "rare": true,
-  "w": 198,
-  "h": 194
+  "w": 205,
+  "h": 206
  },
  {
   "id": "C14",
@@ -524,8 +524,8 @@
   "thumb": "stickers/thumb/C14.png",
   "price": 620,
   "rare": true,
-  "w": 187,
-  "h": 197
+  "w": 194,
+  "h": 209
  },
  {
   "id": "C15",
@@ -535,8 +535,8 @@
   "thumb": "stickers/thumb/C15.png",
   "price": 620,
   "rare": true,
-  "w": 175,
-  "h": 195
+  "w": 187,
+  "h": 207
  },
  {
   "id": "C16",
@@ -546,8 +546,8 @@
   "thumb": "stickers/thumb/C16.png",
   "price": 500,
   "rare": false,
-  "w": 201,
-  "h": 176
+  "w": 203,
+  "h": 188
  },
  {
   "id": "C17",
@@ -557,8 +557,8 @@
   "thumb": "stickers/thumb/C17.png",
   "price": 500,
   "rare": false,
-  "w": 168,
-  "h": 196
+  "w": 180,
+  "h": 208
  },
  {
   "id": "C18",
@@ -568,8 +568,8 @@
   "thumb": "stickers/thumb/C18.png",
   "price": 500,
   "rare": false,
-  "w": 183,
-  "h": 193
+  "w": 192,
+  "h": 200
  },
  {
   "id": "C19",
@@ -579,8 +579,8 @@
   "thumb": "stickers/thumb/C19.png",
   "price": 500,
   "rare": false,
-  "w": 171,
-  "h": 194
+  "w": 183,
+  "h": 205
  },
  {
   "id": "C20",
@@ -590,8 +590,8 @@
   "thumb": "stickers/thumb/C20.png",
   "price": 500,
   "rare": false,
-  "w": 157,
-  "h": 197
+  "w": 169,
+  "h": 206
  },
  {
   "id": "C21",
@@ -601,8 +601,8 @@
   "thumb": "stickers/thumb/C21.png",
   "price": 620,
   "rare": true,
-  "w": 214,
-  "h": 201
+  "w": 221,
+  "h": 208
  },
  {
   "id": "C22",
@@ -612,8 +612,8 @@
   "thumb": "stickers/thumb/C22.png",
   "price": 500,
   "rare": false,
-  "w": 152,
-  "h": 195
+  "w": 164,
+  "h": 204
  },
  {
   "id": "C23",
@@ -623,8 +623,8 @@
   "thumb": "stickers/thumb/C23.png",
   "price": 500,
   "rare": false,
-  "w": 179,
-  "h": 194
+  "w": 186,
+  "h": 203
  },
  {
   "id": "C24",
@@ -634,8 +634,8 @@
   "thumb": "stickers/thumb/C24.png",
   "price": 500,
   "rare": false,
-  "w": 185,
-  "h": 199
+  "w": 196,
+  "h": 207
  },
  {
   "id": "C25",
@@ -645,8 +645,8 @@
   "thumb": "stickers/thumb/C25.png",
   "price": 500,
   "rare": false,
-  "w": 166,
-  "h": 193
+  "w": 178,
+  "h": 205
  },
  {
   "id": "C26",
@@ -656,8 +656,8 @@
   "thumb": "stickers/thumb/C26.png",
   "price": 620,
   "rare": true,
-  "w": 179,
-  "h": 197
+  "w": 188,
+  "h": 209
  },
  {
   "id": "C27",
@@ -667,8 +667,8 @@
   "thumb": "stickers/thumb/C27.png",
   "price": 620,
   "rare": true,
-  "w": 177,
-  "h": 208
+  "w": 189,
+  "h": 220
  },
  {
   "id": "C28",
@@ -678,8 +678,8 @@
   "thumb": "stickers/thumb/C28.png",
   "price": 500,
   "rare": false,
-  "w": 165,
-  "h": 200
+  "w": 172,
+  "h": 212
  },
  {
   "id": "C29",
@@ -689,8 +689,8 @@
   "thumb": "stickers/thumb/C29.png",
   "price": 500,
   "rare": false,
-  "w": 172,
-  "h": 201
+  "w": 179,
+  "h": 213
  },
  {
   "id": "C30",
@@ -700,8 +700,8 @@
   "thumb": "stickers/thumb/C30.png",
   "price": 500,
   "rare": false,
-  "w": 162,
-  "h": 191
+  "w": 174,
+  "h": 203
  },
  {
   "id": "F01",
@@ -711,8 +711,8 @@
   "thumb": "stickers/thumb/F01.png",
   "price": 500,
   "rare": false,
-  "w": 148,
-  "h": 158
+  "w": 155,
+  "h": 169
  },
  {
   "id": "F02",
@@ -722,8 +722,8 @@
   "thumb": "stickers/thumb/F02.png",
   "price": 500,
   "rare": false,
-  "w": 141,
-  "h": 157
+  "w": 151,
+  "h": 168
  },
  {
   "id": "F03",
@@ -733,8 +733,8 @@
   "thumb": "stickers/thumb/F03.png",
   "price": 500,
   "rare": false,
-  "w": 152,
-  "h": 160
+  "w": 159,
+  "h": 167
  },
  {
   "id": "F04",
@@ -744,8 +744,8 @@
   "thumb": "stickers/thumb/F04.png",
   "price": 500,
   "rare": false,
-  "w": 138,
-  "h": 160
+  "w": 145,
+  "h": 171
  },
  {
   "id": "F05",
@@ -755,8 +755,8 @@
   "thumb": "stickers/thumb/F05.png",
   "price": 500,
   "rare": false,
-  "w": 112,
-  "h": 159
+  "w": 119,
+  "h": 170
  },
  {
   "id": "F06",
@@ -766,8 +766,8 @@
   "thumb": "stickers/thumb/F06.png",
   "price": 500,
   "rare": false,
-  "w": 132,
-  "h": 130
+  "w": 139,
+  "h": 141
  },
  {
   "id": "F07",
@@ -777,8 +777,8 @@
   "thumb": "stickers/thumb/F07.png",
   "price": 500,
   "rare": false,
-  "w": 126,
-  "h": 161
+  "w": 135,
+  "h": 171
  },
  {
   "id": "F08",
@@ -788,8 +788,8 @@
   "thumb": "stickers/thumb/F08.png",
   "price": 500,
   "rare": false,
-  "w": 134,
-  "h": 116
+  "w": 146,
+  "h": 128
  },
  {
   "id": "F09",
@@ -799,8 +799,8 @@
   "thumb": "stickers/thumb/F09.png",
   "price": 500,
   "rare": false,
-  "w": 144,
-  "h": 165
+  "w": 151,
+  "h": 172
  },
  {
   "id": "F10",
@@ -810,8 +810,8 @@
   "thumb": "stickers/thumb/F10.png",
   "price": 500,
   "rare": false,
-  "w": 117,
-  "h": 139
+  "w": 124,
+  "h": 150
  },
  {
   "id": "F11",
@@ -821,8 +821,8 @@
   "thumb": "stickers/thumb/F11.png",
   "price": 500,
   "rare": false,
-  "w": 120,
-  "h": 135
+  "w": 132,
+  "h": 143
  },
  {
   "id": "F12",
@@ -832,8 +832,8 @@
   "thumb": "stickers/thumb/F12.png",
   "price": 500,
   "rare": false,
-  "w": 150,
-  "h": 166
+  "w": 155,
+  "h": 174
  },
  {
   "id": "F13",
@@ -843,8 +843,8 @@
   "thumb": "stickers/thumb/F13.png",
   "price": 500,
   "rare": false,
-  "w": 117,
-  "h": 167
+  "w": 124,
+  "h": 178
  },
  {
   "id": "F14",
@@ -854,8 +854,8 @@
   "thumb": "stickers/thumb/F14.png",
   "price": 500,
   "rare": false,
-  "w": 151,
-  "h": 168
+  "w": 158,
+  "h": 178
  },
  {
   "id": "F15",
@@ -865,8 +865,8 @@
   "thumb": "stickers/thumb/F15.png",
   "price": 500,
   "rare": false,
-  "w": 124,
-  "h": 166
+  "w": 136,
+  "h": 178
  },
  {
   "id": "F16",
@@ -876,8 +876,8 @@
   "thumb": "stickers/thumb/F16.png",
   "price": 500,
   "rare": false,
-  "w": 142,
-  "h": 158
+  "w": 151,
+  "h": 170
  },
  {
   "id": "F17",
@@ -887,8 +887,8 @@
   "thumb": "stickers/thumb/F17.png",
   "price": 620,
   "rare": true,
-  "w": 147,
-  "h": 155
+  "w": 155,
+  "h": 167
  },
  {
   "id": "F18",
@@ -898,8 +898,8 @@
   "thumb": "stickers/thumb/F18.png",
   "price": 620,
   "rare": true,
-  "w": 153,
-  "h": 159
+  "w": 156,
+  "h": 167
  },
  {
   "id": "F19",
@@ -909,8 +909,8 @@
   "thumb": "stickers/thumb/F19.png",
   "price": 620,
   "rare": true,
-  "w": 154,
-  "h": 158
+  "w": 162,
+  "h": 170
  },
  {
   "id": "F20",
@@ -920,8 +920,8 @@
   "thumb": "stickers/thumb/F20.png",
   "price": 500,
   "rare": false,
-  "w": 149,
-  "h": 122
+  "w": 155,
+  "h": 129
  },
  {
   "id": "F21",
@@ -931,8 +931,8 @@
   "thumb": "stickers/thumb/F21.png",
   "price": 500,
   "rare": false,
-  "w": 118,
-  "h": 157
+  "w": 125,
+  "h": 164
  },
  {
   "id": "F22",
@@ -942,8 +942,8 @@
   "thumb": "stickers/thumb/F22.png",
   "price": 620,
   "rare": true,
-  "w": 133,
-  "h": 157
+  "w": 145,
+  "h": 164
  },
  {
   "id": "F23",
@@ -953,8 +953,8 @@
   "thumb": "stickers/thumb/F23.png",
   "price": 620,
   "rare": true,
-  "w": 114,
-  "h": 158
+  "w": 126,
+  "h": 166
  },
  {
   "id": "F24",
@@ -964,8 +964,8 @@
   "thumb": "stickers/thumb/F24.png",
   "price": 500,
   "rare": false,
-  "w": 133,
-  "h": 161
+  "w": 145,
+  "h": 168
  },
  {
   "id": "F25",
@@ -975,8 +975,8 @@
   "thumb": "stickers/thumb/F25.png",
   "price": 500,
   "rare": false,
-  "w": 108,
-  "h": 109
+  "w": 120,
+  "h": 116
  },
  {
   "id": "F26",
@@ -986,8 +986,8 @@
   "thumb": "stickers/thumb/F26.png",
   "price": 620,
   "rare": true,
-  "w": 142,
-  "h": 108
+  "w": 151,
+  "h": 115
  },
  {
   "id": "F27",
@@ -997,8 +997,8 @@
   "thumb": "stickers/thumb/F27.png",
   "price": 620,
   "rare": true,
-  "w": 142,
-  "h": 143
+  "w": 149,
+  "h": 150
  },
  {
   "id": "F28",
@@ -1008,8 +1008,8 @@
   "thumb": "stickers/thumb/F28.png",
   "price": 620,
   "rare": true,
-  "w": 143,
-  "h": 139
+  "w": 150,
+  "h": 146
  },
  {
   "id": "F29",
@@ -1019,8 +1019,8 @@
   "thumb": "stickers/thumb/F29.png",
   "price": 500,
   "rare": false,
-  "w": 117,
-  "h": 103
+  "w": 124,
+  "h": 110
  },
  {
   "id": "F30",
@@ -1030,8 +1030,8 @@
   "thumb": "stickers/thumb/F30.png",
   "price": 500,
   "rare": false,
-  "w": 140,
-  "h": 133
+  "w": 148,
+  "h": 140
  },
  {
   "id": "F31",
@@ -1041,8 +1041,8 @@
   "thumb": "stickers/thumb/F31.png",
   "price": 500,
   "rare": false,
-  "w": 135,
-  "h": 131
+  "w": 142,
+  "h": 138
  },
  {
   "id": "F32",
@@ -1052,8 +1052,8 @@
   "thumb": "stickers/thumb/F32.png",
   "price": 500,
   "rare": false,
-  "w": 116,
-  "h": 102
+  "w": 128,
+  "h": 109
  },
  {
   "id": "F33",
@@ -1063,8 +1063,8 @@
   "thumb": "stickers/thumb/F33.png",
   "price": 500,
   "rare": false,
-  "w": 128,
-  "h": 111
+  "w": 140,
+  "h": 118
  },
  {
   "id": "F34",
@@ -1074,8 +1074,8 @@
   "thumb": "stickers/thumb/F34.png",
   "price": 500,
   "rare": false,
-  "w": 120,
-  "h": 109
+  "w": 132,
+  "h": 116
  },
  {
   "id": "F35",
@@ -1085,8 +1085,8 @@
   "thumb": "stickers/thumb/F35.png",
   "price": 500,
   "rare": false,
-  "w": 134,
-  "h": 96
+  "w": 146,
+  "h": 103
  },
  {
   "id": "F36",
@@ -1096,8 +1096,8 @@
   "thumb": "stickers/thumb/F36.png",
   "price": 500,
   "rare": false,
-  "w": 141,
-  "h": 78
+  "w": 150,
+  "h": 85
  },
  {
   "id": "F37",
@@ -1107,8 +1107,8 @@
   "thumb": "stickers/thumb/F37.png",
   "price": 500,
   "rare": false,
-  "w": 122,
-  "h": 110
+  "w": 134,
+  "h": 117
  },
  {
   "id": "F38",
@@ -1118,8 +1118,8 @@
   "thumb": "stickers/thumb/F38.png",
   "price": 500,
   "rare": false,
-  "w": 140,
-  "h": 113
+  "w": 151,
+  "h": 120
  },
  {
   "id": "F39",
@@ -1129,8 +1129,8 @@
   "thumb": "stickers/thumb/F39.png",
   "price": 500,
   "rare": false,
-  "w": 137,
-  "h": 89
+  "w": 144,
+  "h": 96
  },
  {
   "id": "F40",
@@ -1140,8 +1140,8 @@
   "thumb": "stickers/thumb/F40.png",
   "price": 500,
   "rare": false,
-  "w": 119,
-  "h": 86
+  "w": 131,
+  "h": 93
  },
  {
   "id": "F41",
@@ -1151,8 +1151,8 @@
   "thumb": "stickers/thumb/F41.png",
   "price": 500,
   "rare": false,
-  "w": 132,
-  "h": 123
+  "w": 144,
+  "h": 135
  },
  {
   "id": "F42",
@@ -1162,8 +1162,8 @@
   "thumb": "stickers/thumb/F42.png",
   "price": 500,
   "rare": false,
-  "w": 111,
-  "h": 126
+  "w": 123,
+  "h": 137
  },
  {
   "id": "F43",
@@ -1173,8 +1173,8 @@
   "thumb": "stickers/thumb/F43.png",
   "price": 500,
   "rare": false,
-  "w": 130,
-  "h": 128
+  "w": 142,
+  "h": 140
  },
  {
   "id": "F44",
@@ -1184,8 +1184,8 @@
   "thumb": "stickers/thumb/F44.png",
   "price": 500,
   "rare": false,
-  "w": 124,
-  "h": 127
+  "w": 131,
+  "h": 137
  },
  {
   "id": "F45",
@@ -1195,8 +1195,8 @@
   "thumb": "stickers/thumb/F45.png",
   "price": 500,
   "rare": false,
-  "w": 124,
-  "h": 126
+  "w": 131,
+  "h": 138
  },
  {
   "id": "F46",
@@ -1206,8 +1206,8 @@
   "thumb": "stickers/thumb/F46.png",
   "price": 500,
   "rare": false,
-  "w": 142,
-  "h": 136
+  "w": 149,
+  "h": 143
  },
  {
   "id": "F47",
@@ -1217,8 +1217,8 @@
   "thumb": "stickers/thumb/F47.png",
   "price": 620,
   "rare": true,
-  "w": 125,
-  "h": 133
+  "w": 137,
+  "h": 142
  },
  {
   "id": "F48",
@@ -1228,8 +1228,8 @@
   "thumb": "stickers/thumb/F48.png",
   "price": 620,
   "rare": true,
-  "w": 140,
-  "h": 135
+  "w": 148,
+  "h": 144
  },
  {
   "id": "F49",
@@ -1239,8 +1239,8 @@
   "thumb": "stickers/thumb/F49.png",
   "price": 620,
   "rare": true,
-  "w": 134,
-  "h": 136
+  "w": 141,
+  "h": 148
  },
  {
   "id": "F50",
@@ -1250,8 +1250,8 @@
   "thumb": "stickers/thumb/F50.png",
   "price": 500,
   "rare": false,
-  "w": 122,
-  "h": 130
+  "w": 134,
+  "h": 142
  },
  {
   "id": "F51",
@@ -1261,8 +1261,8 @@
   "thumb": "stickers/thumb/F51.png",
   "price": 500,
   "rare": false,
-  "w": 116,
-  "h": 133
+  "w": 128,
+  "h": 145
  },
  {
   "id": "F52",
@@ -1272,8 +1272,8 @@
   "thumb": "stickers/thumb/F52.png",
   "price": 500,
   "rare": false,
-  "w": 119,
-  "h": 136
+  "w": 126,
+  "h": 148
  },
  {
   "id": "F53",
@@ -1283,8 +1283,8 @@
   "thumb": "stickers/thumb/F53.png",
   "price": 500,
   "rare": false,
-  "w": 115,
-  "h": 132
+  "w": 122,
+  "h": 144
  },
  {
   "id": "F54",
@@ -1294,8 +1294,8 @@
   "thumb": "stickers/thumb/F54.png",
   "price": 500,
   "rare": false,
-  "w": 134,
-  "h": 133
+  "w": 144,
+  "h": 145
  },
  {
   "id": "F55",
@@ -1305,8 +1305,8 @@
   "thumb": "stickers/thumb/F55.png",
   "price": 500,
   "rare": false,
-  "w": 131,
-  "h": 132
+  "w": 138,
+  "h": 144
  },
  {
   "id": "F56",
@@ -1316,8 +1316,8 @@
   "thumb": "stickers/thumb/F56.png",
   "price": 500,
   "rare": false,
-  "w": 137,
-  "h": 126
+  "w": 149,
+  "h": 138
  },
  {
   "id": "D01",
@@ -1328,7 +1328,7 @@
   "price": 750,
   "rare": false,
   "w": 320,
-  "h": 278
+  "h": 284
  },
  {
   "id": "D02",
@@ -1338,8 +1338,8 @@
   "thumb": "stickers/thumb/D02.png",
   "price": 750,
   "rare": false,
-  "w": 287,
-  "h": 301
+  "w": 296,
+  "h": 311
  },
  {
   "id": "D03",
@@ -1350,7 +1350,7 @@
   "price": 750,
   "rare": false,
   "w": 320,
-  "h": 298
+  "h": 296
  },
  {
   "id": "D04",
@@ -1360,8 +1360,8 @@
   "thumb": "stickers/thumb/D04.png",
   "price": 750,
   "rare": false,
-  "w": 304,
-  "h": 303
+  "w": 314,
+  "h": 311
  },
  {
   "id": "D05",
@@ -1371,8 +1371,8 @@
   "thumb": "stickers/thumb/D05.png",
   "price": 900,
   "rare": true,
-  "w": 302,
-  "h": 284
+  "w": 310,
+  "h": 290
  },
  {
   "id": "D06",
@@ -1382,8 +1382,8 @@
   "thumb": "stickers/thumb/D06.png",
   "price": 750,
   "rare": false,
-  "w": 292,
-  "h": 283
+  "w": 300,
+  "h": 290
  },
  {
   "id": "D07",
@@ -1393,8 +1393,8 @@
   "thumb": "stickers/thumb/D07.png",
   "price": 750,
   "rare": false,
-  "w": 275,
-  "h": 281
+  "w": 291,
+  "h": 290
  },
  {
   "id": "D08",
@@ -1404,8 +1404,8 @@
   "thumb": "stickers/thumb/D08.png",
   "price": 750,
   "rare": false,
-  "w": 291,
-  "h": 282
+  "w": 305,
+  "h": 290
  },
  {
   "id": "D09",
@@ -1415,7 +1415,7 @@
   "thumb": "stickers/thumb/D09.png",
   "price": 750,
   "rare": false,
-  "w": 286,
+  "w": 302,
   "h": 278
  },
  {
@@ -1426,8 +1426,8 @@
   "thumb": "stickers/thumb/D10.png",
   "price": 750,
   "rare": false,
-  "w": 300,
-  "h": 269
+  "w": 303,
+  "h": 277
  },
  {
   "id": "D11",
@@ -1438,7 +1438,7 @@
   "price": 900,
   "rare": true,
   "w": 320,
-  "h": 261
+  "h": 265
  },
  {
   "id": "D12",
@@ -1448,8 +1448,8 @@
   "thumb": "stickers/thumb/D12.png",
   "price": 750,
   "rare": false,
-  "w": 265,
-  "h": 270
+  "w": 281,
+  "h": 278
  },
  {
   "id": "D13",
@@ -1459,8 +1459,8 @@
   "thumb": "stickers/thumb/D13.png",
   "price": 900,
   "rare": true,
-  "w": 309,
-  "h": 297
+  "w": 320,
+  "h": 299
  },
  {
   "id": "D14",
@@ -1470,8 +1470,8 @@
   "thumb": "stickers/thumb/D14.png",
   "price": 750,
   "rare": false,
-  "w": 278,
-  "h": 293
+  "w": 292,
+  "h": 308
  },
  {
   "id": "D15",
@@ -1481,8 +1481,8 @@
   "thumb": "stickers/thumb/D15.png",
   "price": 900,
   "rare": true,
-  "w": 312,
-  "h": 305
+  "w": 320,
+  "h": 308
  },
  {
   "id": "D16",
@@ -1492,8 +1492,8 @@
   "thumb": "stickers/thumb/D16.png",
   "price": 750,
   "rare": false,
-  "w": 304,
-  "h": 258
+  "w": 320,
+  "h": 274
  },
  {
   "id": "E01",
@@ -1503,8 +1503,8 @@
   "thumb": "stickers/thumb/E01.png",
   "price": 750,
   "rare": false,
-  "w": 296,
-  "h": 278
+  "w": 312,
+  "h": 287
  },
  {
   "id": "E02",
@@ -1514,8 +1514,8 @@
   "thumb": "stickers/thumb/E02.png",
   "price": 750,
   "rare": false,
-  "w": 302,
-  "h": 280
+  "w": 318,
+  "h": 288
  },
  {
   "id": "E03",
@@ -1525,8 +1525,8 @@
   "thumb": "stickers/thumb/E03.png",
   "price": 750,
   "rare": false,
-  "w": 245,
-  "h": 279
+  "w": 261,
+  "h": 288
  },
  {
   "id": "E04",
@@ -1536,8 +1536,8 @@
   "thumb": "stickers/thumb/E04.png",
   "price": 750,
   "rare": false,
-  "w": 299,
-  "h": 278
+  "w": 313,
+  "h": 289
  },
  {
   "id": "E05",
@@ -1548,7 +1548,7 @@
   "price": 750,
   "rare": false,
   "w": 320,
-  "h": 251
+  "h": 261
  },
  {
   "id": "E06",
@@ -1558,8 +1558,8 @@
   "thumb": "stickers/thumb/E06.png",
   "price": 750,
   "rare": false,
-  "w": 292,
-  "h": 274
+  "w": 308,
+  "h": 282
  },
  {
   "id": "E07",
@@ -1569,8 +1569,8 @@
   "thumb": "stickers/thumb/E07.png",
   "price": 900,
   "rare": true,
-  "w": 298,
-  "h": 275
+  "w": 314,
+  "h": 283
  },
  {
   "id": "E08",
@@ -1580,8 +1580,8 @@
   "thumb": "stickers/thumb/E08.png",
   "price": 750,
   "rare": false,
-  "w": 278,
-  "h": 277
+  "w": 294,
+  "h": 285
  },
  {
   "id": "E09",
@@ -1591,7 +1591,7 @@
   "thumb": "stickers/thumb/E09.png",
   "price": 750,
   "rare": false,
-  "w": 315,
+  "w": 320,
   "h": 275
  },
  {
@@ -1602,8 +1602,8 @@
   "thumb": "stickers/thumb/E10.png",
   "price": 900,
   "rare": true,
-  "w": 300,
-  "h": 268
+  "w": 308,
+  "h": 276
  },
  {
   "id": "E11",
@@ -1613,8 +1613,8 @@
   "thumb": "stickers/thumb/E11.png",
   "price": 900,
   "rare": true,
-  "w": 285,
-  "h": 263
+  "w": 297,
+  "h": 278
  },
  {
   "id": "E12",
@@ -1624,8 +1624,8 @@
   "thumb": "stickers/thumb/E12.png",
   "price": 900,
   "rare": true,
-  "w": 299,
-  "h": 271
+  "w": 315,
+  "h": 284
  },
  {
   "id": "E13",
@@ -1635,8 +1635,8 @@
   "thumb": "stickers/thumb/E13.png",
   "price": 750,
   "rare": false,
-  "w": 293,
-  "h": 296
+  "w": 313,
+  "h": 312
  },
  {
   "id": "E14",
@@ -1646,8 +1646,8 @@
   "thumb": "stickers/thumb/E14.png",
   "price": 750,
   "rare": false,
-  "w": 309,
-  "h": 291
+  "w": 320,
+  "h": 305
  },
  {
   "id": "E15",
@@ -1657,8 +1657,8 @@
   "thumb": "stickers/thumb/E15.png",
   "price": 750,
   "rare": false,
-  "w": 304,
-  "h": 295
+  "w": 313,
+  "h": 312
  },
  {
   "id": "E16",
@@ -1668,7 +1668,7 @@
   "thumb": "stickers/thumb/E16.png",
   "price": 750,
   "rare": false,
-  "w": 275,
-  "h": 292
+  "w": 293,
+  "h": 310
  }
 ]
