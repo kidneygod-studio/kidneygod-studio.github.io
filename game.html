@@ -451,7 +451,7 @@ function renderTips(){
       <b>累計最多算十輪</b>（100 題，一次挑戰內題目不重複，全對就是滿分 100）。
       題庫共 200 題，每次挑戰是從中洗牌抽出的 100 題，所以每一輪挑戰的題目組合都不一樣。
       第十輪一結算，累計就歸零、重新洗牌 —— 分數不會無限往上疊。
-      <b>排行榜每週一重新開始</b>，上週前三名可獲得獎金：🥇 2000、🥈 1000、🥉 500 腎元
+      <b>排行榜每週日晚上 12:00 結算</b>，該週前三名可獲得獎金：🥇 2000、🥈 1000、🥉 500 腎元
       —— 下次進來小學堂時自動入帳。第一名的名字會出現在商城首頁的跑馬燈上。
       <div id="qStats" class="qstats"></div>
       <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">🏆 看排行榜</button></div>`;
@@ -1129,7 +1129,7 @@ async function doClaimWeeklyPrize(){
   $("quizWrap").insertAdjacentHTML("afterbegin",
     `<div class="qchallenge"><div class="ct">${medal} 上週第 ${rank+1} 名</div>
        <div class="cs">獎金 <b>${prize}</b> 腎元已入帳</div>
-       <span class="dimtxt">排行榜每週一重新開始，這週再挑戰一次吧。</span></div>`);
+       <span class="dimtxt">排行榜每週日晚上 12:00 結算，這週再挑戰一次吧。</span></div>`);
   confetti(["🏆","🥇","✨","🎊","💰","⭐"]);
   toast(`${medal} 上週第 ${rank+1} 名，獎金 ${prize} 腎元已入帳`);
 }
@@ -1140,8 +1140,14 @@ function fillWeekInfo(){
   if(!el) return;
   const ms = msToNextWeek();
   const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5);
-  el.innerHTML = `🗓️ 本週結算倒數 <b>${d} 天 ${h} 小時</b>　｜　`
-    + `前三名獎金 🥇 2000・🥈 1000・🥉 500 腎元`;
+  const m = Math.floor(ms % 36e5 / 6e4);
+  // 換週點就是週一 00:00，也就是週日晚上 12:00 —— 同一個時刻，
+  // 但寫成「週日晚上 12:00」比「週一」不容易被誤會成週一白天。
+  const t = new Date(Date.now() + ms - 1);          // 減 1ms 讓日期落在週日
+  const when = `${t.getMonth()+1}/${t.getDate()}（日）晚上 12:00`;
+  const left = d > 0 ? `${d} 天 ${h} 小時` : (h > 0 ? `${h} 小時 ${m} 分` : `${m} 分`);
+  el.innerHTML = `🗓️ 本週於 <b>${when}</b> 結算，倒數 <b>${left}</b><br>`
+    + `前三名獎金 🥇 2000・🥈 1000・🥉 500 腎元，下次進來自動入帳`;
 }
 
 /* 挑戰人數。排行榜一人一筆，所以文件數就是人數；只在有數字時才顯示，
