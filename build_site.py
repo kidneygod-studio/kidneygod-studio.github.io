@@ -163,14 +163,13 @@ animation:sheen 4.5s ease-in-out infinite}
    固定高度、寬度自動，比例才會正確。 */
 .gamebtn img{height:136px;width:auto;max-width:100%;
 filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}
-.gamebtn .cap{font-size:14.5px;color:#e6d9c2;line-height:1.75}
-.gamebtn .cap b{display:block;font-size:1.14rem;font-weight:800;color:#e8c65a;
-letter-spacing:.4px;margin-bottom:3px}
+.gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
+letter-spacing:.4px;line-height:1.5}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
   .gamebtn{gap:14px;padding:26px 20px}
   .gamebtn img{height:96px}
-  .gamebtn .cap b{font-size:1.06rem}
+  .gamebtn .cap{font-size:1.06rem}
 }
 """
 
@@ -460,8 +459,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]])
 
 <a class="gamebtn" href="/shop.html">
   <img src="/logo.png" alt="" aria-hidden="true" width="480" height="257">
-  <span class="cap"><b>護腎知識卡片收集商城</b>
-  玩遊戲賺腎元、收集 60 張護腎知識卡與貓咪貼圖・不收費、沒有金流</span>
+  <span class="cap">護腎知識卡片收集商城</span>
 </a>
 
 <h2 class="sect">依主題閱讀</h2>
