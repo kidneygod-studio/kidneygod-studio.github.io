@@ -260,7 +260,7 @@
 
 <header>
   <div class="hwrap">
-    <a class="logo" href="index.html" title="回到商城首頁" aria-label="護腎教室 KidneyGod.Studio，回首頁">
+    <a class="logo" href="shop.html" title="回到商城首頁" aria-label="護腎教室 KidneyGod.Studio，回首頁">
       <img src="logo.png" alt="護腎教室 KidneyGod.Studio" width="480" height="257">
     </a>
     <span class="homehint">← 點標誌回首頁</span>
@@ -268,7 +268,7 @@
     <span class="hbtn coin"><img class="ki" alt=""><span id="coinBal">200</span> 腎元</span>
     <button class="hbtn" id="fsBtn" onclick="cycleFontScale()">🔠 標準</button>
     <a class="hbtn" href="library.html">📚 收藏冊</a>
-    <a class="hbtn" href="index.html">🛒 回商城</a>
+    <a class="hbtn" href="shop.html">🛒 回商城</a>
     <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
   </div>
 </header>
@@ -311,7 +311,7 @@
 
 <footer>
   <div class="fw">
-    <p>腎元只能在<a href="index.html">護腎教室商城</a>兌換護腎知識與貓咪貼圖，不具任何金錢價值。</p>
+    <p>腎元只能在<a href="shop.html">護腎教室商城</a>兌換護腎知識與貓咪貼圖，不具任何金錢價值。</p>
     <p style="margin-top:6px">⚕️ 遊戲中的衛教內容為一般性健康知識，不能取代醫師診斷與治療建議；有症狀請就醫。</p>
     <p class="byline">✍️ 內容編寫｜<b>護腎專家 吳政哲醫師</b><span>本站衛教內容由本人編寫與審訂，每則皆標註所依據的臨床指引。</span></p>
     <div class="fmeta" id="viewBox" style="display:none">累計瀏覽 <b id="viewCnt">–</b> 次</div>
@@ -1043,7 +1043,7 @@ function quizEnd(){
       <div class="qnav" style="justify-content:center">
         <button class="qbtn" onclick="quizStart()">再來一輪</button>
         <button class="qbtn ghost" onclick="openShare()">📤 分享成績</button>
-        <a class="qbtn ghost" href="index.html">去商城換知識卡</a>
+        <a class="qbtn ghost" href="shop.html">去商城換知識卡</a>
       </div>
     </div>`;
   quizStats();
@@ -1329,7 +1329,7 @@ async function showBoard(){
      <div id="boardList">讀取中…</div>
      <div class="qnav" style="justify-content:center">
        <button class="qbtn" onclick="quizStart()">開始挑戰</button>
-       <a class="qbtn ghost" href="index.html">回商城</a>
+       <a class="qbtn ghost" href="shop.html">回商城</a>
      </div></div>`;
   fillPlayerCount(); fillWeekInfo();
   const top = window.site ? await window.site.getTop(10) : null;

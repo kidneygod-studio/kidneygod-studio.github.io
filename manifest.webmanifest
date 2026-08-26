@@ -4,7 +4,7 @@
   "description": "護腎知識卡片收集遊戲：玩遊戲賺腎元、收集 60 張護腎知識卡與貓咪貼圖。",
   "lang": "zh-Hant",
   "dir": "ltr",
-  "start_url": "./index.html",
+  "start_url": "./shop.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#1d1713",

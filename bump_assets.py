@@ -13,7 +13,14 @@ import io, os, re, sys, hashlib
 sys.stdout.reconfigure(encoding="utf-8")
 
 ASSETS = ("shared.js", "data.js", "sync.js", "quiz.js")
-PAGES = ("index.html", "game.html", "library.html", "dash.html")
+
+# 會載入上述 js、需要改寫 ?v= 的頁面。
+# 註：首頁 index.html 已改為衛教文章頁（由 build_site.py 產生、不載入這些 js），
+#     原本的商城搬到 shop.html，所以要改的是 shop.html 而不是 index.html。
+PAGES = ("shop.html", "game.html", "library.html", "dash.html")
+
+# 不需要改寫 ?v=，但內容變動時仍應讓 Service Worker 換快取版本的檔案
+HASH_ONLY = ("index.html",)
 
 
 def main():
@@ -45,7 +52,7 @@ def bump_sw(ver):
     if not os.path.exists("sw.js"):
         return
     h = hashlib.md5()
-    for f in list(ASSETS) + list(PAGES):
+    for f in list(ASSETS) + list(PAGES) + list(HASH_ONLY):
         if os.path.exists(f):
             h.update(io.open(f, "rb").read())
     tag = "kg-" + h.hexdigest()[:10]

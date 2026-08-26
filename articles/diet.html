@@ -55,13 +55,66 @@ footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px
 font-size:13.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}
 .backlink{margin:34px 0}
+ul{padding-left:22px;margin:0 0 18px}
+li{margin:7px 0}
+strong{font-weight:700}
+code{background:var(--card);padding:1px 6px;border-radius:5px;font-size:.92em}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin:22px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:var(--card);font-weight:600;font-size:13.5px;color:var(--mut)}
+tr:last-child td{border-bottom:0}
+.callout{background:var(--card);border-left:3px solid var(--accent);
+padding:14px 18px;border-radius:0 10px 10px 0;margin:22px 0;font-size:16px}
+
+/* ── 首頁 ── */
+.hero{padding:34px 0 8px}
+.hero h1{font-size:2.1rem;margin:0 0 12px}
+.hero .sub{font-size:1.08rem;color:var(--mut);margin-bottom:6px}
+.hero .cred{font-size:14px;color:var(--mut)}
+.sect{font-size:1.15rem;margin:44px 0 4px}
+.sect + .sd{font-size:14px;color:var(--mut);margin-bottom:16px}
+.feat{display:block;border:1px solid var(--line);border-radius:12px;padding:18px 20px;
+text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
+.feat:hover{border-color:var(--accent)}
+.feat .t{font-weight:700;font-size:1.05rem;margin-bottom:5px;line-height:1.5}
+.feat .d{font-size:14px;color:var(--mut);line-height:1.65}
+
+/* 商城入口：刻意沿用商城本身的深色＋金框風格，在淺色頁面上形成強烈對比，
+   讓它成為整個首頁最醒目的元素。 */
+.gamebtn{display:flex;align-items:center;gap:20px;text-decoration:none;
+background:linear-gradient(120deg,#33281f,#1e1814);color:#e8c65a;
+border:3px solid #c9a227;border-radius:18px;padding:26px 28px;margin:26px 0 10px;
+box-shadow:inset 0 1px 0 rgba(255,236,200,.14),0 14px 34px rgba(0,0,0,.32);
+position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
+.gamebtn:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(201,162,39,.34)}
+.gamebtn::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
+background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent);
+animation:sheen 4.5s ease-in-out infinite}
+@keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
+@media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
+.gamebtn img{width:78px;height:78px;flex-shrink:0;
+filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
+.gamebtn .gt{flex:1;min-width:0}
+.gamebtn .gt b{display:block;font-size:1.5rem;font-weight:900;letter-spacing:.5px;
+line-height:1.35;margin-bottom:6px}
+.gamebtn .gt span{display:block;font-size:14.5px;color:#e6d9c2;line-height:1.65;opacity:.95}
+.gamebtn .go{font-size:16px;font-weight:800;white-space:nowrap;color:#1e1814;
+background:#e8c65a;padding:11px 22px;border-radius:99px}
+@media(max-width:560px){
+  .hero h1{font-size:1.68rem}
+  .gamebtn{flex-wrap:wrap;gap:14px;padding:22px 20px}
+  .gamebtn img{width:56px;height:56px}
+  .gamebtn .gt b{font-size:1.24rem}
+  .gamebtn .go{width:100%;text-align:center}
+}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "headline": "飲食護腎與腎臟健康", "description": "「腎不好要吃什麼」是最常見的問題，答案卻會隨腎功能階段而改變。這一頁整理飲食上真正有證據的原則與常見誤解。內容包含：楊桃：腎友的水果黑名單第一名、鹽：腎臟每天在幫你擦的屁股、隱形磷：包裝食品裡的血管殺手 等 8 個主題。", "inLanguage": "zh-Hant", "url": "https://kidneygod-studio.github.io/articles/diet.html", "dateModified": "2026-08-26", "author": {"@type": "Person", "name": "吳政哲", "jobTitle": "腎臟科醫師"}, "publisher": {"@type": "Organization", "name": "護腎教室"}, "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"}, "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}}}</script>
 </head>
 <body>
 <header class="site"><div class="wrap">
-<a href="/articles/">護腎教室｜衛教文章</a>
-<nav><a href="/">回護腎教室主站</a></nav>
+<a href="/">護腎教室｜衛教文章</a>
+<nav><a href="/">回首頁</a>　·　<a href="/shop.html">知識商城</a></nav>
 </div></header>
 <main class="wrap">
 

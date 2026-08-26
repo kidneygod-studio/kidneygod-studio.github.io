@@ -9,12 +9,12 @@
      其他來源 一律不碰（Firebase、Google 字型等交給瀏覽器自己處理）
 
    VERSION 由 bump_assets.py 自動更新，改版時舊快取會整批清掉。 */
-const VERSION = "kg-062b63db1f";
+const VERSION = "kg-0d96af2179";
 const SHELL = `${VERSION}-shell`, IMG = `${VERSION}-img`;
 
 /* 先抓起來的骨架：三個頁面加標誌。JS 與圖片留給實際瀏覽時自然填入，
    不在安裝時一次下載幾百張圖，免得第一次進站就吃掉一堆流量。 */
-const PRECACHE = ["./index.html", "./game.html", "./library.html", "./logo.png"];
+const PRECACHE = ["./index.html", "./shop.html", "./game.html", "./library.html", "./logo.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil((async () => {
@@ -43,7 +43,8 @@ self.addEventListener("fetch", e => {
   const url = new URL(req.url);
   if(url.origin !== self.location.origin) return;      // 外部資源不插手
 
-  /* 網頁：連線優先。拿不到（離線）才退回快取，最後退回首頁。 */
+  /* 網頁：連線優先。拿不到（離線）才退回快取，最後退回商城首頁
+     （安裝成 App 的使用者是為了商城與遊戲而來，退回那裡比退回文章首頁有用）。 */
   if(req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")){
     e.respondWith((async () => {
       try{
@@ -53,6 +54,7 @@ self.addEventListener("fetch", e => {
         return net;
       }catch(err){
         return (await caches.match(req, {ignoreSearch: true}))
+            || (await caches.match("./shop.html"))
             || (await caches.match("./index.html"))
             || new Response("離線中，且這一頁還沒看過。", {
                  status: 503, headers: {"Content-Type": "text/plain; charset=utf-8"}});
