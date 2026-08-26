@@ -40,6 +40,16 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    /* ── 每題作答統計：聚合數字，不含任何身分 ──
+       只記「第 N 題被作答幾次、答對幾次」，回推不到個人，也不影響排行榜。
+       分成 s0–s3 數份，避免單一文件的每秒一次寫入上限在尖峰塞車。
+       ※ 規則無法驗證增量是不是真的玩出來的 —— 這份資料只當選題參考。 */
+    match /qstats/{shard} {
+      allow read:           if request.auth != null;
+      allow create, update: if request.auth != null && shard.matches('^s[0-3]$');
+      allow delete:         if false;
+    }
+
     /* ── 小學堂排行榜：公開讀，一人「一週」一筆 ── */
     match /leaderboard/{docId} {
       function mine() {

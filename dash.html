@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>站長儀表板 — 護腎教室</title>
+<style>
+  :root{
+    --board:#1d1713; --edge:#3d3128; --gold:#c9a227; --gold2:#e8c65a;
+    --card:#f4edd8; --ink:#2b221d; --onboard:#e6d9c2; --dim:#6e5f4c; --dimboard:#a8977f;
+    --bad:#b82445; --mid:#b8791f; --ok:#17734a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--board);color:var(--onboard);line-height:1.6;
+       font-family:"Segoe UI","Microsoft JhengHei",system-ui,sans-serif;padding:20px 14px 60px;}
+  .wrap{max-width:940px;margin:0 auto;}
+  h1{font-size:22px;color:var(--gold2);font-weight:900;}
+  .sub{font-size:13px;color:var(--dimboard);margin-bottom:18px;}
+  .panel{background:var(--card);color:var(--ink);border:2px solid #0f0c0a;
+         border-radius:14px;padding:18px;margin-bottom:16px;}
+  button{font-family:inherit;cursor:pointer;border:none;
+         background:linear-gradient(180deg,#e0bb44,#a8801a);color:#231a06;
+         font-weight:900;padding:10px 18px;border-radius:99px;border:2px solid #6b5208;}
+  .sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+  .box{background:#fbf6e6;border:1px solid #d9cdae;border-radius:10px;padding:10px 12px;}
+  .box b{display:block;font-size:26px;font-weight:900;}
+  .box span{font-size:12px;color:var(--dim);}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{padding:8px 6px;border-bottom:1px solid #d9cdae;text-align:left;vertical-align:top;}
+  th{font-size:12px;color:var(--dim);white-space:nowrap;}
+  td.r,th.r{text-align:right;white-space:nowrap;}
+  .rate{font-weight:900;}
+  .lo{color:var(--bad);} .md{color:var(--mid);} .hi{color:var(--ok);}
+  .cat{display:inline-block;background:#efe4c6;border:1px solid #d9cdae;border-radius:99px;
+       padding:1px 8px;font-size:11.5px;color:var(--dim);white-space:nowrap;}
+  .thin{color:var(--dim);font-size:11.5px;}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+  .tab{background:none;border:1px solid var(--edge);color:var(--onboard);
+       padding:5px 12px;font-size:13px;font-weight:700;border-radius:99px;}
+  .tab.on{background:#c62a4c;border-color:#c62a4c;color:#fff;}
+  .note{font-size:12px;color:var(--dim);background:#fff7ee;border:1px dashed #f0d8bf;
+        border-radius:10px;padding:10px 12px;margin-top:14px;}
+  a{color:var(--gold2);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📊 站長儀表板</h1>
+  <div class="sub">護腎小學堂・每題答對率　—　答對率最低的題目，就是民眾最需要你寫的題目</div>
+  <div id="app" class="panel">載入中…</div>
+</div>
+
+<script src="quiz.js?v=1d5418d1"></script>
+<script type="module">
+/* 這個頁面只有站長本人看得到 —— 認的是 Google 登入身分，不是網址保密。
+   統計本身是聚合數字，不含任何身分資料。 */
+const OWNER_HASH = "5cb52ea32ac279efe1d77500e9203173320d6a0ee2366b11ab8e0ded3d544912";
+const CFG = {
+  apiKey: "AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU",
+  authDomain: "kidneygod-ea61e.firebaseapp.com",
+  projectId: "kidneygod-ea61e",
+  storageBucket: "kidneygod-ea61e.firebasestorage.app",
+  messagingSenderId: "494753459903",
+  appId: "1:494753459903:web:281898dfc087dad416600a",
+};
+const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js");
+const { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } =
+  await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js");
+const { getFirestore, collection, getDocs } =
+  await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+
+const app = initializeApp(CFG), auth = getAuth(app), db = getFirestore(app);
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+async function sha256(s){
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+}
+
+let STATS = null, curCat = "全部";
+
+/* ?demo=1 用亂數假資料看版面，不連雲端、也不會顯示任何真實資料。
+   統計還沒累積起來時可以先看看長什麼樣子。 */
+if(new URLSearchParams(location.search).has("demo")){
+  STATS = {};
+  QUIZ.forEach((_, i) => {
+    if(i % 7 === 3) return;                       // 留一些沒人作答的題目
+    const n = 5 + Math.floor(Math.random() * 120);
+    STATS[i] = {n, c: Math.round(n * (0.3 + Math.random() * 0.68))};
+  });
+  document.querySelector(".sub").innerHTML =
+    "⚠️ <b>示範資料</b>　—　這頁的數字是亂數產生的，只用來看版面";
+  render();
+}else onAuthStateChanged(auth, async u => {
+  const mail = u && !u.isAnonymous && u.email ? u.email.trim().toLowerCase() : "";
+  if(!mail){ signInView(); return; }
+  if((await sha256(mail)) !== OWNER_HASH){
+    $("app").innerHTML = `<b>這個頁面只開放站長本人。</b>
+      <div class="thin" style="margin-top:8px">目前登入：${esc(mail)}</div>
+      <div style="margin-top:14px"><button id="out">換一個帳號</button></div>`;
+    $("out").onclick = () => signOut(auth);
+    return;
+  }
+  $("app").innerHTML = "讀取統計中…";
+  STATS = await load();
+  render();
+});
+
+function signInView(){
+  $("app").innerHTML = `<b>請先用站長的 Google 帳號登入。</b>
+    <div class="thin" style="margin-top:8px">這裡只顯示聚合統計，不含任何使用者身分資料。</div>
+    <div style="margin-top:14px"><button id="in">使用 Google 登入</button></div>`;
+  $("in").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => {
+    $("app").innerHTML = `<b>登入未完成。</b><div class="thin">${esc(e.code || e.message)}</div>`;
+  });
+}
+
+/* 四份統計文件加總 */
+async function load(){
+  try{
+    const snap = await getDocs(collection(db, "qstats"));
+    const all = {};
+    snap.forEach(d => {
+      const q = (d.data() || {}).q || {};
+      for(const k of Object.keys(q)){
+        const v = q[k] || {};
+        all[k] = all[k] || {n: 0, c: 0};
+        all[k].n += v.n || 0;
+        all[k].c += v.c || 0;
+      }
+    });
+    return all;
+  }catch(e){ return {err: e.code || e.message}; }
+}
+
+function rows(){
+  return QUIZ.map((it, i) => {
+    const s = STATS[i] || {n: 0, c: 0};
+    return {i, it, n: s.n, c: s.c, rate: s.n ? s.c / s.n : null};
+  });
+}
+
+function render(){
+  if(STATS && STATS.err){
+    $("app").innerHTML = `<b>讀不到統計。</b><div class="thin">${esc(STATS.err)}</div>
+      <div class="note">如果訊息是 permission-denied，表示 Firestore 規則還沒發布 qstats 那一段。</div>`;
+    return;
+  }
+  const all = rows();
+  const answered = all.filter(r => r.n > 0);
+  const totalN = answered.reduce((a, r) => a + r.n, 0);
+  const totalC = answered.reduce((a, r) => a + r.c, 0);
+
+  /* 分類彙總 */
+  const byCat = {};
+  for(const r of answered){
+    const k = r.it.c;
+    byCat[k] = byCat[k] || {n: 0, c: 0};
+    byCat[k].n += r.n; byCat[k].c += r.c;
+  }
+  const cats = ["全部", ...Object.keys(byCat).sort((a, b) =>
+    (byCat[a].c / byCat[a].n) - (byCat[b].c / byCat[b].n))];
+
+  const list = all
+    .filter(r => curCat === "全部" || r.it.c === curCat)
+    .sort((a, b) => {
+      if(a.n === 0 && b.n === 0) return a.i - b.i;
+      if(a.n === 0) return 1;                     // 沒人作答的排最後
+      if(b.n === 0) return -1;
+      return a.rate - b.rate || b.n - a.n;        // 答對率低的排最前
+    });
+
+  const cls = r => r.rate === null ? "" : r.rate < .5 ? "lo" : r.rate < .75 ? "md" : "hi";
+  const pct = r => r.rate === null ? "—" : Math.round(r.rate * 100) + "%";
+
+  $("app").innerHTML = `
+    <div class="sum">
+      <div class="box"><b>${totalN.toLocaleString()}</b><span>總作答次數</span></div>
+      <div class="box"><b>${totalN ? Math.round(totalC / totalN * 100) : 0}%</b><span>整體答對率</span></div>
+      <div class="box"><b>${answered.length} / ${QUIZ.length}</b><span>已有人作答的題目</span></div>
+      <div class="box"><b>${answered.filter(r => r.rate < .5).length}</b><span>答對率低於五成</span></div>
+    </div>
+    <div class="tabs" style="margin-top:16px">${cats.map(c => {
+      const s = c === "全部" ? null : byCat[c];
+      return `<button class="tab${c === curCat ? " on" : ""}" data-c="${esc(c)}">${esc(c)}${
+        s ? `　${Math.round(s.c / s.n * 100)}%` : ""}</button>`;
+    }).join("")}</div>
+    <div style="overflow-x:auto">
+    <table>
+      <tr><th class="r">#</th><th>題目</th><th>分類</th>
+          <th class="r">答對率</th><th class="r">作答</th></tr>
+      ${list.map(r => `<tr>
+        <td class="r thin">${r.i + 1}</td>
+        <td>${esc(r.it.q)}<div class="thin">正解：${esc(r.it.o[r.it.a])}　·　${esc(QUIZ_SRC[r.it.src] || r.it.src)}</div></td>
+        <td><span class="cat">${esc(r.it.c)}</span></td>
+        <td class="r rate ${cls(r)}">${pct(r)}</td>
+        <td class="r thin">${r.n || "—"}${r.n > 0 && r.n < 10 ? "<br>樣本少" : ""}</td>
+      </tr>`).join("")}
+    </table></div>
+    <div class="note">答對率由低而高排序，樣本少於 10 次的數字只能參考。
+      這些是聚合計數，不含任何使用者身分；也無法驗證是否真的玩出來的，
+      拿來當選題參考可以，別當研究數據。</div>`;
+
+  document.querySelectorAll(".tab").forEach(b =>
+    b.onclick = () => { curCat = b.dataset.c; render(); });
+}
+</script>
+</body>
+</html>

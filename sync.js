@@ -102,6 +102,25 @@ if (FIREBASE_CONFIG) {
   /* ── 站台統計與排行榜（公開讀取）── */
   const statsDoc = () => doc(db, "stats", "site");
 
+  /* 讀取快取。免費方案每天 5 萬次讀取，而一次遊戲場的來回（每輪結算查榜、
+     開排行榜面板、上週前三名）本來會重覆查同一份榜單好幾次。榜單變動不快，
+     短時間內重查沒有意義，快取起來可以把尖峰時的讀取量壓下一個數量級。 */
+  const TOP_TTL = 90e3, CNT_TTL = 300e3;
+  function cGet(key, ttl){
+    try{
+      const o = JSON.parse(sessionStorage[key] || "null");
+      return o && Date.now() - o.t < ttl ? o.v : null;
+    }catch(e){ return null; }
+  }
+  function cPut(key, v){
+    try{ sessionStorage[key] = JSON.stringify({t: Date.now(), v}); }catch(e){}
+  }
+  /* 自己送出成績之後榜單就變了，把這一週的快取全部作廢 */
+  function cDropWeek(week){
+    for(const k of Object.keys(sessionStorage))
+      if(k.startsWith("kg_top_" + week)) delete sessionStorage[k];
+  }
+
   window.site = {
     /* 自己的 uid；算名次時要排除自己的舊紀錄，否則會被自己擠掉一名 */
     myId(){ return auth.currentUser ? auth.currentUser.uid : null; },
@@ -130,10 +149,16 @@ if (FIREBASE_CONFIG) {
     /* 排行榜每週重來。不刪資料 —— 每筆成績帶著週識別，查詢只取指定的一週，
        上週的紀錄留著給發獎用，但不會再出現在榜上。 */
     async getTop(n = 10, week){
+      const wk = week || weekId();
+      const key = `kg_top_${wk}_${n}`;
+      const hit = cGet(key, TOP_TTL);
+      if(hit) return hit;
       try{
+        /* 文件 id 是 {uid}_{週次}，同一人同一週只可能有一筆，取 n 筆就夠。
+           原本抓 n*5 筆是週制以前用來去重的遺留寫法，等於白花五倍讀取額度。 */
         const q = query(collection(db, "leaderboard"),
-                        where("week", "==", week || weekId()),
-                        orderBy("score", "desc"), limit(n * 5));
+                        where("week", "==", wk),
+                        orderBy("score", "desc"), limit(n));
         const snap = await getDocs(q);
         const byUser = new Map();
         for(const d of snap.docs){
@@ -146,19 +171,63 @@ if (FIREBASE_CONFIG) {
         rows.sort((a, b) =>
           (b.score - a.score) ||
           ((a.at && a.at.seconds || 0) - (b.at && b.at.seconds || 0)));
-        return rows.slice(0, n);
+        const out = rows.slice(0, n);
+        cPut(key, out);
+        return out;
       }catch(e){ console.debug("leaderboard read", e); return null; }
     },
     /* 本週上榜人數。一人一週一筆，所以文件數就是人數。
        用聚合查詢而不是抓全部文件 —— 每 1000 筆才算一次讀取，不會隨人數變貴。 */
     async playerCount(){
+      const key = "kg_cnt_" + weekId();
+      const hit = cGet(key, CNT_TTL);
+      if(hit !== null) return hit;
       try{
         const q = query(collection(db, "leaderboard"), where("week", "==", weekId()));
-        return (await getCountFromServer(q)).data().count;
+        const n = (await getCountFromServer(q)).data().count;
+        cPut(key, n);
+        return n;
       }catch(e){ console.debug("player count", e); return null; }
     },
     /* 上週前三名，用來發週賽獎金 */
     async lastWeekTop3(){ return this.getTop(3, prevWeekId()); },
+    /* 每題的作答統計。記的是「第 N 題被答對了幾次」這種聚合數字，
+       不附帶任何身分，也回推不到個人 —— 用途是讓站長知道民眾最常錯哪個觀念。
+       一輪十題彙整成一次寫入（不是每題一次），免費方案每天 2 萬次寫入才夠用。
+       分散在數份文件是因為單一文件的持續寫入速度約每秒一次，尖峰會塞車。
+
+       ※ 誠實說明：安全規則無法驗證這些數字是不是真的玩出來的，有心人可以灌水。
+         這份資料只拿來當選題參考，不適合當成研究數據。 */
+    async logQuiz(rows){
+      try{
+        if(!auth.currentUser || !Array.isArray(rows) || !rows.length) return;
+        const q = {};
+        for(const r of rows){
+          if(!Number.isInteger(r.i) || r.i < 0) continue;
+          q[r.i] = {n: increment(1), c: increment(r.ok ? 1 : 0)};
+        }
+        if(!Object.keys(q).length) return;
+        const shard = "s" + Math.floor(Math.random() * 4);
+        await setDoc(doc(db, "qstats", shard), {q}, {merge: true});
+      }catch(e){ console.debug("qstats write", e); }
+    },
+    /* 站長儀表板用：把各份統計加總起來 */
+    async quizStats(){
+      try{
+        const snap = await getDocs(collection(db, "qstats"));
+        const all = {};
+        snap.forEach(d => {
+          const q = (d.data() || {}).q || {};
+          for(const k of Object.keys(q)){
+            const v = q[k] || {};
+            all[k] = all[k] || {n: 0, c: 0};
+            all[k].n += v.n || 0;
+            all[k].c += v.c || 0;
+          }
+        });
+        return all;
+      }catch(e){ console.debug("qstats read", e); return null; }
+    },
     /* 一人一週一筆，同一週內重複送出就更新那一筆，不會洗版排行榜。 */
     async submitScore(name, score, rounds){
       try{
@@ -172,6 +241,7 @@ if (FIREBASE_CONFIG) {
           rounds: Math.max(1, Math.min(10, rounds|0)),
           at: serverTimestamp(),
         });
+        cDropWeek(week);          // 榜單已變動，快取作廢
         return clean;
       }catch(e){ console.debug("leaderboard write", e); return null; }
     },

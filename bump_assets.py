@@ -13,7 +13,7 @@ import io, os, re, sys, hashlib
 sys.stdout.reconfigure(encoding="utf-8")
 
 ASSETS = ("shared.js", "data.js", "sync.js", "quiz.js")
-PAGES = ("index.html", "game.html", "library.html")
+PAGES = ("index.html", "game.html", "library.html", "dash.html")
 
 
 def main():
