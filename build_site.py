@@ -189,6 +189,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     url = f"{BASE_URL}/{path}"
     nav = ('<a href="/articles/">全部文章</a>' if home
            else '<a href="/">回首頁</a>')
+    nav += '　·　<a href="/about.html">關於作者</a>'
     brand = ("護腎教室" if home else f"{SITE_NAME}｜衛教文章")
     ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
     return f"""<!doctype html>
@@ -232,7 +233,8 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 """
 
 
-def build_category(cat: str, items: list[dict]) -> tuple[str, str, str]:
+def build_category(cat: str, items: list[dict],
+                   articles: list[dict] | None = None) -> tuple[str, str, str]:
     slug = CAT_SLUG[cat]
     path = f"articles/{slug}.html"
     title = f"{cat}與腎臟健康：{len(items)} 個重點整理｜{SITE_NAME}"
@@ -258,10 +260,22 @@ def build_category(cat: str, items: list[dict]) -> tuple[str, str, str]:
         f'<div class="d">{esc(CAT_INTRO.get(c, "")[:46])}…</div></a>'
         for c in CAT_SLUG if c != cat)
 
+    # 內部連結：把屬於這個分類的長文列在最前面。
+    # 分類頁流量較大，是把權重導向深度文章最自然的位置。
+    deep = [a for a in (articles or []) if a.get("cat") == cat]
+    deep_html = ""
+    if deep:
+        li = "".join(
+            f'<a class="feat" href="/{a["path"]}"><div class="t">{esc(a["title"])}</div>'
+            f'<div class="d">{esc(a["summary"][:88])}…</div></a>' for a in deep)
+        deep_html = (f'<h2 class="backlink">深入閱讀</h2>'
+                     f'<div class="sd">這個主題的完整長文</div>{li}')
+
     body = f"""
 <h1>{esc(cat)}與腎臟健康</h1>
 <p class="lede">{esc(intro)}</p>
-<p class="meta">作者：{esc(AUTHOR_NAME)}（{esc(AUTHOR_TITLE)}）　·　更新於 {TODAY}　·　共 {len(items)} 則</p>
+<p class="meta">作者：<a href="/about.html">{esc(AUTHOR_NAME)}</a>（{esc(AUTHOR_TITLE)}）　·　更新於 {TODAY}　·　共 {len(items)} 則</p>
+{deep_html}
 <div class="toc"><h2>本頁內容</h2><ol>{toc}</ol></div>
 {''.join(secs)}
 <h2 class="backlink">其他主題</h2>
@@ -375,49 +389,153 @@ def md_to_html(text: str) -> tuple[list[str], list[tuple[str, str]]]:
     return out, heads
 
 
-def build_markdown_articles() -> list[tuple[str, str, str]]:
-    """articles_src/*.md 各自產生一頁長文。
-    格式：第一行 `# 標題`，接著 `> 一句話摘要`（作為 meta description），其後為內文。"""
-    out = []
+PUB_DATES = SRC_MD / "published.json"
+
+
+def load_pub_dates() -> dict[str, str]:
+    """記住每篇文章第一次發布的日期。
+    Google 會同時看 datePublished 與 dateModified；若只有後者，
+    每次重新產生都會讓文章看起來像新寫的，反而不利於累積權重。"""
+    if PUB_DATES.exists():
+        try:
+            return json.loads(PUB_DATES.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            pass
+    return {}
+
+
+def extract_faq(text: str) -> list[tuple[str, str]]:
+    """從「常見問題／常見誤解」段落抽出問答配對，用來產生 FAQPage 結構化資料。
+
+    Google 會把 FAQPage 呈現成可展開的問答區塊，版位在一般搜尋結果之上。
+    慣例：`## 常見問題`（或含「常見誤解」）底下，每個 `### 問句` 加緊接的段落。
+    """
+    m = re.search(r"^##\s+(.*(?:常見問題|常見誤解).*)$", text, re.M)
+    if not m:
+        return []
+    section = text[m.end():]
+    nxt = re.search(r"^##\s+", section, re.M)
+    if nxt:
+        section = section[:nxt.start()]
+
+    faqs = []
+    parts = re.split(r"^###\s+", section, flags=re.M)[1:]
+    for p in parts:
+        lines = [ln.strip() for ln in p.strip().split("\n") if ln.strip()]
+        if len(lines) < 2:
+            continue
+        q = lines[0].strip("「」？?。 ")
+        a = "".join(lines[1:])
+        a = re.sub(r"\*\*([^*]+)\*\*", r"\1", a)
+        faqs.append((lines[0].strip(), a))
+    return faqs
+
+
+def parse_article(md: Path) -> dict:
+    """解析一篇 Markdown 長文。
+    格式：`# 標題` / `> 一句話摘要` / `分類：檢查數值`（可省略）/ 內文。"""
+    text = md.read_text(encoding="utf-8").strip()
+    lines = text.split("\n")
+    title = lines[0].lstrip("# ").strip() if lines else md.stem
+    rest = lines[1:]
+
+    summary, cat = "", ""
+    while rest and not rest[0].strip():
+        rest.pop(0)
+    if rest and rest[0].startswith(">"):
+        summary = rest.pop(0).lstrip("> ").strip()
+    while rest and not rest[0].strip():
+        rest.pop(0)
+    if rest and re.match(r"^(分類|cat)\s*[:：]", rest[0]):
+        cat = re.split(r"[:：]", rest.pop(0), maxsplit=1)[1].strip()
+
+    return {"slug": md.stem, "title": title, "summary": summary,
+            "cat": cat if cat in CAT_SLUG else "",
+            "body": "\n".join(rest), "raw": text}
+
+
+def build_markdown_articles() -> list[dict]:
+    """articles_src/*.md 各自產生一頁長文。回傳每篇的中繼資料供互連與首頁使用。"""
+    out: list[dict] = []
     if not SRC_MD.exists():
         return out
+
+    pub = load_pub_dates()
+    changed = False
+
     for md in sorted(SRC_MD.glob("*.md")):
         # 檔名以底線開頭 = 草稿，不產生頁面也不進 sitemap。
         # 醫學內容掛作者姓名發布前必須先經本人審核，審完把底線拿掉即可上線。
         if md.name.startswith("_"):
             print(f"  （草稿，未發布）{md.name}")
             continue
-        text = md.read_text(encoding="utf-8").strip()
-        lines = text.split("\n")
-        title = lines[0].lstrip("# ").strip() if lines else md.stem
-        summary = ""
-        rest = lines[1:]
-        # 標題與摘要之間通常隔一行空白，先跳過才抓得到摘要
-        while rest and not rest[0].strip():
-            rest.pop(0)
-        if rest and rest[0].startswith(">"):
-            summary = rest.pop(0).lstrip("> ").strip()
-        paras, heads = md_to_html("\n".join(rest))
+
+        a = parse_article(md)
+        paras, heads = md_to_html(a["body"])
         toc = ""
         if len(heads) >= 3:
             li = "".join(f'<li><a href="#{h}">{esc(t)}</a></li>' for h, t in heads)
             toc = f'<div class="toc"><h2>本頁內容</h2><ol>{li}</ol></div>'
 
-        path = f"articles/{md.stem}.html"
-        desc = (summary or title)[:150]
-        body = f"<h1>{esc(title)}</h1>"
-        if summary:
-            body += f"<p class='lede'>{esc(summary)}</p>"
-        body += (f"<p class='meta'>作者：{esc(AUTHOR_NAME)}（{esc(AUTHOR_TITLE)}）"
-                 f"　·　更新於 {TODAY}</p>{toc}" + "".join(paras))
+        path = f"articles/{a['slug']}.html"
+        desc = (a["summary"] or a["title"])[:150]
+
+        if a["slug"] not in pub:
+            pub[a["slug"]] = TODAY
+            changed = True
+        published = pub[a["slug"]]
+
+        datestr = (f"發布於 {published}" if published == TODAY
+                   else f"發布於 {published}　·　更新於 {TODAY}")
+
+        # 內部連結：把文章接回它所屬的分類頁，讓搜尋引擎看得出主題歸屬
+        related = ""
+        if a["cat"]:
+            related = (f'<h2 class="backlink">延伸閱讀</h2>'
+                       f'<div class="cats">'
+                       f'<a href="/articles/{CAT_SLUG[a["cat"]]}.html">'
+                       f'<div class="t">{esc(a["cat"])}：完整整理</div>'
+                       f'<div class="d">{esc(CAT_INTRO.get(a["cat"], "")[:46])}…</div></a>'
+                       f'<a href="/articles/"><div class="t">全部衛教主題</div>'
+                       f'<div class="d">血壓、血糖、血脂、飲食、用藥安全…</div></a>'
+                       f"</div>")
+
+        body = f"<h1>{esc(a['title'])}</h1>"
+        if a["summary"]:
+            body += f"<p class='lede'>{esc(a['summary'])}</p>"
+        body += (f"<p class='meta'>作者：<a href='/about.html'>{esc(AUTHOR_NAME)}</a>"
+                 f"（{esc(AUTHOR_TITLE)}）　·　{datestr}</p>{toc}"
+                 + "".join(paras) + related)
+
         jsonld = {
             "@context": "https://schema.org", "@type": "MedicalWebPage",
-            "headline": title, "description": desc, "inLanguage": "zh-Hant",
-            "url": f"{BASE_URL}/{path}", "dateModified": TODAY,
-            "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE},
+            "headline": a["title"], "description": desc, "inLanguage": "zh-Hant",
+            "url": f"{BASE_URL}/{path}",
+            "datePublished": published, "dateModified": TODAY,
+            "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
+                       "url": f"{BASE_URL}/about.html"},
+            "publisher": {"@type": "Organization", "name": SITE_NAME},
             "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"},
         }
-        out.append((path, page(f"{title}｜{SITE_NAME}", desc, path, body, jsonld), title))
+
+        faqs = extract_faq(a["raw"])
+        extra_ld = ""
+        if faqs:
+            faq_ld = {"@context": "https://schema.org", "@type": "FAQPage",
+                      "mainEntity": [{"@type": "Question", "name": q,
+                                      "acceptedAnswer": {"@type": "Answer", "text": ans}}
+                                     for q, ans in faqs]}
+            extra_ld = ('<script type="application/ld+json">'
+                        + json.dumps(faq_ld, ensure_ascii=False) + "</script>")
+
+        a["path"] = path
+        a["html"] = page(f"{a['title']}｜{SITE_NAME}", desc, path, body, jsonld,
+                         extra_head=extra_ld)
+        a["faq_count"] = len(faqs)
+        out.append(a)
+
+    if changed:
+        PUB_DATES.write_text(json.dumps(pub, ensure_ascii=False, indent=2), encoding="utf-8")
     return out
 
 
@@ -433,17 +551,9 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]])
         f'<div class="d">{esc(CAT_INTRO.get(c, "")[:50])}…</div></a>'
         for c, v in by_cat.items())
 
-    feats = ""
-    for path, _h, t in extra:
-        src = SRC_MD / (Path(path).stem + ".md")
-        summary = ""
-        if src.exists():
-            for ln in src.read_text(encoding="utf-8").split("\n")[1:6]:
-                if ln.startswith(">"):
-                    summary = ln.lstrip("> ").strip()
-                    break
-        feats += (f'<a class="feat" href="/{path}"><div class="t">{esc(t)}</div>'
-                  f'<div class="d">{esc(summary[:88])}…</div></a>')
+    feats = "".join(
+        f'<a class="feat" href="/{a["path"]}"><div class="t">{esc(a["title"])}</div>'
+        f'<div class="d">{esc(a["summary"][:88])}…</div></a>' for a in extra)
 
     feat_sect = (f'<h2 class="sect">深入文章</h2>'
                  f'<div class="sd">完整長文，適合想把一個主題徹底搞懂的人</div>{feats}'
@@ -480,6 +590,84 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]])
     return page(title, desc, "", body, jsonld, home=True)
 
 
+def build_about() -> str:
+    """關於作者頁。
+
+    醫療內容（YMYL）的搜尋排名高度取決於「誰寫的、憑什麼可信」。
+    只在頁尾放一個作者方塊不夠，需要一頁完整說明資歷與撰寫原則，
+    並讓所有文章都連過來，形成明確的權威訊號。
+    """
+    title = f"關於{AUTHOR_NAME}醫師與本站｜{SITE_NAME}"
+    desc = (f"{AUTHOR_NAME}，腎臟科專科醫師，臨床工作以三高、慢性腎臟病與"
+            "血液透析／腹膜透析為主。本頁說明本站的內容撰寫原則、資料來源，"
+            "以及本站不提供個別醫療建議的立場。")
+
+    body = f"""
+<h1>關於{esc(AUTHOR_NAME)}醫師與本站</h1>
+<p class="lede">{esc(AUTHOR_BIO)}</p>
+
+<h2 id="zhuan-ye">專業背景</h2>
+<ul>
+<li>腎臟科專科醫師</li>
+<li>臨床專長：三高（高血壓、糖尿病、高血脂）、慢性腎臟病、血液透析、腹膜透析</li>
+</ul>
+
+<h2 id="wei-shen-me">為什麼做這個網站</h2>
+<p>在門診最常遇到的不是不願意配合的病人，而是<strong>被錯誤資訊嚇到、或被錯誤資訊耽誤</strong>的人。
+健檢報告上一個紅字，網路上查到的答案從「沒事」到「準備洗腎」都有；而真正需要警覺的訊號，
+反而常被當成小毛病。這個網站想做的很簡單：把腎臟與三高的事，用一般人看得懂的方式講清楚，
+讓你在跟自己的醫師討論之前，先知道問題在哪裡、該問什麼。</p>
+
+<h2 id="yuan-ze">內容撰寫原則</h2>
+<ul>
+<li><strong>以國際指引與期刊文獻為依據</strong>，主要參考 KDIGO 慢性腎臟病指引、
+以及腎臟醫學與內科領域的同儕審查期刊。</li>
+<li><strong>不確定的就說不確定。</strong>醫學上有很多還沒有定論的問題，
+這種時候會直接寫「目前證據還不夠」，而不是給一個聽起來很篤定的答案。</li>
+<li><strong>不推薦任何商品。</strong>本站不接受保健食品、藥品或醫療器材的業配與贊助，
+也不會在文章中推薦特定品牌。</li>
+<li><strong>內容會更新。</strong>指引改版、有新的重要證據時會回頭修改舊文，
+每篇文章都標示發布與更新日期。</li>
+</ul>
+
+<h2 id="bu-ti-gong">本站不提供什麼</h2>
+<p>本站的內容是<strong>一般性的健康衛教</strong>，不是針對任何特定個人的診療建議。
+具體而言：</p>
+<ul>
+<li>不提供線上診斷、不解讀個人的檢查報告</li>
+<li>不提供個別的用藥建議或劑量調整</li>
+<li>不回覆與個人病情有關的私訊或留言諮詢</li>
+</ul>
+<p>每個人的狀況都不一樣——同樣一個 eGFR 數值，在不同年齡、有沒有蛋白尿、
+有沒有其他共病的人身上，意義可能完全不同。這些判斷需要完整的病史、
+檢查結果與當面評估，不是任何網站能取代的。<strong>請與你的主治醫師討論。</strong></p>
+
+<h2 id="lian-luo">關於引用</h2>
+<p>本站文章歡迎在註明出處與連結原文的前提下引用。若為媒體採訪或授權轉載，
+請透過本站說明的方式聯絡。</p>
+"""
+
+    jsonld = {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        "name": title,
+        "description": desc,
+        "inLanguage": "zh-Hant",
+        "url": f"{BASE_URL}/about.html",
+        "dateModified": TODAY,
+        "mainEntity": {
+            "@type": "Physician",
+            "name": AUTHOR_NAME,
+            "jobTitle": AUTHOR_TITLE,
+            "description": AUTHOR_BIO,
+            "medicalSpecialty": ["Nephrologic", "InternalMedicine"],
+            "knowsAbout": ["慢性腎臟病", "血液透析", "腹膜透析", "高血壓", "糖尿病", "高血脂"],
+            "url": f"{BASE_URL}/about.html",
+        },
+    }
+    return page(title, desc, "about.html", body, jsonld)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--serve", action="store_true")
@@ -494,28 +682,34 @@ def main() -> int:
     OUT.mkdir(exist_ok=True)
     written: list[str] = []
 
+    # 長文先產生，分類頁才知道要把哪幾篇列為「深入閱讀」
+    md_pages = build_markdown_articles()
+    for a in md_pages:
+        (ROOT / a["path"]).write_text(a["html"], encoding="utf-8")
+        written.append(a["path"])
+        faq = f"，FAQ {a['faq_count']} 題" if a["faq_count"] else ""
+        print(f"  {a['path']}　(長文，分類：{a['cat'] or '未指定'}{faq})")
+
     for cat, items in by_cat.items():
-        path, htm, _t = build_category(cat, items)
+        path, htm, _t = build_category(cat, items, md_pages)
         (ROOT / path).write_text(htm, encoding="utf-8")
         written.append(path)
         print(f"  {path}　({len(items)} 則，約 {sum(len(i['body']) for i in items):,} 字)")
 
-    md_pages = build_markdown_articles()
-    for path, htm, _t in md_pages:
-        (ROOT / path).write_text(htm, encoding="utf-8")
-        written.append(path)
-        print(f"  {path}　(擴寫長文)")
-
-    idx_path, idx_html = build_index(by_cat, [(p, t) for p, _h, t in md_pages])
+    idx_path, idx_html = build_index(by_cat, [(a["path"], a["title"]) for a in md_pages])
     (ROOT / idx_path).write_text(idx_html, encoding="utf-8")
     written.insert(0, idx_path)
     print(f"  {idx_path}")
+
+    (ROOT / "about.html").write_text(build_about(), encoding="utf-8")
+    print("  about.html　(關於作者，E-E-A-T 權威訊號)")
 
     (ROOT / "index.html").write_text(build_home(by_cat, md_pages), encoding="utf-8")
     print("  index.html　(網站首頁，衛教為主 + 商城大按鈕)")
 
     # sitemap：讓搜尋引擎一次拿到所有網址
-    urls = ["", "articles/", "shop.html"] + [p for p in written if not p.endswith("index.html")]
+    urls = ["", "articles/", "about.html", "shop.html"] + [
+        p for p in written if not p.endswith("index.html")]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>',
           '<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9">'.replace(
               "www.sitemap.org", "www.sitemaps.org")]
