@@ -81,10 +81,12 @@ text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat .d{font-size:14px;color:var(--mut);line-height:1.65}
 
 /* 商城入口：刻意沿用商城本身的深色＋金框風格，在淺色頁面上形成強烈對比，
-   讓它成為整個首頁最醒目的元素。 */
-.gamebtn{display:flex;align-items:center;gap:20px;text-decoration:none;
+   讓它成為整個首頁最醒目的元素。
+   版面以標誌為主體、文字只作為說明它的圖說，所以是置中直排、不放按鈕與箭頭。 */
+.gamebtn{display:flex;flex-direction:column;align-items:center;text-align:center;
+gap:18px;text-decoration:none;
 background:linear-gradient(120deg,#33281f,#1e1814);color:#e8c65a;
-border:3px solid #c9a227;border-radius:18px;padding:26px 28px;margin:26px 0 10px;
+border:3px solid #c9a227;border-radius:18px;padding:32px 26px;margin:26px 0 10px;
 box-shadow:inset 0 1px 0 rgba(255,236,200,.14),0 14px 34px rgba(0,0,0,.32);
 position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
 .gamebtn:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(201,162,39,.34)}
@@ -93,23 +95,20 @@ background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent)
 animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
-.gamebtn img{width:78px;height:78px;flex-shrink:0;
-filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
-.gamebtn .gt{flex:1;min-width:0}
-.gamebtn .gt b{display:block;font-size:1.5rem;font-weight:900;letter-spacing:.5px;
-line-height:1.35;margin-bottom:6px}
-.gamebtn .gt span{display:block;font-size:14.5px;color:#e6d9c2;line-height:1.65;opacity:.95}
-.gamebtn .go{font-size:16px;font-weight:800;white-space:nowrap;color:#1e1814;
-background:#e8c65a;padding:11px 22px;border-radius:99px}
+/* 商城的招牌是 480x257 的橫幅標誌，不能鎖成正方形，否則會被壓扁。
+   固定高度、寬度自動，比例才會正確。 */
+.gamebtn img{height:136px;width:auto;max-width:100%;
+filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}
+.gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
+letter-spacing:.4px;line-height:1.5}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
-  .gamebtn{flex-wrap:wrap;gap:14px;padding:22px 20px}
-  .gamebtn img{width:56px;height:56px}
-  .gamebtn .gt b{font-size:1.24rem}
-  .gamebtn .go{width:100%;text-align:center}
+  .gamebtn{gap:14px;padding:26px 20px}
+  .gamebtn img{height:96px}
+  .gamebtn .cap{font-size:1.06rem}
 }
 </style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "headline": "生活習慣與腎臟健康", "description": "腎臟的保養沒有捷徑，但有幾個生活習慣的影響比多數人想的大。這一頁整理實際有幫助的部分。內容包含：脫水：急性腎損傷最常見的開場、憋尿的代價：從膀胱炎到腎盂腎炎、抽菸傷腎：血管的事，腎臟全都算一份 等 6 個主題。", "inLanguage": "zh-Hant", "url": "https://kidneygod-studio.github.io/articles/lifestyle.html", "dateModified": "2026-08-26", "author": {"@type": "Person", "name": "吳政哲", "jobTitle": "腎臟科醫師"}, "publisher": {"@type": "Organization", "name": "護腎教室"}, "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"}, "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "headline": "生活習慣與腎臟健康", "description": "腎臟的保養沒有捷徑，但有幾個生活習慣的影響比多數人想的大。這一頁整理實際有幫助的部分。內容包含：脫水：急性腎損傷最常見的開場、憋尿的代價：從膀胱炎到腎盂腎炎、抽菸傷腎：血管的事，腎臟全都算一份 等 6 個主題。", "inLanguage": "zh-Hant", "url": "https://kidneygod-studio.github.io/articles/lifestyle.html", "dateModified": "2026-08-27", "author": {"@type": "Person", "name": "吳政哲", "jobTitle": "腎臟科醫師"}, "publisher": {"@type": "Organization", "name": "護腎教室"}, "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"}, "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}}}</script>
 </head>
 <body>
 <header class="site"><div class="wrap">
@@ -120,7 +119,7 @@ background:#e8c65a;padding:11px 22px;border-radius:99px}
 
 <h1>生活習慣與腎臟健康</h1>
 <p class="lede">腎臟的保養沒有捷徑，但有幾個生活習慣的影響比多數人想的大。這一頁整理實際有幫助的部分。</p>
-<p class="meta">作者：吳政哲（腎臟科醫師）　·　更新於 2026-08-26　·　共 6 則</p>
+<p class="meta">作者：吳政哲（腎臟科醫師）　·　更新於 2026-08-27　·　共 6 則</p>
 <div class="toc"><h2>本頁內容</h2><ol><li><a href="#dehydration">脫水：急性腎損傷最常見的開場</a></li><li><a href="#holdurine">憋尿的代價：從膀胱炎到腎盂腎炎</a></li><li><a href="#smoking">抽菸傷腎：血管的事，腎臟全都算一份</a></li><li><a href="#sleep">睡不夠，腎臟也在加班</a></li><li><a href="#dietpill">來路不明的減肥藥：瘦不瘦不知道，腎臟先抽獎</a></li><li><a href="#exercise">運動護腎：控制三高就是保護腎絲球</a></li></ol></div>
 <article class="card"><h2 id="dehydration">脫水：急性腎損傷最常見的開場</h2><p>腎臟需要足夠的血流灌注才能工作。大量流汗、腹瀉嘔吐、發燒卻沒補水時，腎臟血流下降，就可能發生「腎前性急性腎損傷」——這是住院病人腎功能惡化最常見的原因之一。警訊很簡單：尿變深、變少、頭暈心悸。此時若再吃 NSAID 止痛藥或繼續用利尿劑，等於雪上加霜。腹瀉發燒時的功課：小口多次補水（必要時電解質液），並暫停止痛藥前先問醫師。</p></article><article class="card"><h2 id="holdurine">憋尿的代價：從膀胱炎到腎盂腎炎</h2><p>尿液在膀胱裡滯留越久，細菌越有機會繁殖。反覆憋尿與泌尿道感染關係密切，感染若往上蔓延成急性腎盂腎炎，就會發燒、腰痛、需要抗生素治療，嚴重時留下腎臟疤痕。女性因尿道短更容易中獎。護腎最便宜的兩招：水喝夠、想上就去上。上班再忙，膀胱的行程永遠該排前面。</p></article><article class="card"><h2 id="smoking">抽菸傷腎：血管的事，腎臟全都算一份</h2><p>腎臟本質上是一團精密的血管球。菸品中的尼古丁與毒素會收縮血管、加速動脈硬化、增加蛋白尿，讓慢性腎臟病惡化速度明顯加快——對糖尿病患者的腎臟傷害更是加乘。研究一致顯示吸菸者進入透析的風險更高。戒菸是少數「同時保護心、腦、肺、腎」的投資，而且免費。需要幫忙可以找戒菸門診，健保有給付。</p></article><article class="card"><h2 id="sleep">睡不夠，腎臟也在加班</h2><p>長期睡眠不足與高血壓、蛋白尿、腎功能下降的風險上升有關——睡眠是血壓的夜間休息時段，長期熬夜等於讓腎絲球連夜加班。此外，嚴重打鼾與睡眠呼吸中止症會造成夜間缺氧與血壓飆升，是被低估的腎臟壓力源，枕邊人抱怨你「鼾聲會停一下再大聲吸氣」就該去檢查。目標很樸素：每天 7 小時左右、規律作息、打鼾嚴重就就醫。</p></article><article class="card"><h2 id="dietpill">來路不明的減肥藥：瘦不瘦不知道，腎臟先抽獎</h2><p>標榜「速效」的不明減肥產品，被驗出過利尿劑（脫水假象體重）、甲狀腺素、瀉藥，甚至已禁用的西布曲明。利尿劑與瀉藥造成的脫水和電解質失衡，是急性腎損傷的標準劇本。真正有效且安全的減重：飲食調整、運動，必要時由醫師處方合法減重藥物。體重可以慢慢減，腎臟壞了不會慢慢好。</p></article><article class="card"><h2 id="exercise">運動護腎：控制三高就是保護腎絲球</h2><p>規律的中等強度運動（快走、游泳、騎車，每週 150 分鐘）能改善血壓、血糖、體重——這三項正是腎臟病最大的上游因子，慢性腎臟病患者適度運動同樣安全且有益。要避開的是極端劇本：平常不動、突然高強度爆發（重訓過猛、酷熱下長跑），可能引發橫紋肌溶解症，肌肉崩解產物堵塞腎小管造成急性腎損傷，尿液呈可樂色就要立刻就醫。循序漸進、補足水分，避免運動前吞 NSAID 止痛藥。</p></article>
 <h2 class="backlink">其他主題</h2>
@@ -129,13 +128,13 @@ background:#e8c65a;padding:11px 22px;border-radius:99px}
 <div class="author">
   <div>
     <div class="n">吳政哲　<span class="r">腎臟科醫師</span></div>
-    <div>腎臟科專科醫師，臨床工作以慢性腎臟病與血液透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
+    <div>腎臟科專科醫師，臨床工作以三高、慢性腎臟病與血液透析／腹膜透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
   </div>
 </div>
 <div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
 </main>
 <footer class="site"><div class="wrap">
-<p>護腎教室　·　最後更新 2026-08-26　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<p>護腎教室　·　最後更新 2026-08-27　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
 </div></footer>
 </body>
 </html>

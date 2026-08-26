@@ -81,10 +81,12 @@ text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat .d{font-size:14px;color:var(--mut);line-height:1.65}
 
 /* 商城入口：刻意沿用商城本身的深色＋金框風格，在淺色頁面上形成強烈對比，
-   讓它成為整個首頁最醒目的元素。 */
-.gamebtn{display:flex;align-items:center;gap:20px;text-decoration:none;
+   讓它成為整個首頁最醒目的元素。
+   版面以標誌為主體、文字只作為說明它的圖說，所以是置中直排、不放按鈕與箭頭。 */
+.gamebtn{display:flex;flex-direction:column;align-items:center;text-align:center;
+gap:18px;text-decoration:none;
 background:linear-gradient(120deg,#33281f,#1e1814);color:#e8c65a;
-border:3px solid #c9a227;border-radius:18px;padding:26px 28px;margin:26px 0 10px;
+border:3px solid #c9a227;border-radius:18px;padding:32px 26px;margin:26px 0 10px;
 box-shadow:inset 0 1px 0 rgba(255,236,200,.14),0 14px 34px rgba(0,0,0,.32);
 position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
 .gamebtn:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(201,162,39,.34)}
@@ -93,23 +95,20 @@ background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent)
 animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
-.gamebtn img{width:78px;height:78px;flex-shrink:0;
-filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
-.gamebtn .gt{flex:1;min-width:0}
-.gamebtn .gt b{display:block;font-size:1.5rem;font-weight:900;letter-spacing:.5px;
-line-height:1.35;margin-bottom:6px}
-.gamebtn .gt span{display:block;font-size:14.5px;color:#e6d9c2;line-height:1.65;opacity:.95}
-.gamebtn .go{font-size:16px;font-weight:800;white-space:nowrap;color:#1e1814;
-background:#e8c65a;padding:11px 22px;border-radius:99px}
+/* 商城的招牌是 480x257 的橫幅標誌，不能鎖成正方形，否則會被壓扁。
+   固定高度、寬度自動，比例才會正確。 */
+.gamebtn img{height:136px;width:auto;max-width:100%;
+filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}
+.gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
+letter-spacing:.4px;line-height:1.5}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
-  .gamebtn{flex-wrap:wrap;gap:14px;padding:22px 20px}
-  .gamebtn img{width:56px;height:56px}
-  .gamebtn .gt b{font-size:1.24rem}
-  .gamebtn .go{width:100%;text-align:center}
+  .gamebtn{gap:14px;padding:26px 20px}
+  .gamebtn img{height:96px}
+  .gamebtn .cap{font-size:1.06rem}
 }
 </style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "headline": "血壓管理與腎臟健康", "description": "血壓與腎臟是雙向的關係：高血壓會傷腎，腎功能變差又會讓血壓更難控制。這一頁整理血壓與腎臟之間最常被問到的問題。內容包含：130/80：台灣的高血壓標準為什麼下修了、722 原則：血壓要在家量，不是在診間量、白袍高血壓與隱匿性高血壓：哪一個比較危險 等 10 個主題。", "inLanguage": "zh-Hant", "url": "https://kidneygod-studio.github.io/articles/blood-pressure.html", "dateModified": "2026-08-26", "author": {"@type": "Person", "name": "吳政哲", "jobTitle": "腎臟科醫師"}, "publisher": {"@type": "Organization", "name": "護腎教室"}, "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"}, "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "headline": "血壓管理與腎臟健康", "description": "血壓與腎臟是雙向的關係：高血壓會傷腎，腎功能變差又會讓血壓更難控制。這一頁整理血壓與腎臟之間最常被問到的問題。內容包含：130/80：台灣的高血壓標準為什麼下修了、722 原則：血壓要在家量，不是在診間量、白袍高血壓與隱匿性高血壓：哪一個比較危險 等 10 個主題。", "inLanguage": "zh-Hant", "url": "https://kidneygod-studio.github.io/articles/blood-pressure.html", "dateModified": "2026-08-27", "author": {"@type": "Person", "name": "吳政哲", "jobTitle": "腎臟科醫師"}, "publisher": {"@type": "Organization", "name": "護腎教室"}, "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"}, "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}}}</script>
 </head>
 <body>
 <header class="site"><div class="wrap">
@@ -120,7 +119,7 @@ background:#e8c65a;padding:11px 22px;border-radius:99px}
 
 <h1>血壓管理與腎臟健康</h1>
 <p class="lede">血壓與腎臟是雙向的關係：高血壓會傷腎，腎功能變差又會讓血壓更難控制。這一頁整理血壓與腎臟之間最常被問到的問題。</p>
-<p class="meta">作者：吳政哲（腎臟科醫師）　·　更新於 2026-08-26　·　共 10 則</p>
+<p class="meta">作者：吳政哲（腎臟科醫師）　·　更新於 2026-08-27　·　共 10 則</p>
 <div class="toc"><h2>本頁內容</h2><ol><li><a href="#bp-130">130/80：台灣的高血壓標準為什麼下修了</a></li><li><a href="#bp-722">722 原則：血壓要在家量，不是在診間量</a></li><li><a href="#bp-whitecoat">白袍高血壓與隱匿性高血壓：哪一個比較危險</a></li><li><a href="#bp-stop">血壓正常了，可以自己停藥嗎</a></li><li><a href="#bp-acei">ACEI／ARB：不只降壓，還會降蛋白尿</a></li><li><a href="#bp-ckd">為什麼腎臟病患的血壓特別難控制</a></li><li><a href="#bp-salt">減鹽降壓：真正的大魔王不在鹽罐裡</a></li><li><a href="#bp-night">夜間高血壓：睡覺時血壓沒有降下來</a></li><li><a href="#bp-silent">高血壓沒有症狀，這正是它可怕的地方</a></li><li><a href="#bp-howto">血壓量錯了，後面的治療都是猜的</a></li></ol></div>
 <article class="card"><h2 id="bp-130">130/80：台灣的高血壓標準為什麼下修了</h2><p>2022 年台灣高血壓治療指引把診斷標準從 140/90 下修到 130/80 mmHg，依據之一是以華人為主要受試者的 STEP 研究——把收縮壓控制在 130 以下，心血管事件風險下降約 26%。這不是把更多人「變成病人」，而是把介入時機提早到器官還沒受損之前。對腎臟尤其重要：血壓每高一階，腎絲球就多承受一分壓力，而腎功能一旦掉下去就回不來。看到 132/84 別再說「才一點點」。</p></article><article class="card"><h2 id="bp-722">722 原則：血壓要在家量，不是在診間量</h2><p>新版指引最大的改變之一，是把「居家血壓」當成主要判斷依據，而不是診間量的那一次。做法就是 722：連續 7 天、早晚各 2 次、每次量 2 遍取平均。早上起床後一小時內、上廁所後、吃藥前量；晚上睡前量。量之前先靜坐五分鐘，背靠椅背、腳平放地面、手臂與心臟同高。一週的平均值比任何單次數字都有意義，回診時把紀錄帶去，醫師調藥才有依據。</p></article><article class="card"><h2 id="bp-whitecoat">白袍高血壓與隱匿性高血壓：哪一個比較危險</h2><p>有人一進診間血壓就飆，回家卻正常，這叫白袍高血壓；反過來，診間量起來漂亮、在家或上班時卻偏高，叫隱匿性高血壓。後者更值得警惕——因為它平常不會被抓到，器官卻一直在受傷，心血管與腎臟風險接近真正的高血壓患者。這正是指引改以居家血壓為準的原因。只在診間量血壓，等於只在體檢當天觀察一個人的作息。</p></article><article class="card"><h2 id="bp-stop">血壓正常了，可以自己停藥嗎</h2><p>「血壓正常」多半是藥在發揮作用，不是高血壓好了——自行停藥，血壓通常在數天到數週內回升，某些藥物驟停還可能反彈性飆高。門診最令人惋惜的情況，就是病人因為怕「吃藥傷腎」而停掉降壓藥，改吃來路不明的偏方，結果血壓失控、腎功能加速惡化。事實恰恰相反：規律服用降壓藥是保護腎臟，失控的血壓才是傷腎的元凶。真的想減藥，可以靠減重、減鹽、運動創造條件，然後帶著居家血壓紀錄與醫師討論，由醫師調整。</p></article><article class="card"><h2 id="bp-acei">ACEI／ARB：不只降壓，還會降蛋白尿</h2><p>血管收縮素轉化酶抑制劑（ACEI）與血管收縮素受體阻斷劑（ARB）能降低腎絲球內壓，除了降血壓，還能減少蛋白尿、延緩腎功能惡化，是慢性腎臟病合併蛋白尿的首選用藥。KDIGO 2024 指引甚至建議，即使 eGFR 已降到 30 以下，仍應繼續使用而非貿然停藥。有件事要先知道：開始服用後肌酸酐可能小幅上升（通常 30% 以內），這是腎絲球內壓下降的預期反應，不代表藥物傷腎，醫師會抽血追蹤。另外這兩類藥不可以合併使用，也要注意血鉀。</p></article><article class="card"><h2 id="bp-ckd">為什麼腎臟病患的血壓特別難控制</h2><p>腎臟同時是高血壓的受害者與加害者。腎功能下降後排鈉能力變差，體內水分與鈉滯留，血壓自然上升；同時腎素—血管收縮素—醛固酮系統（RAAS）被活化，血管收縮、血壓再往上推。這就是為什麼腎友常常需要三種以上的降壓藥，而且利尿劑在其中扮演關鍵角色——因為要先把多餘的水和鈉排掉，其他藥才有效。也因此，腎友減鹽的效果比一般人更明顯：少吃鹽，等於少吃一顆藥。</p></article><article class="card"><h2 id="bp-salt">減鹽降壓：真正的大魔王不在鹽罐裡</h2><p>每日鹽分控制在 6 克（約 2400 毫克鈉）以下，收縮壓平均可下降數毫米汞柱，對腎友效果更明顯。但只把餐桌上的鹽罐收起來幾乎沒用，因為台灣人吃進的鈉大多藏在別的地方：麵湯與火鍋湯底、加工肉品、醬料沾醬、麵包吐司、零食餅乾、醃漬品。實用三招：湯少喝（麵湯是重災區）、醬料改成另外沾、看包裝上的鈉含量（400 毫克鈉約等於 1 克鹽）。要提醒的是，低鈉鹽是用鉀取代鈉，腎功能不好的人反而可能高血鉀，不要自行改用。</p></article><article class="card"><h2 id="bp-night">夜間高血壓：睡覺時血壓沒有降下來</h2><p>正常人夜間血壓會比白天低 10–20%，這段「休息時間」是血管與腎臟的修復期。如果夜間血壓沒有下降（醫學上稱 non-dipper），心血管與腎臟風險明顯上升，而慢性腎臟病患者出現這種型態的比例特別高。常見的可矯正原因是阻塞型睡眠呼吸中止症——夜裡反覆缺氧會讓交感神經興奮、血壓飆升。如果枕邊人說你「打鼾中間會停一下再大口吸氣」，白天又很累，值得做睡眠檢查，治療後血壓往往一起改善。</p></article><article class="card"><h2 id="bp-silent">高血壓沒有症狀，這正是它可怕的地方</h2><p>依國健署國民營養健康狀況變遷調查，20 歲以上國人高血壓自知率約 68%，換句話說每三個高血壓患者就有一個不知道自己有。很多人以為「血壓高會頭痛、會脖子緊」，但絕大多數高血壓完全沒有症狀，等到有感覺時往往已經傷到心、腦、腎。所以判斷有沒有高血壓的唯一方法就是量——18 歲以上每年至少量一次，有家族史、肥胖、糖尿病或腎臟病的人要規律居家量測。國健署也提供成人預防保健服務，符合年齡即可利用。</p></article><article class="card"><h2 id="bp-howto">血壓量錯了，後面的治療都是猜的</h2><p>常見的五個錯誤：量之前剛走完路或喝完咖啡（要先靜坐五分鐘）、翹腳或腳懸空（要平放地面）、手臂垂放或抬太高（要與心臟同高）、袖帶太小或隔著厚衣服（袖帶要合尺寸、直接貼上臂）、憋著尿量（膀胱脹會讓血壓上升）。另外，量兩遍取平均比只量一次可靠，兩次之間間隔約一分鐘。手腕式血壓計方便但容易因姿勢誤差失準，若要用於長期追蹤，建議還是選上臂式並定期校正。</p></article>
 <h2 class="backlink">其他主題</h2>
@@ -129,13 +128,13 @@ background:#e8c65a;padding:11px 22px;border-radius:99px}
 <div class="author">
   <div>
     <div class="n">吳政哲　<span class="r">腎臟科醫師</span></div>
-    <div>腎臟科專科醫師，臨床工作以慢性腎臟病與血液透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
+    <div>腎臟科專科醫師，臨床工作以三高、慢性腎臟病與血液透析／腹膜透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
   </div>
 </div>
 <div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
 </main>
 <footer class="site"><div class="wrap">
-<p>護腎教室　·　最後更新 2026-08-26　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<p>護腎教室　·　最後更新 2026-08-27　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
 </div></footer>
 </body>
 </html>

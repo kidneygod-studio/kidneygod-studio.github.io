@@ -81,10 +81,12 @@ text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat .d{font-size:14px;color:var(--mut);line-height:1.65}
 
 /* 商城入口：刻意沿用商城本身的深色＋金框風格，在淺色頁面上形成強烈對比，
-   讓它成為整個首頁最醒目的元素。 */
-.gamebtn{display:flex;align-items:center;gap:20px;text-decoration:none;
+   讓它成為整個首頁最醒目的元素。
+   版面以標誌為主體、文字只作為說明它的圖說，所以是置中直排、不放按鈕與箭頭。 */
+.gamebtn{display:flex;flex-direction:column;align-items:center;text-align:center;
+gap:18px;text-decoration:none;
 background:linear-gradient(120deg,#33281f,#1e1814);color:#e8c65a;
-border:3px solid #c9a227;border-radius:18px;padding:26px 28px;margin:26px 0 10px;
+border:3px solid #c9a227;border-radius:18px;padding:32px 26px;margin:26px 0 10px;
 box-shadow:inset 0 1px 0 rgba(255,236,200,.14),0 14px 34px rgba(0,0,0,.32);
 position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
 .gamebtn:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(201,162,39,.34)}
@@ -93,23 +95,20 @@ background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent)
 animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
-.gamebtn img{width:78px;height:78px;flex-shrink:0;
-filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
-.gamebtn .gt{flex:1;min-width:0}
-.gamebtn .gt b{display:block;font-size:1.5rem;font-weight:900;letter-spacing:.5px;
-line-height:1.35;margin-bottom:6px}
-.gamebtn .gt span{display:block;font-size:14.5px;color:#e6d9c2;line-height:1.65;opacity:.95}
-.gamebtn .go{font-size:16px;font-weight:800;white-space:nowrap;color:#1e1814;
-background:#e8c65a;padding:11px 22px;border-radius:99px}
+/* 商城的招牌是 480x257 的橫幅標誌，不能鎖成正方形，否則會被壓扁。
+   固定高度、寬度自動，比例才會正確。 */
+.gamebtn img{height:136px;width:auto;max-width:100%;
+filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}
+.gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
+letter-spacing:.4px;line-height:1.5}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
-  .gamebtn{flex-wrap:wrap;gap:14px;padding:22px 20px}
-  .gamebtn img{width:56px;height:56px}
-  .gamebtn .gt b{font-size:1.24rem}
-  .gamebtn .go{width:100%;text-align:center}
+  .gamebtn{gap:14px;padding:26px 20px}
+  .gamebtn img{height:96px}
+  .gamebtn .cap{font-size:1.06rem}
 }
 </style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "headline": "飲食護腎與腎臟健康", "description": "「腎不好要吃什麼」是最常見的問題，答案卻會隨腎功能階段而改變。這一頁整理飲食上真正有證據的原則與常見誤解。內容包含：楊桃：腎友的水果黑名單第一名、鹽：腎臟每天在幫你擦的屁股、隱形磷：包裝食品裡的血管殺手 等 8 個主題。", "inLanguage": "zh-Hant", "url": "https://kidneygod-studio.github.io/articles/diet.html", "dateModified": "2026-08-26", "author": {"@type": "Person", "name": "吳政哲", "jobTitle": "腎臟科醫師"}, "publisher": {"@type": "Organization", "name": "護腎教室"}, "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"}, "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "headline": "飲食護腎與腎臟健康", "description": "「腎不好要吃什麼」是最常見的問題，答案卻會隨腎功能階段而改變。這一頁整理飲食上真正有證據的原則與常見誤解。內容包含：楊桃：腎友的水果黑名單第一名、鹽：腎臟每天在幫你擦的屁股、隱形磷：包裝食品裡的血管殺手 等 8 個主題。", "inLanguage": "zh-Hant", "url": "https://kidneygod-studio.github.io/articles/diet.html", "dateModified": "2026-08-27", "author": {"@type": "Person", "name": "吳政哲", "jobTitle": "腎臟科醫師"}, "publisher": {"@type": "Organization", "name": "護腎教室"}, "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"}, "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}}}</script>
 </head>
 <body>
 <header class="site"><div class="wrap">
@@ -120,7 +119,7 @@ background:#e8c65a;padding:11px 22px;border-radius:99px}
 
 <h1>飲食護腎與腎臟健康</h1>
 <p class="lede">「腎不好要吃什麼」是最常見的問題，答案卻會隨腎功能階段而改變。這一頁整理飲食上真正有證據的原則與常見誤解。</p>
-<p class="meta">作者：吳政哲（腎臟科醫師）　·　更新於 2026-08-26　·　共 8 則</p>
+<p class="meta">作者：吳政哲（腎臟科醫師）　·　更新於 2026-08-27　·　共 8 則</p>
 <div class="toc"><h2>本頁內容</h2><ol><li><a href="#starfruit">楊桃：腎友的水果黑名單第一名</a></li><li><a href="#salt">鹽：腎臟每天在幫你擦的屁股</a></li><li><a href="#phosphate">隱形磷：包裝食品裡的血管殺手</a></li><li><a href="#potassium">鉀：正常腎不用怕，晚期腎友要會算</a></li><li><a href="#protein">蛋白質：吃多傷腎、吃少傷身的兩難</a></li><li><a href="#water">多喝水護腎，但不是人人適用</a></li><li><a href="#sportsdrink">運動飲料：沒大量流汗，喝的只是糖水</a></li><li><a href="#uricacid">高尿酸：痛的是腳，傷的是腎</a></li></ol></div>
 <article class="card"><h2 id="starfruit">楊桃：腎友的水果黑名單第一名</h2><p>楊桃含有神經毒素 caramboxin，健康的腎臟能把它排掉，但腎功能不全與透析患者排不掉，累積後會造成頑固性打嗝、意識混亂、癲癇，嚴重可致命——一杯楊桃汁就可能出事。慢性腎臟病與透析患者：楊桃、楊桃汁、楊桃蜜餞全部避免。腎功能正常的人適量吃沒有這個問題，但空腹大量喝濃縮楊桃汁曾有急性腎損傷的報告，也別挑戰。</p></article><article class="card"><h2 id="salt">鹽：腎臟每天在幫你擦的屁股</h2><p>吃太鹹→血壓上升→腎絲球長期高壓過濾→腎功能加速惡化，這條路線清楚明確。台灣成人平均每天吃進約 10 克鹽，將近建議量（6 克以下）的兩倍。真正的大魔王不是餐桌上的鹽罐，而是：麵湯與火鍋湯底、加工食品、醬料、麵包與零食裡的隱藏鈉。實用技巧：湯少喝、醬另沾、看營養標示的鈉含量，400mg 鈉≒1 克鹽。</p></article><article class="card"><h2 id="phosphate">隱形磷：包裝食品裡的血管殺手</h2><p>腎功能變差後磷排不掉，高血磷會導致血管鈣化、皮膚搔癢與腎性骨病變。天然食物的磷（肉、蛋、豆）吸收率約五成，但加工食品添加的磷酸鹽吸收率接近百分之百——香腸火腿、可樂、即溶飲品、重組肉、起司片都是重災區。腎友選食物的口訣：看得出原型的食物優先，成分表出現「磷酸」開頭的添加物就放回架上。</p></article><article class="card"><h2 id="potassium">鉀：正常腎不用怕，晚期腎友要會算</h2><p>常有人問「腎不好是不是不能吃香蕉」——答案分兩段。腎功能正常或早期慢性腎臟病：不需要刻意限鉀，蔬果照吃，高鉀飲食甚至有助血壓。晚期腎臟病與透析患者：腎臟排鉀能力下降，高血鉀可能引發致命心律不整，需要限制高鉀食物（香蕉、奇異果、番茄、深綠色蔬菜、低鈉鹽），蔬菜先燙過再炒可去掉部分鉀。該不該限、限多嚴，以抽血數值和醫囑為準，不要自己嚇自己。</p></article><article class="card"><h2 id="protein">蛋白質：吃多傷腎、吃少傷身的兩難</h2><p>慢性腎臟病患者常需要「低蛋白飲食」（約每公斤體重 0.6–0.8 克）減輕腎臟負擔，但蛋白質吃太少又會肌少症、營養不良——所以重點是「量要精、質要好」，優先選蛋、魚、豆腐等優質蛋白，嚴格限制時醫師可能搭配酮酸胺基酸。而開始透析後策略反轉：透析會流失蛋白質，反而要吃夠。健身族的高蛋白飲食與蛋白粉，對健康的腎臟大致安全，但已有腎病的人請先諮詢。這門課的正解只有一個：找腎臟科醫師與營養師量身調配。</p></article><article class="card"><h2 id="water">多喝水護腎，但不是人人適用</h2><p>對大多數人，每天約 2000ml 水分、讓尿液保持淡黃色，是最便宜的護腎投資——足夠的尿量能稀釋代謝廢物、降低結石與泌尿道感染風險。曾長結石的人要喝更多。但注意兩個例外：心衰竭與透析患者需要「限水」，喝太多會喘、水腫、增加心臟負擔，請依醫囑執行；老人家口渴感覺遲鈍，夏天要主動提醒喝水，不要等渴。</p></article><article class="card"><h2 id="sportsdrink">運動飲料：沒大量流汗，喝的只是糖水</h2><p>運動飲料設計給長時間大量流汗的情境，平常上班喝，等於喝下一堆糖和鈉；能量飲的高咖啡因利尿，還可能讓你更脫水。含糖飲料喝越多，肥胖、糖尿病、高尿酸的風險越高——而這三個都是腎臟病的上游。口渴的標準答案永遠是白開水；真的激烈運動流很多汗，再考慮電解質補充。</p></article><article class="card"><h2 id="uricacid">高尿酸：痛的是腳，傷的是腎</h2><p>尿酸太高不只讓關節痛風發作，還會形成尿酸結石、傷害腎功能，而腎功能變差又更排不掉尿酸——惡性循環。飲食紅燈：啤酒與烈酒、內臟、濃肉湯海鮮湯、大量含糖飲料（果糖是被低估的兇手）。已確診痛風或尿酸明顯偏高者，光靠飲食通常降不夠，規律服用降尿酸藥把數值控制在 6 mg/dL 以下，比忍痛硬撐重要得多。</p></article>
 <h2 class="backlink">其他主題</h2>
@@ -129,13 +128,13 @@ background:#e8c65a;padding:11px 22px;border-radius:99px}
 <div class="author">
   <div>
     <div class="n">吳政哲　<span class="r">腎臟科醫師</span></div>
-    <div>腎臟科專科醫師，臨床工作以慢性腎臟病與血液透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
+    <div>腎臟科專科醫師，臨床工作以三高、慢性腎臟病與血液透析／腹膜透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
   </div>
 </div>
 <div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
 </main>
 <footer class="site"><div class="wrap">
-<p>護腎教室　·　最後更新 2026-08-26　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<p>護腎教室　·　最後更新 2026-08-27　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
 </div></footer>
 </body>
 </html>

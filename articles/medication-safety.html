@@ -81,10 +81,12 @@ text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat .d{font-size:14px;color:var(--mut);line-height:1.65}
 
 /* 商城入口：刻意沿用商城本身的深色＋金框風格，在淺色頁面上形成強烈對比，
-   讓它成為整個首頁最醒目的元素。 */
-.gamebtn{display:flex;align-items:center;gap:20px;text-decoration:none;
+   讓它成為整個首頁最醒目的元素。
+   版面以標誌為主體、文字只作為說明它的圖說，所以是置中直排、不放按鈕與箭頭。 */
+.gamebtn{display:flex;flex-direction:column;align-items:center;text-align:center;
+gap:18px;text-decoration:none;
 background:linear-gradient(120deg,#33281f,#1e1814);color:#e8c65a;
-border:3px solid #c9a227;border-radius:18px;padding:26px 28px;margin:26px 0 10px;
+border:3px solid #c9a227;border-radius:18px;padding:32px 26px;margin:26px 0 10px;
 box-shadow:inset 0 1px 0 rgba(255,236,200,.14),0 14px 34px rgba(0,0,0,.32);
 position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
 .gamebtn:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(201,162,39,.34)}
@@ -93,23 +95,20 @@ background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent)
 animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
-.gamebtn img{width:78px;height:78px;flex-shrink:0;
-filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
-.gamebtn .gt{flex:1;min-width:0}
-.gamebtn .gt b{display:block;font-size:1.5rem;font-weight:900;letter-spacing:.5px;
-line-height:1.35;margin-bottom:6px}
-.gamebtn .gt span{display:block;font-size:14.5px;color:#e6d9c2;line-height:1.65;opacity:.95}
-.gamebtn .go{font-size:16px;font-weight:800;white-space:nowrap;color:#1e1814;
-background:#e8c65a;padding:11px 22px;border-radius:99px}
+/* 商城的招牌是 480x257 的橫幅標誌，不能鎖成正方形，否則會被壓扁。
+   固定高度、寬度自動，比例才會正確。 */
+.gamebtn img{height:136px;width:auto;max-width:100%;
+filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}
+.gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
+letter-spacing:.4px;line-height:1.5}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
-  .gamebtn{flex-wrap:wrap;gap:14px;padding:22px 20px}
-  .gamebtn img{width:56px;height:56px}
-  .gamebtn .gt b{font-size:1.24rem}
-  .gamebtn .go{width:100%;text-align:center}
+  .gamebtn{gap:14px;padding:26px 20px}
+  .gamebtn img{height:96px}
+  .gamebtn .cap{font-size:1.06rem}
 }
 </style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "headline": "用藥安全與腎臟健康", "description": "很多腎損傷來自可以避免的用藥。這一頁整理常見的傷腎藥物、危險組合，以及什麼情況下該先問過醫師。內容包含：NSAID 止痛藥：腎臟的頭號黑名單、來路不明的止痛藥，成分永遠是驚喜、馬兜鈴酸：一次傷害，終身有效 等 6 個主題。", "inLanguage": "zh-Hant", "url": "https://kidneygod-studio.github.io/articles/medication-safety.html", "dateModified": "2026-08-26", "author": {"@type": "Person", "name": "吳政哲", "jobTitle": "腎臟科醫師"}, "publisher": {"@type": "Organization", "name": "護腎教室"}, "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"}, "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "headline": "用藥安全與腎臟健康", "description": "很多腎損傷來自可以避免的用藥。這一頁整理常見的傷腎藥物、危險組合，以及什麼情況下該先問過醫師。內容包含：NSAID 止痛藥：腎臟的頭號黑名單、來路不明的止痛藥，成分永遠是驚喜、馬兜鈴酸：一次傷害，終身有效 等 6 個主題。", "inLanguage": "zh-Hant", "url": "https://kidneygod-studio.github.io/articles/medication-safety.html", "dateModified": "2026-08-27", "author": {"@type": "Person", "name": "吳政哲", "jobTitle": "腎臟科醫師"}, "publisher": {"@type": "Organization", "name": "護腎教室"}, "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"}, "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}}}</script>
 </head>
 <body>
 <header class="site"><div class="wrap">
@@ -120,7 +119,7 @@ background:#e8c65a;padding:11px 22px;border-radius:99px}
 
 <h1>用藥安全與腎臟健康</h1>
 <p class="lede">很多腎損傷來自可以避免的用藥。這一頁整理常見的傷腎藥物、危險組合，以及什麼情況下該先問過醫師。</p>
-<p class="meta">作者：吳政哲（腎臟科醫師）　·　更新於 2026-08-26　·　共 6 則</p>
+<p class="meta">作者：吳政哲（腎臟科醫師）　·　更新於 2026-08-27　·　共 6 則</p>
 <div class="toc"><h2>本頁內容</h2><ol><li><a href="#nsaid">NSAID 止痛藥：腎臟的頭號黑名單</a></li><li><a href="#unknown-med">來路不明的止痛藥，成分永遠是驚喜</a></li><li><a href="#aristo">馬兜鈴酸：一次傷害，終身有效</a></li><li><a href="#contrast">打顯影劑前，先讓醫師知道你的腎</a></li><li><a href="#ppi">胃藥不是保養品：PPI 的腎臟冷知識</a></li><li><a href="#abx">抗生素：該吃就吃好吃滿，不該吃別碰</a></li></ol></div>
 <article class="card"><h2 id="nsaid">NSAID 止痛藥：腎臟的頭號黑名單</h2><p>布洛芬、雙氯芬酸等非類固醇消炎止痛藥（NSAID）會抑制前列腺素，讓腎臟血流減少。健康人偶爾短期使用通常沒事，但在脫水、年長、慢性腎臟病，或同時使用利尿劑與降壓藥（ACEI/ARB）時，急性腎損傷風險大幅上升——這個組合在醫界被稱為「三重打擊」。腎功能不好的人止痛請先與醫師或藥師討論，普拿疼（乙醯胺酚）在建議劑量內對腎臟相對安全。</p></article><article class="card"><h2 id="unknown-med">來路不明的止痛藥，成分永遠是驚喜</h2><p>地下電台、遊覽車團購、標示不清的「祖傳秘方」止痛粉，經常摻入高劑量 NSAID、類固醇，甚至已禁用成分。長期服用不明複方止痛藥與慢性間質性腎炎、止痛藥腎病變有明確關聯。買藥認明兩件事：包裝上的衛福部藥品許可證字號，以及願意回答你問題的藥師。便宜有效又神秘的藥，通常是腎臟在幫你付帳。</p></article><article class="card"><h2 id="aristo">馬兜鈴酸：一次傷害，終身有效</h2><p>含馬兜鈴酸的中草藥（關木通、廣防己等）會造成不可逆的腎間質纖維化，還會大幅提高泌尿道上皮癌風險——台灣曾是全球馬兜鈴酸腎病變最盛行的地區之一，因此已全面禁用。但地下管道與來源不明的草藥、藥粉仍可能含有。想用中藥調理沒問題，請找合格中醫師開立、在有 GMP 認證的藥廠產品範圍內使用，不要吃朋友送的、山上採的、夜市買的。</p></article><article class="card"><h2 id="contrast">打顯影劑前，先讓醫師知道你的腎</h2><p>電腦斷層與心導管使用的含碘顯影劑可能造成顯影劑腎病變，高風險族群是原本腎功能就差、糖尿病、脫水與年長者。要做檢查前：主動告知醫師自己的腎功能或直接出示抽血報告；檢查前後依醫囑補充水分；服用 metformin（二甲雙胍）的糖尿病患者，醫師可能會請你暫停幾天。多數人風險很低，不需要因噎廢食拒絕必要檢查——關鍵是讓團隊知道你的腎，事先準備。</p></article><article class="card"><h2 id="ppi">胃藥不是保養品：PPI 的腎臟冷知識</h2><p>氫離子幫浦阻斷劑（PPI，常見的「強效胃藥」）長期使用與急性間質性腎炎及慢性腎臟病風險上升有關。短期依醫囑治療胃食道逆流、胃潰瘍沒有問題，有明確適應症就該用；問題出在「吃了舒服就一直吃」、把胃藥當日常保養。任何藥要不要長期吃，答案都應該來自回診評估，而不是習慣。</p></article><article class="card"><h2 id="abx">抗生素：該吃就吃好吃滿，不該吃別碰</h2><p>部分抗生素（如胺基糖苷類）本身有腎毒性，醫師開立時會依腎功能調整劑量並監測——這是專業判斷，請照醫囑完成療程，自行停藥反而養出抗藥菌。真正傷腎的常見情境是：自行到藥房買抗生素、吃別人剩下的藥、感冒（多為病毒）卻硬要吃抗生素。抗生素不是消炎藥，也不是退燒藥。</p></article>
 <h2 class="backlink">其他主題</h2>
@@ -129,13 +128,13 @@ background:#e8c65a;padding:11px 22px;border-radius:99px}
 <div class="author">
   <div>
     <div class="n">吳政哲　<span class="r">腎臟科醫師</span></div>
-    <div>腎臟科專科醫師，臨床工作以慢性腎臟病與血液透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
+    <div>腎臟科專科醫師，臨床工作以三高、慢性腎臟病與血液透析／腹膜透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
   </div>
 </div>
 <div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
 </main>
 <footer class="site"><div class="wrap">
-<p>護腎教室　·　最後更新 2026-08-26　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<p>護腎教室　·　最後更新 2026-08-27　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
 </div></footer>
 </body>
 </html>

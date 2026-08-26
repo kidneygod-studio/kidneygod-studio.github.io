@@ -81,10 +81,12 @@ text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat .d{font-size:14px;color:var(--mut);line-height:1.65}
 
 /* 商城入口：刻意沿用商城本身的深色＋金框風格，在淺色頁面上形成強烈對比，
-   讓它成為整個首頁最醒目的元素。 */
-.gamebtn{display:flex;align-items:center;gap:20px;text-decoration:none;
+   讓它成為整個首頁最醒目的元素。
+   版面以標誌為主體、文字只作為說明它的圖說，所以是置中直排、不放按鈕與箭頭。 */
+.gamebtn{display:flex;flex-direction:column;align-items:center;text-align:center;
+gap:18px;text-decoration:none;
 background:linear-gradient(120deg,#33281f,#1e1814);color:#e8c65a;
-border:3px solid #c9a227;border-radius:18px;padding:26px 28px;margin:26px 0 10px;
+border:3px solid #c9a227;border-radius:18px;padding:32px 26px;margin:26px 0 10px;
 box-shadow:inset 0 1px 0 rgba(255,236,200,.14),0 14px 34px rgba(0,0,0,.32);
 position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
 .gamebtn:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(201,162,39,.34)}
@@ -93,20 +95,17 @@ background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent)
 animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
-.gamebtn img{width:78px;height:78px;flex-shrink:0;
-filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
-.gamebtn .gt{flex:1;min-width:0}
-.gamebtn .gt b{display:block;font-size:1.5rem;font-weight:900;letter-spacing:.5px;
-line-height:1.35;margin-bottom:6px}
-.gamebtn .gt span{display:block;font-size:14.5px;color:#e6d9c2;line-height:1.65;opacity:.95}
-.gamebtn .go{font-size:16px;font-weight:800;white-space:nowrap;color:#1e1814;
-background:#e8c65a;padding:11px 22px;border-radius:99px}
+/* 商城的招牌是 480x257 的橫幅標誌，不能鎖成正方形，否則會被壓扁。
+   固定高度、寬度自動，比例才會正確。 */
+.gamebtn img{height:136px;width:auto;max-width:100%;
+filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}
+.gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
+letter-spacing:.4px;line-height:1.5}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
-  .gamebtn{flex-wrap:wrap;gap:14px;padding:22px 20px}
-  .gamebtn img{width:56px;height:56px}
-  .gamebtn .gt b{font-size:1.24rem}
-  .gamebtn .go{width:100%;text-align:center}
+  .gamebtn{gap:14px;padding:26px 20px}
+  .gamebtn img{height:96px}
+  .gamebtn .cap{font-size:1.06rem}
 }
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "腎臟與三高衛教文章總覽｜護腎教室", "description": "腎臟科醫師整理的慢性腎臟病與三高衛教文章：血壓、血糖、血脂、飲食、用藥安全、檢查數值判讀與常見迷思，依據國際指引，持續更新。", "inLanguage": "zh-Hant", "url": "https://kidneygod-studio.github.io/articles/index.html", "author": {"@type": "Person", "name": "吳政哲", "jobTitle": "腎臟科醫師"}}</script>
@@ -127,13 +126,13 @@ background:#e8c65a;padding:11px 22px;border-radius:99px}
 <div class="author">
   <div>
     <div class="n">吳政哲　<span class="r">腎臟科醫師</span></div>
-    <div>腎臟科專科醫師，臨床工作以慢性腎臟病與血液透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
+    <div>腎臟科專科醫師，臨床工作以三高、慢性腎臟病與血液透析／腹膜透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
   </div>
 </div>
 <div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
 </main>
 <footer class="site"><div class="wrap">
-<p>護腎教室　·　最後更新 2026-08-26　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<p>護腎教室　·　最後更新 2026-08-27　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
 </div></footer>
 </body>
 </html>
