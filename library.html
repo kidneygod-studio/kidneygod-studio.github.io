@@ -3,6 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d1713">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="護腎教室">
+<script>
+  /* 加到主畫面與離線瀏覽。註冊失敗不影響網站任何功能。 */
+  if("serviceWorker" in navigator)
+    addEventListener("load", () => navigator.serviceWorker.register("sw.js")
+      .catch(e => console.debug("sw", e)));
+</script>
 <title>收藏冊 — 護腎教室 KidneyGod.Studio</title>
 <meta name="description" content="護腎教室的收藏冊：60 張護腎知識卡與 152 張貓咪貼圖，未取得的格子留空，一眼看得出還差哪幾張。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>📔</text></svg>">
@@ -16,6 +27,9 @@
     --line:#d9cdae;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
+  /* 字級調整：只放大有長文的容器，按鈕與導覽維持原大小 */
+  .zoomable{zoom:var(--fs,1);}
+
   html{scroll-behavior:smooth;}
   body{background-color:var(--board);color:var(--onboard);
        background-image:
@@ -178,6 +192,7 @@
     <span class="homehint">← 點標誌回首頁</span>
     <div class="spacer"></div>
     <span class="hbtn coin"><img class="ki" id="coinIco" alt=""><span id="coinBal">200</span> 腎元</span>
+    <button class="hbtn" id="fsBtn" onclick="cycleFontScale()">🔠 標準</button>
     <a class="hbtn" href="index.html">🛒 回商城</a>
     <a class="hbtn" href="game.html">🎮 遊戲場</a>
     <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
@@ -225,13 +240,14 @@
   <div id="accActions" style="margin-top:14px"></div>
 </div></div>
 
-<script src="shared.js?v=4b2d16ec"></script>
+<script src="shared.js?v=a66e3dfc"></script>
 <script src="data.js?v=3c015b55"></script>
 <script>
 "use strict";
 let GI = {};   // gi/index.json：卡片編號與等級，與卡面印的一致
 
 function closeAll(){
+  stopSpeak();                          /* 關掉視窗就別再唸了 */
   ["detail","account"].forEach(id=>$(id).classList.remove("on"));
   $("veil").classList.remove("on");
 }
@@ -288,7 +304,9 @@ function openCard(id){
     <div class="shead"><h3>${p.e} ${p.k.t}</h3>
       <button class="x" onclick="closeAll()">✕</button></div>
     <div class="smeta">No.${g.no ? String(g.no).padStart(2,"0") : "--"}　${g.rank||""}　【${p.c}】</div>
-    <div class="sbody">${p.k.b}</div>
+    <button class="hbtn" style="margin-bottom:10px"
+            onclick="speakEl('#detailBody .sbody', this)">🔊 朗讀</button>
+    <div class="sbody zoomable">${p.k.b}</div>
     <div class="sthumb"><img src="cards/gi/${id}.png" alt="${p.k.t}"></div>
     <div class="sdl">
       <a href="cards/gi/${id}.png" download="護腎教室_${fname}.png">⬇ 下載知識卡</a>
@@ -342,7 +360,7 @@ addEventListener("keydown", e=>{ if(e.key === "Escape") closeAll(); });
 window.onStateApplied = function(){ syncCoinBar(); renderK(); renderS(); };
 
 (async function init(){
-  fillCoinIcons(); syncCoinBar();
+  fillCoinIcons(); syncCoinBar(); applyFontScale();
   try{
     GI = await fetch("gi/index.json").then(r=>r.json());
   }catch(e){ console.debug("卡片編號載入失敗，改用問號顯示", e); }

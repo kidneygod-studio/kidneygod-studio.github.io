@@ -3,6 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d1713">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="護腎教室">
+<script>
+  /* 加到主畫面與離線瀏覽。註冊失敗不影響網站任何功能。 */
+  if("serviceWorker" in navigator)
+    addEventListener("load", () => navigator.serviceWorker.register("sw.js")
+      .catch(e => console.debug("sw", e)));
+</script>
 <title>遊戲場 — 護腎教室 KidneyGod.Studio</title>
 <meta name="description" content="護腎教室遊戲場：小腎臟大冒險、護腎小學堂 — 躲開傷腎因子、收集腎元，玩遊戲順便學護腎。">
 <style>
@@ -16,6 +27,9 @@
     --line:#d9cdae;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
+  /* 字級調整：只放大有長文的容器，按鈕與導覽維持原大小 */
+  .zoomable{zoom:var(--fs,1);}
+
   /* 冊頁：皮革顆粒 + 斜向織紋 + 暈影，與商城完全一致 */
   body{background-color:var(--board);color:var(--onboard);
        background-image:
@@ -252,6 +266,7 @@
     <span class="homehint">← 點標誌回首頁</span>
     <div class="spacer"></div>
     <span class="hbtn coin"><img class="ki" alt=""><span id="coinBal">200</span> 腎元</span>
+    <button class="hbtn" id="fsBtn" onclick="cycleFontScale()">🔠 標準</button>
     <a class="hbtn" href="library.html">📚 收藏冊</a>
     <a class="hbtn" href="index.html">🛒 回商城</a>
     <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
@@ -329,7 +344,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="shared.js?v=4b2d16ec"></script>
+<script src="shared.js?v=a66e3dfc"></script>
 <script src="quiz.js?v=1d5418d1"></script>
 <script>
 "use strict";
@@ -948,7 +963,7 @@ function quizRender(){
       <span class="qbar"><b style="width:${pct}%"></b></span>
       <span>答對 ${Q.right}${Q.streak>1?`　🔥 連續 ${Q.streak}`:""}</span>
     </div>
-    <div class="qq">${it.q}</div>
+    <div class="qq zoomable">${it.q}</div>
     <div class="qopts" id="qopts">
       ${it.o.map((t,n)=>`<button class="qopt" data-n="${n}">
           <i>${"ABCD"[n]}</i><span>${t}</span></button>`).join("")}
@@ -979,7 +994,7 @@ function quizAnswer(n){
     Q.wrong.push(it);
   }
   $("qafter").innerHTML = `
-    <div class="qexp">
+    <div class="qexp zoomable">
       <span class="verdict" style="color:${ok?"#17734a":"#b82445"}">
         ${ok ? `✅ 答對了！＋${gain} 腎元${Q.streak>=3?"（連續加成）":""}` : "❌ 答錯了，但這題值得記住"}
       </span>
@@ -1396,7 +1411,7 @@ function initViews(tries = 0){
   });
 }
 initViews();
-fillCoinIcons(); syncCoinBar(); renderTips();
+fillCoinIcons(); syncCoinBar(); renderTips(); applyFontScale();
 fitCanvas(); statsRunner(); loopRunner();
 function closeAll(){ ["account","shareBox"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
 </script>

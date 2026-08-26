@@ -1,0 +1,23 @@
+{
+  "name": "護腎教室 KidneyGod.Studio",
+  "short_name": "護腎教室",
+  "description": "護腎知識卡片收集遊戲：玩遊戲賺腎元、收集 60 張護腎知識卡與貓咪貼圖。",
+  "lang": "zh-Hant",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1d1713",
+  "theme_color": "#1d1713",
+  "categories": ["education", "health", "games"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "護腎小學堂", "short_name": "小學堂", "url": "./game.html" },
+    { "name": "知識庫", "short_name": "知識庫", "url": "./library.html" }
+  ]
+}

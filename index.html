@@ -3,6 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d1713">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="護腎教室">
+<script>
+  /* 加到主畫面與離線瀏覽。註冊失敗不影響網站任何功能。 */
+  if("serviceWorker" in navigator)
+    addEventListener("load", () => navigator.serviceWorker.register("sw.js")
+      .catch(e => console.debug("sw", e)));
+</script>
 <title>護腎教室 KidneyGod.Studio — 護腎知識卡片收集遊戲</title>
 <meta name="description" content="護腎知識卡片收集遊戲：玩遊戲賺腎元、收集 60 張護腎知識卡與貓咪貼圖 — 不收費、不收集資料，唯一會出貨的是護腎知識。">
 <style>
@@ -26,6 +37,9 @@
     --r:12px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
+  /* 字級調整：只放大有長文的容器，按鈕與導覽維持原大小 */
+  .zoomable{zoom:var(--fs,1);}
+
   html{scroll-behavior:smooth;}
   /* 冊頁：皮革顆粒（交錯網點）+ 斜向織紋 + 四周暈影 */
   body{background-color:var(--board);color:var(--onboard);
@@ -115,6 +129,20 @@
 
   /* 小遊戲已移到 game.html，原本這裡的 .game / .game-box / canvas 等
      樣式在本頁已無對應標記，移除。 */
+
+  /* 加到主畫面提示條 */
+  .installbar{max-width:1180px;margin:12px auto 0;padding:10px 14px;display:flex;
+              align-items:center;gap:10px;flex-wrap:wrap;
+              background:linear-gradient(180deg,#2a211b,#1e1814);
+              border:1px solid var(--edge);border-radius:12px;font-size:13.5px;
+              color:var(--onboard);}
+  .installbar b{color:var(--gold2);}
+  .installbar span{flex:1;min-width:180px;}
+  .ibtn{background:linear-gradient(180deg,#e0bb44,#a8801a);color:#231a06;
+        border:2px solid #6b5208;font-weight:900;font-size:13px;
+        padding:6px 14px;border-radius:99px;white-space:nowrap;}
+  .ibtn.ghost{background:none;border:1px solid var(--edge);color:var(--dimboard);
+              font-weight:700;}
 
   /* ── 禮包 ── */
   .coupons{max-width:1180px;margin:14px auto 0;padding:0 20px;display:grid;
@@ -389,6 +417,7 @@
       <button onclick="renderGrid()">🔍</button>
     </div>
     <button class="hbtn coin" onclick="scrollGame()"><img class="ki" id="coinIco" alt=""><span id="coinBal">200</span> 腎元</button>
+    <button class="hbtn" id="fsBtn" onclick="cycleFontScale()">🔠 標準</button>
     <a class="hbtn" href="library.html">📚 收藏冊<span class="badge" id="libBadge">0</span></a>
     <button class="hbtn" onclick="openCart()">🛒<span class="badge" id="badge">0</span></button>
     <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
@@ -397,6 +426,14 @@
 </header>
 
 <div class="marquee"><div class="marq-in" id="marq"></div></div>
+
+<!-- 加到主畫面提示。中高齡使用者最常見的流失原因是「下次找不到網址」，
+     桌面上一個圖示就解決了。關掉之後不再出現。 -->
+<div class="installbar" id="installBar" hidden>
+  <span id="installMsg"></span>
+  <button class="ibtn" id="installGo" hidden>加到主畫面</button>
+  <button class="ibtn ghost" id="installNo">不用了</button>
+</div>
 
 <section class="hub">
   <a class="hubcard" href="game.html">
@@ -504,7 +541,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="shared.js?v=4b2d16ec"></script>
+<script src="shared.js?v=a66e3dfc"></script>
 <script src="data.js?v=3c015b55"></script>
 
 <script>
@@ -572,7 +609,9 @@ async function openKCard(id){
   const html = g => `
     <h2>${p.e} ${p.k.t}</h2>
     <div class="sub kmeta">${meta(g)}</div>
-    <div class="kbody" style="padding:0">${p.k.b}</div>
+    <button class="hbtn" style="margin-bottom:10px"
+            onclick="speakEl('#kviewBody .kbody', this)">🔊 朗讀</button>
+    <div class="kbody zoomable" style="padding:0">${p.k.b}</div>
     <div class="kcardwrap"><img src="cards/gi/${id}.png" alt="${p.k.t}"></div>
     <div class="kdl">
       <a class="dl" href="cards/gi/${id}.png" download="護腎教室_${fname}.png">⬇ 下載知識卡</a>
@@ -639,6 +678,47 @@ function stickerHTML(k){
       </div>
     </article>`;
 }
+
+/* ═══════════ 加到主畫面 ═══════════
+   Android／桌機 Chrome 會丟出 beforeinstallprompt，可以直接叫出安裝視窗；
+   iOS Safari 沒有這個事件，只能教使用者按「分享 → 加入主畫面」。
+   已經從主畫面開啟（standalone）或按過「不用了」就不再出現。 */
+(function installHint(){
+  const bar = $("installBar"), msg = $("installMsg"),
+        go = $("installGo"), no = $("installNo");
+  const standalone = matchMedia("(display-mode: standalone)").matches
+                  || navigator.standalone === true;
+  if(standalone || localStorage.msd_noinstall === "1") return;
+
+  const show = html => { msg.innerHTML = html; bar.hidden = false; };
+  no.addEventListener("click", () => { localStorage.msd_noinstall = "1"; bar.hidden = true; });
+
+  let deferred = null;
+  addEventListener("beforeinstallprompt", e => {
+    e.preventDefault();
+    deferred = e;
+    go.hidden = false;
+    show("📲 把<b>護腎教室</b>放到主畫面，下次一按就開，離線也看得到已收藏的卡片");
+  });
+  go.addEventListener("click", async () => {
+    if(!deferred) return;
+    go.disabled = true;
+    deferred.prompt();
+    const r = await deferred.userChoice.catch(() => null);
+    deferred = null;
+    bar.hidden = true;
+    if(r && r.outcome === "accepted") localStorage.msd_noinstall = "1";
+    else go.disabled = false;
+  });
+
+  /* iOS：等一下下，若沒有 beforeinstallprompt 才顯示手動步驟 */
+  const iOS = /iphone|ipad|ipod/i.test(navigator.userAgent)
+           || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if(iOS) setTimeout(() => {
+    if(bar.hidden && !deferred)
+      show("📲 想放到主畫面嗎？點下方的<b>分享</b>圖示，選<b>加入主畫面</b>");
+  }, 1200);
+})();
 
 /* ═══════════ 外掛密技 ═══════════
    在搜尋框輸入代碼即可觸發。逐字輸入時每打一個字都會比對一次，所以
@@ -859,7 +939,8 @@ function openCheckout(){
   $("payBtn").disabled = cartSum() > store.coins;
   $("checkout").classList.add("on");
 }
-function closeAll(){ ["drawer","checkout","doneModal","account","kview"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
+function closeAll(){ stopSpeak();   /* 關掉視窗就別再唸了 */
+  ["drawer","checkout","doneModal","account","kview"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
 
 /* ── 下單：扣腎元，知識與貼圖入收藏 ── */
 function placeOrder(){
@@ -952,7 +1033,7 @@ function downloadAll(){
 
 
 window.onStateApplied = () => { syncCoins(); renderGrid(); renderGifts(); };
-fillCoinIcons();
+fillCoinIcons(); applyFontScale();
 renderTabs(); renderGrid(); renderMarq(); renderGifts(); renderCart();
 initSiteBits();
 syncBadge(); syncCoins();

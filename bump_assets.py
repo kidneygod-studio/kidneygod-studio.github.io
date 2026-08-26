@@ -32,6 +32,30 @@ def main():
     for f, v in ver.items():
         print(f"  {f:12} v={v}")
     print(f"更新了 {len(changed)} 個頁面 {changed or '（版本號已是最新）'}")
+    bump_sw(ver)
+
+
+def bump_sw(ver):
+    """把整站內容摘要寫進 sw.js 的 VERSION。
+
+    Service Worker 的快取名字要跟著內容一起變，否則改版之後使用者會停在
+    舊快取上。這裡把三個頁面加上四支 js 的雜湊再壓成一個短碼 —— 任何一處
+    有改動，快取名就換，activate 時舊的會整批清掉。
+    """
+    if not os.path.exists("sw.js"):
+        return
+    h = hashlib.md5()
+    for f in list(ASSETS) + list(PAGES):
+        if os.path.exists(f):
+            h.update(io.open(f, "rb").read())
+    tag = "kg-" + h.hexdigest()[:10]
+    s = old = io.open("sw.js", encoding="utf-8").read()
+    s = re.sub(r'const VERSION = "[^"]*";', f'const VERSION = "{tag}";', s)
+    if s != old:
+        io.open("sw.js", "w", encoding="utf-8").write(s)
+        print(f"  sw.js        VERSION={tag}")
+    else:
+        print(f"  sw.js        VERSION={tag}（未變動）")
 
 
 if __name__ == "__main__":

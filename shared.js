@@ -164,6 +164,81 @@ function openAccount(){
   $("veil")?.classList.add("on"); $("account")?.classList.add("on");
 }
 
+/* ═══════════ 字級調整 ═══════════
+   受眾以中高齡為主，老花是實際存在的閱讀障礙。全站的 CSS 用的是 px，
+   改根字級沒有效果，所以用 zoom 放大「有長文的容器」（.zoomable）——
+   容器裡都是一般流排內容，沒有固定定位元素，放大不會弄壞版面。
+   放大的只有真正在讀的地方，按鈕與導覽維持原本大小與觸控範圍。 */
+const FS_STEPS = [1, 1.2, 1.45], FS_NAME = ["標準", "大字", "特大"];
+function fontScale(){ return Math.min(2, Math.max(0, +localStorage.msd_fs || 0)); }
+function applyFontScale(){
+  const i = fontScale();
+  document.documentElement.style.setProperty("--fs", FS_STEPS[i]);
+  const b = $("fsBtn");
+  if(b){
+    b.textContent = "🔠 " + FS_NAME[i];
+    b.title = "調整內文字級（目前：" + FS_NAME[i] + "）";
+  }
+}
+function cycleFontScale(){
+  localStorage.msd_fs = (fontScale() + 1) % FS_STEPS.length;
+  applyFontScale();
+  toast("內文字級：" + FS_NAME[fontScale()]);
+}
+
+/* ═══════════ 朗讀 ═══════════
+   用瀏覽器內建的語音合成，不需要任何服務也不花錢。
+   長文一次丟進去在部分瀏覽器會被攔腰截斷，所以先切成短句排隊唸。 */
+let speakBtn = null;
+function zhVoice(){
+  const vs = speechSynthesis.getVoices() || [];
+  return vs.find(v => v.lang === "zh-TW") || vs.find(v => /^zh[-_]/.test(v.lang)) || null;
+}
+function stopSpeak(){
+  speechSynthesis.cancel();
+  if(speakBtn){ speakBtn.textContent = speakBtn.dataset.idle || "🔊 朗讀"; speakBtn = null; }
+}
+function speakEl(sel, btn){
+  if(!("speechSynthesis" in window)){ toast("這個瀏覽器不支援朗讀"); return; }
+  if(speakBtn === btn){ stopSpeak(); return; }      // 再按一次＝停止
+  stopSpeak();
+  const el = typeof sel === "string" ? document.querySelector(sel) : sel;
+  if(!el) return;
+  const text = (el.innerText || "").replace(/\s+/g, " ").trim();
+  if(!text) return;
+
+  speakBtn = btn;
+  btn.dataset.idle = btn.dataset.idle || btn.textContent;
+  btn.textContent = "⏹ 停止朗讀";
+
+  const parts = [];
+  for(const seg of text.split(/(?<=[。！？；\n])/)){
+    if(!seg.trim()) continue;
+    /* 沒有句號的長段落再依逗號切，單句控制在 120 字以內 */
+    if(seg.length <= 120){ parts.push(seg); continue; }
+    let buf = "";
+    for(const piece of seg.split(/(?<=[，、）])/)){
+      if((buf + piece).length > 120){ if(buf) parts.push(buf); buf = piece; }
+      else buf += piece;
+    }
+    if(buf) parts.push(buf);
+  }
+  const v = zhVoice();
+  parts.forEach((p, i) => {
+    const u = new SpeechSynthesisUtterance(p);
+    u.lang = "zh-TW"; u.rate = 0.95;
+    if(v) u.voice = v;
+    if(i === parts.length - 1) u.onend = () => { if(speakBtn === btn) stopSpeak(); };
+    u.onerror = () => { if(speakBtn === btn) stopSpeak(); };
+    speechSynthesis.speak(u);
+  });
+}
+/* 語音清單常常要等一下才載入好；關頁或離開時務必停掉，否則會繼續唸 */
+if("speechSynthesis" in window){
+  speechSynthesis.onvoiceschanged = () => {};
+  addEventListener("pagehide", stopSpeak);
+}
+
 /* ── 共用 UI ── */
 function fillCoinIcons(){
   document.querySelectorAll("img.ki:not([src])").forEach(i => { i.src = COIN_ICON; });
