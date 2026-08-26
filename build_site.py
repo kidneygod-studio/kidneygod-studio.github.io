@@ -157,7 +157,9 @@ background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent)
 animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
-.gamebtn img{width:78px;height:78px;flex-shrink:0;
+/* 商城的招牌是 480x257 的橫幅標誌，不能鎖成正方形，否則會被壓扁。
+   固定高度、寬度自動，比例才會正確。 */
+.gamebtn img{height:72px;width:auto;flex-shrink:0;
 filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
 .gamebtn .gt{flex:1;min-width:0}
 .gamebtn .gt b{display:block;font-size:1.5rem;font-weight:900;letter-spacing:.5px;
@@ -167,8 +169,11 @@ line-height:1.35;margin-bottom:6px}
 background:#e8c65a;padding:11px 22px;border-radius:99px}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
-  .gamebtn{flex-wrap:wrap;gap:14px;padding:22px 20px}
-  .gamebtn img{width:56px;height:56px}
+  /* 手機改直式堆疊：橫排時文字欄只剩 180px，標題會被擠成兩行、說明擠成四行。
+     標誌獨佔一列後，文字就能用到整個寬度。 */
+  .gamebtn{flex-direction:column;align-items:flex-start;gap:12px;padding:22px 20px}
+  .gamebtn img{height:52px;width:auto}
+  .gamebtn .gt{width:100%}
   .gamebtn .gt b{font-size:1.24rem}
   .gamebtn .go{width:100%;text-align:center}
 }
@@ -459,7 +464,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]])
 </div>
 
 <a class="gamebtn" href="/shop.html">
-  <img src="/kidney_sprite.png" alt="" aria-hidden="true">
+  <img src="/logo.png" alt="" aria-hidden="true" width="480" height="257">
   <div class="gt">
     <b>🎮 護腎知識卡片收集商城</b>
     <span>玩遊戲賺腎元、收集 60 張護腎知識卡與貓咪貼圖。<br>
