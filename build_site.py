@@ -145,10 +145,12 @@ text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat .d{font-size:14px;color:var(--mut);line-height:1.65}
 
 /* 商城入口：刻意沿用商城本身的深色＋金框風格，在淺色頁面上形成強烈對比，
-   讓它成為整個首頁最醒目的元素。 */
-.gamebtn{display:flex;align-items:center;gap:20px;text-decoration:none;
+   讓它成為整個首頁最醒目的元素。
+   版面以標誌為主體、文字只作為說明它的圖說，所以是置中直排、不放按鈕與箭頭。 */
+.gamebtn{display:flex;flex-direction:column;align-items:center;text-align:center;
+gap:18px;text-decoration:none;
 background:linear-gradient(120deg,#33281f,#1e1814);color:#e8c65a;
-border:3px solid #c9a227;border-radius:18px;padding:26px 28px;margin:26px 0 10px;
+border:3px solid #c9a227;border-radius:18px;padding:32px 26px;margin:26px 0 10px;
 box-shadow:inset 0 1px 0 rgba(255,236,200,.14),0 14px 34px rgba(0,0,0,.32);
 position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
 .gamebtn:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(201,162,39,.34)}
@@ -158,27 +160,17 @@ animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
 /* 商城的招牌是 480x257 的橫幅標誌，不能鎖成正方形，否則會被壓扁。
-   固定高度、寬度自動，比例才會正確。整張卡片本身就是連結，
-   所以不再另放「進入商城」按鈕，改把標誌放大當作主視覺。 */
-.gamebtn img{height:112px;width:auto;flex-shrink:0;
+   固定高度、寬度自動，比例才會正確。 */
+.gamebtn img{height:136px;width:auto;max-width:100%;
 filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}
-.gamebtn .gt{flex:1;min-width:0}
-.gamebtn .gt b{display:block;font-size:1.5rem;font-weight:900;letter-spacing:.5px;
-line-height:1.35;margin-bottom:6px}
-.gamebtn .gt span{display:block;font-size:14.5px;color:#e6d9c2;line-height:1.65;opacity:.95}
-/* 沒有按鈕了，用一個箭頭提示整張卡片可點，滑過時往右移一點 */
-.gamebtn .arw{font-size:30px;color:#c9a227;flex-shrink:0;transition:transform .18s}
-.gamebtn:hover .arw{transform:translateX(5px)}
+.gamebtn .cap{font-size:14.5px;color:#e6d9c2;line-height:1.75}
+.gamebtn .cap b{display:block;font-size:1.14rem;font-weight:800;color:#e8c65a;
+letter-spacing:.4px;margin-bottom:3px}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
-  /* 手機改直式堆疊：橫排時文字欄只剩 180px，標題會被擠成兩行、說明擠成四行。
-     標誌獨佔一列後，文字就能用到整個寬度。 */
-  .gamebtn{flex-direction:column;align-items:flex-start;gap:14px;padding:24px 20px}
-  .gamebtn img{height:82px;width:auto}
-  /* 箭頭在直式排版時絕對定位到右下，文字要留出邊距，否則會被壓到 */
-  .gamebtn .gt{width:100%;padding-right:38px}
-  .gamebtn .gt b{font-size:1.24rem}
-  .gamebtn .arw{position:absolute;right:20px;bottom:18px}
+  .gamebtn{gap:14px;padding:26px 20px}
+  .gamebtn img{height:96px}
+  .gamebtn .cap b{font-size:1.06rem}
 }
 """
 
@@ -468,12 +460,8 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]])
 
 <a class="gamebtn" href="/shop.html">
   <img src="/logo.png" alt="" aria-hidden="true" width="480" height="257">
-  <div class="gt">
-    <b>🎮 護腎知識卡片收集商城</b>
-    <span>玩遊戲賺腎元、收集 60 張護腎知識卡與貓咪貼圖。<br>
-    不收費、沒有金流——唯一會出貨的是護腎知識。</span>
-  </div>
-  <span class="arw" aria-hidden="true">→</span>
+  <span class="cap"><b>護腎知識卡片收集商城</b>
+  玩遊戲賺腎元、收集 60 張護腎知識卡與貓咪貼圖・不收費、沒有金流</span>
 </a>
 
 <h2 class="sect">依主題閱讀</h2>
