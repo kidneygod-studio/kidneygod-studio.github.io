@@ -158,24 +158,27 @@ animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
 /* 商城的招牌是 480x257 的橫幅標誌，不能鎖成正方形，否則會被壓扁。
-   固定高度、寬度自動，比例才會正確。 */
-.gamebtn img{height:72px;width:auto;flex-shrink:0;
-filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
+   固定高度、寬度自動，比例才會正確。整張卡片本身就是連結，
+   所以不再另放「進入商城」按鈕，改把標誌放大當作主視覺。 */
+.gamebtn img{height:112px;width:auto;flex-shrink:0;
+filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}
 .gamebtn .gt{flex:1;min-width:0}
 .gamebtn .gt b{display:block;font-size:1.5rem;font-weight:900;letter-spacing:.5px;
 line-height:1.35;margin-bottom:6px}
 .gamebtn .gt span{display:block;font-size:14.5px;color:#e6d9c2;line-height:1.65;opacity:.95}
-.gamebtn .go{font-size:16px;font-weight:800;white-space:nowrap;color:#1e1814;
-background:#e8c65a;padding:11px 22px;border-radius:99px}
+/* 沒有按鈕了，用一個箭頭提示整張卡片可點，滑過時往右移一點 */
+.gamebtn .arw{font-size:30px;color:#c9a227;flex-shrink:0;transition:transform .18s}
+.gamebtn:hover .arw{transform:translateX(5px)}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
   /* 手機改直式堆疊：橫排時文字欄只剩 180px，標題會被擠成兩行、說明擠成四行。
      標誌獨佔一列後，文字就能用到整個寬度。 */
-  .gamebtn{flex-direction:column;align-items:flex-start;gap:12px;padding:22px 20px}
-  .gamebtn img{height:52px;width:auto}
-  .gamebtn .gt{width:100%}
+  .gamebtn{flex-direction:column;align-items:flex-start;gap:14px;padding:24px 20px}
+  .gamebtn img{height:82px;width:auto}
+  /* 箭頭在直式排版時絕對定位到右下，文字要留出邊距，否則會被壓到 */
+  .gamebtn .gt{width:100%;padding-right:38px}
   .gamebtn .gt b{font-size:1.24rem}
-  .gamebtn .go{width:100%;text-align:center}
+  .gamebtn .arw{position:absolute;right:20px;bottom:18px}
 }
 """
 
@@ -470,7 +473,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]])
     <span>玩遊戲賺腎元、收集 60 張護腎知識卡與貓咪貼圖。<br>
     不收費、沒有金流——唯一會出貨的是護腎知識。</span>
   </div>
-  <span class="go">進入商城 →</span>
+  <span class="arw" aria-hidden="true">→</span>
 </a>
 
 <h2 class="sect">依主題閱讀</h2>
