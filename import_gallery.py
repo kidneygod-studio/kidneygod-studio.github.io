@@ -44,8 +44,16 @@ SERIES_RULES = [
     (r"三高(健康|衛教)?\s*教室\s*[—–-]\s*[Dd]ay", "三高健康教室", "metabolic"),
     (r"三高知識小教室", "三高健康教室", "metabolic"),
     (r"護腎陪伴日常", "護腎陪伴日常", "companion"),
-    (r"^[Dd]ay\s*\d+\s*[：:]", "腎臟健康教室", "kidney"),
+    # 開頭可能有 📌 之類的裝飾字元，所以先允許少量非文字字元
+    (r"^[\s\W]{0,4}[Dd]ay\s*\d+\s*[：:]", "腎臟健康教室", "kidney"),
 ]
+
+# 內文完全沒寫「Day N」的貼文（早期只把編號放在圖片裡），只能人工對應。
+# key 是 Threads 貼文 id，值是 (系列, Day)。
+MANUAL_SERIES = {
+    "17955075309132469": ("腎臟健康教室", 1),   # 代謝症候群篩檢
+    "18075115397279817": ("腎臟健康教室", 2),   # 血壓控制標準
+}
 
 # 總覽與各頁的排列順序
 SERIES_ORDER = ["腎臟健康教室", "護腎健康教室 Pro", "三高健康教室",
@@ -62,8 +70,13 @@ SERIES_INTRO = {
 }
 
 
-def detect_series(text: str) -> tuple[str, str, int | None]:
+def detect_series(text: str, post_id: str = "") -> tuple[str, str, int | None]:
     """回傳 (系列名稱, 網址代稱, Day 編號)。抓不到系列就歸「其他」。"""
+    if post_id in MANUAL_SERIES:
+        name, day = MANUAL_SERIES[post_id]
+        slug = next((s for pat, nm, s in SERIES_RULES if nm == name), "others")
+        return name, slug, day
+
     t = (text or "").strip()
     name, slug = "其他", "others"
     for pat, nm, sl in SERIES_RULES:
@@ -132,7 +145,7 @@ def main() -> int:
             if len(files) > 1:
                 cap = f"{cap}（{idx + 1}/{len(files)}）"
 
-            s_name, s_slug, s_day = detect_series(p.get("text") or "")
+            s_name, s_slug, s_day = detect_series(p.get("text") or "", pid)
 
             entries.append({
                 "id": stem, "cat": meta["cat"], "cap": cap,

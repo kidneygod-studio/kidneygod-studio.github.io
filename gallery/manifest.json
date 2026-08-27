@@ -1,5 +1,35 @@
 [
  {
+  "id": "17955075309132469_0",
+  "cat": "檢查數值",
+  "cap": "認識代謝症候群五項指標與腎臟風險",
+  "series": "腎臟健康教室",
+  "series_slug": "kidney",
+  "day": 1,
+  "text": "代謝症候群是三高、心血管疾病、慢性腎臟病的主要原因之一。\n改善代謝症候群就可以大幅降低心血管疾病與慢性腎臟病的風險。\n快來看看這5個指標你中了幾項？\n#代謝症候群 #慢性腎臟病 #心血管疾病",
+  "full": "gallery/17955075309132469_0.jpg",
+  "thumb": "gallery/thumb/17955075309132469_0.jpg",
+  "w": 1000,
+  "h": 1097,
+  "date": "2026-05-23",
+  "permalink": "https://www.threads.com/@kidney.godreborn/post/DYqdLrrASJI"
+ },
+ {
+  "id": "18075115397279817_0",
+  "cat": "血壓管理",
+  "cap": "控制血壓是延緩腎臟病惡化的關鍵",
+  "series": "腎臟健康教室",
+  "series_slug": "kidney",
+  "day": 2,
+  "text": "控好血壓，就是最有效的護腎藥！\n常有病友說：「我血壓 135 沒感覺啊，不用吃藥吧？」錯！高血壓就像洪水，天天撞擊腎臟微血管，會導致血管硬化與蛋白尿。\n\n最新 ACC/AHA 臨床指引 建議：\n• 一般成人理想血壓：<120/80mmHg。\n• 合併慢性腎臟病（CKD）或糖尿病（DM）：應嚴格控制在 <130/80mmHg。\n• 【吳醫師小叮嚀】 請落實「722法則」量血壓：連續7天、每天早晚2遍、每次量2遍取平均。今天早晚，記得定時量血壓！\n• 【指引來源】 2024 ACC/AHA High Blood Pressure Guidelines / KDIGO BP in CKD",
+  "full": "gallery/18075115397279817_0.jpg",
+  "thumb": "gallery/thumb/18075115397279817_0.jpg",
+  "w": 935,
+  "h": 1024,
+  "date": "2026-05-24",
+  "permalink": "https://www.threads.com/@kidney.godreborn/post/DYtEjAlk4s9"
+ },
+ {
   "id": "18199257958364548_0",
   "cat": "飲食護腎",
   "cap": "減少精緻糖攝取逆轉胰島素阻抗護腎",
@@ -1393,35 +1423,5 @@
   "h": 1000,
   "date": "2026-07-07",
   "permalink": "https://www.threads.com/@kidney.godreborn/post/Daem3HDkQaf"
- },
- {
-  "id": "17955075309132469_0",
-  "cat": "檢查數值",
-  "cap": "認識代謝症候群五項指標與腎臟風險",
-  "series": "其他",
-  "series_slug": "others",
-  "day": null,
-  "text": "代謝症候群是三高、心血管疾病、慢性腎臟病的主要原因之一。\n改善代謝症候群就可以大幅降低心血管疾病與慢性腎臟病的風險。\n快來看看這5個指標你中了幾項？\n#代謝症候群 #慢性腎臟病 #心血管疾病",
-  "full": "gallery/17955075309132469_0.jpg",
-  "thumb": "gallery/thumb/17955075309132469_0.jpg",
-  "w": 1000,
-  "h": 1097,
-  "date": "2026-05-23",
-  "permalink": "https://www.threads.com/@kidney.godreborn/post/DYqdLrrASJI"
- },
- {
-  "id": "18075115397279817_0",
-  "cat": "血壓管理",
-  "cap": "控制血壓是延緩腎臟病惡化的關鍵",
-  "series": "其他",
-  "series_slug": "others",
-  "day": null,
-  "text": "控好血壓，就是最有效的護腎藥！\n常有病友說：「我血壓 135 沒感覺啊，不用吃藥吧？」錯！高血壓就像洪水，天天撞擊腎臟微血管，會導致血管硬化與蛋白尿。\n\n最新 ACC/AHA 臨床指引 建議：\n• 一般成人理想血壓：<120/80mmHg。\n• 合併慢性腎臟病（CKD）或糖尿病（DM）：應嚴格控制在 <130/80mmHg。\n• 【吳醫師小叮嚀】 請落實「722法則」量血壓：連續7天、每天早晚2遍、每次量2遍取平均。今天早晚，記得定時量血壓！\n• 【指引來源】 2024 ACC/AHA High Blood Pressure Guidelines / KDIGO BP in CKD",
-  "full": "gallery/18075115397279817_0.jpg",
-  "thumb": "gallery/thumb/18075115397279817_0.jpg",
-  "w": 935,
-  "h": 1024,
-  "date": "2026-05-24",
-  "permalink": "https://www.threads.com/@kidney.godreborn/post/DYtEjAlk4s9"
  }
 ]

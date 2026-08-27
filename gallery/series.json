@@ -3,8 +3,8 @@
   "name": "腎臟健康教室",
   "slug": "kidney",
   "intro": "最早的一輪護腎衛教，從最基本的觀念開始，一天一個主題。",
-  "count": 23,
-  "day_range": "Day 7–29"
+  "count": 25,
+  "day_range": "Day 1–29"
  },
  {
   "name": "護腎健康教室 Pro",
@@ -33,12 +33,5 @@
   "intro": "日常生活裡的護腎提醒，輕鬆一點的一系列。",
   "count": 6,
   "day_range": "Day 1–7"
- },
- {
-  "name": "其他",
-  "slug": "others",
-  "intro": "沒有歸入固定系列的單篇衛教圖。",
-  "count": 2,
-  "day_range": ""
  }
 ]
