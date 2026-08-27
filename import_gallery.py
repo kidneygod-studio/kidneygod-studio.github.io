@@ -173,11 +173,22 @@ def main() -> int:
             if pid in have:
                 continue
             p = posts.get(pid)
-            src = ROOT / "manual_media" / c["file"]
-            if not p or not src.exists():
-                print(f"  ! 跳過人工補充 {pid}：" +
-                      ("找不到貼文" if not p else f"找不到圖檔 {c['file']}"))
+            if not p:
+                print(f"  ! 跳過人工補充 {pid}：備份裡找不到這則貼文")
                 continue
+            # file 省略時，代表圖片其實在備份裡（只是被分類器排除），直接沿用
+            if c.get("file"):
+                src = ROOT / "manual_media" / c["file"]
+                if not src.exists():
+                    print(f"  ! 跳過人工補充 {pid}：找不到圖檔 {c['file']}")
+                    continue
+            else:
+                own = [f for f in (p.get("media_files") or [])
+                       if not f.lower().endswith(".mp4")]
+                if not own:
+                    print(f"  ! 跳過人工補充 {pid}：備份裡也沒有圖，需要提供 file")
+                    continue
+                src = SRC_MEDIA / own[0]
             stem = f"{pid}_m0"
             full_p, thumb_p = OUT / f"{stem}.jpg", THUMB / f"{stem}.jpg"
             if args.force or not (full_p.exists() and thumb_p.exists()):
@@ -192,7 +203,8 @@ def main() -> int:
                 "series_slug": next((s for _p, nm, s in SERIES_RULES
                                      if nm == c["series"]), "others"),
                 "day": c.get("day"),
-                "text": (p.get("text") or "").strip(),
+                # text_override：圖片改過時，文字要一起改，否則兩邊說法不一致
+                "text": (c.get("text_override") or (p.get("text") or "")).strip(),
                 "full": f"gallery/{stem}.jpg", "thumb": f"gallery/thumb/{stem}.jpg",
                 "w": fw, "h": fh,
                 "date": (p.get("timestamp") or "")[:10],
