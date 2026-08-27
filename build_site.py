@@ -589,10 +589,11 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]])
 
     body = f"""
 <div class="hero">
-<h1>把腎臟的事，講到你聽得懂</h1>
-<p class="sub">慢性腎臟病、高血壓、糖尿病、高血脂——這裡用一般人看得懂的方式，
-說明檢查數字代表什麼、哪些習慣真的有影響、哪些說法沒有根據。</p>
-<p class="cred">內容由 {esc(AUTHOR_NAME)}（{esc(AUTHOR_TITLE)}）撰寫，依據國際指引與期刊文獻，持續更新。</p>
+<h1>護腎專家－{esc(AUTHOR_NAME)}醫師的護腎教室</h1>
+<p class="sub">把腎臟的事，講到你聽得懂。慢性腎臟病、高血壓、糖尿病、高血脂——
+這裡用一般人看得懂的方式，說明檢查數字代表什麼、哪些習慣真的有影響、哪些說法沒有根據。</p>
+<p class="cred">內容依據國際指引與期刊文獻撰寫，持續更新。
+<a href="/about.html">關於{esc(AUTHOR_NAME)}醫師 →</a></p>
 </div>
 
 <a class="gamebtn" href="/shop.html">

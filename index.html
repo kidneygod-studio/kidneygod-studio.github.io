@@ -67,6 +67,34 @@ tr:last-child td{border-bottom:0}
 .callout{background:var(--card);border-left:3px solid var(--accent);
 padding:14px 18px;border-radius:0 10px 10px 0;margin:22px 0;font-size:16px}
 
+/* ── 醫師介紹（關於頁最上方）── */
+.docintro{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);
+gap:34px;align-items:center;margin:26px 0 40px}
+.docintro.nophoto{grid-template-columns:1fr}
+/* 原圖是全身直式，直接放會比旁邊的資歷欄高出一截。
+   裁成 3:4 並把構圖重心往上移，取到頭部與上半身，和資歷欄的高度才平衡。
+   想改成完整全身，把 aspect-ratio 與 object-fit 兩行拿掉即可。 */
+/* height:auto 不可省略——HTML 上的 height 屬性（用來避免版面跳動）
+   會被當成呈現提示而固定高度，那樣 aspect-ratio 就不會生效。 */
+.docphoto{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;
+object-position:center 12%;
+border-radius:14px;display:block;box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.docname{font-size:1.9rem;font-weight:800;letter-spacing:.5px;margin:0 0 18px;
+color:var(--accent2)}
+.docname small{display:block;font-size:.95rem;font-weight:600;color:var(--mut);
+letter-spacing:0;margin-bottom:4px}
+.doccred{list-style:none;padding:0;margin:0}
+.doccred li{display:flex;align-items:flex-start;gap:11px;margin:0 0 13px;
+font-size:1.02rem;line-height:1.55}
+.doccred svg{flex-shrink:0;margin-top:2px}
+.doccred li.key{font-weight:700}
+@media(max-width:720px){
+  .docintro{grid-template-columns:1fr;gap:22px;margin-bottom:32px}
+  .docphoto{max-width:250px;margin:0 auto}
+  .docname{font-size:1.55rem;text-align:center}
+  .doccred li{font-size:.98rem}
+}
+
 /* ── 首頁 ── */
 .hero{padding:34px 0 8px}
 .hero h1{font-size:2.1rem;margin:0 0 12px}
@@ -118,10 +146,11 @@ letter-spacing:.4px;line-height:1.5}
 <main class="wrap">
 
 <div class="hero">
-<h1>把腎臟的事，講到你聽得懂</h1>
-<p class="sub">慢性腎臟病、高血壓、糖尿病、高血脂——這裡用一般人看得懂的方式，
-說明檢查數字代表什麼、哪些習慣真的有影響、哪些說法沒有根據。</p>
-<p class="cred">內容由 吳政哲（腎臟科醫師）撰寫，依據國際指引與期刊文獻，持續更新。</p>
+<h1>護腎專家－吳政哲醫師的護腎教室</h1>
+<p class="sub">把腎臟的事，講到你聽得懂。慢性腎臟病、高血壓、糖尿病、高血脂——
+這裡用一般人看得懂的方式，說明檢查數字代表什麼、哪些習慣真的有影響、哪些說法沒有根據。</p>
+<p class="cred">內容依據國際指引與期刊文獻撰寫，持續更新。
+<a href="/about.html">關於吳政哲醫師 →</a></p>
 </div>
 
 <a class="gamebtn" href="/shop.html">
