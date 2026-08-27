@@ -621,13 +621,15 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]])
 # 醫師介紹要條列的資歷。第一項是最強的權威訊號，刻意排在最前面。
 CREDENTIALS = [
     ("台灣慢性腎臟病臨床診療指引編撰委員", True),
-    ("腎臟科專科醫師", True),
-    ("內科專科醫師", True),
-    ("戒菸醫師", False),
-    ("糖尿病共照網醫師", False),
     ("國立成功大學醫學系畢業", False),
     ("前成大醫院主治醫師", False),
     ("郭綜合醫院腎臟內科主治醫師", True),
+    ("腎臟科專科醫師", True),
+    ("內科專科醫師", False),
+    ("台灣腎臟醫學會會員", False),
+    ("美國腎臟醫學會會員", False),
+    ("戒菸醫師", False),
+    ("糖尿病共照網醫師", False),
 ]
 
 CHECK_SVG = ('<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
@@ -716,7 +718,7 @@ def build_about() -> str:
 </div>
 
 <h2 id="zhuan-chang">臨床專長</h2>
-<p>三高（高血壓、糖尿病、高血脂）、慢性腎臟病、急性腎衰竭、血液透析／腹膜透析、
+<p>三高（高血壓、糖尿病、高血脂）、慢性腎臟病、急性腎衰竭、血液／腹膜透析、
 多囊腎、電解質異常、痛風、代謝症候群、戒菸。</p>
 
 <h2 id="wei-shen-me">為什麼做這個網站</h2>
@@ -776,8 +778,12 @@ def build_about() -> str:
             "alumniOf": {"@type": "CollegeOrUniversity", "name": "國立成功大學醫學系"},
             "worksFor": {"@type": "Hospital", "name": "郭綜合醫院",
                          "department": {"@type": "MedicalOrganization", "name": "腎臟內科"}},
-            "memberOf": {"@type": "Organization",
-                         "name": "台灣慢性腎臟病臨床診療指引編撰委員會"},
+            "memberOf": [
+                {"@type": "Organization", "name": "台灣慢性腎臟病臨床診療指引編撰委員會"},
+                {"@type": "MedicalOrganization", "name": "台灣腎臟醫學會"},
+                {"@type": "MedicalOrganization", "name": "美國腎臟醫學會",
+                 "alternateName": "American Society of Nephrology"},
+            ],
             "url": f"{BASE_URL}/about.html",
         },
     }
