@@ -196,16 +196,14 @@ background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent)
 animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
-/* 商城的招牌是 480x257 的橫幅標誌，不能鎖成正方形，否則會被壓扁。
-   固定高度、寬度自動，比例才會正確。 */
-.gamebtn img{height:136px;width:auto;max-width:100%;
-filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}
+/* 標誌是橫幅比例，固定高度、寬度自動才不會被壓扁。 */
+.gamebtn img{height:132px;width:auto;max-width:100%}
 .gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
 letter-spacing:.4px;line-height:1.5}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
   .gamebtn{gap:14px;padding:26px 20px}
-  .gamebtn img{height:96px}
+  .gamebtn img{height:92px}
   .gamebtn .cap{font-size:1.06rem}
 }
 </style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "泡泡尿一定是蛋白尿嗎？", "acceptedAnswer": {"@type": "Answer", "text": "不是。尿速、馬桶清潔劑殘留、脫水、前一天高蛋白飲食、劇烈運動後，都可能產生泡沫。真正需要注意的是持續數分鐘不散、細緻綿密、反覆出現的泡沫，尤其合併水腫或尿量改變時。"}}, {"@type": "Question", "name": "沒有泡泡尿是不是就代表腎臟沒問題？", "acceptedAnswer": {"@type": "Answer", "text": "不是。早期蛋白尿的量往往少到看不出泡沫，糖尿病腎病變最早期的微量白蛋白尿就是如此。有糖尿病、高血壓或腎臟病家族史的人，應該定期驗尿液白蛋白，而不是靠肉眼判斷。"}}, {"@type": "Question", "name": "驗出蛋白尿就是慢性腎臟病嗎？", "acceptedAnswer": {"@type": "Answer", "text": "不一定。運動、發燒、感染都可能造成暫時性蛋白尿，年輕人也可能是良性的姿勢性蛋白尿。指引建議在三到六個月內重複檢驗，確認異常是持續的才算數。"}}, {"@type": "Question", "name": "蛋白尿可以逆轉嗎？", "acceptedAnswer": {"@type": "Answer", "text": "有機會。視原因而定，控制血壓與血糖、使用具有腎臟保護效果的藥物（如 ACEI／ARB、SGLT2 抑制劑等），都可能讓蛋白尿減少。減少的幅度本身就與長期預後改善相關。實際用藥請與你的醫師討論。"}}, {"@type": "Question", "name": "少吃蛋白質可以改善蛋白尿嗎？", "acceptedAnswer": {"@type": "Answer", "text": "不建議自行大幅限制。尿中的蛋白質流失和吃進去的蛋白質不是同一回事，過度限制反而可能造成營養不良與肌肉流失。蛋白質攝取量應該依腎功能階段由醫師或營養師評估。"}}]}</script>

@@ -196,16 +196,14 @@ background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent)
 animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
-/* 商城的招牌是 480x257 的橫幅標誌，不能鎖成正方形，否則會被壓扁。
-   固定高度、寬度自動，比例才會正確。 */
-.gamebtn img{height:136px;width:auto;max-width:100%;
-filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}
+/* 標誌是橫幅比例，固定高度、寬度自動才不會被壓扁。 */
+.gamebtn img{height:132px;width:auto;max-width:100%}
 .gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
 letter-spacing:.4px;line-height:1.5}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
   .gamebtn{gap:14px;padding:26px 20px}
-  .gamebtn img{height:96px}
+  .gamebtn img{height:92px}
   .gamebtn .cap{font-size:1.06rem}
 }
 </style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "eGFR 下降就一定會走到洗腎嗎？", "acceptedAnswer": {"@type": "Answer", "text": "不會。多數第三期的人終生不需要透析。真正決定會不會惡化的是下降速度與有沒有蛋白尿，而不是當下這個數字。近年 SGLT2 抑制劑等藥物已被證實能延緩腎功能惡化，能不能用、適不適合，請與你的醫師討論。"}}, {"@type": "Question", "name": "多喝水可以把腎功能喝回來嗎？", "acceptedAnswer": {"@type": "Answer", "text": "不行。維持適當水分有益健康，但過量飲水並不會提升 eGFR，對已經受損的腎絲球也沒有修復作用。心衰竭或水腫的人反而需要限制水分攝取。"}}, {"@type": "Question", "name": "吃保健食品可以顧腎嗎？", "acceptedAnswer": {"@type": "Answer", "text": "沒有任何保健食品被證實能改善腎功能。反而有不少急性腎損傷的案例，來自來路不明的草藥、偏方，或高劑量的營養補充品。腎功能不好的人在吃任何補充品之前，都應該先問過醫師或藥師。"}}, {"@type": "Question", "name": "一次抽血 eGFR 偏低，就是慢性腎臟病嗎？", "acceptedAnswer": {"@type": "Answer", "text": "不是。慢性腎臟病的定義要求異常持續超過三個月。單次數值可能受到脫水、抽血前吃大量肉類、劇烈運動或某些藥物影響。正確作法是間隔至少三個月再驗一次，看的是趨勢而不是單點。"}}]}</script>

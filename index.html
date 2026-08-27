@@ -196,16 +196,14 @@ background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent)
 animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
-/* 商城的招牌是 480x257 的橫幅標誌，不能鎖成正方形，否則會被壓扁。
-   固定高度、寬度自動，比例才會正確。 */
-.gamebtn img{height:136px;width:auto;max-width:100%;
-filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}
+/* 標誌是橫幅比例，固定高度、寬度自動才不會被壓扁。 */
+.gamebtn img{height:132px;width:auto;max-width:100%}
 .gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
 letter-spacing:.4px;line-height:1.5}
 @media(max-width:560px){
   .hero h1{font-size:1.68rem}
   .gamebtn{gap:14px;padding:26px 20px}
-  .gamebtn img{height:96px}
+  .gamebtn img{height:92px}
   .gamebtn .cap{font-size:1.06rem}
 }
 </style>
@@ -235,7 +233,7 @@ letter-spacing:.4px;line-height:1.5}
 <h2 class="sect" id="play">從免費遊戲商城學習</h2>
 <div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
 <a class="gamebtn" href="/shop.html">
-  <img src="/logo.png" alt="" aria-hidden="true" width="915" height="452">
+  <img src="/logo.png" alt="" aria-hidden="true" width="684" height="370">
   <span class="cap">護腎知識卡片收集商城</span>
 </a>
 
