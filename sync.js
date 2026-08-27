@@ -16,7 +16,8 @@ const FIREBASE_CONFIG = {
 if (FIREBASE_CONFIG) {
   const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js");
   const { getAuth, onAuthStateChanged, signInAnonymously, GoogleAuthProvider,
-          signInWithPopup, linkWithPopup, signOut } =
+          signInWithPopup, linkWithPopup, signInWithRedirect, linkWithRedirect,
+          getRedirectResult, signOut } =
     await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js");
   const { getFirestore, doc, getDoc, setDoc, deleteDoc, collection,
           getDocs, getCountFromServer, query, where, orderBy, limit, increment,
@@ -30,6 +31,51 @@ if (FIREBASE_CONFIG) {
   let user = null;
 
   const userDoc = () => doc(db, "users", user.uid);
+
+  /* 登入失敗有很多種原因，一律回「登入未完成」等於沒說。
+     以下分成三類：使用者自己取消（不必打擾）、該改用導向的、以及要具體告知的。 */
+  const CANCELLED = ["auth/popup-closed-by-user", "auth/cancelled-popup-request",
+                     "auth/user-cancelled"];
+  const NEEDS_REDIRECT = ["auth/popup-blocked",
+                          "auth/operation-not-supported-in-this-environment",
+                          "auth/web-storage-unsupported"];
+  const MESSAGES = {
+    "auth/unauthorized-domain":
+      "⚠️ 這個網域尚未在 Firebase 授權，請通知站方",
+    "auth/network-request-failed":
+      "⚠️ 網路不通，連上網路後再試一次",
+    "auth/account-exists-with-different-credential":
+      "⚠️ 這個 Email 已用其他方式註冊過",
+    "auth/credential-already-in-use":
+      "⚠️ 這個 Google 帳號已經有另一份進度了",
+    "auth/too-many-requests":
+      "⚠️ 嘗試次數過多，請稍後再試",
+  };
+
+  function reportAuthError(e, fallbackMsg){
+    console.error(e);
+    const code = e && e.code;
+    if(CANCELLED.includes(code)) return;           // 自己關掉視窗，不用跳提示
+    toast(MESSAGES[code] || fallbackMsg);
+  }
+
+  /* 彈窗在 App 內建瀏覽器（Threads、IG、LINE）常被擋掉，擋掉時改用整頁導向。
+     成功回傳結果物件；失敗或已跳轉離開頁面則回傳 null。
+     導向的結果由下方 getRedirectResult 接手。 */
+  async function popupThenRedirect(popupFn, redirectFn, fallbackMsg){
+    try{
+      return await popupFn();
+    }catch(e){
+      if(NEEDS_REDIRECT.includes(e && e.code)){
+        sessionStorage.setItem("kg-auth-redirect", "1");
+        try{ await redirectFn(); }
+        catch(e2){ sessionStorage.removeItem("kg-auth-redirect"); reportAuthError(e2, fallbackMsg); }
+      }else{
+        reportAuthError(e, fallbackMsg);
+      }
+      return null;
+    }
+  }
 
   async function pull(){
     try{
@@ -69,16 +115,22 @@ if (FIREBASE_CONFIG) {
       });
     },
     async google(){
-      try{ await signInWithPopup(auth, provider); closeAll(); }
-      catch(e){ console.error(e); toast("⚠️ Google 登入未完成"); }
+      const r = await popupThenRedirect(
+        () => signInWithPopup(auth, provider),
+        () => signInWithRedirect(auth, provider),
+        "⚠️ Google 登入未完成");
+      if(r) closeAll();
     },
     async anon(){
       try{ await signInAnonymously(auth); closeAll(); }
-      catch(e){ console.error(e); toast("⚠️ 匿名登入未完成"); }
+      catch(e){ reportAuthError(e, "⚠️ 匿名登入未完成"); }
     },
     async link(){
-      try{ await linkWithPopup(auth.currentUser, provider); toast("✅ 已升級為 Google 帳號"); this.renderAccount(); }
-      catch(e){ console.error(e); toast("⚠️ 升級未完成（此 Google 帳號可能已有資料）"); }
+      const r = await popupThenRedirect(
+        () => linkWithPopup(auth.currentUser, provider),
+        () => linkWithRedirect(auth.currentUser, provider),
+        "⚠️ 升級未完成（此 Google 帳號可能已有資料）");
+      if(r){ toast("✅ 已升級為 Google 帳號"); this.renderAccount(); }
     },
     async logout(){ await signOut(auth); closeAll(); toast("已登出，進度保留在本機"); },
     async wipe(){
@@ -246,6 +298,19 @@ if (FIREBASE_CONFIG) {
       }catch(e){ console.debug("leaderboard write", e); return null; }
     },
   };
+
+  /* 從導向流程回到頁面時，結果（或失敗原因）在這裡取得。
+     沒有走過導向時 getRedirectResult 回傳 null，不影響一般載入。 */
+  getRedirectResult(auth)
+    .then(res => {
+      if(!res) return;
+      if(sessionStorage.getItem("kg-auth-redirect")) toast("✅ 已登入，進度同步中");
+      sessionStorage.removeItem("kg-auth-redirect");
+    })
+    .catch(e => {
+      sessionStorage.removeItem("kg-auth-redirect");
+      reportAuthError(e, "⚠️ Google 登入未完成");
+    });
 
   onAuthStateChanged(auth, u => {
     user = u;
