@@ -77,6 +77,17 @@ CAT_INTRO = {
 
 TODAY = date.today().isoformat()
 
+# 頁首的品牌標記。用內嵌 SVG 而不是圖檔：縮放不糊、會跟著深淺色模式換色、
+# 不多一次網路請求，而且商城的標誌是為深色底設計的，放在淺色頁面上不合適。
+KIDNEY_SVG = (
+    '<svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true">'
+    '<path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 '
+    '0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 '
+    '0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 '
+    '3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 '
+    '4.6 13.6 4.6Z"/></svg>'
+)
+
 CSS = """
 :root{--bg:#fdfcfa;--fg:#22201d;--mut:#6b645c;--line:#e6e1d8;--card:#f6f3ed;
 --accent:#0f766e;--accent2:#0d5f59;--warn:#8a5a00;--maxw:720px}
@@ -87,10 +98,37 @@ body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
 -webkit-text-size-adjust:100%}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
-header.site{border-bottom:1px solid var(--line);padding:14px 0;margin-bottom:8px}
-header.site .wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-header.site a{color:var(--fg);text-decoration:none;font-weight:700}
-header.site nav a{font-weight:400;color:var(--mut);font-size:14px}
+/* 錨點跳轉時要扣掉固定頁首的高度，否則標題會被壓在頁首下面。
+   頁首約 60px，再加一點餘裕才不會貼著邊。 */
+html{scroll-padding-top:78px}
+header.site{position:sticky;top:0;z-index:50;background:var(--bg);
+background:color-mix(in srgb,var(--bg) 86%,transparent);
+backdrop-filter:saturate(150%) blur(10px);-webkit-backdrop-filter:saturate(150%) blur(10px);
+border-bottom:1px solid var(--line);margin-bottom:8px}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;
+gap:14px;padding-top:11px;padding-bottom:11px}
+.brand{display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+color:var(--fg);font-weight:800;font-size:1.04rem;letter-spacing:.3px;white-space:nowrap}
+.brand svg{color:var(--accent);flex-shrink:0}
+.brand:hover{color:var(--accent2)}
+header.site nav{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:flex-end}
+header.site nav a{font-size:14px;color:var(--mut);text-decoration:none;font-weight:500;
+padding:6px 11px;border-radius:8px;white-space:nowrap;
+transition:color .15s,background .15s}
+header.site nav a:hover{color:var(--fg);background:var(--card)}
+header.site nav a[aria-current="page"]{color:var(--accent2);background:var(--card);font-weight:700}
+/* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
+header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
+header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
+@media(max-width:600px){
+  header.site .wrap{padding-top:8px;padding-bottom:8px;gap:8px}
+  .brand{font-size:.95rem;gap:7px}
+  .brand svg{width:22px;height:22px}
+  header.site nav{gap:2px}
+  /* 隱藏「衛教／關於／知識」前綴，只留兩個字，才排得下一行 */
+  header.site nav .np{display:none}
+  header.site nav a{padding:9px 10px;font-size:13.5px}
+}
 h1{font-size:1.85rem;line-height:1.35;margin:28px 0 10px;letter-spacing:-.01em}
 h2{font-size:1.28rem;line-height:1.45;margin:38px 0 10px;padding-top:6px}
 h3{font-size:1.05rem;margin:26px 0 8px;color:var(--mut)}
@@ -248,10 +286,24 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
          extra_head: str = "", home: bool = False) -> str:
     """所有頁面共用的骨架。canonical 與 OG 是搜尋引擎與分享預覽的基本要求。"""
     url = f"{BASE_URL}/{path}"
-    nav = ('<a href="/articles/">全部文章</a>' if home
-           else '<a href="/">回首頁</a>')
-    nav += '　·　<a href="/about.html">關於作者</a>'
-    brand = ("護腎教室" if home else f"{SITE_NAME}｜衛教文章")
+
+    # 目前所在區塊要標示出來，讀者才知道自己在哪一層
+    in_gallery = "gallery" in path
+    in_articles = path.startswith("articles/") and not in_gallery
+    cur = {"articles": in_articles, "gallery": in_gallery,
+           "about": path == "about.html"}
+
+    # 前綴包在 span 裡，手機上隱藏起來變成「文章／圖卡／關於／商城」，
+    # 否則四個四字標籤會換成兩行，固定頁首會高到 84px。
+    def navlink(href: str, prefix: str, label: str, key: str, cls: str = "") -> str:
+        mark = ' aria-current="page"' if cur.get(key) else ""
+        c = f' class="{cls}"' if cls else ""
+        return f'<a href="{href}"{c}{mark}><span class="np">{prefix}</span>{label}</a>'
+
+    nav = (navlink("/articles/", "衛教", "文章", "articles")
+           + navlink("/articles/gallery.html", "衛教", "圖卡", "gallery")
+           + navlink("/about.html", "關於", "作者", "about")
+           + navlink("/shop.html", "知識", "商城", "shop", "shoplink"))
     ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
     return f"""<!doctype html>
 <html lang="zh-Hant">
@@ -273,8 +325,8 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 </head>
 <body>
 <header class="site"><div class="wrap">
-<a href="/">{brand}</a>
-<nav>{nav}　·　<a href="/shop.html">知識商城</a></nav>
+<a class="brand" href="/">{KIDNEY_SVG}<span>{SITE_NAME}</span></a>
+<nav>{nav}</nav>
 </div></header>
 <main class="wrap">
 {body}
