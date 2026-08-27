@@ -135,8 +135,14 @@ padding:14px 18px;border-radius:0 10px 10px 0;margin:22px 0;font-size:16px}
 .docintro{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);
 gap:34px;align-items:center;margin:26px 0 40px}
 .docintro.nophoto{grid-template-columns:1fr}
-.docphoto{width:100%;height:auto;border-radius:14px;display:block;
-box-shadow:0 10px 30px rgba(0,0,0,.16)}
+/* 原圖是全身直式，直接放會比旁邊的資歷欄高出一截。
+   裁成 3:4 並把構圖重心往上移，取到頭部與上半身，和資歷欄的高度才平衡。
+   想改成完整全身，把 aspect-ratio 與 object-fit 兩行拿掉即可。 */
+/* height:auto 不可省略——HTML 上的 height 屬性（用來避免版面跳動）
+   會被當成呈現提示而固定高度，那樣 aspect-ratio 就不會生效。 */
+.docphoto{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;
+object-position:center 12%;
+border-radius:14px;display:block;box-shadow:0 10px 30px rgba(0,0,0,.16)}
 .docname{font-size:1.9rem;font-weight:800;letter-spacing:.5px;margin:0 0 18px;
 color:var(--accent2)}
 .docname small{display:block;font-size:.95rem;font-weight:600;color:var(--mut);

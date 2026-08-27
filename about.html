@@ -71,8 +71,14 @@ padding:14px 18px;border-radius:0 10px 10px 0;margin:22px 0;font-size:16px}
 .docintro{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);
 gap:34px;align-items:center;margin:26px 0 40px}
 .docintro.nophoto{grid-template-columns:1fr}
-.docphoto{width:100%;height:auto;border-radius:14px;display:block;
-box-shadow:0 10px 30px rgba(0,0,0,.16)}
+/* 原圖是全身直式，直接放會比旁邊的資歷欄高出一截。
+   裁成 3:4 並把構圖重心往上移，取到頭部與上半身，和資歷欄的高度才平衡。
+   想改成完整全身，把 aspect-ratio 與 object-fit 兩行拿掉即可。 */
+/* height:auto 不可省略——HTML 上的 height 屬性（用來避免版面跳動）
+   會被當成呈現提示而固定高度，那樣 aspect-ratio 就不會生效。 */
+.docphoto{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;
+object-position:center 12%;
+border-radius:14px;display:block;box-shadow:0 10px 30px rgba(0,0,0,.16)}
 .docname{font-size:1.9rem;font-weight:800;letter-spacing:.5px;margin:0 0 18px;
 color:var(--accent2)}
 .docname small{display:block;font-size:.95rem;font-weight:600;color:var(--mut);
@@ -141,8 +147,8 @@ letter-spacing:.4px;line-height:1.5}
 
 <h1>關於吳政哲醫師與本站</h1>
 
-<div class="docintro nophoto">
-
+<div class="docintro">
+<div><img class="docphoto" src="/doctor.jpg" width="900" height="1350" alt="吳政哲醫師" loading="eager"></div>
 <div>
   <div class="docname"><small>腎臟科</small>吳政哲醫師</div>
   <ul class="doccred"><li class="key"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="M7 12.4l3.2 3.2L17 8.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>台灣慢性腎臟病臨床診療指引編撰委員</span></li><li class="key"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="M7 12.4l3.2 3.2L17 8.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>腎臟科專科醫師</span></li><li class="key"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="M7 12.4l3.2 3.2L17 8.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>內科專科醫師</span></li><li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="M7 12.4l3.2 3.2L17 8.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>戒菸醫師</span></li><li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="M7 12.4l3.2 3.2L17 8.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>糖尿病共照網醫師</span></li><li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="M7 12.4l3.2 3.2L17 8.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>國立成功大學醫學系畢業</span></li><li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="M7 12.4l3.2 3.2L17 8.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>前成大醫院主治醫師</span></li><li class="key"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/><path d="M7 12.4l3.2 3.2L17 8.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>郭綜合醫院腎臟內科主治醫師</span></li></ul>
