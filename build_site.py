@@ -131,6 +131,39 @@ tr:last-child td{border-bottom:0}
 .callout{background:var(--card);border-left:3px solid var(--accent);
 padding:14px 18px;border-radius:0 10px 10px 0;margin:22px 0;font-size:16px}
 
+/* ── 衛教圖卡 ── */
+.galnav{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 8px}
+.galnav a{font-size:13.5px;background:var(--card);border:1px solid var(--line);
+border-radius:99px;padding:6px 14px;text-decoration:none;color:var(--fg)}
+.galnav a:hover{border-color:var(--accent)}
+.galcard{display:grid;grid-template-columns:210px minmax(0,1fr);gap:22px;
+padding:24px 0;border-top:1px solid var(--line);align-items:start}
+.galcard:last-of-type{border-bottom:1px solid var(--line)}
+.galcard img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;
+border-radius:10px;border:1px solid var(--line);display:block;background:var(--card);
+transition:transform .16s,border-color .16s}
+.galcard a.shot:hover img{transform:scale(1.02);border-color:var(--accent)}
+.galcard h3{font-size:1.06rem;color:var(--fg);margin:0 0 8px;line-height:1.5}
+/* 原文保留換行；貼文的分行本身就是作者安排的節奏，攤平會很難讀 */
+.galcard .post{white-space:pre-wrap;font-size:15px;line-height:1.8;margin:0 0 10px}
+.galcard .src{font-size:12.5px;color:var(--mut)}
+/* 總覽頁：每個主題一塊，配四張縮圖預覽 */
+.galgroup{display:block;text-decoration:none;color:inherit;margin:0 0 16px;
+border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--card)}
+.galgroup:hover{border-color:var(--accent)}
+.gg-head{display:flex;justify-content:space-between;align-items:baseline;
+gap:12px;margin-bottom:12px}
+.gg-head b{font-size:1.08rem}
+.gg-head span{font-size:13.5px;color:var(--mut);white-space:nowrap}
+.gg-prev{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.gg-prev img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;
+border-radius:7px;display:block;border:1px solid var(--line)}
+@media(max-width:640px){
+  .galcard{grid-template-columns:1fr;gap:14px;padding:20px 0}
+  .galcard img{max-width:280px}
+  .galcard .post{font-size:14.5px}
+}
+
 /* ── 醫師介紹（關於頁最上方）── */
 .docintro{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);
 gap:34px;align-items:center;margin:26px 0 40px}
@@ -326,7 +359,8 @@ def build_category(cat: str, items: list[dict],
     return path, page(title, desc, path, body, jsonld), title
 
 
-def build_index(by_cat: dict[str, list[dict]], extra_pages: list[tuple[str, str]]) -> tuple[str, str]:
+def build_index(by_cat: dict[str, list[dict]], extra_pages: list[tuple[str, str]],
+                n_gallery: int = 0) -> tuple[str, str]:
     path = "articles/index.html"
     title = f"腎臟與三高衛教文章總覽｜{SITE_NAME}"
     desc = ("腎臟科醫師整理的慢性腎臟病與三高衛教文章：血壓、血糖、血脂、飲食、用藥安全、"
@@ -341,12 +375,20 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[tuple[str, str]
         li = "".join(f'<li><a href="/{p}">{esc(t)}</a></li>' for p, t in extra_pages)
         extra = f"<h2>深入文章</h2><div class='toc'><ol>{li}</ol></div>"
 
+    gal = ""
+    if n_gallery:
+        gal = (f'<h2>衛教圖卡</h2>'
+               f'<a class="feat" href="/articles/gallery.html">'
+               f'<div class="t">{n_gallery} 張圖解，依主題分類</div>'
+               f'<div class="d">原本發表在社群上的衛教圖，整理後收在這裡方便回頭查找。</div></a>')
+
     body = f"""
 <h1>腎臟與三高衛教文章</h1>
 <p class="lede">這裡整理慢性腎臟病、高血壓、糖尿病與高血脂相關的衛教內容，
 依據國際指引與期刊文獻撰寫，目的是讓一般人也能看懂自己的身體與檢查報告。</p>
 <div class="cats">{cards}</div>
 {extra}
+{gal}
 """
     jsonld = {
         "@context": "https://schema.org",
@@ -567,7 +609,7 @@ def build_markdown_articles() -> list[dict]:
     return out
 
 
-def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]]) -> str:
+def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int = 0) -> str:
     """網站首頁：以衛教內容為主，商城與遊戲收在一個明顯的大按鈕後面。"""
     title = f"護腎教室｜腎臟與三高衛教．{AUTHOR_NAME}{AUTHOR_TITLE}"
     desc = ("腎臟科醫師撰寫的慢性腎臟病與三高衛教：看懂 eGFR 與腎功能報告、"
@@ -586,6 +628,13 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]])
     feat_sect = (f'<h2 class="sect">深入文章</h2>'
                  f'<div class="sd">完整長文，適合想把一個主題徹底搞懂的人</div>{feats}'
                  if feats else "")
+
+    gal_sect = (f'<h2 class="sect">衛教圖卡</h2>'
+                f'<div class="sd">社群上發表過的圖解，依主題整理並附上完整說明</div>'
+                f'<a class="feat" href="/articles/gallery.html">'
+                f'<div class="t">{n_gallery} 張衛教圖卡</div>'
+                f'<div class="d">血壓、血糖、血脂、飲食、用藥安全、檢查數值…'
+                f'點主題可跳到該區。</div></a>' if n_gallery else "")
 
     body = f"""
 <div class="hero">
@@ -606,6 +655,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]])
 <div class="cats">{cards}</div>
 
 {feat_sect}
+{gal_sect}
 """
     jsonld = {
         "@context": "https://schema.org",
@@ -677,6 +727,121 @@ def find_doctor_photo() -> tuple[str, int, int] | None:
             wh = img_size(p)
             return (name, wh[0], wh[1]) if wh else (name, 0, 0)
     return None
+
+
+GALLERY_MANIFEST = ROOT / "gallery" / "manifest.json"
+
+
+def load_gallery() -> list[dict]:
+    if not GALLERY_MANIFEST.exists():
+        return []
+    try:
+        return json.loads(GALLERY_MANIFEST.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return []
+
+
+def _gal_card(it: dict) -> str:
+    src = (f'<span class="src">{it["date"]}　·　'
+           f'<a href="{esc(it["permalink"])}" target="_blank" rel="noopener">原始貼文 →</a>'
+           f"</span>" if it.get("permalink") else f'<span class="src">{it["date"]}</span>')
+    return (f'<div class="galcard">'
+            f'<a class="shot" href="/{it["full"]}" target="_blank" rel="noopener">'
+            f'<img src="/{it["thumb"]}" alt="{esc(it["cap"])}" loading="lazy" '
+            f'width="360" height="360"></a>'
+            f'<div><h3>{esc(it["cap"])}</h3>'
+            f'<p class="post">{esc(it.get("text", ""))}</p>{src}</div>'
+            f"</div>")
+
+
+def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
+    """衛教圖卡：一頁總覽 + 每個主題各一頁。
+
+    刻意拆成多頁而不是全部塞一頁——95 張卡片加上完整貼文約兩萬七千字，
+    單頁會高達兩萬多像素，讀者滑不到底，八個主題混在一起也讓每頁的主題失焦。
+    拆開後每頁三千多字、聚焦單一主題，對閱讀和搜尋都比較好。
+
+    另外刻意不寫 JavaScript 燈箱——縮圖直接連到大圖檔，
+    搜尋引擎抓得到、沒有 JS 也能用。
+    """
+    if not items:
+        return []
+
+    by_cat: dict[str, list[dict]] = {}
+    for it in items:
+        by_cat.setdefault(it["cat"], []).append(it)
+    by_cat = {c: by_cat[c] for c in CAT_SLUG if c in by_cat}
+
+    out: list[tuple[str, str]] = []
+
+    for cat, group in by_cat.items():
+        slug = CAT_SLUG[cat]
+        path = f"articles/gallery-{slug}.html"
+        title = f"{cat}衛教圖卡：{len(group)} 張圖解｜{SITE_NAME}"
+        heads = "、".join(it["cap"] for it in group[:3])
+        desc = f"{AUTHOR_NAME}醫師的{cat}衛教圖解 {len(group)} 張，內容包含：{heads} 等。"[:150]
+
+        others = "".join(
+            f'<a href="/articles/gallery-{CAT_SLUG[c]}.html">'
+            f'<div class="t">{esc(c)}圖卡（{len(v)}）</div>'
+            f'<div class="d">{esc(CAT_INTRO.get(c, "")[:44])}…</div></a>'
+            for c, v in by_cat.items() if c != cat)
+
+        body = f"""
+<h1>{esc(cat)}衛教圖卡</h1>
+<p class="lede">{esc(CAT_INTRO.get(cat, ""))}以下 {len(group)} 張圖卡原本發表在社群上，
+這裡附上每張圖當初的完整說明文字。點圖片可看大圖。</p>
+<p class="meta">作者：<a href="/about.html">{esc(AUTHOR_NAME)}</a>（{esc(AUTHOR_TITLE)}）
+　·　共 {len(group)} 張　·　更新於 {TODAY}</p>
+<div class="galnav"><a href="/articles/gallery.html">← 全部圖卡</a>
+<a href="/articles/{slug}.html">{esc(cat)}完整說明 →</a></div>
+{''.join(_gal_card(it) for it in group)}
+<h2 class="backlink">其他主題的圖卡</h2>
+<div class="cats">{others}</div>
+"""
+        jsonld = {
+            "@context": "https://schema.org", "@type": "ImageGallery",
+            "name": f"{cat}衛教圖卡", "description": desc, "inLanguage": "zh-Hant",
+            "url": f"{BASE_URL}/{path}", "dateModified": TODAY,
+            "numberOfItems": len(group),
+            "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
+                       "url": f"{BASE_URL}/about.html"},
+        }
+        out.append((path, page(title, desc, path, body, jsonld)))
+
+    # 總覽頁：每個主題一張卡片，配四張縮圖當預覽
+    path = "articles/gallery.html"
+    title = f"衛教圖卡總覽：{len(items)} 張腎臟與三高圖解｜{SITE_NAME}"
+    desc = (f"{AUTHOR_NAME}醫師整理的 {len(items)} 張腎臟與三高衛教圖卡，"
+            "依血壓、血糖、血脂、飲食、用藥安全、檢查數值等八個主題分類。")
+
+    blocks = []
+    for cat, group in by_cat.items():
+        prev = "".join(
+            f'<img src="/{it["thumb"]}" alt="{esc(it["cap"])}" loading="lazy" '
+            f'width="360" height="360">' for it in group[:4])
+        blocks.append(
+            f'<a class="galgroup" href="/articles/gallery-{CAT_SLUG[cat]}.html">'
+            f'<div class="gg-head"><b>{esc(cat)}</b><span>{len(group)} 張 →</span></div>'
+            f'<div class="gg-prev">{prev}</div></a>')
+
+    body = f"""
+<h1>衛教圖卡總覽</h1>
+<p class="lede">社群上發表過的衛教圖解，依主題整理收錄，每一張都附上當初的完整說明文字。
+共 {len(items)} 張。</p>
+<p class="meta">作者：<a href="/about.html">{esc(AUTHOR_NAME)}</a>（{esc(AUTHOR_TITLE)}）
+　·　更新於 {TODAY}</p>
+{''.join(blocks)}
+"""
+    jsonld = {
+        "@context": "https://schema.org", "@type": "CollectionPage",
+        "name": title, "description": desc, "inLanguage": "zh-Hant",
+        "url": f"{BASE_URL}/{path}", "dateModified": TODAY,
+        "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
+                   "url": f"{BASE_URL}/about.html"},
+    }
+    out.append((path, page(title, desc, path, body, jsonld)))
+    return out
 
 
 def build_about() -> str:
@@ -819,7 +984,14 @@ def main() -> int:
         written.append(path)
         print(f"  {path}　({len(items)} 則，約 {sum(len(i['body']) for i in items):,} 字)")
 
-    idx_path, idx_html = build_index(by_cat, [(a["path"], a["title"]) for a in md_pages])
+    gallery_items = load_gallery()
+    for gpath, ghtml in build_gallery(gallery_items):
+        (ROOT / gpath).write_text(ghtml, encoding="utf-8")
+        written.append(gpath)
+        print(f"  {gpath}")
+
+    idx_path, idx_html = build_index(by_cat, [(a["path"], a["title"]) for a in md_pages],
+                                     len(gallery_items))
     (ROOT / idx_path).write_text(idx_html, encoding="utf-8")
     written.insert(0, idx_path)
     print(f"  {idx_path}")
@@ -827,7 +999,8 @@ def main() -> int:
     (ROOT / "about.html").write_text(build_about(), encoding="utf-8")
     print("  about.html　(關於作者，E-E-A-T 權威訊號)")
 
-    (ROOT / "index.html").write_text(build_home(by_cat, md_pages), encoding="utf-8")
+    (ROOT / "index.html").write_text(
+        build_home(by_cat, md_pages, len(gallery_items)), encoding="utf-8")
     print("  index.html　(網站首頁，衛教為主 + 商城大按鈕)")
 
     # sitemap：讓搜尋引擎一次拿到所有網址
