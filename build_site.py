@@ -50,6 +50,25 @@ AUTHOR_BIO = ("腎臟科專科醫師，臨床工作以三高、慢性腎臟病�
               "在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，"
               "並持續更新。")
 
+# 社群帳號。這裡同時餵給三個地方：頁尾連結、醫師簡介頁的可見連結，
+# 以及 JSON-LD 的 sameAs —— sameAs 是告訴搜尋引擎「這些帳號跟本站是同一個實體」，
+# 對「作者是誰」的判定有直接影響，醫療類內容尤其看重這點。
+#
+# note 顯示帳號代號而不是「現用／原帳號」之類的說明：兩個 IG 只差在代號，
+# 直接把代號寫出來讀者自己分得出來，也不必在專業網站上交代帳號的來龍去脈。
+# url 為 None 的項目會被自動略過，方便先留位置之後再補。
+SOCIAL = [
+    {"label": "Threads", "url": "https://www.threads.com/@kidney.godreborn",
+     "note": "@kidney.godreborn"},
+    {"label": "Instagram", "url": "https://www.instagram.com/kidney.god/",
+     "note": "@kidney.god"},
+    {"label": "Instagram", "url": "https://www.instagram.com/kidney.godreborn/",
+     "note": "@kidney.godreborn"},
+    {"label": "Facebook", "url": None,   # 待補：需要粉專的正式網址，不是 share 短連結
+     "note": "粉絲專頁"},
+]
+SOCIAL_LIVE = [s for s in SOCIAL if s["url"]]
+
 DISCLAIMER = ("本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，"
               "亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，"
               "請與您的醫師或藥師討論後再做決定。")
@@ -157,6 +176,13 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
 font-size:13.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}
+.social{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+.social a{display:inline-flex;align-items:center;gap:6px;
+padding:6px 13px;border:1px solid var(--line);border-radius:999px;
+text-decoration:none;font-size:.92rem;color:var(--mut)}
+.social a:hover{border-color:var(--ink);color:var(--ink)}
+.social .nt{color:var(--mut);font-size:.8rem;opacity:.85}
+.sociallist a{color:var(--ink)}
 .backlink{margin:34px 0}
 ul{padding-left:22px;margin:0 0 18px}
 li{margin:7px 0}
@@ -294,6 +320,19 @@ def esc(s: str) -> str:
     return html.escape(s, quote=True)
 
 
+def social_links() -> str:
+    """社群連結。兩個 IG 只差在帳號代號，所以代號一律顯示出來，
+    否則頁尾會並排兩顆看起來一模一樣的「Instagram」。
+
+    rel 用 me：這是 IndieWeb 的作者身分標記，部分工具會用它來驗證帳號歸屬，
+    和 JSON-LD 的 sameAs 是互補的兩套機制。"""
+    return "".join(
+        f'<a href="{s["url"]}" rel="me noopener" target="_blank">{esc(s["label"])}'
+        + (f'<span class="nt">{esc(s["note"])}</span>' if s.get("note") else "")
+        + "</a>"
+        for s in SOCIAL_LIVE)
+
+
 def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None,
          extra_head: str = "", home: bool = False) -> str:
     """所有頁面共用的骨架。canonical 與 OG 是搜尋引擎與分享預覽的基本要求。"""
@@ -354,6 +393,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 </main>
 <footer class="site"><div class="wrap">
 <p>{SITE_NAME}　·　最後更新 {TODAY}　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<p class="social">{social_links()}</p>
 </div></footer>
 </body>
 </html>
@@ -744,7 +784,9 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         "description": desc,
         "inLanguage": "zh-Hant",
         "url": f"{BASE_URL}/",
-        "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE},
+        "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
+                   "url": f"{BASE_URL}/about.html",
+                   "sameAs": [s["url"] for s in SOCIAL_LIVE]},
     }
     return page(title, desc, "", body, jsonld, home=True)
 
@@ -1018,6 +1060,11 @@ def build_about() -> str:
 <h2 id="lian-luo">關於引用</h2>
 <p>本站文章歡迎在註明出處與連結原文的前提下引用。若為媒體採訪或授權轉載，
 請透過本站說明的方式聯絡。</p>
+
+<h2 id="she-qun">社群帳號</h2>
+<p>以下是我本人經營的帳號。日常的衛教圖卡與短文會先發在社群，
+完整的長文與整理過的內容放在這個網站。</p>
+<p class="social sociallist">{social_links()}</p>
 """
 
     jsonld = {
@@ -1049,6 +1096,8 @@ def build_about() -> str:
                  "alternateName": "American Society of Nephrology"},
             ],
             "url": f"{BASE_URL}/about.html",
+            # 宣告這些社群帳號與本人是同一個實體，協助搜尋引擎建立作者身分
+            "sameAs": [s["url"] for s in SOCIAL_LIVE],
         },
     }
     return page(title, desc, "about.html", body, jsonld)
