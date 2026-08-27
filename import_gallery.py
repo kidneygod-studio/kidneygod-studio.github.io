@@ -61,6 +61,13 @@ MANUAL_SERIES = {
 SERIES_ORDER = ["腎臟健康教室", "護腎健康教室 Pro", "三高健康教室",
                 "三高健康教室 Pro", "護腎陪伴日常", "其他"]
 
+# 作者確認「本來就沒發」的日子。編號跳號不是資料遺漏，
+# 記在這裡以免每次建置都跳出假警報。
+KNOWN_SKIPS = {
+    "三高健康教室": {25, 27},
+    "護腎陪伴日常": {5},
+}
+
 SERIES_INTRO = {
     "腎臟健康教室": "最早的一輪護腎衛教，從最基本的觀念開始，一天一個主題。",
     "護腎健康教室 Pro": "進階版，依據 KDIGO 指引逐日展開：藥物四大支柱、飲食個人化、"
@@ -253,10 +260,15 @@ def main() -> int:
             continue
         days = sorted(e["day"] for e in entries if e["series"] == s and e["day"])
         rng = f"Day {days[0]}–{days[-1]}" if days else "無編號"
-        missing = ([d for d in range(days[0], days[-1] + 1) if d not in days]
-                   if days else [])
-        gap = f"　缺 Day {','.join(map(str, missing))}" if missing else ""
-        print(f"  {s:<16}{by_s[s]:>4} 張　{rng}{gap}")
+        skips = KNOWN_SKIPS.get(s, set())
+        missing = ([d for d in range(days[0], days[-1] + 1)
+                    if d not in days and d not in skips] if days else [])
+        note = ""
+        if missing:
+            note = f"　⚠ 缺 Day {','.join(map(str, missing))}"
+        elif skips & set(range(days[0], days[-1] + 1)) if days else False:
+            note = f"　（Day {','.join(map(str, sorted(skips)))} 未發，非遺漏）"
+        print(f"  {s:<16}{by_s[s]:>4} 張　{rng}{note}")
     return 0
 
 
