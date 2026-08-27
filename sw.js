@@ -48,7 +48,11 @@ self.addEventListener("fetch", e => {
   if(req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")){
     e.respondWith((async () => {
       try{
-        const net = await fetch(req);
+        /* cache:"no-cache" 是必要的：預設的 fetch 會走瀏覽器 HTTP 快取，
+           而 GitHub Pages 送 max-age=600，所以「連線優先」在十分鐘內
+           其實拿到的是舊 HTML，還會把舊的再存回 SW 快取。
+           改成強制向伺服器驗證，內容沒變時伺服器回 304，成本很低。 */
+        const net = await fetch(req, {cache: "no-cache"});
         const c = await caches.open(SHELL);
         c.put(req, net.clone());
         return net;
