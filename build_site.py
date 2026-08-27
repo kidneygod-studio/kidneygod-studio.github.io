@@ -44,13 +44,14 @@ SITE_NAME = "護腎教室"
 # 因此不需要同意橫幅，也不會和「本站不收集任何資料」的定位衝突。
 # 留空時完全不輸出這段 script，網站行為不受影響。
 # 取得方式：Cloudflare 免費帳號 → Web Analytics → Add a site → 複製 token。
-ANALYTICS_TOKEN = ""
+ANALYTICS_TOKEN = "e44b1d39221d4a5085336497dbff3ce4"
 
 
 def analytics_tag() -> str:
     if not ANALYTICS_TOKEN:
         return ""
-    return ('\n<script defer src="https://static.cloudflareinsights.com/beacon.min.js" '
+    # 寫法對齊 Cloudflare 目前發的片段（type="module"，本身就是延後執行）
+    return ('\n<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" '
             f'data-cf-beacon=\'{{"token": "{ANALYTICS_TOKEN}"}}\'></script>')
 
 # ---------------------------------------------------------------------------

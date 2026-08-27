@@ -25,12 +25,21 @@ ROOT = Path(__file__).resolve().parent
 BUILD = ROOT / "build_site.py"
 HANDWRITTEN = ["shop.html", "game.html", "library.html"]
 
+# dash.html（站長儀表板）刻意不追蹤：沒有對外連結、不在 sitemap，
+# 只有你自己會開。加進去只會讓自己的後台瀏覽污染統計數字。
+EXCLUDED = ["dash.html"]
+
+# 比對時放寬 script 標籤的屬性寫法，這樣即使之前用 defer 版本注入過也認得出來，
+# 重跑不會留下兩份。
 BEACON_RE = re.compile(
-    r'\n?<script defer src="https://static\.cloudflareinsights\.com/beacon\.min\.js"[^>]*></script>')
+    r'\n?[ \t]*(?:<!-- Cloudflare Web Analytics -->)?'
+    r'<script [^>]*src=[\'"]https://static\.cloudflareinsights\.com/beacon\.min\.js[\'"][^>]*>'
+    r'</script>(?:<!-- End Cloudflare Web Analytics -->)?')
 
 
 def beacon(token: str) -> str:
-    return ('\n<script defer src="https://static.cloudflareinsights.com/beacon.min.js" '
+    # 寫法對齊 Cloudflare 目前發的片段（type="module"，本身就是延後執行）
+    return ('\n<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" '
             f'data-cf-beacon=\'{{"token": "{token}"}}\'></script>')
 
 
