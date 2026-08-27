@@ -297,7 +297,9 @@ def esc(s: str) -> str:
 def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None,
          extra_head: str = "", home: bool = False) -> str:
     """所有頁面共用的骨架。canonical 與 OG 是搜尋引擎與分享預覽的基本要求。"""
-    url = f"{BASE_URL}/{path}"
+    # canonical 必須和 sitemap 宣告的網址逐字相同，否則等於叫 Google 索引兩個位址。
+    # sitemap 用的是目錄形式（/articles/），這裡把 index.html 收掉對齊。
+    url = f"{BASE_URL}/{re.sub(r'(^|/)index\.html$', r'\1', path)}"
 
     # 目前所在區塊要標示出來，讀者才知道自己在哪一層
     in_gallery = "gallery" in path
@@ -362,7 +364,9 @@ def build_category(cat: str, items: list[dict],
                    articles: list[dict] | None = None) -> tuple[str, str, str]:
     slug = CAT_SLUG[cat]
     path = f"articles/{slug}.html"
-    title = f"{cat}與腎臟健康：{len(items)} 個重點整理｜{SITE_NAME}"
+    # 用冒號而不是「與」串接：分類名本身可能就含「與」（警訊與迷思），
+    # 接成「警訊與迷思與腎臟健康」會讀不順。
+    title = f"{cat}：腎臟健康的 {len(items)} 個重點整理｜{SITE_NAME}"
     intro = CAT_INTRO.get(cat, "")
     # description 同時要有足夠長度與關鍵字覆蓋，所以用「簡介＋前三篇標題」組成。
     # 中文搜尋結果約顯示 80 字，超過會被截斷，因此上限抓 150 字。
@@ -397,7 +401,7 @@ def build_category(cat: str, items: list[dict],
                      f'<div class="sd">這個主題的完整長文</div>{li}')
 
     body = f"""
-<h1>{esc(cat)}與腎臟健康</h1>
+<h1>{esc(cat)}：腎臟健康重點整理</h1>
 <p class="lede">{esc(intro)}</p>
 <p class="meta">作者：<a href="/about.html">{esc(AUTHOR_NAME)}</a>（{esc(AUTHOR_TITLE)}）　·　更新於 {TODAY}　·　共 {len(items)} 則</p>
 {deep_html}
@@ -410,7 +414,7 @@ def build_category(cat: str, items: list[dict],
     jsonld = {
         "@context": "https://schema.org",
         "@type": "MedicalWebPage",
-        "headline": f"{cat}與腎臟健康",
+        "headline": f"{cat}：腎臟健康重點整理",
         "description": desc,
         "inLanguage": "zh-Hant",
         "url": f"{BASE_URL}/{path}",
@@ -862,10 +866,11 @@ def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
         if not group:
             continue
         path = f"articles/gallery-{slug}.html"
+        # Day 區間沒有人拿來搜尋，放標題只會把標題推過截斷長度，移到描述裡。
         rng = f"（{s['day_range']}）" if s.get("day_range") else ""
-        title = f"{name}：{len(group)} 張衛教圖卡{rng}｜{SITE_NAME}"
+        title = f"{name}：{len(group)} 張衛教圖卡｜{SITE_NAME}"
         heads = "、".join(it["cap"] for it in group[:3])
-        desc = (f"{AUTHOR_NAME}醫師的「{name}」系列共 {len(group)} 張衛教圖解，"
+        desc = (f"{AUTHOR_NAME}醫師的「{name}」系列{rng}共 {len(group)} 張衛教圖解，"
                 f"內容包含：{heads} 等。")[:150]
 
         others = "".join(
