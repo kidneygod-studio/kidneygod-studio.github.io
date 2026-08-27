@@ -1,0 +1,33 @@
+{
+ "_comment": "人工補充的圖片。有些貼文是先發在 Instagram 再分享到 Threads，Threads API 只看得到文字（media_type=TEXT_POST、沒有 media_url），圖片抓不到。這裡用 Threads 貼文 id 對應手動提供的圖檔，文字、日期、原文連結仍取自備份。",
+ "cards": [
+  {
+   "post_id": "17987214089995936",
+   "file": "kidney-day3.jpg",
+   "series": "腎臟健康教室",
+   "day": 3,
+   "cap": "血糖管理與腎病變：HbA1c 控制目標"
+  },
+  {
+   "post_id": "18123345187630690",
+   "file": "kidney-day4.jpg",
+   "series": "腎臟健康教室",
+   "day": 4,
+   "cap": "微量白蛋白尿（UACR）的威力"
+  },
+  {
+   "post_id": "17928309921324848",
+   "file": "kidney-day5.jpg",
+   "series": "腎臟健康教室",
+   "day": 5,
+   "cap": "高血脂與腎血管硬化"
+  },
+  {
+   "post_id": "17941818873035447",
+   "file": "kidney-day6.png",
+   "series": "腎臟健康教室",
+   "day": 6,
+   "cap": "認識血尿與蛋白尿的差異"
+  }
+ ]
+}

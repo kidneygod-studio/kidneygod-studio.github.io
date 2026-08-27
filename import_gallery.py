@@ -161,6 +161,47 @@ def main() -> int:
 
     # 系列內依 Day 編號排序（沒編號的排最後、按日期），才讀得出課程順序
     order = {s: i for i, s in enumerate(SERIES_ORDER)}
+    # 人工補充的圖：有些貼文先發在 IG 再分享到 Threads，Threads API 只看到文字，
+    # 圖片抓不到。這些由 manual_media.json 指定圖檔，文字仍取自備份。
+    mm_path = ROOT / "manual_media.json"
+    if mm_path.exists():
+        mm = json.loads(mm_path.read_text(encoding="utf-8")).get("cards", [])
+        have = {e["id"].rsplit("_", 1)[0] for e in entries}
+        added = 0
+        for c in mm:
+            pid = c["post_id"]
+            if pid in have:
+                continue
+            p = posts.get(pid)
+            src = ROOT / "manual_media" / c["file"]
+            if not p or not src.exists():
+                print(f"  ! 跳過人工補充 {pid}：" +
+                      ("找不到貼文" if not p else f"找不到圖檔 {c['file']}"))
+                continue
+            stem = f"{pid}_m0"
+            full_p, thumb_p = OUT / f"{stem}.jpg", THUMB / f"{stem}.jpg"
+            if args.force or not (full_p.exists() and thumb_p.exists()):
+                fw, fh = save_optimised(src, full_p, FULL_W, FULL_Q)
+                save_optimised(src, thumb_p, THUMB_W, THUMB_Q)
+            else:
+                with Image.open(full_p) as im:
+                    fw, fh = im.size
+            entries.append({
+                "id": stem, "cat": "", "cap": c["cap"],
+                "series": c["series"],
+                "series_slug": next((s for _p, nm, s in SERIES_RULES
+                                     if nm == c["series"]), "others"),
+                "day": c.get("day"),
+                "text": (p.get("text") or "").strip(),
+                "full": f"gallery/{stem}.jpg", "thumb": f"gallery/thumb/{stem}.jpg",
+                "w": fw, "h": fh,
+                "date": (p.get("timestamp") or "")[:10],
+                "permalink": p.get("permalink") or "",
+            })
+            added += 1
+        if added:
+            print(f"人工補充圖片：{added} 張")
+
     entries.sort(key=lambda e: (order.get(e["series"], 99),
                                 e["day"] if e["day"] is not None else 9999,
                                 e["date"]))
