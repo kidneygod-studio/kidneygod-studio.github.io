@@ -39,6 +39,20 @@ BASE_URL = "https://kidneygod.net"
 
 SITE_NAME = "護腎教室"
 
+# Cloudflare Web Analytics 的 beacon token。
+# 選它而不是 GA4 的理由：不放 cookie、不收集個人識別資料，
+# 因此不需要同意橫幅，也不會和「本站不收集任何資料」的定位衝突。
+# 留空時完全不輸出這段 script，網站行為不受影響。
+# 取得方式：Cloudflare 免費帳號 → Web Analytics → Add a site → 複製 token。
+ANALYTICS_TOKEN = ""
+
+
+def analytics_tag() -> str:
+    if not ANALYTICS_TOKEN:
+        return ""
+    return ('\n<script defer src="https://static.cloudflareinsights.com/beacon.min.js" '
+            f'data-cf-beacon=\'{{"token": "{ANALYTICS_TOKEN}"}}\'></script>')
+
 # ---------------------------------------------------------------------------
 # 作者資訊：醫療類內容（YMYL）的搜尋排名高度依賴作者專業身分（E-E-A-T）。
 # 匿名的醫療網站在 Google 眼中可信度低，很難排上去。
@@ -394,7 +408,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <footer class="site"><div class="wrap">
 <p>{SITE_NAME}　·　最後更新 {TODAY}　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
 <p class="social">{social_links()}</p>
-</div></footer>
+</div></footer>{analytics_tag()}
 </body>
 </html>
 """
