@@ -237,6 +237,14 @@ font-size:1.02rem;line-height:1.55}
 .hero .cred{font-size:14px;color:var(--mut)}
 .sect{font-size:1.15rem;margin:44px 0 4px}
 .sect + .sd{font-size:14px;color:var(--mut);margin-bottom:16px}
+/* 使用說明：定位在「先看這個再決定往哪走」，所以視覺上要跟一般段落分開，
+   但又不能重到搶走主標題的位置 */
+.howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
+padding:15px 18px;margin:22px 0 6px;font-size:14.8px;line-height:1.95;color:var(--mut)}
+.howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:5px}
+.howto a{font-weight:700;text-decoration:none;border-bottom:1px solid transparent}
+.howto a:hover{border-bottom-color:var(--accent)}
+.howto .step{color:var(--fg)}
 .feat{display:block;border:1px solid var(--line);border-radius:12px;padding:18px 20px;
 text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat:hover{border-color:var(--accent)}
@@ -677,11 +685,11 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         f'<a class="feat" href="/{a["path"]}"><div class="t">{esc(a["title"])}</div>'
         f'<div class="d">{esc(a["summary"][:88])}…</div></a>' for a in extra)
 
-    feat_sect = (f'<h2 class="sect">深入文章</h2>'
+    feat_sect = (f'<h2 class="sect" id="deep">深入文章</h2>'
                  f'<div class="sd">完整長文，適合想把一個主題徹底搞懂的人</div>{feats}'
                  if feats else "")
 
-    gal_sect = (f'<h2 class="sect">衛教圖卡</h2>'
+    gal_sect = (f'<h2 class="sect" id="gallery">衛教圖卡</h2>'
                 f'<div class="sd">社群上發表過的圖解，依主題整理並附上完整說明</div>'
                 f'<a class="feat" href="/articles/gallery.html">'
                 f'<div class="t">{n_gallery} 張衛教圖卡</div>'
@@ -695,16 +703,22 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 這裡用一般人看得懂的方式，說明檢查數字代表什麼、哪些習慣真的有影響、哪些說法沒有根據。</p>
 <p class="cred">內容依據國際指引與期刊文獻撰寫，持續更新。
 <a href="/about.html">關於{esc(AUTHOR_NAME)}醫師 →</a></p>
+
+<p class="howto"><b>這個網站怎麼用</b>
+<span class="step">不知道從哪開始</span>：先玩 <a href="/shop.html">遊戲商城</a>，邊玩邊收集護腎知識卡。<br>
+<span class="step">有明確想查的問題</span>：到 <a href="#topics">依主題閱讀</a> 挑對應主題。<br>
+<span class="step">想把一件事徹底弄懂</span>：看 <a href="#deep">深入文章</a>，一篇讀完不必再查。<br>
+<span class="step">只想快速看重點</span>：翻 <a href="#gallery">衛教圖卡</a>，一張圖說完一件事。</p>
 </div>
 
-<h2 class="sect">從免費遊戲商城學習</h2>
+<h2 class="sect" id="play">從免費遊戲商城學習</h2>
 <div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
 <a class="gamebtn" href="/shop.html">
   <img src="/logo.png" alt="" aria-hidden="true" width="480" height="257">
   <span class="cap">護腎知識卡片收集商城</span>
 </a>
 
-<h2 class="sect">依主題閱讀</h2>
+<h2 class="sect" id="topics">依主題閱讀</h2>
 <div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>
 <div class="cats">{cards}</div>
 

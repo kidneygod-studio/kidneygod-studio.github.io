@@ -162,6 +162,14 @@ font-size:1.02rem;line-height:1.55}
 .hero .cred{font-size:14px;color:var(--mut)}
 .sect{font-size:1.15rem;margin:44px 0 4px}
 .sect + .sd{font-size:14px;color:var(--mut);margin-bottom:16px}
+/* 使用說明：定位在「先看這個再決定往哪走」，所以視覺上要跟一般段落分開，
+   但又不能重到搶走主標題的位置 */
+.howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
+padding:15px 18px;margin:22px 0 6px;font-size:14.8px;line-height:1.95;color:var(--mut)}
+.howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:5px}
+.howto a{font-weight:700;text-decoration:none;border-bottom:1px solid transparent}
+.howto a:hover{border-bottom-color:var(--accent)}
+.howto .step{color:var(--fg)}
 .feat{display:block;border:1px solid var(--line);border-radius:12px;padding:18px 20px;
 text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat:hover{border-color:var(--accent)}
@@ -211,21 +219,27 @@ letter-spacing:.4px;line-height:1.5}
 這裡用一般人看得懂的方式，說明檢查數字代表什麼、哪些習慣真的有影響、哪些說法沒有根據。</p>
 <p class="cred">內容依據國際指引與期刊文獻撰寫，持續更新。
 <a href="/about.html">關於吳政哲醫師 →</a></p>
+
+<p class="howto"><b>這個網站怎麼用</b>
+<span class="step">不知道從哪開始</span>：先玩 <a href="/shop.html">遊戲商城</a>，邊玩邊收集護腎知識卡。<br>
+<span class="step">有明確想查的問題</span>：到 <a href="#topics">依主題閱讀</a> 挑對應主題。<br>
+<span class="step">想把一件事徹底弄懂</span>：看 <a href="#deep">深入文章</a>，一篇讀完不必再查。<br>
+<span class="step">只想快速看重點</span>：翻 <a href="#gallery">衛教圖卡</a>，一張圖說完一件事。</p>
 </div>
 
-<h2 class="sect">從免費遊戲商城學習</h2>
+<h2 class="sect" id="play">從免費遊戲商城學習</h2>
 <div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
 <a class="gamebtn" href="/shop.html">
   <img src="/logo.png" alt="" aria-hidden="true" width="480" height="257">
   <span class="cap">護腎知識卡片收集商城</span>
 </a>
 
-<h2 class="sect">依主題閱讀</h2>
+<h2 class="sect" id="topics">依主題閱讀</h2>
 <div class="sd">60 則衛教內容，分成 8 個主題，適合想直接找答案的人</div>
 <div class="cats"><a href="/articles/blood-pressure.html"><div class="t">血壓管理（10 則）</div><div class="d">血壓與腎臟是雙向的關係：高血壓會傷腎，腎功能變差又會讓血壓更難控制。這一頁整理血壓與腎臟之間最常被問…</div></a><a href="/articles/blood-sugar.html"><div class="t">血糖管理（10 則）</div><div class="d">糖尿病是台灣洗腎最主要的原因。血糖控制得好不好，直接決定腎臟能撐多久。這一頁整理血糖與腎臟的關聯與實…</div></a><a href="/articles/lipids.html"><div class="t">血脂代謝（10 則）</div><div class="d">血脂異常對腎臟的影響常被忽略，但它同時牽動心血管與腎臟的長期風險。這一頁整理血脂與腎臟保護的重點。…</div></a><a href="/articles/diet.html"><div class="t">飲食護腎（8 則）</div><div class="d">「腎不好要吃什麼」是最常見的問題，答案卻會隨腎功能階段而改變。這一頁整理飲食上真正有證據的原則與常見…</div></a><a href="/articles/medication-safety.html"><div class="t">用藥安全（6 則）</div><div class="d">很多腎損傷來自可以避免的用藥。這一頁整理常見的傷腎藥物、危險組合，以及什麼情況下該先問過醫師。…</div></a><a href="/articles/lifestyle.html"><div class="t">生活習慣（6 則）</div><div class="d">腎臟的保養沒有捷徑，但有幾個生活習慣的影響比多數人想的大。這一頁整理實際有幫助的部分。…</div></a><a href="/articles/lab-values.html"><div class="t">檢查數值（5 則）</div><div class="d">肌酸酐、eGFR、蛋白尿——健檢報告上的腎功能數字到底代表什麼。這一頁教你看懂自己的報告。…</div></a><a href="/articles/myths.html"><div class="t">警訊與迷思（5 則）</div><div class="d">哪些症狀該就醫、哪些流傳很廣的說法其實沒有根據。這一頁整理腎臟相關的警訊與常見迷思。…</div></a></div>
 
-<h2 class="sect">深入文章</h2><div class="sd">完整長文，適合想把一個主題徹底搞懂的人</div><a class="feat" href="/articles/egfr-meaning-ckd-stages.html"><div class="t">eGFR 60 是什麼意思？腎功能報告完整判讀指南</div><div class="d">健檢報告上的 eGFR 出現紅字，多數人的第一個念頭是「我是不是要洗腎了」。這篇說明 eGFR 到底怎麼算出來的、數字代表什麼、哪些情況會讓它失真，以及什麼時候真的需要看腎臟科…</div></a><a class="feat" href="/articles/foamy-urine-proteinuria.html"><div class="t">泡泡尿是腎臟壞掉了嗎？蛋白尿的判斷與該做的檢查</div><div class="d">尿裡有泡泡不一定是蛋白尿，蛋白尿也不一定會有泡泡。這篇說明什麼樣的泡泡要注意、哪些原因會造成假警報、該驗什麼項目，以及什麼情況必須盡快就醫。…</div></a>
-<h2 class="sect">衛教圖卡</h2><div class="sd">社群上發表過的圖解，依主題整理並附上完整說明</div><a class="feat" href="/articles/gallery.html"><div class="t">95 張衛教圖卡</div><div class="d">血壓、血糖、血脂、飲食、用藥安全、檢查數值…點主題可跳到該區。</div></a>
+<h2 class="sect" id="deep">深入文章</h2><div class="sd">完整長文，適合想把一個主題徹底搞懂的人</div><a class="feat" href="/articles/egfr-meaning-ckd-stages.html"><div class="t">eGFR 60 是什麼意思？腎功能報告完整判讀指南</div><div class="d">健檢報告上的 eGFR 出現紅字，多數人的第一個念頭是「我是不是要洗腎了」。這篇說明 eGFR 到底怎麼算出來的、數字代表什麼、哪些情況會讓它失真，以及什麼時候真的需要看腎臟科…</div></a><a class="feat" href="/articles/foamy-urine-proteinuria.html"><div class="t">泡泡尿是腎臟壞掉了嗎？蛋白尿的判斷與該做的檢查</div><div class="d">尿裡有泡泡不一定是蛋白尿，蛋白尿也不一定會有泡泡。這篇說明什麼樣的泡泡要注意、哪些原因會造成假警報、該驗什麼項目，以及什麼情況必須盡快就醫。…</div></a>
+<h2 class="sect" id="gallery">衛教圖卡</h2><div class="sd">社群上發表過的圖解，依主題整理並附上完整說明</div><a class="feat" href="/articles/gallery.html"><div class="t">95 張衛教圖卡</div><div class="d">血壓、血糖、血脂、飲食、用藥安全、檢查數值…點主題可跳到該區。</div></a>
 
 <div class="author">
   <div>
