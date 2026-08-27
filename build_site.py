@@ -695,6 +695,10 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
                  f'<div class="sd">完整長文，適合想把一個主題徹底搞懂的人</div>{feats}'
                  if feats else "")
 
+    # 直接讀 logo 實際尺寸，換圖時不必再手改寫死的數字（換過一次比例就變了）
+    lw = img_size(ROOT / "logo.png")
+    logo_dims = f' width="{lw[0]}" height="{lw[1]}"' if lw else ""
+
     gal_sect = (f'<h2 class="sect" id="gallery">衛教圖卡</h2>'
                 f'<div class="sd">社群上發表過的圖解，依主題整理並附上完整說明</div>'
                 f'<a class="feat" href="/articles/gallery.html">'
@@ -720,7 +724,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 <h2 class="sect" id="play">從免費遊戲商城學習</h2>
 <div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
 <a class="gamebtn" href="/shop.html">
-  <img src="/logo.png" alt="" aria-hidden="true" width="480" height="257">
+  <img src="/logo.png" alt="" aria-hidden="true"{logo_dims}>
   <span class="cap">護腎知識卡片收集商城</span>
 </a>
 
