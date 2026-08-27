@@ -33,8 +33,9 @@ ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "articles"
 SRC_MD = ROOT / "articles_src"
 
-# 改用自訂網域時，只要改這一行（並在 repo 根目錄放 CNAME 檔）
-BASE_URL = "https://kidneygod-studio.github.io"
+# 自訂網域。改這一行之外，repo 根目錄要有對應的 CNAME 檔，
+# 且註冊商的 DNS 要指向 GitHub Pages（見 SETUP 說明）。
+BASE_URL = "https://kidneygod.net"
 
 SITE_NAME = "護腎教室"
 
