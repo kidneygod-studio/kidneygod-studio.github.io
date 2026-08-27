@@ -55,6 +55,10 @@ def bump_sw(ver):
     for f in list(ASSETS) + list(PAGES) + list(HASH_ONLY):
         if os.path.exists(f):
             h.update(io.open(f, "rb").read())
+    # sw.js 自己的內容也要計入，否則改了快取策略卻不換版本號，
+    # 舊快取不會被清掉。把 VERSION 那行剔除以免自我循環。
+    sw_body = re.sub(r'const VERSION = "[^"]*";', "", io.open("sw.js", encoding="utf-8").read())
+    h.update(sw_body.encode("utf-8"))
     tag = "kg-" + h.hexdigest()[:10]
     s = old = io.open("sw.js", encoding="utf-8").read()
     s = re.sub(r'const VERSION = "[^"]*";', f'const VERSION = "{tag}";', s)
