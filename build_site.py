@@ -193,6 +193,11 @@ border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var
 gap:12px;margin-bottom:12px}
 .gg-head b{font-size:1.08rem}
 .gg-head span{font-size:13.5px;color:var(--mut);white-space:nowrap}
+.gg-sub{font-size:13.5px;color:var(--mut);line-height:1.65;margin:-6px 0 12px}
+/* Day 編號做成小標籤，一眼看得出這是一堂一堂連著的課 */
+.galcard .day{display:inline-block;font-size:12px;font-weight:700;color:var(--accent2);
+background:var(--card);border:1px solid var(--line);border-radius:6px;
+padding:1px 7px;margin-right:8px;vertical-align:2px}
 .gg-prev{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .gg-prev img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;
 border-radius:7px;display:block;border:1px solid var(--line)}
@@ -813,11 +818,12 @@ def _gal_card(it: dict) -> str:
     src = (f'<span class="src">{it["date"]}　·　'
            f'<a href="{esc(it["permalink"])}" target="_blank" rel="noopener">原始貼文 →</a>'
            f"</span>" if it.get("permalink") else f'<span class="src">{it["date"]}</span>')
+    day = f'<span class="day">Day {it["day"]}</span>' if it.get("day") else ""
     return (f'<div class="galcard">'
             f'<a class="shot" href="/{it["full"]}" target="_blank" rel="noopener">'
             f'<img src="/{it["thumb"]}" alt="{esc(it["cap"])}" loading="lazy" '
             f'width="360" height="360"></a>'
-            f'<div><h3>{esc(it["cap"])}</h3>'
+            f'<div><h3>{day}{esc(it["cap"])}</h3>'
             f'<p class="post">{esc(it.get("text", ""))}</p>{src}</div>'
             f"</div>")
 
@@ -835,41 +841,51 @@ def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
     if not items:
         return []
 
-    by_cat: dict[str, list[dict]] = {}
+    # 系列的中繼資料由 import_gallery.py 產生，這裡直接讀，避免兩邊各維護一份
+    sp = ROOT / "gallery" / "series.json"
+    try:
+        series = json.loads(sp.read_text(encoding="utf-8")) if sp.exists() else []
+    except json.JSONDecodeError:
+        series = []
+    by_series: dict[str, list[dict]] = {}
     for it in items:
-        by_cat.setdefault(it["cat"], []).append(it)
-    by_cat = {c: by_cat[c] for c in CAT_SLUG if c in by_cat}
+        by_series.setdefault(it.get("series", "其他"), []).append(it)
 
     out: list[tuple[str, str]] = []
 
-    for cat, group in by_cat.items():
-        slug = CAT_SLUG[cat]
+    for s in series:
+        name, slug = s["name"], s["slug"]
+        group = by_series.get(name, [])
+        if not group:
+            continue
         path = f"articles/gallery-{slug}.html"
-        title = f"{cat}衛教圖卡：{len(group)} 張圖解｜{SITE_NAME}"
+        rng = f"（{s['day_range']}）" if s.get("day_range") else ""
+        title = f"{name}：{len(group)} 張衛教圖卡{rng}｜{SITE_NAME}"
         heads = "、".join(it["cap"] for it in group[:3])
-        desc = f"{AUTHOR_NAME}醫師的{cat}衛教圖解 {len(group)} 張，內容包含：{heads} 等。"[:150]
+        desc = (f"{AUTHOR_NAME}醫師的「{name}」系列共 {len(group)} 張衛教圖解，"
+                f"內容包含：{heads} 等。")[:150]
 
         others = "".join(
-            f'<a href="/articles/gallery-{CAT_SLUG[c]}.html">'
-            f'<div class="t">{esc(c)}圖卡（{len(v)}）</div>'
-            f'<div class="d">{esc(CAT_INTRO.get(c, "")[:44])}…</div></a>'
-            for c, v in by_cat.items() if c != cat)
+            f'<a href="/articles/gallery-{o["slug"]}.html">'
+            f'<div class="t">{esc(o["name"])}（{o["count"]}）</div>'
+            f'<div class="d">{esc(o.get("intro", "")[:44])}…</div></a>'
+            for o in series if o["name"] != name)
 
         body = f"""
-<h1>{esc(cat)}衛教圖卡</h1>
-<p class="lede">{esc(CAT_INTRO.get(cat, ""))}以下 {len(group)} 張圖卡原本發表在社群上，
-這裡附上每張圖當初的完整說明文字。點圖片可看大圖。</p>
+<h1>{esc(name)}</h1>
+<p class="lede">{esc(s.get("intro", ""))}以下 {len(group)} 張圖卡原本發表在社群上，
+依 Day 順序整理，並附上每張圖當初的完整說明文字。點圖片可看大圖。</p>
 <p class="meta">作者：<a href="/about.html">{esc(AUTHOR_NAME)}</a>（{esc(AUTHOR_TITLE)}）
-　·　共 {len(group)} 張　·　更新於 {TODAY}</p>
-<div class="galnav"><a href="/articles/gallery.html">← 全部圖卡</a>
-<a href="/articles/{slug}.html">{esc(cat)}完整說明 →</a></div>
+　·　共 {len(group)} 張{rng}　·　更新於 {TODAY}</p>
+<div class="galnav"><a href="/articles/gallery.html">← 全部系列</a>
+<a href="/articles/">依主題閱讀 →</a></div>
 {''.join(_gal_card(it) for it in group)}
-<h2 class="backlink">其他主題的圖卡</h2>
+<h2 class="backlink">其他系列</h2>
 <div class="cats">{others}</div>
 """
         jsonld = {
             "@context": "https://schema.org", "@type": "ImageGallery",
-            "name": f"{cat}衛教圖卡", "description": desc, "inLanguage": "zh-Hant",
+            "name": name, "description": desc, "inLanguage": "zh-Hant",
             "url": f"{BASE_URL}/{path}", "dateModified": TODAY,
             "numberOfItems": len(group),
             "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
@@ -884,18 +900,24 @@ def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
             "依血壓、血糖、血脂、飲食、用藥安全、檢查數值等八個主題分類。")
 
     blocks = []
-    for cat, group in by_cat.items():
+    for s in series:
+        group = by_series.get(s["name"], [])
+        if not group:
+            continue
         prev = "".join(
             f'<img src="/{it["thumb"]}" alt="{esc(it["cap"])}" loading="lazy" '
             f'width="360" height="360">' for it in group[:4])
+        rng = f'　{s["day_range"]}' if s.get("day_range") else ""
         blocks.append(
-            f'<a class="galgroup" href="/articles/gallery-{CAT_SLUG[cat]}.html">'
-            f'<div class="gg-head"><b>{esc(cat)}</b><span>{len(group)} 張 →</span></div>'
+            f'<a class="galgroup" href="/articles/gallery-{s["slug"]}.html">'
+            f'<div class="gg-head"><b>{esc(s["name"])}</b>'
+            f'<span>{len(group)} 張{rng} →</span></div>'
+            f'<div class="gg-sub">{esc(s.get("intro", ""))}</div>'
             f'<div class="gg-prev">{prev}</div></a>')
 
     body = f"""
 <h1>衛教圖卡總覽</h1>
-<p class="lede">社群上發表過的衛教圖解，依主題整理收錄，每一張都附上當初的完整說明文字。
+<p class="lede">社群上發表過的衛教圖解，依原本的系列整理收錄，每一張都附上當初的完整說明文字。
 共 {len(items)} 張。</p>
 <p class="meta">作者：<a href="/about.html">{esc(AUTHOR_NAME)}</a>（{esc(AUTHOR_TITLE)}）
 　·　更新於 {TODAY}</p>

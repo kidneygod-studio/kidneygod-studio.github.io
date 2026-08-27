@@ -1,0 +1,44 @@
+[
+ {
+  "name": "腎臟健康教室",
+  "slug": "kidney",
+  "intro": "最早的一輪護腎衛教，從最基本的觀念開始，一天一個主題。",
+  "count": 23,
+  "day_range": "Day 7–29"
+ },
+ {
+  "name": "護腎健康教室 Pro",
+  "slug": "kidney-pro",
+  "intro": "進階版，依據 KDIGO 指引逐日展開：藥物四大支柱、飲食個人化、併發症處理，一路走到腎臟替代治療的提前規劃。",
+  "count": 30,
+  "day_range": "Day 1–30"
+ },
+ {
+  "name": "三高健康教室",
+  "slug": "metabolic",
+  "intro": "高血壓、高血糖、高血脂的基礎觀念與日常控制。",
+  "count": 28,
+  "day_range": "Day 2–30"
+ },
+ {
+  "name": "三高健康教室 Pro",
+  "slug": "metabolic-pro",
+  "intro": "進階版，從最新指引的分類、診斷標準到心血管風險評估工具。",
+  "count": 6,
+  "day_range": "Day 1–6"
+ },
+ {
+  "name": "護腎陪伴日常",
+  "slug": "companion",
+  "intro": "日常生活裡的護腎提醒，輕鬆一點的一系列。",
+  "count": 6,
+  "day_range": "Day 1–7"
+ },
+ {
+  "name": "其他",
+  "slug": "others",
+  "intro": "沒有歸入固定系列的單篇衛教圖。",
+  "count": 2,
+  "day_range": ""
+ }
+]

@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -29,6 +30,48 @@ MANIFEST = OUT / "manifest.json"
 
 THUMB_W, THUMB_Q = 360, 78
 FULL_W, FULL_Q = 1000, 82
+
+# 系列名稱在貼文裡寫法不一致（護腎健康教室Pro / ProDay / pro—Day / 護腎進階計畫…），
+# 這裡把它們正規化回同一個系列。順序有意義：先比對 Pro，再比對非 Pro，
+# 否則「護腎健康教室Pro」會被「護腎健康教室」先攔截。
+SERIES_RULES = [
+    (r"三高(健康|進階|衛教)?\s*教室\s*[Pp]ro", "三高健康教室 Pro", "metabolic-pro"),
+    (r"護腎(健康|進階)?\s*(教室|計畫)\s*[Pp]ro", "護腎健康教室 Pro", "kidney-pro"),
+    # 護腎進階計畫是同一個系列的另一種寫法（作者確認）
+    (r"護腎進階計畫", "護腎健康教室 Pro", "kidney-pro"),
+    # 【護腎健康教室 Day 2】這種漏打 Pro 的，Day 4 之後都標了 Pro，歸同一系列
+    (r"【\s*護腎健康教室\s*[Dd]ay", "護腎健康教室 Pro", "kidney-pro"),
+    (r"三高(健康|衛教)?\s*教室\s*[—–-]\s*[Dd]ay", "三高健康教室", "metabolic"),
+    (r"三高知識小教室", "三高健康教室", "metabolic"),
+    (r"護腎陪伴日常", "護腎陪伴日常", "companion"),
+    (r"^[Dd]ay\s*\d+\s*[：:]", "腎臟健康教室", "kidney"),
+]
+
+# 總覽與各頁的排列順序
+SERIES_ORDER = ["腎臟健康教室", "護腎健康教室 Pro", "三高健康教室",
+                "三高健康教室 Pro", "護腎陪伴日常", "其他"]
+
+SERIES_INTRO = {
+    "腎臟健康教室": "最早的一輪護腎衛教，從最基本的觀念開始，一天一個主題。",
+    "護腎健康教室 Pro": "進階版，依據 KDIGO 指引逐日展開：藥物四大支柱、飲食個人化、"
+                        "併發症處理，一路走到腎臟替代治療的提前規劃。",
+    "三高健康教室": "高血壓、高血糖、高血脂的基礎觀念與日常控制。",
+    "三高健康教室 Pro": "進階版，從最新指引的分類、診斷標準到心血管風險評估工具。",
+    "護腎陪伴日常": "日常生活裡的護腎提醒，輕鬆一點的一系列。",
+    "其他": "沒有歸入固定系列的單篇衛教圖。",
+}
+
+
+def detect_series(text: str) -> tuple[str, str, int | None]:
+    """回傳 (系列名稱, 網址代稱, Day 編號)。抓不到系列就歸「其他」。"""
+    t = (text or "").strip()
+    name, slug = "其他", "others"
+    for pat, nm, sl in SERIES_RULES:
+        if re.search(pat, t):
+            name, slug = nm, sl
+            break
+    m = re.search(r"[Dd]ay\s*(\d+)", t) or re.search(r"第\s*(\d+)\s*天", t)
+    return name, slug, int(m.group(1)) if m else None
 
 
 def save_optimised(src: Path, dst: Path, width: int, quality: int) -> tuple[int, int]:
@@ -89,8 +132,11 @@ def main() -> int:
             if len(files) > 1:
                 cap = f"{cap}（{idx + 1}/{len(files)}）"
 
+            s_name, s_slug, s_day = detect_series(p.get("text") or "")
+
             entries.append({
                 "id": stem, "cat": meta["cat"], "cap": cap,
+                "series": s_name, "series_slug": s_slug, "day": s_day,
                 # 原始貼文全文一併帶進來：它是圖片的說明，
                 # 同時也是網站目前完全沒有的原創文字內容
                 "text": (p.get("text") or "").strip(),
@@ -100,15 +146,49 @@ def main() -> int:
                 "permalink": p.get("permalink") or "",
             })
 
-    entries.sort(key=lambda e: (e["cat"], e["date"]))
+    # 系列內依 Day 編號排序（沒編號的排最後、按日期），才讀得出課程順序
+    order = {s: i for i, s in enumerate(SERIES_ORDER)}
+    entries.sort(key=lambda e: (order.get(e["series"], 99),
+                                e["day"] if e["day"] is not None else 9999,
+                                e["date"]))
     MANIFEST.write_text(json.dumps(entries, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    # 系列的中繼資料另存一份，build_site.py 直接讀，不必兩邊各維護一份名單
+    seen: dict[str, dict] = {}
+    for e in entries:
+        s = seen.setdefault(e["series"], {
+            "name": e["series"], "slug": e["series_slug"],
+            "intro": SERIES_INTRO.get(e["series"], ""), "count": 0, "days": [],
+        })
+        s["count"] += 1
+        if e["day"]:
+            s["days"].append(e["day"])
+    series = []
+    for name in SERIES_ORDER:
+        if name in seen:
+            s = seen[name]
+            d = sorted(s.pop("days"))
+            s["day_range"] = f"Day {d[0]}–{d[-1]}" if d else ""
+            series.append(s)
+    (OUT / "series.json").write_text(
+        json.dumps(series, ensure_ascii=False, indent=1), encoding="utf-8")
 
     total_mb = sum(f.stat().st_size for f in OUT.rglob("*.jpg")) / 1024 / 1024
     print(f"新產生 {skipped_new} 張、沿用 {reused} 張")
     print(f"manifest：{len(entries)} 筆　gallery 目錄合計 {total_mb:.1f} MB")
+
     from collections import Counter
-    for c, n in Counter(e["cat"] for e in entries).most_common():
-        print(f"  {c:<10}{n:>4} 張")
+    print("\n依系列：")
+    by_s = Counter(e["series"] for e in entries)
+    for s in SERIES_ORDER:
+        if not by_s.get(s):
+            continue
+        days = sorted(e["day"] for e in entries if e["series"] == s and e["day"])
+        rng = f"Day {days[0]}–{days[-1]}" if days else "無編號"
+        missing = ([d for d in range(days[0], days[-1] + 1) if d not in days]
+                   if days else [])
+        gap = f"　缺 Day {','.join(map(str, missing))}" if missing else ""
+        print(f"  {s:<16}{by_s[s]:>4} 張　{rng}{gap}")
     return 0
 
 
