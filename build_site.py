@@ -131,6 +131,28 @@ tr:last-child td{border-bottom:0}
 .callout{background:var(--card);border-left:3px solid var(--accent);
 padding:14px 18px;border-radius:0 10px 10px 0;margin:22px 0;font-size:16px}
 
+/* ── 醫師介紹（關於頁最上方）── */
+.docintro{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);
+gap:34px;align-items:center;margin:26px 0 40px}
+.docintro.nophoto{grid-template-columns:1fr}
+.docphoto{width:100%;height:auto;border-radius:14px;display:block;
+box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.docname{font-size:1.9rem;font-weight:800;letter-spacing:.5px;margin:0 0 18px;
+color:var(--accent2)}
+.docname small{display:block;font-size:.95rem;font-weight:600;color:var(--mut);
+letter-spacing:0;margin-bottom:4px}
+.doccred{list-style:none;padding:0;margin:0}
+.doccred li{display:flex;align-items:flex-start;gap:11px;margin:0 0 13px;
+font-size:1.02rem;line-height:1.55}
+.doccred svg{flex-shrink:0;margin-top:2px}
+.doccred li.key{font-weight:700}
+@media(max-width:720px){
+  .docintro{grid-template-columns:1fr;gap:22px;margin-bottom:32px}
+  .docphoto{max-width:250px;margin:0 auto}
+  .docname{font-size:1.55rem;text-align:center}
+  .doccred li{font-size:.98rem}
+}
+
 /* ── 首頁 ── */
 .hero{padding:34px 0 8px}
 .hero h1{font-size:2.1rem;margin:0 0 12px}
@@ -590,6 +612,64 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[tuple[str, str, str]])
     return page(title, desc, "", body, jsonld, home=True)
 
 
+# 醫師介紹要條列的資歷。第一項是最強的權威訊號，刻意排在最前面。
+CREDENTIALS = [
+    ("台灣慢性腎臟病臨床診療指引編撰委員", True),
+    ("腎臟科專科醫師", True),
+    ("內科專科醫師", True),
+    ("戒菸醫師", False),
+    ("糖尿病共照網醫師", False),
+    ("國立成功大學醫學系畢業", False),
+    ("前成大醫院主治醫師", False),
+    ("郭綜合醫院腎臟內科主治醫師", True),
+]
+
+CHECK_SVG = ('<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
+             '<circle cx="12" cy="12" r="11" fill="currentColor" opacity=".16"/>'
+             '<path d="M7 12.4l3.2 3.2L17 8.8" stroke="currentColor" stroke-width="2.4" '
+             'stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
+
+def img_size(p: Path) -> tuple[int, int] | None:
+    """讀出 PNG/JPEG 的原始尺寸，寫進 width/height 屬性避免圖片載入時版面跳動。"""
+    try:
+        b = p.read_bytes()
+    except OSError:
+        return None
+    if b[:8] == b"\x89PNG\r\n\x1a\n":
+        import struct
+        w, h = struct.unpack(">II", b[16:24])
+        return w, h
+    if b[:2] == b"\xff\xd8":
+        i = 2
+        while i < len(b) - 9:
+            if b[i] != 0xFF:
+                i += 1
+                continue
+            m = b[i + 1]
+            if m in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7,
+                     0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+                h = int.from_bytes(b[i + 5:i + 7], "big")
+                w = int.from_bytes(b[i + 7:i + 9], "big")
+                return w, h
+            if m in (0xD8, 0xD9) or 0xD0 <= m <= 0xD7:
+                i += 2
+                continue
+            i += 2 + int.from_bytes(b[i + 2:i + 4], "big")
+    return None
+
+
+def find_doctor_photo() -> tuple[str, int, int] | None:
+    """找醫師照片。放進 repo 根目錄命名為 doctor.jpg／doctor.png 即會自動採用；
+    沒有檔案時醫師介紹會退成純資歷條列，頁面不會壞掉。"""
+    for name in ("doctor.jpg", "doctor.jpeg", "doctor.png", "doctor.webp"):
+        p = ROOT / name
+        if p.exists():
+            wh = img_size(p)
+            return (name, wh[0], wh[1]) if wh else (name, 0, 0)
+    return None
+
+
 def build_about() -> str:
     """關於作者頁。
 
@@ -602,35 +682,36 @@ def build_about() -> str:
             "血液透析／腹膜透析為主。本頁說明本站的內容撰寫原則、資料來源，"
             "以及本站不提供個別醫療建議的立場。")
 
+    photo = find_doctor_photo()
+    if photo:
+        name, w, h = photo
+        dims = f' width="{w}" height="{h}"' if w else ""
+        photo_html = (f'<div><img class="docphoto" src="/{name}"{dims} '
+                      f'alt="{esc(AUTHOR_NAME)}醫師" loading="eager"></div>')
+        grid_cls = "docintro"
+    else:
+        photo_html = ""
+        grid_cls = "docintro nophoto"
+
+    creds = "".join(
+        f'<li class="key">{CHECK_SVG}<span>{esc(t)}</span></li>' if key
+        else f'<li>{CHECK_SVG}<span>{esc(t)}</span></li>'
+        for t, key in CREDENTIALS)
+
     body = f"""
 <h1>關於{esc(AUTHOR_NAME)}醫師與本站</h1>
-<p class="lede">{esc(AUTHOR_BIO)}</p>
 
-<h2 id="zhuan-ye">專業背景</h2>
+<div class="{grid_cls}">
+{photo_html}
+<div>
+  <div class="docname"><small>腎臟科</small>{esc(AUTHOR_NAME)}醫師</div>
+  <ul class="doccred">{creds}</ul>
+</div>
+</div>
 
-<h3>臨床專長</h3>
+<h2 id="zhuan-chang">臨床專長</h2>
 <p>三高（高血壓、糖尿病、高血脂）、慢性腎臟病、急性腎衰竭、血液透析／腹膜透析、
 多囊腎、電解質異常、痛風、代謝症候群、戒菸。</p>
-
-<h3>學術參與</h3>
-<ul>
-<li><strong>台灣慢性腎臟病臨床診療指引編撰委員</strong></li>
-</ul>
-
-<h3>專科資格</h3>
-<ul>
-<li>腎臟科專科醫師</li>
-<li>內科專科醫師</li>
-<li>戒菸醫師</li>
-<li>糖尿病共照網醫師</li>
-</ul>
-
-<h3>學歷與經歷</h3>
-<ul>
-<li>國立成功大學醫學系畢業</li>
-<li>前成大醫院主治醫師</li>
-<li>郭綜合醫院腎臟內科主治醫師</li>
-</ul>
 
 <h2 id="wei-shen-me">為什麼做這個網站</h2>
 <p>在門診最常遇到的不是不願意配合的病人，而是<strong>被錯誤資訊嚇到、或被錯誤資訊耽誤</strong>的人。
