@@ -697,13 +697,15 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 <a href="/about.html">關於{esc(AUTHOR_NAME)}醫師 →</a></p>
 </div>
 
+<h2 class="sect">從免費遊戲商城學習</h2>
+<div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
 <a class="gamebtn" href="/shop.html">
   <img src="/logo.png" alt="" aria-hidden="true" width="480" height="257">
   <span class="cap">護腎知識卡片收集商城</span>
 </a>
 
 <h2 class="sect">依主題閱讀</h2>
-<div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，分成 {len(by_cat)} 個主題</div>
+<div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>
 <div class="cats">{cards}</div>
 
 {feat_sect}
