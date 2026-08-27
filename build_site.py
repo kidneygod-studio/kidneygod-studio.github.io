@@ -607,9 +607,29 @@ def build_about() -> str:
 <p class="lede">{esc(AUTHOR_BIO)}</p>
 
 <h2 id="zhuan-ye">專業背景</h2>
+
+<h3>臨床專長</h3>
+<p>三高（高血壓、糖尿病、高血脂）、慢性腎臟病、急性腎衰竭、血液透析／腹膜透析、
+多囊腎、電解質異常、痛風、代謝症候群、戒菸。</p>
+
+<h3>學術參與</h3>
+<ul>
+<li><strong>台灣慢性腎臟病臨床診療指引編撰委員</strong></li>
+</ul>
+
+<h3>專科資格</h3>
 <ul>
 <li>腎臟科專科醫師</li>
-<li>臨床專長：三高（高血壓、糖尿病、高血脂）、慢性腎臟病、血液透析、腹膜透析</li>
+<li>內科專科醫師</li>
+<li>戒菸醫師</li>
+<li>糖尿病共照網醫師</li>
+</ul>
+
+<h3>學歷與經歷</h3>
+<ul>
+<li>國立成功大學醫學系畢業</li>
+<li>前成大醫院主治醫師</li>
+<li>郭綜合醫院腎臟內科主治醫師</li>
 </ul>
 
 <h2 id="wei-shen-me">為什麼做這個網站</h2>
@@ -655,13 +675,22 @@ def build_about() -> str:
         "inLanguage": "zh-Hant",
         "url": f"{BASE_URL}/about.html",
         "dateModified": TODAY,
+        # 結構化資料把資歷寫成機器讀得懂的欄位。醫療內容的可信度評估
+        # 很吃「作者是誰、憑什麼」，學歷、任職與指引編撰身分都是可查證的訊號。
         "mainEntity": {
             "@type": "Physician",
             "name": AUTHOR_NAME,
             "jobTitle": AUTHOR_TITLE,
             "description": AUTHOR_BIO,
             "medicalSpecialty": ["Nephrologic", "InternalMedicine"],
-            "knowsAbout": ["慢性腎臟病", "血液透析", "腹膜透析", "高血壓", "糖尿病", "高血脂"],
+            "knowsAbout": ["慢性腎臟病", "急性腎衰竭", "血液透析", "腹膜透析", "多囊腎",
+                           "電解質異常", "高血壓", "糖尿病", "高血脂", "痛風",
+                           "代謝症候群", "戒菸"],
+            "alumniOf": {"@type": "CollegeOrUniversity", "name": "國立成功大學醫學系"},
+            "worksFor": {"@type": "Hospital", "name": "郭綜合醫院",
+                         "department": {"@type": "MedicalOrganization", "name": "腎臟內科"}},
+            "memberOf": {"@type": "Organization",
+                         "name": "台灣慢性腎臟病臨床診療指引編撰委員會"},
             "url": f"{BASE_URL}/about.html",
         },
     }
