@@ -305,12 +305,21 @@ background:var(--accent)}
 .sect + .sd{font-size:14px;color:var(--mut);margin-bottom:16px;padding-left:14px}
 /* 使用說明：定位在「先看這個再決定往哪走」，所以視覺上要跟一般段落分開，
    但又不能重到搶走主標題的位置 */
+/* 原本是五行散文，在手機上佔掉 355px、將近半個第一屏，而且要讀完一句話
+   才找得到連結。改成方塊：同樣的資訊約 180px，而且整格可點。
+   順序刻意把商城放最後——衛教是主體，商城是其中一種學習方式。 */
 .howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
-padding:15px 18px;margin:22px 0 6px;font-size:14.8px;line-height:1.95;color:var(--mut)}
-.howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:5px}
-.howto a{font-weight:700;text-decoration:none;border-bottom:1px solid transparent}
-.howto a:hover{border-bottom-color:var(--accent)}
-.howto .step{color:var(--fg)}
+padding:13px 14px;margin:20px 0 6px;color:var(--mut)}
+.howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:9px}
+.hgrid{display:grid;gap:7px;grid-template-columns:1fr 1fr}
+.htile{display:flex;flex-direction:column;text-decoration:none;
+padding:8px 11px;border-radius:9px;background:var(--bg);
+border:1px solid var(--line);border-left:3px solid var(--accent)}
+.htile:hover{border-color:var(--accent);border-left-color:var(--accent)}
+.htile .hq{font-size:12px;color:var(--mut);line-height:1.5}
+.htile .hgo{font-size:15px;font-weight:700;color:var(--fg);line-height:1.45}
+/* 五格為奇數，最後一格（商城）獨佔一列比留一個空格好看 */
+.htile:last-child{grid-column:1 / -1}
 .feat{display:block;border:1px solid var(--line);border-radius:12px;padding:18px 20px;
 text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat:hover{border-color:var(--accent)}
@@ -807,12 +816,21 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 <p class="cred">內容依據國際指引與期刊文獻撰寫，持續更新。
 <a href="/about.html">關於{esc(AUTHOR_NAME)}醫師 →</a></p>
 
-<p class="howto"><b>這個網站怎麼用</b>
-<span class="step">不知道從哪開始</span>：先玩 <a href="/shop.html">遊戲商城</a>，邊玩邊收集護腎知識卡。<br>
-<span class="step">有明確想查的問題</span>：到 <a href="#topics">依主題閱讀</a> 挑對應主題。<br>
-<span class="step">想把一件事徹底弄懂</span>：看 <a href="#deep">深入文章</a>，一篇讀完不必再查。<br>
-<span class="step">只想快速看重點</span>：翻 <a href="#gallery">衛教圖卡</a>，一張圖說完一件事。<br>
-<span class="step">想查某個食物</span>：用 <a href="/food.html">食物查詢</a>，看它的鈉、鉀、磷、蛋白質含量。</p>
+<div class="howto">
+<b>這個網站怎麼用</b>
+<div class="hgrid">
+  <a class="htile" href="#topics"><span class="hq">有明確想查的問題</span>
+    <span class="hgo">依主題閱讀</span></a>
+  <a class="htile" href="#deep"><span class="hq">想徹底弄懂一件事</span>
+    <span class="hgo">深入文章</span></a>
+  <a class="htile" href="/food.html"><span class="hq">想查某個食物</span>
+    <span class="hgo">食物查詢</span></a>
+  <a class="htile" href="#gallery"><span class="hq">只想快速看重點</span>
+    <span class="hgo">衛教圖卡</span></a>
+  <a class="htile" href="/shop.html"><span class="hq">不知道從哪開始</span>
+    <span class="hgo">遊戲商城</span></a>
+</div>
+</div>
 </div>
 
 <h2 class="sect" id="play">從免費遊戲商城學習</h2>
