@@ -1183,25 +1183,44 @@ FOOD_QUICK = [
 
 FOOD_CSS_JS = r"""
 <style>
-.warnbox{background:#fff6f0;border-left:4px solid #c05621;padding:16px 18px;
+/* 這一頁自己的色票。網站有深色模式（prefers-color-scheme），所以任何顏色都不能寫死
+   ——寫死白底配 var(--fg) 的文字，在深色模式下會變成白底淺字，完全看不見。
+   注意本站的變數是 --fg 不是 --ink。 */
+:root{
+  --wbg:#fff6f0; --wline:#c05621; --wttl:#9c4221;
+  --lo-bg:#f0f8f1; --lo-line:#bcdcc0;
+  --mid-bg:#fdf7e6; --mid-line:#e8d59a;
+  --hi-bg:#fdf0ee; --hi-line:#e9b4aa;
+  --chip-bg:#fafafa;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --wbg:#2a1b13; --wline:#c96a34; --wttl:#e9a97e;
+    --lo-bg:#17251b; --lo-line:#2f4a35;
+    --mid-bg:#2a2415; --mid-line:#5a4a1e;
+    --hi-bg:#2b1a18; --hi-line:#5c302a;
+    --chip-bg:#1a1712;
+  }
+}
+.warnbox{background:var(--wbg);border-left:4px solid var(--wline);padding:16px 18px;
 border-radius:0 8px 8px 0;margin:22px 0}
-.warnbox b{color:#9c4221;display:block;margin-bottom:8px;font-size:1.05rem}
+.warnbox b{color:var(--wttl);display:block;margin-bottom:8px;font-size:1.05rem}
 .warnbox p{margin:0 0 8px;font-size:.96rem}
 .warnbox p:last-child{margin:0}
 .foodtool{margin:26px 0 34px}
 .fsearch{display:flex;gap:10px;flex-wrap:wrap}
 .fsearch input{flex:1 1 240px;min-width:0;padding:13px 15px;font-size:1.05rem;
-border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg)}
 .fsearch input:focus{outline:none;border-color:var(--accent2)}
 .fsearch select{padding:13px 12px;font-size:1rem;border:2px solid var(--line);
-border-radius:10px;background:#fff;color:var(--ink)}
+border-radius:10px;background:var(--bg);color:var(--fg)}
 .fhint{color:var(--mut);font-size:.9rem;margin:10px 2px 0}
 .fquick{margin:14px 0 4px;display:flex;flex-direction:column;gap:7px}
 .qlead{color:var(--mut);font-size:.88rem;margin:0 2px 2px}
 .qrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .qcat{font-size:.78rem;color:var(--mut);min-width:5.6em}
 .qchip{font:inherit;font-size:.88rem;padding:5px 12px;border-radius:999px;
-border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
 .qchip:hover{border-color:var(--accent2);color:var(--accent2)}
 .qchip:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 /* 手機上不要讓分類標籤獨佔一行——那會讓整塊高到 440px，
@@ -1212,17 +1231,19 @@ border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
   .fquick{gap:5px}
 }
 .fres{margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.fcard{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff}
-.fcard h3{margin:0 0 3px;font-size:1.06rem}
+.fcard{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--card)}
+/* 全站的 h3 是灰色次級小標（color:var(--mut)），但食物名稱是卡片主體，
+   要用正文色。圖卡的 .galcard h3 也是同樣的覆寫。 */
+.fcard h3{margin:0 0 3px;font-size:1.06rem;color:var(--fg)}
 .fcard .fmeta{color:var(--mut);font-size:.83rem;margin:0 0 10px}
 .fvals{display:flex;flex-wrap:wrap;gap:8px}
 .fv{display:flex;align-items:baseline;gap:6px;padding:6px 11px;border-radius:999px;
-font-size:.9rem;border:1px solid var(--line);background:#fafafa}
+font-size:.9rem;border:1px solid var(--line);background:var(--chip-bg);color:var(--fg)}
 .fv .num{font-variant-numeric:tabular-nums;font-weight:700}
 .fv .rng{font-variant-numeric:tabular-nums;font-size:.78rem;color:var(--mut)}
-.fv.lo{background:#f0f8f1;border-color:#bcdcc0}
-.fv.mid{background:#fdf7e6;border-color:#e8d59a}
-.fv.hi{background:#fdf0ee;border-color:#e9b4aa}
+.fv.lo{background:var(--lo-bg);border-color:var(--lo-line)}
+.fv.mid{background:var(--mid-bg);border-color:var(--mid-line)}
+.fv.hi{background:var(--hi-bg);border-color:var(--hi-line)}
 .fv .tag{font-size:.76rem;color:var(--mut)}
 /* 全站的 th,td 是 white-space:nowrap（給分期表那種短欄位用的）。
    這張表的第三欄是長句子，必須允許換行，否則會把版面撐到 1,200px 以上。 */
