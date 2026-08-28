@@ -209,9 +209,9 @@ footer.site a{color:var(--mut)}
 .social a{display:inline-flex;align-items:center;gap:6px;
 padding:6px 13px;border:1px solid var(--line);border-radius:999px;
 text-decoration:none;font-size:.92rem;color:var(--mut)}
-.social a:hover{border-color:var(--ink);color:var(--ink)}
+.social a:hover{border-color:var(--fg);color:var(--fg)}
 .social .nt{color:var(--mut);font-size:.8rem;opacity:.85}
-.sociallist a{color:var(--ink)}
+.sociallist a{color:var(--fg)}
 .backlink{margin:34px 0}
 ul{padding-left:22px;margin:0 0 18px}
 li{margin:7px 0}
