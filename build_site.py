@@ -780,8 +780,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
                      f'而該注意哪一項取決於你的分期</div>'
                      f'<a class="feat" href="/food.html">'
                      f'<div class="t">查 {n_food:,} 種食物的鈉、鉀、磷、蛋白質含量</div>'
-                     f'<div class="d">資料來自衛福部食藥署食品營養成分資料庫。'
-                     f'不會給你「能不能吃」的二元答案——那要看你的腎功能分期。</div></a>')
+                     f'<div class="d">資料來自衛福部食藥署食品營養成分資料庫。</div></a>')
 
     gal_sect = (f'<h2 class="sect" id="gallery">衛教圖卡</h2>'
                 f'<div class="sd">社群上發表過的圖解，依主題整理並附上完整說明</div>'
