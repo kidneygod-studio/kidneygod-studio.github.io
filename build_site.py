@@ -756,6 +756,18 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     lw = img_size(ROOT / "logo.png")
     logo_dims = f' width="{lw[0]}" height="{lw[1]}"' if lw else ""
 
+    # 食物查詢：唯一的工具型內容，值得一個獨立入口。沒有 food_db.json 時整段消失。
+    food_sect = ""
+    if FOOD_DB.exists():
+        n_food = len(json.loads(FOOD_DB.read_text(encoding="utf-8"))["rows"])
+        food_sect = (f'<h2 class="sect" id="food">食物查詢</h2>'
+                     f'<div class="sd">腎臟病飲食最需要注意的是鈉、鉀、磷，'
+                     f'而該注意哪一項取決於你的分期</div>'
+                     f'<a class="feat" href="/food.html">'
+                     f'<div class="t">查 {n_food:,} 種食物的鈉、鉀、磷含量</div>'
+                     f'<div class="d">資料來自衛福部食藥署食品營養成分資料庫。'
+                     f'不會給你「能不能吃」的二元答案——那要看你的腎功能分期。</div></a>')
+
     gal_sect = (f'<h2 class="sect" id="gallery">衛教圖卡</h2>'
                 f'<div class="sd">社群上發表過的圖解，依主題整理並附上完整說明</div>'
                 f'<a class="feat" href="/articles/gallery.html">'
@@ -775,7 +787,8 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 <span class="step">不知道從哪開始</span>：先玩 <a href="/shop.html">遊戲商城</a>，邊玩邊收集護腎知識卡。<br>
 <span class="step">有明確想查的問題</span>：到 <a href="#topics">依主題閱讀</a> 挑對應主題。<br>
 <span class="step">想把一件事徹底弄懂</span>：看 <a href="#deep">深入文章</a>，一篇讀完不必再查。<br>
-<span class="step">只想快速看重點</span>：翻 <a href="#gallery">衛教圖卡</a>，一張圖說完一件事。</p>
+<span class="step">只想快速看重點</span>：翻 <a href="#gallery">衛教圖卡</a>，一張圖說完一件事。<br>
+<span class="step">想查某個食物</span>：用 <a href="/food.html">食物查詢</a>，看它的鈉、鉀、磷含量。</p>
 </div>
 
 <h2 class="sect" id="play">從免費遊戲商城學習</h2>
@@ -790,6 +803,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 <div class="cats">{cards}</div>
 
 {feat_sect}
+{food_sect}
 {gal_sect}
 """
     jsonld = {
@@ -1304,7 +1318,7 @@ def build_food() -> str:
     <tr><td><b>鈉</b></td><td>幾乎所有人</td>
         <td>升高血壓、增加腎絲球負擔、加重蛋白尿，還會削弱降血壓藥的效果。
         詳見<a href="/articles/taiwan-eating-out-sodium.html">外食減鈉指南</a></td></tr>
-    <tr><td><b>鉀</b></td><td>中晚期（eGFR 低於 45）與透析患者</td>
+    <tr><td><b>鉀</b></td><td>晚期（eGFR 低於 30）與透析患者</td>
         <td>腎功能下降時排鉀能力變差，血鉀過高可能造成心律不整，且初期沒有症狀。
         <strong>早期患者通常不需要限鉀</strong>，過度限制反而會少吃了蔬果</td></tr>
     <tr><td><b>磷</b></td><td>中晚期與透析患者</td>
