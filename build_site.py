@@ -1156,6 +1156,17 @@ FOOD_TIERS = {
     "p":  {"label": "磷", "unit": "mg", "mid": 50,  "high": 150},
 }
 
+# 高鈉來源的快速入口。分組沿用〈外食減鈉指南〉裡「台灣外食的鹽藏在哪裡」那一節，
+# 兩邊看到的分類一致。每個詞都實測過有結果——「番茄醬」「豆腐乳」查無，故未收錄。
+FOOD_QUICK = [
+    # 用「豆瓣醬」而非「豆瓣」：後者第一筆會命中「豆瓣菜」，那是蔬菜不是調味料
+    ("調味料", ["醬油", "沙茶", "豆瓣醬", "味噌"]),
+    ("加工肉品", ["香腸", "火腿", "培根", "肉鬆"]),
+    ("火鍋料與冷凍", ["貢丸", "魚丸", "餃", "泡麵"]),
+    ("醃漬與罐頭", ["醃", "滷", "酸菜", "泡菜", "罐頭"]),
+    ("零食點心", ["餅乾", "洋芋片", "起司", "海苔"]),
+]
+
 FOOD_CSS_JS = r"""
 <style>
 .warnbox{background:#fff6f0;border-left:4px solid #c05621;padding:16px 18px;
@@ -1171,6 +1182,21 @@ border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)
 .fsearch select{padding:13px 12px;font-size:1rem;border:2px solid var(--line);
 border-radius:10px;background:#fff;color:var(--ink)}
 .fhint{color:var(--mut);font-size:.9rem;margin:10px 2px 0}
+.fquick{margin:14px 0 4px;display:flex;flex-direction:column;gap:7px}
+.qlead{color:var(--mut);font-size:.88rem;margin:0 2px 2px}
+.qrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.qcat{font-size:.78rem;color:var(--mut);min-width:5.6em}
+.qchip{font:inherit;font-size:.88rem;padding:5px 12px;border-radius:999px;
+border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+.qchip:hover{border-color:var(--accent2);color:var(--accent2)}
+.qchip:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+/* 手機上不要讓分類標籤獨佔一行——那會讓整塊高到 440px，
+   把搜尋結果推出畫面外。改成與按鈕同行流動。 */
+@media(max-width:560px){
+  .qcat{min-width:0;margin-right:2px}
+  .qchip{padding:4px 10px;font-size:.85rem}
+  .fquick{gap:5px}
+}
 .fres{margin-top:14px;display:flex;flex-direction:column;gap:10px}
 .fcard{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff}
 .fcard h3{margin:0 0 3px;font-size:1.06rem}
@@ -1225,20 +1251,34 @@ function card(r){
          plain("蛋白質", prot, "g") + plain("熱量", kcal, "kcal") + '</div></div>';
 }
 
-function render(){
+/* force=true 用於快速入口的按鈕：那是刻意的點擊、詞也是我們挑好的，
+   不該被「輸入兩個字以上」擋住（「餃」「醃」「滷」都是單字）。
+   那條限制的用意只是避免打字過程中一次算出上千筆。 */
+function render(force){
   const q = document.getElementById("fq").value.trim();
   const cat = document.getElementById("fcat").value;
   const hint = document.getElementById("fhint");
   const box = document.getElementById("fres");
   if(!DB){ hint.textContent = "資料載入中…"; return; }
-  if(q.length < 2 && !cat){
+  if(q.length < (force ? 1 : 2) && !cat){
     box.innerHTML = "";
     hint.textContent = "共 " + DB.rows.length.toLocaleString() + " 種食物。輸入兩個字以上開始搜尋。";
     return;
   }
   let hits = DB.rows;
   if(cat) hits = hits.filter(r => r[2] === cat);
-  if(q)   hits = hits.filter(r => r[0].includes(q) || (r[1] && r[1].includes(q)));
+  if(q){
+    hits = hits.filter(r => r[0].includes(q) || (r[1] && r[1].includes(q)));
+    /* 相關度排序：完全相同的名稱最前，其次是名稱越短越通用。
+       否則搜「醬油」第一筆會是「醬油西瓜子」，不是使用者想找的那瓶醬油。 */
+    hits = hits.slice().sort((a, b) => {
+      const ea = a[0] === q ? 0 : 1, eb = b[0] === q ? 0 : 1;
+      if(ea !== eb) return ea - eb;
+      const sa = a[0].startsWith(q) ? 0 : 1, sb = b[0].startsWith(q) ? 0 : 1;
+      if(sa !== sb) return sa - sb;
+      return a[0].length - b[0].length;
+    });
+  }
   /* 「查不到」多半不是打錯字，而是搜了店家現做的料理。界線是「有沒有包裝標示」：
      泡麵、水餃、醬油查得到，滷肉飯、牛肉麵查不到。講清楚界線在哪，
      比籠統說「這是食材資料庫」有用——後者會讓人連泡麵都懶得查。 */
@@ -1255,8 +1295,17 @@ function render(){
 /* 這段是從 <head> 載入的，執行時 body 還沒解析，直接抓元素會拿到 null。
    全部等 DOMContentLoaded 之後再做。 */
 function init(){
-  document.getElementById("fq").addEventListener("input", render);
+  const q = document.getElementById("fq");
+  q.addEventListener("input", render);
   document.getElementById("fcat").addEventListener("change", render);
+  /* 快速入口：填進搜尋框直接查。結果區就在按鈕上方，不需要捲動。 */
+  document.querySelectorAll(".qchip").forEach(b => {
+    b.addEventListener("click", () => {
+      q.value = b.dataset.q;
+      document.getElementById("fcat").value = "";
+      render(true);
+    });
+  });
   (async () => {
     try{
       DB = await (await fetch("/food_db.json")).json();
@@ -1285,6 +1334,14 @@ def build_food() -> str:
 
     db = json.loads(FOOD_DB.read_text(encoding="utf-8"))
     n = len(db["rows"])
+
+    quick_html = "".join(
+        f'<div class="qrow"><span class="qcat">{esc(cat)}</span>'
+        + "".join(f'<button type="button" class="qchip" data-q="{esc(w)}">{esc(w)}</button>'
+                  for w in words)
+        + "</div>"
+        for cat, words in FOOD_QUICK)
+
     title = f"腎臟病飲食查詢：{n:,} 種食物的鈉鉀磷含量｜{SITE_NAME}"
     desc = (f"查詢 {n:,} 種食物的鈉、鉀、磷與蛋白質含量，資料來自衛福部食藥署"
             f"台灣食品營養成分資料庫。該注意哪一項，取決於你的腎功能分期。")
@@ -1309,7 +1366,20 @@ def build_food() -> str:
     <select id="fcat" aria-label="依分類篩選"><option value="">全部分類</option></select>
   </div>
   <p class="fhint" id="fhint">共 {n:,} 種食物。輸入兩個字以上開始搜尋。</p>
+  <!-- 結果放在快速入口之前：沒搜尋時它高度為零，按鈕自然貼在搜尋框下方；
+       一搜尋結果就出現在眼睛正在看的位置，不必自動捲動（捲動會讓人失去方向）。 -->
   <div id="fres" class="fres"></div>
+  <div class="fquick">
+    <p class="qlead">不知道要查什麼？台灣外食的鈉主要來自這幾類——點一下直接查：</p>
+    {quick_html}
+  </div>
+</div>
+
+<div class="note">
+  <p><b>看調味料的數字時要留意份量。</b>醬油每 100 公克含鈉四千多毫克看起來嚇人，
+  但沒有人一次吃 100 公克的醬油。這類食物的重點不是單一數字，而是<strong>用量與頻率</strong>
+  ——同一瓶醬油，沾著吃和淋上去的差別很大。做法見
+  <a href="/articles/taiwan-eating-out-sodium.html">外食減鈉指南</a>。</p>
 </div>
 
 <h2 id="san-xiang">這三項分別是誰要注意</h2>
