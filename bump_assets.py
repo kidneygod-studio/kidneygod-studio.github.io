@@ -20,7 +20,11 @@ ASSETS = ("shared.js", "data.js", "sync.js", "quiz.js")
 PAGES = ("shop.html", "game.html", "library.html", "dash.html")
 
 # 不需要改寫 ?v=，但內容變動時仍應讓 Service Worker 換快取版本的檔案
-HASH_ONLY = ("index.html",)
+#
+# 圖片必須列入：sw.js 對圖片採「快取優先」，而圖片網址沒有 ?v= 可以帶版本。
+# 換了圖卻沒換 VERSION 的話，造訪過的人會從快取拿到舊圖，而且永遠不會更新
+# ——沒有任何錯誤訊息，只是圖一直是舊的。2026-08-28 換醫師照時實際踩到。
+HASH_ONLY = ("index.html", "logo.png", "doctor.jpg", "apple-touch-icon.png")
 
 
 def main():
