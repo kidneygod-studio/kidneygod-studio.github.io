@@ -375,16 +375,21 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     cur = {"articles": in_articles, "gallery": in_gallery,
            "about": path == "about.html", "food": path == "food.html"}
 
-    # 前綴包在 span 裡，手機上隱藏起來變成「文章／圖卡／查詢／作者／商城」，
-    # 否則四個四字標籤會換成兩行，固定頁首會高到 84px。
-    def navlink(href: str, prefix: str, label: str, key: str, cls: str = "") -> str:
+    # 四字標籤在手機上會擠成兩行、頁首變高，所以其中兩個字包進 .np 於手機隱藏。
+    # 多數項目是「前綴＋主詞」（衛教文章 → 文章），但「食物查詢」相反：
+    # 手機上該留的是「食物」不是「查詢」，所以要能把隱藏的那半放在後面。
+    def navlink(href: str, prefix: str, label: str, key: str, cls: str = "",
+                suffix: str = "") -> str:
         mark = ' aria-current="page"' if cur.get(key) else ""
         c = f' class="{cls}"' if cls else ""
-        return f'<a href="{href}"{c}{mark}><span class="np">{prefix}</span>{label}</a>'
+        pre = f'<span class="np">{prefix}</span>' if prefix else ""
+        suf = f'<span class="np">{suffix}</span>' if suffix else ""
+        return f'<a href="{href}"{c}{mark}>{pre}{label}{suf}</a>'
 
+    # 手機上顯示：文章／圖卡／食物／作者／商城
     nav = (navlink("/articles/", "衛教", "文章", "articles")
            + navlink("/articles/gallery.html", "衛教", "圖卡", "gallery")
-           + navlink("/food.html", "食物", "查詢", "food")
+           + navlink("/food.html", "", "食物", "food", suffix="查詢")
            + navlink("/about.html", "關於", "作者", "about")
            + navlink("/shop.html", "知識", "商城", "shop", "shoplink"))
     ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
