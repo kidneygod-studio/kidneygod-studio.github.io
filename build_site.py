@@ -1069,7 +1069,7 @@ def build_about() -> str:
 
 <h2 id="zhuan-chang">臨床專長</h2>
 <p>三高（高血壓、糖尿病、高血脂）、慢性腎臟病、急性腎衰竭、血液／腹膜透析、
-多囊腎、電解質異常、痛風、代謝症候群、戒菸。</p>
+多囊腎、電解質異常、痛風、代謝症候群、戒菸治療。</p>
 
 <h2 id="wei-shen-me">為什麼做這個網站</h2>
 <p>在門診最常遇到的不是不願意配合的病人，而是<strong>被錯誤資訊嚇到、或被錯誤資訊耽誤</strong>的人。
@@ -1129,7 +1129,7 @@ def build_about() -> str:
             "medicalSpecialty": ["Nephrologic", "InternalMedicine"],
             "knowsAbout": ["慢性腎臟病", "急性腎衰竭", "血液透析", "腹膜透析", "多囊腎",
                            "電解質異常", "高血壓", "糖尿病", "高血脂", "痛風",
-                           "代謝症候群", "戒菸"],
+                           "代謝症候群", "戒菸治療"],
             "alumniOf": {"@type": "CollegeOrUniversity", "name": "國立成功大學醫學系"},
             "worksFor": {"@type": "Hospital", "name": "郭綜合醫院",
                          "department": {"@type": "MedicalOrganization", "name": "腎臟內科"}},
