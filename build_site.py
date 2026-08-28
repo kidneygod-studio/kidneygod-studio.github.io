@@ -833,13 +833,6 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 </div>
 </div>
 
-<h2 class="sect" id="play">從免費遊戲商城學習</h2>
-<div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
-<a class="gamebtn" href="/shop.html">
-  <img src="/logo.png" alt="" aria-hidden="true"{logo_dims}>
-  <span class="cap">護腎知識卡片收集商城</span>
-</a>
-
 <h2 class="sect" id="topics">依主題閱讀</h2>
 <div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>
 <div class="cats">{cards}</div>
@@ -847,6 +840,15 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 {feat_sect}
 {food_sect}
 {gal_sect}
+
+<!-- 商城放最後：衛教是主體，遊戲是其中一種學習方式。
+     順序與上方「這個網站怎麼用」的方塊一致，避免導航與陳列互相矛盾。 -->
+<h2 class="sect" id="play">從免費遊戲商城學習</h2>
+<div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
+<a class="gamebtn" href="/shop.html">
+  <img src="/logo.png" alt="" aria-hidden="true"{logo_dims}>
+  <span class="cap">護腎知識卡片收集商城</span>
+</a>
 """
     jsonld = {
         "@context": "https://schema.org",
