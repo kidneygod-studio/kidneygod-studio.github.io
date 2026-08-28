@@ -776,10 +776,10 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     if FOOD_DB.exists():
         n_food = len(json.loads(FOOD_DB.read_text(encoding="utf-8"))["rows"])
         food_sect = (f'<h2 class="sect" id="food">食物查詢</h2>'
-                     f'<div class="sd">腎臟病飲食最需要注意的是鈉、鉀、磷，'
+                     f'<div class="sd">腎臟病飲食最需要注意的是鈉、鉀、磷、蛋白質，'
                      f'而該注意哪一項取決於你的分期</div>'
                      f'<a class="feat" href="/food.html">'
-                     f'<div class="t">查 {n_food:,} 種食物的鈉、鉀、磷含量</div>'
+                     f'<div class="t">查 {n_food:,} 種食物的鈉、鉀、磷、蛋白質含量</div>'
                      f'<div class="d">資料來自衛福部食藥署食品營養成分資料庫。'
                      f'不會給你「能不能吃」的二元答案——那要看你的腎功能分期。</div></a>')
 
@@ -803,7 +803,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 <span class="step">有明確想查的問題</span>：到 <a href="#topics">依主題閱讀</a> 挑對應主題。<br>
 <span class="step">想把一件事徹底弄懂</span>：看 <a href="#deep">深入文章</a>，一篇讀完不必再查。<br>
 <span class="step">只想快速看重點</span>：翻 <a href="#gallery">衛教圖卡</a>，一張圖說完一件事。<br>
-<span class="step">想查某個食物</span>：用 <a href="/food.html">食物查詢</a>，看它的鈉、鉀、磷含量。</p>
+<span class="step">想查某個食物</span>：用 <a href="/food.html">食物查詢</a>，看它的鈉、鉀、磷、蛋白質含量。</p>
 </div>
 
 <h2 class="sect" id="play">從免費遊戲商城學習</h2>
@@ -1357,13 +1357,14 @@ def build_food() -> str:
         + "</div>"
         for cat, words in FOOD_QUICK)
 
-    title = f"腎臟病飲食查詢：{n:,} 種食物的鈉鉀磷含量｜{SITE_NAME}"
+    # 標題裡的收錄數不是搜尋詞，讓位給「蛋白質」。數量仍寫在描述與頁面內文
+    title = f"腎臟病飲食查詢：食物的鈉鉀磷與蛋白質含量｜{SITE_NAME}"
     desc = (f"查詢 {n:,} 種食物的鈉、鉀、磷與蛋白質含量，資料來自衛福部食藥署"
             f"台灣食品營養成分資料庫。該注意哪一項，取決於你的腎功能分期。")
 
     body = f"""
 <h1>腎臟病飲食查詢</h1>
-<p class="lede">查詢食物的<strong>鈉、鉀、磷</strong>含量。這三項是腎臟病飲食最需要注意的，
+<p class="lede">查詢食物的<strong>鈉、鉀、磷、蛋白質</strong>含量。這四項是腎臟病飲食最需要注意的，
 但<strong>該注意哪一項，取決於你的腎功能分期</strong>——不是每個人都要限制同樣的東西。</p>
 
 <div class="warnbox">
@@ -1397,7 +1398,7 @@ def build_food() -> str:
   <a href="/articles/taiwan-eating-out-sodium.html">外食減鈉指南</a>。</p>
 </div>
 
-<h2 id="san-xiang">這三項分別是誰要注意</h2>
+<h2 id="san-xiang">這四項分別是誰要注意</h2>
 <div class="tw">
 <table class="ftiers">
   <thead><tr><th>營養素</th><th>誰需要注意</th><th>為什麼</th></tr></thead>
@@ -1411,12 +1412,16 @@ def build_food() -> str:
     <tr><td><b>磷</b></td><td>中晚期與透析患者</td>
         <td>磷排不掉會影響骨骼與血管。加工食品的「磷酸鹽添加物」吸收率遠高於
         天然食物中的磷，是最該優先避開的來源</td></tr>
+    <tr><td><b>蛋白質</b></td><td>幾乎所有人，<strong>但方向相反</strong></td>
+        <td>慢性腎臟病常需要<strong>限制</strong>，透析患者反而需要<strong>增加</strong>。
+        正因為方向相反，本站不對蛋白質做高低分級，只顯示數值——你的目標值
+        請直接問你的醫師或營養師</td></tr>
   </tbody>
 </table>
 </div>
 
 <div class="note">
-  <p><b>蛋白質為什麼不做分級？</b>因為方向是相反的：<strong>早期腎臟病常需要限制蛋白質，
+  <p><b>蛋白質為什麼不做分級？</b>因為方向是相反的：<strong>慢性腎臟病常需要限制蛋白質，
   透析患者反而需要增加</strong>。做成紅綠燈一定會害到其中一群人，所以這裡只顯示數值。
   你的蛋白質目標請直接問你的醫師或營養師。</p>
 </div>
