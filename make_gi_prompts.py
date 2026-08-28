@@ -169,6 +169,96 @@ SCENE = {
              "source, while a small kidney behind sits quietly unlit.",
  "organ-food": "A steaming bowl of braised offal on a table, its rising steam forming sharp uric acid "
                "crystals and phosphate specks instead of aroma.",
+
+ # ══════════ 2026-08 新增 40 則 ══════════
+ # ── 血壓管理 ──
+ "bp-cuff": "An upper-arm blood pressure cuff shown alone, correctly sized and neatly wrapped around an "
+            "invisible arm, with a small measuring tape curling beside it.",
+ "bp-orthostatic": "A chair with a figure rising from it, a translucent pressure gauge behind them whose "
+                   "needle dips sharply downward as they stand, small stars circling above.",
+ "bp-season": "A thermometer standing between a bare winter branch and a summer leaf, its column tracing "
+              "a gentle wave that rises on the winter side.",
+ "bp-diuretic": "A tap releasing measured droplets into a shallow dish, with tiny mineral crystals of "
+                "different shapes settling at the bottom in careful balance.",
+ "bp-ccb-edema": "A single swollen ankle resting on a cushion, soft ripples of fluid around it, while a "
+                 "small calm kidney floats to the side clearly unaffected and untroubled.",
+ "bp-combo": "Two small interlocking puzzle pieces of different colours fitting together perfectly, "
+             "beside one oversized single piece that clearly does not fit.",
+ "bp-osa": "A sleeping figure in profile with a blocked airway shown as a narrowed passage, and a "
+           "pressure gauge on the bedside table whose needle creeps upward through the night.",
+ # ── 血糖管理 ──
+ "dm-three": "Three separate measuring instruments standing side by side at different heights, each "
+             "reading a different aspect of the same glowing amber liquid.",
+ "dm-pre": "An hourglass with amber sand, the narrow neck still wide open and a small hand reaching in "
+           "to turn it over before it runs out.",
+ "dm-cgm": "A small round sensor patch on an upper arm, from which a smooth continuous glowing curve "
+           "unspools across the frame, with a highlighted band running through its middle.",
+ "dm-foot": "A bare foot seen from below on a soft cushion, a magnifying glass hovering over the sole, "
+            "a small numb spot indicated by faded concentric rings.",
+ "dm-eye-kidney": "An eye and a kidney side by side, connected by a single delicate branching vessel "
+                  "network that is identical in pattern on both sides.",
+ "dm-smbg": "A glucose meter with two paired readings displayed as before-and-after markers on a small "
+            "arc, a pen and notebook resting beside it.",
+ "dm-sickday": "A thermometer and a water glass standing together beside a small pill organiser whose "
+               "lid is partly closed, with a warning ripple spreading from a dry cracked surface.",
+ # ── 血脂代謝 ──
+ "lp-lpa": "A single DNA-like double helix standing upright, one strand carrying a distinct lipid "
+           "particle that the other strand lacks, isolated and unchanging.",
+ "lp-nonhdl": "A simple balance scale where one large pan holds many small particles and a smaller pan "
+              "holds one bright particle being lifted away as a subtraction.",
+ "lp-fh": "Three stylised family silhouettes of different heights standing in a row, each carrying the "
+          "same small glowing lipid marker at heart level.",
+ "lp-add": "A staircase of three ascending steps, each step a differently shaped tablet or capsule, "
+           "leading a descending arrow further down toward a target line.",
+ "lp-fasting": "An empty dinner plate beside a filled one, with a blood collection tube standing between "
+               "them showing the same reading either way.",
+ "lp-fat": "Two oil bottles side by side, one pouring a clear golden stream that flows freely, the other "
+           "a thick opaque stream that congeals into a solid block.",
+ # ── 飲食護腎 ──
+ "lowsodium-salt": "A salt shaker with its contents shown as two different kinds of crystals, the "
+                   "substitute crystals glowing with a subtle warning aura as they fall.",
+ "boil-first": "Leafy greens being lifted from a pot of clear boiling water, with small mineral specks "
+               "left visibly dissolved in the water below being poured away.",
+ "supplement": "An unlabelled supplement bottle standing under a spotlight that casts a long shadow "
+               "shaped like a question mark across the ground.",
+ "eatout": "A steaming noodle bowl where the noodles are lifted out on chopsticks while the broth below "
+           "shimmers with dissolved salt crystals, left untouched.",
+ "protein-source": "A balance with a piece of tofu on one side and an egg on the other, small phosphate "
+                   "specks rising from each side in clearly different quantities.",
+ # ── 用藥安全 ──
+ "cold-med": "A cold medicine sachet split open to reveal several different coloured tablets inside, one "
+             "of which is identical to a separate painkiller tablet lying beside it.",
+ "phosphate-enema": "A bottle of clear bowel-prep solution beside a kidney whose surface shows fine "
+                    "crystalline deposits forming, with an alternative gentler bottle nearby.",
+ "dose-adjust": "A balance scale where the same tablet is being divided into different portions, with a "
+                "kidney-shaped weight on the other side determining how much is placed.",
+ "herb-interact": "A herbal decoction bowl and a western tablet blister pack overlapping, with sparks "
+                  "arcing between them at the point of overlap.",
+ # ── 生活習慣 ──
+ "heat": "A blazing sun over a figure working outdoors, sweat droplets rising away while a water bottle "
+         "with measured time markings stands prominently in the foreground.",
+ "ecig": "A sleek vaping device emitting vapour that resolves into narrowing constricted blood vessels "
+         "rather than harmless cloud.",
+ "protein-powder": "A scoop of powder beside a dumbbell, with two nearly identical molecule symbols on "
+                   "small tags that are subtly different from each other.",
+ "alcohol": "A glass of beer beside a kidney, with droplets leaving the kidney faster than they arrive, "
+            "and a pressure gauge in the background edging upward.",
+ # ── 檢查數值 ──
+ "hematuria": "A urine sample tube held to the light, one half showing a faint microscopic trace only "
+              "visible under a magnifier, the other half visibly tinted red.",
+ "dipstick-uacr": "A urine test strip lying flat showing no colour change, beside a laboratory vial "
+                  "whose contents glow revealing tiny albumin particles the strip missed.",
+ "bun": "A laboratory report card where one value is highlighted, surrounded by small icons of meat, a "
+        "water droplet and a pill, all pointing toward that same value.",
+ "electrolyte": "A heart rhythm line running across the frame, its waveform distorting sharply where a "
+                "potassium symbol glows too brightly above it.",
+ # ── 警訊與迷思 ──
+ "shenkui": "A figure rubbing their lower back beneath a large question mark, while a kidney sits far "
+            "away in a separate glowing circle, entirely disconnected from them.",
+ "dialysis-forever": "Two diverging paths from a single dialysis machine, one path curving back toward a "
+                     "recovering kidney, the other continuing steadily forward.",
+ "detox": "A kidney depicted as an elegant working filtration apparatus already processing a stream of "
+          "liquid, while a gaudy detox product bottle stands ignored and redundant beside it.",
 }
 
 

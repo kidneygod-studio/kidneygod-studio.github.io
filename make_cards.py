@@ -160,7 +160,7 @@ def header(d, title, sub, w=A4[0], cat="用藥安全", pid=None, im=None):
     d.ellipse([M + 16, 172 + 15 - sr, M + 16 + 2*sr, 172 + 15 + sr],
               fill=accent, outline=(255, 255, 255), width=3)
     text(d, (M + 16 + sr, 172 + 14), mark, 22, True, (255, 255, 255), anchor="mm")
-    text(d, (w - M - 16, 172 + 14), "護腎教室 KIDNEYGOD.STUDIO", 15, True,
+    text(d, (w - M - 16, 172 + 14), "護腎教室 KIDNEYGOD.NET", 15, True,
          (255, 255, 255), anchor="rm")
 
 
@@ -170,7 +170,7 @@ def footer(d, note, w=A4[0], h=A4[1], cat="用藥安全"):
     d.line([M, h - 116, w - M, h - 116], fill=CREAM_D, width=1)
     wrap(d, (M, h - 100), note, 15, w - 2 * M, 1.5, DIM)
     text(d, (M, h - 46), BYLINE, 15, True, DIM)
-    text(d, (w - M, h - 46), "kidneygod-studio.github.io", 15, False, DIM, anchor="ra")
+    text(d, (w - M, h - 46), "kidneygod.net", 15, False, DIM, anchor="ra")
     corner_marks(d, w, h, accent)
 
 
@@ -223,7 +223,7 @@ def card_pharmacist():
     d.rectangle([44, 144, W - 44, 170], outline=FRAME_C, width=3)
     d.ellipse([58, 138, 100, 176], fill=accent, outline=(255, 255, 255), width=3)
     text(d, (79, 156), mark, 20, True, (255, 255, 255), anchor="mm")
-    text(d, (W - 58, 156), "護腎教室 KIDNEYGOD.STUDIO", 14, True,
+    text(d, (W - 58, 156), "護腎教室 KIDNEYGOD.NET", 14, True,
          (255, 255, 255), anchor="rm")
 
     y = 198

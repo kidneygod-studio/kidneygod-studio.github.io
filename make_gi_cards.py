@@ -304,7 +304,7 @@ def make_card(item, no, rank, out):
            font=F("sans", 17), fill=(150, 150, 158))
     d.text((W // 2, H - 47), BYLINE,
            font=F("sans", 13), fill=(126, 126, 134), anchor="ma")
-    d.text((W - M - 10, H - 50), "KIDNEYGOD.STUDIO",
+    d.text((W - M - 10, H - 50), "KIDNEYGOD.NET",
            font=F("sans", 17), fill=(150, 150, 158), anchor="ra")
 
     im.quantize(colors=224, method=Image.FASTOCTREE).convert("RGB").save(out, optimize=True)

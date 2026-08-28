@@ -153,7 +153,7 @@ def make_card(item, idx, total, out):
     for j, ln in enumerate(["本卡為一般衛教參考，不能取代醫師診斷與治療建議。",
                             "腎功能異常、用藥問題請諮詢腎臟科醫師或藥師；有症狀請就醫。"]):
         d.text((M, fy+68+j*24), ln, font=F("light", 15), fill=DIM)
-    d.text((W-M, H-46), "kidneygod-studio.github.io", font=F("light", 15),
+    d.text((W-M, H-46), "kidneygod.net", font=F("light", 15),
            fill=DIM, anchor="ra")
 
     im = im.quantize(colors=160, method=Image.FASTOCTREE).convert("RGB")

@@ -131,7 +131,7 @@ run(p, "本文件內容為一般性健康衛教知識，不能取代醫師診斷
 p = doc.add_paragraph()
 p.paragraph_format.line_spacing = 1.5
 run(p, "內容出處：護腎教室 KidneyGod.Studio"
-       "（https://kidneygod-studio.github.io/）之遊戲內知識商品，全數為原創撰寫。",
+       "（https://kidneygod.net/）之遊戲內知識商品，全數為原創撰寫。",
     size=9.5, color=DIM)
 
 doc.core_properties.title = "護腎知識全集"
@@ -162,6 +162,6 @@ lines += ["=" * 60,
           "腎功能異常、用藥問題請諮詢腎臟科醫師或藥師；有症狀請就醫。",
           "",
           "內容出處：護腎教室 KidneyGod.Studio",
-          "https://kidneygod-studio.github.io/"]
+          "https://kidneygod.net/"]
 open("護腎知識全集.txt", "w", encoding="utf-8").write("\n".join(lines))
 print("TXT written")
