@@ -52,7 +52,21 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
   header.site nav{gap:2px}
   /* 隱藏「衛教／關於／知識」前綴，只留兩個字，才排得下一行 */
   header.site nav .np{display:none}
-  header.site nav a{padding:9px 10px;font-size:13.5px}
+  /* 五個項目時，10px 的水平內距會讓總寬超出約 1px 而換行，頁首從 66px 變 105px。
+     縮到 8px 就排得下。垂直內距不動，點擊區高度不受影響。 */
+  header.site nav a{padding:9px 8px;font-size:13.5px}
+}
+/* 小螢幕（iPhone SE 等 320–380px）再收一階，否則仍會換行 */
+@media(max-width:380px){
+  .brand{font-size:.88rem;gap:5px}
+  .brand svg{width:20px;height:20px}
+  header.site nav a{padding:9px 6px;font-size:12.5px}
+}
+/* 最小的一批（320px，iPhone SE 第一代）。差 4px 就排得下，收水平內距即可；
+   垂直內距不動，點擊區高度維持 41px。 */
+@media(max-width:340px){
+  header.site nav a{padding:9px 4px}
+  header.site nav{gap:1px}
 }
 h1{font-size:1.85rem;line-height:1.35;margin:28px 0 10px;letter-spacing:-.01em}
 h2{font-size:1.28rem;line-height:1.45;margin:38px 0 10px;padding-top:6px}
@@ -219,7 +233,7 @@ letter-spacing:.4px;line-height:1.5}
 <body>
 <header class="site"><div class="wrap">
 <a class="brand" href="/"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true"><path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 4.6 13.6 4.6Z"/></svg><span>護腎教室</span></a>
-<nav><a href="/articles/" aria-current="page"><span class="np">衛教</span>文章</a><a href="/articles/gallery.html"><span class="np">衛教</span>圖卡</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">知識</span>商城</a></nav>
+<nav><a href="/articles/" aria-current="page"><span class="np">衛教</span>文章</a><a href="/articles/gallery.html"><span class="np">衛教</span>圖卡</a><a href="/food.html"><span class="np">食物</span>查詢</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">知識</span>商城</a></nav>
 </div></header>
 <main class="wrap">
 

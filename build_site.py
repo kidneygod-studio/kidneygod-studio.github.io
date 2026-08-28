@@ -162,7 +162,21 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
   header.site nav{gap:2px}
   /* 隱藏「衛教／關於／知識」前綴，只留兩個字，才排得下一行 */
   header.site nav .np{display:none}
-  header.site nav a{padding:9px 10px;font-size:13.5px}
+  /* 五個項目時，10px 的水平內距會讓總寬超出約 1px 而換行，頁首從 66px 變 105px。
+     縮到 8px 就排得下。垂直內距不動，點擊區高度不受影響。 */
+  header.site nav a{padding:9px 8px;font-size:13.5px}
+}
+/* 小螢幕（iPhone SE 等 320–380px）再收一階，否則仍會換行 */
+@media(max-width:380px){
+  .brand{font-size:.88rem;gap:5px}
+  .brand svg{width:20px;height:20px}
+  header.site nav a{padding:9px 6px;font-size:12.5px}
+}
+/* 最小的一批（320px，iPhone SE 第一代）。差 4px 就排得下，收水平內距即可；
+   垂直內距不動，點擊區高度維持 41px。 */
+@media(max-width:340px){
+  header.site nav a{padding:9px 4px}
+  header.site nav{gap:1px}
 }
 h1{font-size:1.85rem;line-height:1.35;margin:28px 0 10px;letter-spacing:-.01em}
 h2{font-size:1.28rem;line-height:1.45;margin:38px 0 10px;padding-top:6px}
@@ -359,9 +373,9 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     in_gallery = "gallery" in path
     in_articles = path.startswith("articles/") and not in_gallery
     cur = {"articles": in_articles, "gallery": in_gallery,
-           "about": path == "about.html"}
+           "about": path == "about.html", "food": path == "food.html"}
 
-    # 前綴包在 span 裡，手機上隱藏起來變成「文章／圖卡／關於／商城」，
+    # 前綴包在 span 裡，手機上隱藏起來變成「文章／圖卡／查詢／作者／商城」，
     # 否則四個四字標籤會換成兩行，固定頁首會高到 84px。
     def navlink(href: str, prefix: str, label: str, key: str, cls: str = "") -> str:
         mark = ' aria-current="page"' if cur.get(key) else ""
@@ -370,6 +384,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 
     nav = (navlink("/articles/", "衛教", "文章", "articles")
            + navlink("/articles/gallery.html", "衛教", "圖卡", "gallery")
+           + navlink("/food.html", "食物", "查詢", "food")
            + navlink("/about.html", "關於", "作者", "about")
            + navlink("/shop.html", "知識", "商城", "shop", "shoplink"))
     ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
