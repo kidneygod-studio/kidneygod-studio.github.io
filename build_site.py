@@ -79,9 +79,7 @@ SOCIAL = [
      "note": "@kidney.god"},
     {"label": "Instagram", "url": "https://www.instagram.com/kidney.godreborn/",
      "note": "@kidney.godreborn"},
-    # 這個粉專還沒設使用者名稱，所以網址是數字 ID 形式。之後若設了名稱
-    # （facebook.com/kidneygod 之類），把這裡換掉重建即可。
-    {"label": "Facebook", "url": "https://www.facebook.com/profile.php?id=61587015804381",
+    {"label": "Facebook", "url": "https://www.facebook.com/kidneygod",
      "note": "粉絲專頁"},
 ]
 SOCIAL_LIVE = [s for s in SOCIAL if s["url"]]
