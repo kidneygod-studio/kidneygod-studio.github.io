@@ -82,6 +82,18 @@ a{color:var(--accent)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:13.5px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:26px 0}
+/* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
+   色票要能跟著深色模式走，不能寫死。 */
+:root{--wbg:#fff6f0;--wline:#c05621;--wttl:#9c4221}
+@media (prefers-color-scheme:dark){
+  :root{--wbg:#2a1b13;--wline:#c96a34;--wttl:#e9a97e}
+}
+.warnbox{background:var(--wbg);border-left:4px solid var(--wline);padding:16px 18px;
+border-radius:0 8px 8px 0;margin:22px 0}
+.warnbox b{color:var(--wttl);display:block;margin-bottom:8px;font-size:1.05rem}
+.warnbox p{margin:0 0 8px;font-size:.96rem}
+.warnbox p:last-child{margin:0}
+.contact{font-size:1.12rem;font-weight:700;margin:0 0 18px}
 /* 「本頁內容」是目錄方塊裡的小標籤，不是區塊標題，不加錨點 */
 .toc h2{display:block;font-size:14px;margin:0 0 8px;color:var(--mut);text-transform:none}
 .toc h2::before{content:none}

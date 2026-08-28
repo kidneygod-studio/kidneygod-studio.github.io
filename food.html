@@ -82,6 +82,18 @@ a{color:var(--accent)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:13.5px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:26px 0}
+/* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
+   色票要能跟著深色模式走，不能寫死。 */
+:root{--wbg:#fff6f0;--wline:#c05621;--wttl:#9c4221}
+@media (prefers-color-scheme:dark){
+  :root{--wbg:#2a1b13;--wline:#c96a34;--wttl:#e9a97e}
+}
+.warnbox{background:var(--wbg);border-left:4px solid var(--wline);padding:16px 18px;
+border-radius:0 8px 8px 0;margin:22px 0}
+.warnbox b{color:var(--wttl);display:block;margin-bottom:8px;font-size:1.05rem}
+.warnbox p{margin:0 0 8px;font-size:.96rem}
+.warnbox p:last-child{margin:0}
+.contact{font-size:1.12rem;font-weight:700;margin:0 0 18px}
 /* 「本頁內容」是目錄方塊裡的小標籤，不是區塊標題，不加錨點 */
 .toc h2{display:block;font-size:14px;margin:0 0 8px;color:var(--mut);text-transform:none}
 .toc h2::before{content:none}
@@ -249,9 +261,9 @@ letter-spacing:.4px;line-height:1.5}
 <style>
 /* 這一頁自己的色票。網站有深色模式（prefers-color-scheme），所以任何顏色都不能寫死
    ——寫死白底配 var(--fg) 的文字，在深色模式下會變成白底淺字，完全看不見。
-   注意本站的變數是 --fg 不是 --ink。 */
+   注意本站的變數是 --fg 不是 --ink。
+   （.warnbox 的色票已移到共用 CSS，因為醫師簡介頁也用得到。） */
 :root{
-  --wbg:#fff6f0; --wline:#c05621; --wttl:#9c4221;
   --lo-bg:#f0f8f1; --lo-line:#bcdcc0;
   --mid-bg:#fdf7e6; --mid-line:#e8d59a;
   --hi-bg:#fdf0ee; --hi-line:#e9b4aa;
@@ -259,18 +271,12 @@ letter-spacing:.4px;line-height:1.5}
 }
 @media (prefers-color-scheme:dark){
   :root{
-    --wbg:#2a1b13; --wline:#c96a34; --wttl:#e9a97e;
     --lo-bg:#17251b; --lo-line:#2f4a35;
     --mid-bg:#2a2415; --mid-line:#5a4a1e;
     --hi-bg:#2b1a18; --hi-line:#5c302a;
     --chip-bg:#1a1712;
   }
 }
-.warnbox{background:var(--wbg);border-left:4px solid var(--wline);padding:16px 18px;
-border-radius:0 8px 8px 0;margin:22px 0}
-.warnbox b{color:var(--wttl);display:block;margin-bottom:8px;font-size:1.05rem}
-.warnbox p{margin:0 0 8px;font-size:.96rem}
-.warnbox p:last-child{margin:0}
 .foodtool{margin:26px 0 34px}
 .fsearch{display:flex;gap:10px;flex-wrap:wrap}
 .fsearch input{flex:1 1 240px;min-width:0;padding:13px 15px;font-size:1.05rem;

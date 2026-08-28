@@ -39,6 +39,12 @@ BASE_URL = "https://kidneygod.net"
 
 SITE_NAME = "護腎教室"
 
+# 聯絡信箱。用途刻意限縮在媒體、轉載、演講與勘誤——不做個人醫療諮詢，
+# 避免讀者寄來檢查數值而讓本站持有個資法第 6 條的特種個人資料。
+# 收信靠 Porkbun 的網域轉發（MX 已指向 fwd1/fwd2.porkbun.com），
+# 不需要另外架郵件伺服器。
+CONTACT_EMAIL = "contact@kidneygod.net"
+
 # Cloudflare Web Analytics 的 beacon token。
 # 選它而不是 GA4 的理由：不放 cookie、不收集個人識別資料，
 # 因此不需要同意橫幅，也不會和「本站不收集任何資料」的定位衝突。
@@ -192,6 +198,18 @@ a{color:var(--accent)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:13.5px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:26px 0}
+/* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
+   色票要能跟著深色模式走，不能寫死。 */
+:root{--wbg:#fff6f0;--wline:#c05621;--wttl:#9c4221}
+@media (prefers-color-scheme:dark){
+  :root{--wbg:#2a1b13;--wline:#c96a34;--wttl:#e9a97e}
+}
+.warnbox{background:var(--wbg);border-left:4px solid var(--wline);padding:16px 18px;
+border-radius:0 8px 8px 0;margin:22px 0}
+.warnbox b{color:var(--wttl);display:block;margin-bottom:8px;font-size:1.05rem}
+.warnbox p{margin:0 0 8px;font-size:.96rem}
+.warnbox p:last-child{margin:0}
+.contact{font-size:1.12rem;font-weight:700;margin:0 0 18px}
 /* 「本頁內容」是目錄方塊裡的小標籤，不是區塊標題，不加錨點 */
 .toc h2{display:block;font-size:14px;margin:0 0 8px;color:var(--mut);text-transform:none}
 .toc h2::before{content:none}
@@ -1142,9 +1160,18 @@ def build_about() -> str:
 有沒有其他共病的人身上，意義可能完全不同。這些判斷需要完整的病史、
 檢查結果與當面評估，不是任何網站能取代的。<strong>請與你的主治醫師討論。</strong></p>
 
-<h2 id="lian-luo">關於引用</h2>
-<p>本站文章歡迎在註明出處與連結原文的前提下引用。若為媒體採訪或授權轉載，
-請透過本站說明的方式聯絡。</p>
+<h2 id="lian-luo">聯絡方式</h2>
+<p>媒體採訪、授權轉載、演講邀約，或發現內容有誤，歡迎來信：</p>
+<p class="contact"><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p>
+<div class="warnbox">
+  <b>本信箱不提供個人醫療諮詢</b>
+  <p>不解讀檢查報告、不回覆病情問題、不提供用藥建議。這些判斷需要完整的病史、
+  檢查結果與當面評估，請與你的主治醫師討論。</p>
+  <p><strong>也請不要在信中提供你的檢查數值、病歷或其他健康資訊</strong>——
+  那屬於個人資料保護法的特種個人資料，為了保護你，本站不會蒐集也不會保存。</p>
+</div>
+<p>本站文章歡迎在<strong>註明出處與連結原文</strong>的前提下引用。
+內容如有錯誤或已被新版指引取代，請來信告知，我會更正並註明修改日期。</p>
 
 <h2 id="she-qun">社群帳號</h2>
 <p>以下是我本人經營的帳號。日常的衛教圖卡與短文會先發在社群，
@@ -1181,6 +1208,9 @@ def build_about() -> str:
                  "alternateName": "American Society of Nephrology"},
             ],
             "url": f"{BASE_URL}/about.html",
+            # 醫療類內容（YMYL）的可信度評估看重「找不找得到人」，
+            # 公開的聯絡管道本身就是一個信任訊號
+            "email": CONTACT_EMAIL,
             # 宣告這些社群帳號與本人是同一個實體，協助搜尋引擎建立作者身分
             "sameAs": [s["url"] for s in SOCIAL_LIVE],
         },
@@ -1227,9 +1257,9 @@ FOOD_CSS_JS = r"""
 <style>
 /* 這一頁自己的色票。網站有深色模式（prefers-color-scheme），所以任何顏色都不能寫死
    ——寫死白底配 var(--fg) 的文字，在深色模式下會變成白底淺字，完全看不見。
-   注意本站的變數是 --fg 不是 --ink。 */
+   注意本站的變數是 --fg 不是 --ink。
+   （.warnbox 的色票已移到共用 CSS，因為醫師簡介頁也用得到。） */
 :root{
-  --wbg:#fff6f0; --wline:#c05621; --wttl:#9c4221;
   --lo-bg:#f0f8f1; --lo-line:#bcdcc0;
   --mid-bg:#fdf7e6; --mid-line:#e8d59a;
   --hi-bg:#fdf0ee; --hi-line:#e9b4aa;
@@ -1237,18 +1267,12 @@ FOOD_CSS_JS = r"""
 }
 @media (prefers-color-scheme:dark){
   :root{
-    --wbg:#2a1b13; --wline:#c96a34; --wttl:#e9a97e;
     --lo-bg:#17251b; --lo-line:#2f4a35;
     --mid-bg:#2a2415; --mid-line:#5a4a1e;
     --hi-bg:#2b1a18; --hi-line:#5c302a;
     --chip-bg:#1a1712;
   }
 }
-.warnbox{background:var(--wbg);border-left:4px solid var(--wline);padding:16px 18px;
-border-radius:0 8px 8px 0;margin:22px 0}
-.warnbox b{color:var(--wttl);display:block;margin-bottom:8px;font-size:1.05rem}
-.warnbox p{margin:0 0 8px;font-size:.96rem}
-.warnbox p:last-child{margin:0}
 .foodtool{margin:26px 0 34px}
 .fsearch{display:flex;gap:10px;flex-wrap:wrap}
 .fsearch input{flex:1 1 240px;min-width:0;padding:13px 15px;font-size:1.05rem;
