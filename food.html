@@ -296,12 +296,14 @@ function render(){
   let hits = DB.rows;
   if(cat) hits = hits.filter(r => r[2] === cat);
   if(q)   hits = hits.filter(r => r[0].includes(q) || (r[1] && r[1].includes(q)));
-  /* 「查不到」多半不是打錯字，而是使用者搜了一道菜。這是食材資料庫，
-     沒有「滷肉飯」「牛肉麵」這種組合料理，講清楚比叫人再試一次有用。 */
+  /* 「查不到」多半不是打錯字，而是搜了店家現做的料理。界線是「有沒有包裝標示」：
+     泡麵、水餃、醬油查得到，滷肉飯、牛肉麵查不到。講清楚界線在哪，
+     比籠統說「這是食材資料庫」有用——後者會讓人連泡麵都懶得查。 */
   hint.innerHTML = hits.length
     ? ("找到 " + hits.length + " 筆")
-    : '查不到「' + q + '」。這是<b>食材</b>資料庫，沒有收錄組合料理——'
-      + '例如查不到「滷肉飯」，但查得到「豬肉」「白米」「醬油」。試著搜食材看看。';
+    : '查不到「' + q + '」。資料庫收錄<b>食材、包裝與冷凍食品、調味料、飲料</b>'
+      + '（泡麵、水餃、醬油、奶茶都查得到），但沒有店家現做的料理。'
+      + '試著拆開查食材或調味料，例如查不到「滷肉飯」，可以查「豬肉」「醬油」。';
   box.innerHTML = hits.slice(0, 60).map(card).join("");
   if(hits.length > 60) box.insertAdjacentHTML("beforeend",
     '<p class="fhint">只顯示前 60 筆，請輸入更完整的名稱縮小範圍。</p>');
@@ -353,7 +355,7 @@ else init();
 
 <div class="foodtool">
   <div class="fsearch">
-    <input id="fq" type="search" placeholder="輸入食物名稱，例如 香蕉、豆腐、吐司…"
+    <input id="fq" type="search" placeholder="食物名稱，例如 香蕉、泡麵、醬油、水餃…"
            autocomplete="off" spellcheck="false" aria-label="搜尋食物">
     <select id="fcat" aria-label="依分類篩選"><option value="">全部分類</option></select>
   </div>
@@ -393,8 +395,10 @@ else init();
 <li>所有數值為<strong>每 100 公克可食部分</strong>的含量</li>
 <li><strong>烹調方式會大幅改變結果</strong>：水煮會讓鉀溶進水裡，所以「先燙過再炒」
 是常見的降鉀做法；反之滷、醃、加工會大幅增加鈉</li>
-<li><strong>這是食材資料庫，不是料理資料庫</strong>。查得到「豬肉」「白米」「醬油」，
-但查不到「滷肉飯」「牛肉麵」這類組合料理</li>
+<li><strong>收錄範圍</strong>：食材（蔬果、肉類、魚貝、穀物）、包裝與冷凍食品、
+糕餅點心、調味料、飲料。泡麵、水餃、飯糰、醬油、沙茶、奶茶都查得到。
+<strong>但沒有店家現做的料理</strong>——查不到滷肉飯、牛肉麵、鹽酥雞。
+界線大致是「有沒有包裝與營養標示」</li>
 <li>同一種食物多次取樣且差異較大時，會同時顯示<strong>代表值與範圍</strong>，
 不挑單一數字假裝精確</li>
 <li>本站不記錄你查詢了什麼，搜尋完全在你的瀏覽器內完成</li>
