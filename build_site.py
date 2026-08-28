@@ -1118,6 +1118,240 @@ def build_about() -> str:
     return page(title, desc, "about.html", body, jsonld)
 
 
+# ---------------------------------------------------------------------------
+# 食物查詢工具
+#
+# 這一頁的醫療風險比其他頁高，因此有三個刻意的設計決定：
+#
+# 1. 不給「能吃／不能吃」的二元答案。同一種食物對第 2 期、第 5 期與透析病人
+#    的意義完全不同，二元答案必然對其中某一群人是錯的。改成顯示數值 + 分級
+#    + 說明「誰該在意這一項」。
+#
+# 2. 蛋白質不做好壞分級。早期 CKD 常需限制蛋白質，透析病人反而要增加——方向
+#    相反，做成紅綠燈一定會害到其中一群人，所以只顯示數值並加註提醒。
+#
+# 3. 門檻標示為「本站採用」而非醫學標準，並附資料來源與單位。
+# ---------------------------------------------------------------------------
+
+FOOD_DB = ROOT / "food_db.json"
+
+# 每 100 公克的分級門檻，腎臟病飲食衛教常用的區間。改這裡前端就會跟著變。
+FOOD_TIERS = {
+    "na": {"label": "鈉", "unit": "mg", "mid": 100, "high": 400},
+    "k":  {"label": "鉀", "unit": "mg", "mid": 150, "high": 250},
+    "p":  {"label": "磷", "unit": "mg", "mid": 50,  "high": 150},
+}
+
+FOOD_CSS_JS = r"""
+<style>
+.warnbox{background:#fff6f0;border-left:4px solid #c05621;padding:16px 18px;
+border-radius:0 8px 8px 0;margin:22px 0}
+.warnbox b{color:#9c4221;display:block;margin-bottom:8px;font-size:1.05rem}
+.warnbox p{margin:0 0 8px;font-size:.96rem}
+.warnbox p:last-child{margin:0}
+.foodtool{margin:26px 0 34px}
+.fsearch{display:flex;gap:10px;flex-wrap:wrap}
+.fsearch input{flex:1 1 240px;min-width:0;padding:13px 15px;font-size:1.05rem;
+border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.fsearch input:focus{outline:none;border-color:var(--accent2)}
+.fsearch select{padding:13px 12px;font-size:1rem;border:2px solid var(--line);
+border-radius:10px;background:#fff;color:var(--ink)}
+.fhint{color:var(--mut);font-size:.9rem;margin:10px 2px 0}
+.fres{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.fcard{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff}
+.fcard h3{margin:0 0 3px;font-size:1.06rem}
+.fcard .fmeta{color:var(--mut);font-size:.83rem;margin:0 0 10px}
+.fvals{display:flex;flex-wrap:wrap;gap:8px}
+.fv{display:flex;align-items:baseline;gap:6px;padding:6px 11px;border-radius:999px;
+font-size:.9rem;border:1px solid var(--line);background:#fafafa}
+.fv .num{font-variant-numeric:tabular-nums;font-weight:700}
+.fv .rng{font-variant-numeric:tabular-nums;font-size:.78rem;color:var(--mut)}
+.fv.lo{background:#f0f8f1;border-color:#bcdcc0}
+.fv.mid{background:#fdf7e6;border-color:#e8d59a}
+.fv.hi{background:#fdf0ee;border-color:#e9b4aa}
+.fv .tag{font-size:.76rem;color:var(--mut)}
+/* 全站的 th,td 是 white-space:nowrap（給分期表那種短欄位用的）。
+   這張表的第三欄是長句子，必須允許換行，否則會把版面撐到 1,200px 以上。 */
+.ftiers th,.ftiers td{white-space:normal;vertical-align:top}
+.ftiers td:first-child,.ftiers th:first-child{white-space:nowrap}
+@media(max-width:560px){ .fsearch select{flex:1 1 100%} }
+</style>
+<script>
+const TIERS = __TIERS__;
+let DB = null;
+
+const tier = (key, v) => {
+  if(v === null || v === undefined) return "";
+  const t = TIERS[key];
+  return v >= t.high ? "hi" : (v >= t.mid ? "mid" : "lo");
+};
+const tierWord = c => c === "hi" ? "偏高" : (c === "mid" ? "中等" : "偏低");
+
+/* 數值欄是 [代表值] 或 [代表值, 最小, 最大]。同一種食物多次取樣且差異大時
+   顯示範圍，而不是挑一個數字假裝很精確。 */
+function card(r){
+  const [name, alias, cat, samples, na, k, p, prot, kcal] = r;
+  /* 括號不可省：「352.7 303–463」會讓人分不出哪個是代表值 */
+  const span = v => (v.length > 1) ? ('<span class="rng">(' + v[1] + '–' + v[2] + ')</span>') : '';
+  const chip = (key, v) => {
+    if(!v) return "";
+    const t = TIERS[key], c = tier(key, v[0]);
+    return '<span class="fv ' + c + '">' + t.label +
+           '<span class="num">' + v[0] + '</span>' + span(v) +
+           '<span class="tag">' + t.unit + '・' + tierWord(c) + '</span></span>';
+  };
+  const plain = (label, v, unit) => !v ? "" :
+    '<span class="fv">' + label + '<span class="num">' + v[0] + '</span>' + span(v) +
+    '<span class="tag">' + unit + '</span></span>';
+  const note = samples > 1 ? ('　·　' + samples + ' 次取樣') : '';
+  return '<div class="fcard"><h3>' + name + '</h3>' +
+         '<p class="fmeta">' + cat + (alias ? '　俗名：' + alias : '') +
+         '　·　每 100 公克' + note + '</p>' +
+         '<div class="fvals">' + chip("na", na) + chip("k", k) + chip("p", p) +
+         plain("蛋白質", prot, "g") + plain("熱量", kcal, "kcal") + '</div></div>';
+}
+
+function render(){
+  const q = document.getElementById("fq").value.trim();
+  const cat = document.getElementById("fcat").value;
+  const hint = document.getElementById("fhint");
+  const box = document.getElementById("fres");
+  if(!DB){ hint.textContent = "資料載入中…"; return; }
+  if(q.length < 2 && !cat){
+    box.innerHTML = "";
+    hint.textContent = "共 " + DB.rows.length.toLocaleString() + " 種食物。輸入兩個字以上開始搜尋。";
+    return;
+  }
+  let hits = DB.rows;
+  if(cat) hits = hits.filter(r => r[2] === cat);
+  if(q)   hits = hits.filter(r => r[0].includes(q) || (r[1] && r[1].includes(q)));
+  /* 「查不到」多半不是打錯字，而是使用者搜了一道菜。這是食材資料庫，
+     沒有「滷肉飯」「牛肉麵」這種組合料理，講清楚比叫人再試一次有用。 */
+  hint.innerHTML = hits.length
+    ? ("找到 " + hits.length + " 筆")
+    : '查不到「' + q + '」。這是<b>食材</b>資料庫，沒有收錄組合料理——'
+      + '例如查不到「滷肉飯」，但查得到「豬肉」「白米」「醬油」。試著搜食材看看。';
+  box.innerHTML = hits.slice(0, 60).map(card).join("");
+  if(hits.length > 60) box.insertAdjacentHTML("beforeend",
+    '<p class="fhint">只顯示前 60 筆，請輸入更完整的名稱縮小範圍。</p>');
+}
+
+/* 這段是從 <head> 載入的，執行時 body 還沒解析，直接抓元素會拿到 null。
+   全部等 DOMContentLoaded 之後再做。 */
+function init(){
+  document.getElementById("fq").addEventListener("input", render);
+  document.getElementById("fcat").addEventListener("change", render);
+  (async () => {
+    try{
+      DB = await (await fetch("/food_db.json")).json();
+      const sel = document.getElementById("fcat");
+      DB.cats.forEach(c => {
+        const o = document.createElement("option");
+        o.value = c; o.textContent = c; sel.appendChild(o);
+      });
+      render();
+    }catch(e){
+      document.getElementById("fhint").textContent = "資料載入失敗，請重新整理頁面。";
+    }
+  })();
+}
+if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+else init();
+</script>
+"""
+
+
+def build_food() -> str:
+    """食物營養查詢頁。資料在建置時就轉好放進 food_db.json，
+    前端只做搜尋與篩選——沒有後端，也不記錄使用者查了什麼。"""
+    if not FOOD_DB.exists():
+        return ""
+
+    db = json.loads(FOOD_DB.read_text(encoding="utf-8"))
+    n = len(db["rows"])
+    title = f"腎臟病飲食查詢：{n:,} 種食物的鈉鉀磷含量｜{SITE_NAME}"
+    desc = (f"查詢 {n:,} 種食物的鈉、鉀、磷與蛋白質含量，資料來自衛福部食藥署"
+            f"台灣食品營養成分資料庫。該注意哪一項，取決於你的腎功能分期。")
+
+    body = f"""
+<h1>腎臟病飲食查詢</h1>
+<p class="lede">查詢食物的<strong>鈉、鉀、磷</strong>含量。這三項是腎臟病飲食最需要注意的，
+但<strong>該注意哪一項，取決於你的腎功能分期</strong>——不是每個人都要限制同樣的東西。</p>
+
+<div class="warnbox">
+  <b>這個工具不會告訴你「能不能吃」</b>
+  <p>因為同一種食物，對第 2 期、第 5 期、以及透析中的病人，意義完全不同。
+  給一個二元答案，必然會對其中一群人是錯的。</p>
+  <p>它做的是把數值攤開，並說明<strong>哪些人需要在意哪一項</strong>。
+  實際的飲食計畫請與你的醫師或營養師討論。</p>
+</div>
+
+<div class="foodtool">
+  <div class="fsearch">
+    <input id="fq" type="search" placeholder="輸入食物名稱，例如 香蕉、豆腐、吐司…"
+           autocomplete="off" spellcheck="false" aria-label="搜尋食物">
+    <select id="fcat" aria-label="依分類篩選"><option value="">全部分類</option></select>
+  </div>
+  <p class="fhint" id="fhint">共 {n:,} 種食物。輸入兩個字以上開始搜尋。</p>
+  <div id="fres" class="fres"></div>
+</div>
+
+<h2 id="san-xiang">這三項分別是誰要注意</h2>
+<div class="tw">
+<table class="ftiers">
+  <thead><tr><th>營養素</th><th>誰需要注意</th><th>為什麼</th></tr></thead>
+  <tbody>
+    <tr><td><b>鈉</b></td><td>幾乎所有人</td>
+        <td>升高血壓、增加腎絲球負擔、加重蛋白尿，還會削弱降血壓藥的效果。
+        詳見<a href="/articles/taiwan-eating-out-sodium.html">外食減鈉指南</a></td></tr>
+    <tr><td><b>鉀</b></td><td>中晚期（eGFR 低於 45）與透析患者</td>
+        <td>腎功能下降時排鉀能力變差，血鉀過高可能造成心律不整，且初期沒有症狀。
+        <strong>早期患者通常不需要限鉀</strong>，過度限制反而會少吃了蔬果</td></tr>
+    <tr><td><b>磷</b></td><td>中晚期與透析患者</td>
+        <td>磷排不掉會影響骨骼與血管。加工食品的「磷酸鹽添加物」吸收率遠高於
+        天然食物中的磷，是最該優先避開的來源</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="note">
+  <p><b>蛋白質為什麼不做分級？</b>因為方向是相反的：<strong>早期腎臟病常需要限制蛋白質，
+  透析患者反而需要增加</strong>。做成紅綠燈一定會害到其中一群人，所以這裡只顯示數值。
+  你的蛋白質目標請直接問你的醫師或營養師。</p>
+</div>
+
+<h2 id="lai-yuan">資料來源與限制</h2>
+<ul>
+<li>資料來自<strong>衛生福利部食品藥物管理署「台灣食品營養成分資料庫」</strong>
+（<a href="{db['source_url']}" rel="noopener" target="_blank">政府資料開放平臺</a>，
+{db['licence']}），共 {n:,} 種食物</li>
+<li>所有數值為<strong>{db['unit']}</strong>的含量</li>
+<li><strong>烹調方式會大幅改變結果</strong>：水煮會讓鉀溶進水裡，所以「先燙過再炒」
+是常見的降鉀做法；反之滷、醃、加工會大幅增加鈉</li>
+<li><strong>這是食材資料庫，不是料理資料庫</strong>。查得到「豬肉」「白米」「醬油」，
+但查不到「滷肉飯」「牛肉麵」這類組合料理</li>
+<li>同一種食物多次取樣且差異較大時，會同時顯示<strong>代表值與範圍</strong>，
+不挑單一數字假裝精確</li>
+<li>本站不記錄你查詢了什麼，搜尋完全在你的瀏覽器內完成</li>
+</ul>
+"""
+
+    extra = FOOD_CSS_JS.replace("__TIERS__", json.dumps(FOOD_TIERS, ensure_ascii=False))
+    jsonld = {
+        "@context": "https://schema.org",
+        "@type": "MedicalWebPage",
+        "name": title,
+        "description": desc,
+        "inLanguage": "zh-Hant",
+        "url": f"{BASE_URL}/food.html",
+        "dateModified": TODAY,
+        "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
+                   "url": f"{BASE_URL}/about.html"},
+        "citation": {"@type": "Dataset", "name": db["source"], "url": db["source_url"]},
+    }
+    return page(title, desc, "food.html", body, jsonld, extra_head=extra)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--serve", action="store_true")
@@ -1165,8 +1399,14 @@ def main() -> int:
         build_home(by_cat, md_pages, len(gallery_items)), encoding="utf-8")
     print("  index.html　(網站首頁，衛教為主 + 商城大按鈕)")
 
+    food_html = build_food()
+    if food_html:
+        (ROOT / "food.html").write_text(food_html, encoding="utf-8")
+        print("  food.html　(食物營養查詢工具)")
+
     # sitemap：讓搜尋引擎一次拿到所有網址
-    urls = ["", "articles/", "about.html", "shop.html"] + [
+    urls = ["", "articles/", "about.html", "shop.html"] + (
+        ["food.html"] if food_html else []) + [
         p for p in written if not p.endswith("index.html")]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>',
           '<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9">'.replace(
