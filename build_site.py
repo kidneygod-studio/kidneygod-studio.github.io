@@ -516,7 +516,7 @@ def build_category(cat: str, items: list[dict],
     return path, page(title, desc, path, body, jsonld), title
 
 
-def build_index(by_cat: dict[str, list[dict]], extra_pages: list[tuple[str, str]],
+def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
                 n_gallery: int = 0) -> tuple[str, str]:
     path = "articles/index.html"
     title = f"腎臟與三高衛教文章總覽｜{SITE_NAME}"
@@ -527,10 +527,18 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[tuple[str, str]
         f'<div class="t">{esc(c)}（{len(v)} 則）</div>'
         f'<div class="d">{esc(CAT_INTRO.get(c, "")[:52])}…</div></a>'
         for c, v in by_cat.items())
+    # 長文原本在這裡只是一個 <ol> 編號清單，沒有摘要——而同一頁的衛教圖卡、
+    # 以及首頁的同一個區塊，用的都是 .feat 卡片。長文是站上最有價值的內容，
+    # 不該得到最陽春的呈現。（.toc 本來是分類頁「本頁內容」的頁內目錄樣式，
+    # 拿來當文章列表在語意上也不對。）
     extra = ""
     if extra_pages:
-        li = "".join(f'<li><a href="/{p}">{esc(t)}</a></li>' for p, t in extra_pages)
-        extra = f"<h2>深入文章</h2><div class='toc'><ol>{li}</ol></div>"
+        cs = "".join(
+            f'<a class="feat" href="/{a["path"]}">'
+            f'<div class="t">{esc(a["title"])}</div>'
+            f'<div class="d">{esc(a["summary"][:88])}…</div></a>'
+            for a in extra_pages)
+        extra = f"<h2>深入文章</h2><div class='sd'>完整長文，適合想把一個主題徹底搞懂的人</div>{cs}"
 
     gal = ""
     if n_gallery:
@@ -1543,7 +1551,7 @@ def main() -> int:
         written.append(gpath)
         print(f"  {gpath}")
 
-    idx_path, idx_html = build_index(by_cat, [(a["path"], a["title"]) for a in md_pages],
+    idx_path, idx_html = build_index(by_cat, md_pages,
                                      len(gallery_items))
     (ROOT / idx_path).write_text(idx_html, encoding="utf-8")
     written.insert(0, idx_path)
