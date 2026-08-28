@@ -69,14 +69,22 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
   header.site nav{gap:1px}
 }
 h1{font-size:1.85rem;line-height:1.35;margin:28px 0 10px;letter-spacing:-.01em}
-h2{font-size:1.28rem;line-height:1.45;margin:38px 0 10px;padding-top:6px}
+/* 區塊標題左側的主色錨點。長文有 10–12 個 h2，這條線提供滑動時的節奏感，
+   讓讀者知道換段了。用 flex-start 而非 center：標題換行時錨點對齊第一行，
+   否則它會浮在整段的垂直中央，看起來像被漏掉。 */
+h2{font-size:1.28rem;line-height:1.45;margin:38px 0 10px;padding-top:6px;
+display:flex;align-items:flex-start;gap:10px}
+h2::before{content:"";flex:0 0 auto;width:4px;height:1.05em;margin-top:.22em;
+border-radius:2px;background:var(--accent)}
 h3{font-size:1.05rem;margin:26px 0 8px;color:var(--mut)}
 p{margin:0 0 18px}
 a{color:var(--accent)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:13.5px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:26px 0}
-.toc h2{font-size:14px;margin:0 0 8px;color:var(--mut);text-transform:none}
+/* 「本頁內容」是目錄方塊裡的小標籤，不是區塊標題，不加錨點 */
+.toc h2{display:block;font-size:14px;margin:0 0 8px;color:var(--mut);text-transform:none}
+.toc h2::before{content:none}
 .toc ol{margin:0;padding-left:20px}
 .toc li{margin:5px 0;font-size:15px}
 article.card{border-top:1px solid var(--line);padding-top:6px}
@@ -186,12 +194,8 @@ font-size:1.02rem;line-height:1.55}
 .hero h1{font-size:2.1rem;margin:0 0 12px}
 .hero .sub{font-size:1.08rem;color:var(--mut);margin-bottom:6px}
 .hero .cred{font-size:14px;color:var(--mut)}
-/* 區塊標題原本和內文同色同粗細，滑動時沒有節奏感，讀者不容易知道換段了。
-   加一條主色短線當錨點——只在標題左側，不動字色，維持醫療內容該有的克制。 */
-.sect{font-size:1.15rem;margin:44px 0 4px;
-display:flex;align-items:center;gap:10px}
-.sect::before{content:"";flex:0 0 auto;width:4px;height:1.05em;border-radius:2px;
-background:var(--accent)}
+/* 首頁區塊標題：錨點由上方的 h2 通用規則提供，這裡只調字級與間距 */
+.sect{font-size:1.15rem;margin:44px 0 4px}
 .sect + .sd{font-size:14px;color:var(--mut);margin-bottom:16px;padding-left:14px}
 /* 使用說明：定位在「先看這個再決定往哪走」，所以視覺上要跟一般段落分開，
    但又不能重到搶走主標題的位置 */
