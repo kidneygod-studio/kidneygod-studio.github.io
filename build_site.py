@@ -231,6 +231,11 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
 font-size:13.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}
+.fcontact{margin:8px 0 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+/* 選擇器要比 footer.site a（0,1,2）更明確，否則信箱會被壓成灰色 --mut，
+   失去「這是可以按的東西」的視覺提示 */
+footer.site .fcontact > a{font-weight:700;color:var(--fg)}
+footer.site .fcontact .note{font-size:12.5px;color:var(--mut)}
 .social{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
 .social a{display:inline-flex;align-items:center;gap:6px;
 padding:6px 13px;border:1px solid var(--line);border-radius:999px;
@@ -464,6 +469,10 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 </main>
 <footer class="site"><div class="wrap">
 <p>{SITE_NAME}　·　最後更新 {TODAY}　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<!-- 用途說明跟著信箱一起出現。信箱會出現在每一頁，但完整的界線說明只在
+     簡介頁，所以這裡帶一句最關鍵的，並連到完整版。 -->
+<p class="fcontact"><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>
+<span class="note">媒體、轉載、演講、勘誤；<a href="/about.html#lian-luo">不提供個人醫療諮詢</a></span></p>
 <p class="social">{social_links()}</p>
 </div></footer>{analytics_tag()}
 </body>

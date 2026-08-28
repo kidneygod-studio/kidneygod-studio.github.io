@@ -192,6 +192,13 @@
          background:#0f0c0a;color:var(--gold2);font-size:14px;font-weight:600;
          padding:11px 22px;border-radius:99px;z-index:99;transition:.3s;opacity:0;}
   .toast.on{transform:translateX(-50%);opacity:1;}
+
+  /* 頁尾聯絡方式：沿用 byline 的排版，只把信箱本身做成可點的連結。
+     色用 --ink 而非金色——這個頁尾坐在米色卡紙面板上，不是深色板面，
+     金字配米底對比只有 1.42，看不見。 */
+  .contactline a{color:var(--ink);text-decoration:none;
+                 border-bottom:1px solid rgba(43,34,29,.35)}
+  .contactline a:hover{border-bottom-color:var(--ink)}
 </style>
 </head>
 <body>
@@ -241,6 +248,7 @@
     <p>收藏冊只顯示你已取得的內容。還沒收集到的格子留白，是為了讓你知道還差什麼 —— 就像真的集卡冊一樣。</p>
     <p style="margin-top:8px">⚕️ 本站衛教內容為一般性健康知識，不能取代醫師診斷與治療建議。腎功能異常、用藥問題請諮詢腎臟科醫師或藥師；有症狀請就醫。</p>
     <p class="byline">✍️ 內容編寫｜<b>護腎專家 吳政哲醫師</b><span>本站衛教內容由本人編寫與審訂，每則皆標註所依據的臨床指引。</span></p>
+    <p class="byline contactline">📮 聯絡｜<b><a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a></b><span>媒體、轉載、演講、勘誤。<a href="/about.html#lian-luo">不提供個人醫療諮詢</a>，也請勿在信中提供檢查數值或病歷。</span></p>
     <p style="margin-top:8px"><a href="shop.html">← 回商城繼續收集</a></p>
   </div>
 </footer>

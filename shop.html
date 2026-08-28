@@ -413,6 +413,13 @@
   .confetti{position:fixed;top:-12px;z-index:98;font-size:20px;pointer-events:none;
             animation:fall linear forwards;}
   @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.6;}}
+
+  /* 頁尾聯絡方式：沿用 byline 的排版，只把信箱本身做成可點的連結。
+     色用 --ink 而非金色——這個頁尾坐在米色卡紙面板上，不是深色板面，
+     金字配米底對比只有 1.42，看不見。 */
+  .contactline a{color:var(--ink);text-decoration:none;
+                 border-bottom:1px solid rgba(43,34,29,.35)}
+  .contactline a:hover{border-bottom-color:var(--ink)}
 </style>
 </head>
 <body>
@@ -471,6 +478,7 @@
   <div class="fwrap">
     <h3>關於「護腎教室」護腎知識卡片收集遊戲</h3>
     <p class="byline">✍️ 內容編寫｜<b>護腎專家 吳政哲醫師</b><span>本站衛教內容由本人編寫與審訂，每則皆標註所依據的臨床指引。</span></p>
+    <p class="byline contactline">📮 聯絡｜<b><a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a></b><span>媒體、轉載、演講、勘誤。<a href="/about.html#lian-luo">不提供個人醫療諮詢</a>，也請勿在信中提供檢查數值或病歷。</span></p>
     <p>這是一個<strong>衛教遊戲化網站</strong>：用完整的網購體驗包裝護腎知識 — 逛街、比價、賺腎元、結帳、追蹤出貨 — 全程不涉及任何金錢，而且這次真的會出貨：<strong>出的是護腎知識，直接送進你的知識庫。</strong></p>
     <p><strong>我們不收費、沒有金流、不會要求你輸入信用卡。</strong>腎元是純遊戲幣，賺不了真錢也買不了真商品，但衛教內容是認真的。</p>
     <p>🔐 <strong>隱私說明：</strong>未登入時，你的進度（腎元、知識庫、最高分）只存在你自己瀏覽器的 localStorage，本站不會取得。若你<strong>選擇</strong>使用雲端同步：「匿名開始」只會產生一組隨機識別碼，不涉及任何個人資料；「Google 登入」會取得你的 email 與顯示名稱，<strong>僅用於帳號識別與進度同步</strong>，不作行銷使用、不提供第三人，資料儲存於 Google Firebase。本站不經手任何密碼（登入視窗由 Google 官方提供）。你可隨時在帳號視窗登出，或使用「刪除雲端資料」將同步資料自伺服器移除。本站另有一個<strong>不記名的瀏覽次數計數器</strong>（每個瀏覽階段僅計一次，不記錄 IP、不追蹤個人）；小學堂排行榜只儲存你自行輸入的代號與成績，留空則顯示為「匿名者」。</p>
