@@ -296,8 +296,13 @@ font-size:1.02rem;line-height:1.55}
 .hero h1{font-size:2.1rem;margin:0 0 12px}
 .hero .sub{font-size:1.08rem;color:var(--mut);margin-bottom:6px}
 .hero .cred{font-size:14px;color:var(--mut)}
-.sect{font-size:1.15rem;margin:44px 0 4px}
-.sect + .sd{font-size:14px;color:var(--mut);margin-bottom:16px}
+/* 區塊標題原本和內文同色同粗細，滑動時沒有節奏感，讀者不容易知道換段了。
+   加一條主色短線當錨點——只在標題左側，不動字色，維持醫療內容該有的克制。 */
+.sect{font-size:1.15rem;margin:44px 0 4px;
+display:flex;align-items:center;gap:10px}
+.sect::before{content:"";flex:0 0 auto;width:4px;height:1.05em;border-radius:2px;
+background:var(--accent)}
+.sect + .sd{font-size:14px;color:var(--mut);margin-bottom:16px;padding-left:14px}
 /* 使用說明：定位在「先看這個再決定往哪走」，所以視覺上要跟一般段落分開，
    但又不能重到搶走主標題的位置 */
 .howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
