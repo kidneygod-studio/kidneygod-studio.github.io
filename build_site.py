@@ -53,6 +53,36 @@ CONTACT_EMAIL = "contact@kidneygod.net"
 ANALYTICS_TOKEN = "e44b1d39221d4a5085336497dbff3ce4"
 
 
+# 累計瀏覽數。數字存在 Firestore 的 stats/site，商城與遊戲場自 2026-08 起
+# 持續累加（每個瀏覽階段計一次）。衛教站這邊只讀不寫：
+#   讀取不需認證，一個 fetch 就好，不必為了一個數字載入 Firebase SDK；
+#   寫入則需要認證（實測未認證寫入會被規則擋下，這是正確的設定）。
+# 若要讓衛教站的瀏覽也計入，見 build_site.py 旁的說明或詢問作者調整規則。
+VIEWS_DOC = ("https://firestore.googleapis.com/v1/projects/kidneygod-ea61e"
+             "/databases/(default)/documents/stats/site"
+             "?key=AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU"
+             "&mask.fieldPaths=views")
+
+VIEWS_SCRIPT = """
+<script>
+/* 取不到就整塊不顯示——寧可沒有，也不要顯示壞掉的數字 */
+(async () => {
+  const box = document.getElementById("siteViews");
+  if(!box) return;
+  try{
+    const r = await fetch(VIEWS_URL, {cache: "no-store"});
+    if(!r.ok) return;
+    const d = await r.json();
+    const n = parseInt(d?.fields?.views?.integerValue, 10);
+    if(!isFinite(n) || n <= 0) return;
+    box.querySelector("b").textContent = n.toLocaleString("zh-Hant-TW");
+    box.style.display = "";
+  }catch(e){ /* 靜默 */ }
+})();
+</script>
+"""
+
+
 def analytics_tag() -> str:
     if not ANALYTICS_TOKEN:
         return ""
@@ -242,6 +272,9 @@ footer.site a{color:var(--mut)}
    失去「這是可以按的東西」的視覺提示 */
 footer.site .fcontact > a{font-weight:700;color:var(--fg)}
 footer.site .fcontact .note{font-size:12.5px;color:var(--mut)}
+.views{margin:10px 0 0;font-size:12.5px;color:var(--mut);
+font-variant-numeric:tabular-nums}
+.views b{color:var(--fg);font-weight:700}
 .social{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
 .social a{display:inline-flex;align-items:center;gap:6px;
 padding:6px 13px;border:1px solid var(--line);border-radius:999px;
@@ -441,6 +474,15 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
            + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
            + navlink("/about.html", "關於", "作者", "about")
            + navlink("/shop.html", "知識", "商城", "shop", "shoplink"))
+    # 累計瀏覽只放首頁：它是全站的總數，每一頁都掛一個相同的數字沒有意義，
+    # 也會讓每頁都多打一次 Firestore。
+    views_block = ""
+    if home:
+        views_block = ('<p class="views" id="siteViews" style="display:none">'
+                       '累計瀏覽 <b>–</b> 次</p>'
+                       f'<script>const VIEWS_URL="{VIEWS_DOC}";</script>'
+                       + VIEWS_SCRIPT)
+
     ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
     return f"""<!doctype html>
 <html lang="zh-Hant">
@@ -482,6 +524,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <p class="fcontact"><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>
 <span class="note">媒體、轉載、演講、勘誤；<a href="/about.html#lian-luo">不提供個人醫療諮詢</a></span></p>
 <p class="social">{social_links()}</p>
+{views_block}
 </div></footer>{analytics_tag()}
 </body>
 </html>
