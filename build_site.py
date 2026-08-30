@@ -1568,6 +1568,316 @@ def build_food() -> str:
     return page(title, desc, "food.html", body, jsonld, extra_head=extra)
 
 
+# ---------------------------------------------------------------------------
+# 腎功能計算工具
+#
+# 這一頁的風險比食物查詢更高：它輸出的是可以直接影響病人決策的數字。
+# 幾個刻意的設計決定：
+#
+# 1. 輸入的是使用者已經擁有的檢驗值，不做任何診斷推論。
+# 2. 有填 cystatin C 就自動改用 creatinine-cystatin C 式，並明確標示
+#    「本次使用哪一條公式」——兩式結果可能差很多，不說清楚會誤導。
+# 3. KFRE 只在 eGFR 落在其驗證範圍（G3–G5）且有 UACR 時才顯示。
+#    超出範圍給出的數字沒有意義，寧可不顯示也不要給假的精確度。
+# 4. 風險以區間與文字描述呈現，不只給一個裸數字。
+#
+# 公式來源：
+#   CKD-EPI 2021 creatinine 與 creatinine-cystatin C
+#     Inker LA et al. N Engl J Med 2021;385:1737-1749
+#     係數已對照 National Kidney Foundation 公布版本
+#   KFRE 4-variable：Tangri N et al.
+#     ⚠ 係數與基線存活率待作者確認後才可發布
+# ---------------------------------------------------------------------------
+
+# 這一頁尚未經作者審核，設為 False 時不進導覽列與 sitemap
+CALC_PUBLISHED = False
+
+CALC_CSS_JS = r"""
+<style>
+.calcwrap{margin:24px 0 8px}
+.cform{display:grid;gap:12px;grid-template-columns:1fr 1fr;
+background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.cfield{display:flex;flex-direction:column;gap:5px;min-width:0}
+.cfield.wide{grid-column:1 / -1}
+.cfield label{font-size:13px;color:var(--mut);font-weight:500}
+.cfield label b{color:var(--fg);font-weight:700}
+.cfield .unit{font-size:11.5px;color:var(--mut)}
+.cfield input,.cfield select{padding:11px 12px;font-size:1.02rem;border:2px solid var(--line);
+border-radius:9px;background:var(--bg);color:var(--fg);width:100%}
+.cfield input:focus,.cfield select:focus{outline:none;border-color:var(--accent2)}
+.cfield .hint{font-size:11.5px;color:var(--mut);line-height:1.5}
+.cbtns{grid-column:1 / -1;display:flex;gap:10px;flex-wrap:wrap}
+.cbtn{font:inherit;font-size:1rem;font-weight:700;padding:11px 22px;border-radius:9px;
+border:1px solid var(--accent);background:var(--accent);color:var(--bg);cursor:pointer}
+.cbtn.ghost{background:transparent;color:var(--mut);border-color:var(--line);font-weight:500}
+.cbtn:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+.cres{margin-top:16px;display:none;flex-direction:column;gap:12px}
+.cres.on{display:flex}
+.rbox{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--card)}
+.rbox .rlabel{font-size:12.5px;color:var(--mut);letter-spacing:.04em}
+.rbox .rval{font-size:2.1rem;font-weight:800;line-height:1.25;
+font-variant-numeric:tabular-nums;margin:2px 0 4px}
+.rbox .rsub{font-size:13.5px;color:var(--mut);line-height:1.6}
+.rbox .rformula{font-size:12px;color:var(--mut);margin-top:9px;
+padding-top:9px;border-top:1px dashed var(--line)}
+.stage{display:inline-block;padding:3px 11px;border-radius:999px;font-size:13px;
+font-weight:700;border:1px solid currentColor;margin-left:8px;vertical-align:middle}
+.s-g1,.s-g2{color:var(--ok,#2f7d4f)}
+.s-g3a,.s-g3b{color:var(--warnc,#9a6207)}
+.s-g4,.s-g5{color:var(--bad,#a33)}
+.cnote{font-size:13px;color:var(--mut);line-height:1.7;margin-top:4px}
+.cerr{color:#b03a2e;font-size:13.5px;margin-top:8px}
+@media(prefers-color-scheme:dark){
+  .s-g1,.s-g2{color:#7fd6a0}
+  .s-g3a,.s-g3b{color:#e0b25c}
+  .s-g4,.s-g5{color:#e88a80}
+  .cerr{color:#e88a80}
+}
+@media(max-width:560px){ .cform{grid-template-columns:1fr} }
+</style>
+<script>
+/* ── CKD-EPI 2021（Inker LA et al. NEJM 2021）───────────────────────
+   兩式都不含人種係數。Scr 單位 mg/dL，cystatin C 單位 mg/L。 */
+function ckdEpiCr(scr, age, female){
+  const k = female ? 0.7 : 0.9;
+  const a = female ? -0.241 : -0.302;
+  const r = scr / k;
+  return 142 * Math.pow(Math.min(r,1), a) * Math.pow(Math.max(r,1), -1.200)
+       * Math.pow(0.9938, age) * (female ? 1.012 : 1);
+}
+function ckdEpiCrCys(scr, cys, age, female){
+  const k = female ? 0.7 : 0.9;
+  const a = female ? -0.219 : -0.144;
+  const r = scr / k, c = cys / 0.8;
+  return 135 * Math.pow(Math.min(r,1), a) * Math.pow(Math.max(r,1), -0.544)
+       * Math.pow(Math.min(c,1), -0.323) * Math.pow(Math.max(c,1), -0.778)
+       * Math.pow(0.9961, age) * (female ? 0.963 : 1);
+}
+function stageOf(e){
+  if(e >= 90) return ["G1","正常或偏高"];
+  if(e >= 60) return ["G2","輕度下降"];
+  if(e >= 45) return ["G3a","輕到中度下降"];
+  if(e >= 30) return ["G3b","中到重度下降"];
+  if(e >= 15) return ["G4","重度下降"];
+  return ["G5","腎衰竭"];
+}
+
+/* ── KFRE 4-variable（Tangri N et al.）──────────────────────────────
+   ⚠ 以下係數與基線存活率尚待確認，確認前本區塊不會顯示。 */
+const KFRE_READY = false;
+const KFRE_B = {age: -0.2201, male: 0.2467, egfr: -0.5567, acr: 0.4510};
+const KFRE_M = {age: 7.036, male: 0.5642, egfr: 7.222, acr: 5.137};
+const KFRE_S0 = {   // 依地區校正；台灣適用哪一組待確認
+  na:    {y2: 0.9878, y5: 0.9570},
+  nonna: {y2: 0.9750, y5: 0.9240}
+};
+function kfre(age, male, egfr, acr, region){
+  const b = KFRE_B, m = KFRE_M;
+  const xb = b.age*(age/10 - m.age) + b.male*((male?1:0) - m.male)
+           + b.egfr*(egfr/5 - m.egfr) + b.acr*(Math.log(acr) - m.acr);
+  const s = KFRE_S0[region] || KFRE_S0.nonna;
+  return {y2: 1 - Math.pow(s.y2, Math.exp(xb)),
+          y5: 1 - Math.pow(s.y5, Math.exp(xb))};
+}
+
+function calcInit(){
+  const $ = id => document.getElementById(id);
+  const num = id => { const v = parseFloat($(id).value); return isFinite(v) ? v : null; };
+
+  function run(){
+    const age = num("cAge"), scr = num("cScr"), cys = num("cCys"), acr = num("cAcr");
+    const female = $("cSex").value === "f";
+    const err = $("cErr"); err.textContent = "";
+
+    if(age === null || scr === null){
+      err.textContent = "請至少填入年齡與血清肌酸酐。"; return;
+    }
+    if(age < 18 || age > 110){ err.textContent = "這些公式適用於 18 歲以上的成人。"; return; }
+    if(scr <= 0 || scr > 25){ err.textContent = "血清肌酸酐的數值看起來不合理，請確認單位是 mg/dL。"; return; }
+    if(cys !== null && (cys <= 0 || cys > 12)){
+      err.textContent = "胱抑素 C 的數值看起來不合理，請確認單位是 mg/L。"; return; }
+
+    const useCys = cys !== null;
+    const e = useCys ? ckdEpiCrCys(scr, cys, age, female) : ckdEpiCr(scr, age, female);
+    const [sg, sdesc] = stageOf(e);
+
+    $("rEgfr").innerHTML = e.toFixed(1) +
+      '<span class="stage s-' + sg.toLowerCase() + '">' + sg + '</span>';
+    $("rEgfrSub").textContent = sdesc + "　單位 mL/min/1.73m²";
+    $("rFormula").textContent = useCys
+      ? "使用公式：CKD-EPI 2021 creatinine–cystatin C（因為你填了胱抑素 C）"
+      : "使用公式：CKD-EPI 2021 creatinine";
+
+    /* 只單獨顯示肌酸酐版，方便對照兩式差異 */
+    const cmp = $("rCompare");
+    if(useCys){
+      const only = ckdEpiCr(scr, age, female);
+      cmp.style.display = "";
+      cmp.textContent = "只用肌酸酐計算會是 " + only.toFixed(1) +
+        "，差 " + (e - only >= 0 ? "+" : "") + (e - only).toFixed(1) + "。";
+    } else cmp.style.display = "none";
+
+    /* KFRE */
+    const kb = $("rKfre");
+    if(!KFRE_READY){
+      kb.style.display = "";
+      kb.innerHTML = '<div class="rlabel">腎衰竭風險（KFRE）</div>' +
+        '<div class="rsub">此區塊的公式係數尚在確認中，暫未開放。</div>';
+    } else if(acr === null){
+      kb.style.display = "";
+      kb.innerHTML = '<div class="rlabel">腎衰竭風險（KFRE）</div>' +
+        '<div class="rsub">需要尿液白蛋白／肌酸酐比值（UACR）才能計算。</div>';
+    } else if(e >= 60 || e < 10){
+      kb.style.display = "";
+      kb.innerHTML = '<div class="rlabel">腎衰竭風險（KFRE）</div>' +
+        '<div class="rsub">KFRE 的驗證範圍是慢性腎臟病第 3 到第 5 期' +
+        '（eGFR 約 10–59）。你的 eGFR 為 ' + e.toFixed(1) +
+        '，超出這個範圍，算出來的數字沒有意義，因此不顯示。</div>';
+    } else {
+      const r = kfre(age, !female, e, acr, $("cRegion").value);
+      kb.style.display = "";
+      kb.innerHTML = '<div class="rlabel">腎衰竭風險（KFRE 4 變項）</div>' +
+        '<div class="rval">' + (r.y5*100).toFixed(1) + '%</div>' +
+        '<div class="rsub">五年內進展到需要透析或移植的估計風險；' +
+        '兩年風險約 ' + (r.y2*100).toFixed(1) + '%。</div>' +
+        '<div class="rformula">這是族群層級的統計估計，不是個人的預言。' +
+        '實際結果取決於血壓、血糖、蛋白尿是否控制得好，以及有沒有規則追蹤。</div>';
+    }
+    $("cRes").classList.add("on");
+  }
+
+  $("cRun").addEventListener("click", run);
+  $("cClear").addEventListener("click", () => {
+    ["cAge","cScr","cCys","cAcr"].forEach(i => document.getElementById(i).value = "");
+    $("cRes").classList.remove("on"); $("cErr").textContent = "";
+  });
+  document.querySelectorAll(".cform input").forEach(el => {
+    el.addEventListener("keydown", e => { if(e.key === "Enter") run(); });
+  });
+}
+if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", calcInit);
+else calcInit();
+</script>
+"""
+
+
+def build_calc() -> str:
+    """腎功能計算工具。輸入的是使用者已經有的檢驗值，不做診斷。"""
+    title = f"腎功能計算：eGFR 與腎衰竭風險｜{SITE_NAME}"
+    desc = ("以 CKD-EPI 2021 公式計算 eGFR（可加入胱抑素 C），並依 KFRE 估算"
+            "慢性腎臟病進展到腎衰竭的風險。輸入你報告上已有的數值即可。")
+
+    body = """
+<h1>腎功能計算</h1>
+<p class="lede">把你檢驗報告上<strong>已經有的數值</strong>填進來，換算成 eGFR 與分期。
+這裡不做診斷，也不會知道你的病史——它只是幫你把數字換算成比較好理解的形式。</p>
+
+<div class="warnbox">
+  <b>這個工具算的是「現在的數字」，不是「你的病情」</b>
+  <p>同一個 eGFR，在不同年齡、有沒有蛋白尿、有沒有其他共病的人身上，意義完全不同。
+  而且<strong>單次數值不能診斷慢性腎臟病</strong>——那需要異常持續超過三個月。</p>
+  <p>算出來的結果請帶去跟你的醫師討論，不要自己下結論。</p>
+</div>
+
+<div class="calcwrap">
+<div class="cform">
+  <div class="cfield">
+    <label for="cAge"><b>年齡</b> <span class="unit">歲</span></label>
+    <input id="cAge" type="number" inputmode="numeric" min="18" max="110" placeholder="例如 55">
+  </div>
+  <div class="cfield">
+    <label for="cSex"><b>生理性別</b></label>
+    <select id="cSex"><option value="m">男性</option><option value="f">女性</option></select>
+  </div>
+  <div class="cfield">
+    <label for="cScr"><b>血清肌酸酐</b> <span class="unit">mg/dL</span></label>
+    <input id="cScr" type="number" inputmode="decimal" step="0.01" min="0.1" placeholder="例如 1.20">
+    <span class="hint">報告上寫 Creatinine 或 Cr</span>
+  </div>
+  <div class="cfield">
+    <label for="cCys"><b>胱抑素 C</b> <span class="unit">mg/L・可不填</span></label>
+    <input id="cCys" type="number" inputmode="decimal" step="0.01" min="0.1" placeholder="例如 1.10">
+    <span class="hint">填了就會自動改用較準確的合併公式</span>
+  </div>
+  <div class="cfield">
+    <label for="cAcr"><b>尿液白蛋白／肌酸酐比值</b> <span class="unit">mg/g・可不填</span></label>
+    <input id="cAcr" type="number" inputmode="decimal" step="1" min="0.1" placeholder="例如 120">
+    <span class="hint">報告上寫 UACR 或 ACR</span>
+  </div>
+  <div class="cfield">
+    <label for="cRegion"><b>KFRE 校正區域</b></label>
+    <select id="cRegion">
+      <option value="nonna">北美以外</option>
+      <option value="na">北美</option>
+    </select>
+  </div>
+  <div class="cbtns">
+    <button id="cRun" class="cbtn" type="button">計算</button>
+    <button id="cClear" class="cbtn ghost" type="button">清除</button>
+  </div>
+  <div class="cfield wide"><div class="cerr" id="cErr"></div></div>
+</div>
+
+<div class="cres" id="cRes">
+  <div class="rbox">
+    <div class="rlabel">估算腎絲球過濾率</div>
+    <div class="rval" id="rEgfr">—</div>
+    <div class="rsub" id="rEgfrSub"></div>
+    <div class="rsub" id="rCompare" style="display:none"></div>
+    <div class="rformula" id="rFormula"></div>
+  </div>
+  <div class="rbox" id="rKfre" style="display:none"></div>
+</div>
+</div>
+
+<h2 id="gongshi">用的是哪些公式</h2>
+<div class="tw">
+<table>
+  <thead><tr><th>公式</th><th>用途</th><th>來源</th></tr></thead>
+  <tbody>
+    <tr><td><b>CKD-EPI 2021<br>creatinine</b></td>
+        <td>只用肌酸酐估算 eGFR。不含人種係數</td>
+        <td>Inker LA et al. <i>N Engl J Med</i> 2021;385:1737-1749</td></tr>
+    <tr><td><b>CKD-EPI 2021<br>creatinine–cystatin C</b></td>
+        <td>同時使用肌酸酐與胱抑素 C，準確度較高。填了胱抑素 C 就自動改用這一式</td>
+        <td>同上</td></tr>
+    <tr><td><b>KFRE</b><br>（4 變項）</td>
+        <td>以年齡、性別、eGFR、UACR 估算慢性腎臟病第 3–5 期患者兩年與五年內進展到腎衰竭的風險</td>
+        <td>Tangri N et al.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="xianzhi">限制與注意事項</h2>
+<ul>
+<li><strong>eGFR 是估算不是實測。</strong>肌肉量高（重訓族）會低估腎功能、肌肉量低（長者、肌少症）會高估；
+抽血前劇烈運動、大量肉類、脫水或某些藥物都會影響。詳見
+<a href="/articles/creatinine-high-what-to-do.html">肌酸酐偏高怎麼辦</a></li>
+<li><strong>單次數值不能診斷。</strong>慢性腎臟病的定義要求異常持續超過三個月，
+看的是趨勢而不是單點</li>
+<li><strong>eGFR 正常不代表腎臟沒事。</strong>腎臟的儲備能力會讓剩餘腎元代償，
+在腎元已大量流失時數值仍可能正常。真正可能提早發現的是尿液白蛋白，詳見
+<a href="/articles/egfr-meaning-ckd-stages.html">eGFR 60 是什麼意思</a></li>
+<li><strong>KFRE 有適用範圍。</strong>它在慢性腎臟病第 3 到第 5 期（eGFR 約 10–59）
+的族群中驗證，超出範圍的估計沒有意義，本工具在那種情況下不會顯示結果</li>
+<li>本工具不會保存或傳送你輸入的任何數值，計算完全在你的瀏覽器內完成</li>
+</ul>
+"""
+
+    jsonld = {
+        "@context": "https://schema.org",
+        "@type": "MedicalWebPage",
+        "name": title,
+        "description": desc,
+        "inLanguage": "zh-Hant",
+        "url": f"{BASE_URL}/calc.html",
+        "dateModified": TODAY,
+        "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
+                   "url": f"{BASE_URL}/about.html"},
+    }
+    return page(title, desc, "calc.html", body, jsonld, extra_head=CALC_CSS_JS)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--serve", action="store_true")
@@ -1619,6 +1929,11 @@ def main() -> int:
     if food_html:
         (ROOT / "food.html").write_text(food_html, encoding="utf-8")
         print("  food.html　(食物營養查詢工具)")
+
+    # 計算工具：CALC_PUBLISHED 為 False 時仍會產生檔案供預覽，
+    # 但不進導覽列與 sitemap，等作者確認公式後再開放
+    (ROOT / "calc.html").write_text(build_calc(), encoding="utf-8")
+    print(f"  calc.html　(腎功能計算工具{'' if CALC_PUBLISHED else '，未發布)'}")
 
     # sitemap：讓搜尋引擎一次拿到所有網址
     urls = ["", "articles/", "about.html", "shop.html"] + (

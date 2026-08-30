@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>腎功能計算：eGFR 與腎衰竭風險｜護腎教室</title>
+<meta name="description" content="以 CKD-EPI 2021 公式計算 eGFR（可加入胱抑素 C），並依 KFRE 估算慢性腎臟病進展到腎衰竭的風險。輸入你報告上已有的數值即可。">
+<link rel="canonical" href="https://kidneygod.net/calc.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="護腎教室">
+<meta property="og:title" content="腎功能計算：eGFR 與腎衰竭風險｜護腎教室">
+<meta property="og:description" content="以 CKD-EPI 2021 公式計算 eGFR（可加入胱抑素 C），並依 KFRE 估算慢性腎臟病進展到腎衰竭的風險。輸入你報告上已有的數值即可。">
+<meta property="og:url" content="https://kidneygod.net/calc.html">
+<meta name="twitter:card" content="summary">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+:root{--bg:#fdfcfa;--fg:#22201d;--mut:#6b645c;--line:#e6e1d8;--card:#f6f3ed;
+--accent:#0f766e;--accent2:#0d5f59;--warn:#8a5a00;--maxw:720px}
+@media (prefers-color-scheme:dark){:root{--bg:#16140f;--fg:#eae5dc;--mut:#a3998a;
+--line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--warn:#fbbf24}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
+-webkit-text-size-adjust:100%}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+/* 錨點跳轉時要扣掉固定頁首的高度，否則標題會被壓在頁首下面。
+   頁首約 60px，再加一點餘裕才不會貼著邊。 */
+html{scroll-padding-top:78px}
+header.site{position:sticky;top:0;z-index:50;background:var(--bg);
+background:color-mix(in srgb,var(--bg) 86%,transparent);
+backdrop-filter:saturate(150%) blur(10px);-webkit-backdrop-filter:saturate(150%) blur(10px);
+border-bottom:1px solid var(--line);margin-bottom:8px}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;
+gap:14px;padding-top:11px;padding-bottom:11px}
+.brand{display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+color:var(--fg);font-weight:800;font-size:1.04rem;letter-spacing:.3px;white-space:nowrap}
+.brand svg{color:var(--accent);flex-shrink:0}
+.brand:hover{color:var(--accent2)}
+header.site nav{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:flex-end}
+header.site nav a{font-size:14px;color:var(--mut);text-decoration:none;font-weight:500;
+padding:6px 11px;border-radius:8px;white-space:nowrap;
+transition:color .15s,background .15s}
+header.site nav a:hover{color:var(--fg);background:var(--card)}
+header.site nav a[aria-current="page"]{color:var(--accent2);background:var(--card);font-weight:700}
+/* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
+header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
+header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
+@media(max-width:600px){
+  header.site .wrap{padding-top:8px;padding-bottom:8px;gap:8px}
+  .brand{font-size:.95rem;gap:7px}
+  .brand svg{width:22px;height:22px}
+  header.site nav{gap:2px}
+  /* 隱藏「衛教／關於／知識」前綴，只留兩個字，才排得下一行 */
+  header.site nav .np{display:none}
+  /* 五個項目時，10px 的水平內距會讓總寬超出約 1px 而換行，頁首從 66px 變 105px。
+     縮到 8px 就排得下。垂直內距不動，點擊區高度不受影響。 */
+  header.site nav a{padding:9px 8px;font-size:13.5px}
+}
+/* 小螢幕（iPhone SE 等 320–380px）再收一階，否則仍會換行 */
+@media(max-width:380px){
+  .brand{font-size:.88rem;gap:5px}
+  .brand svg{width:20px;height:20px}
+  header.site nav a{padding:9px 6px;font-size:12.5px}
+}
+/* 最小的一批（320px，iPhone SE 第一代）。差 4px 就排得下，收水平內距即可；
+   垂直內距不動，點擊區高度維持 41px。 */
+@media(max-width:340px){
+  header.site nav a{padding:9px 4px}
+  header.site nav{gap:1px}
+}
+h1{font-size:1.85rem;line-height:1.35;margin:28px 0 10px;letter-spacing:-.01em}
+/* 區塊標題左側的主色錨點。長文有 10–12 個 h2，這條線提供滑動時的節奏感，
+   讓讀者知道換段了。用 flex-start 而非 center：標題換行時錨點對齊第一行，
+   否則它會浮在整段的垂直中央，看起來像被漏掉。 */
+h2{font-size:1.28rem;line-height:1.45;margin:38px 0 10px;padding-top:6px;
+display:flex;align-items:flex-start;gap:10px}
+h2::before{content:"";flex:0 0 auto;width:4px;height:1.05em;margin-top:.22em;
+border-radius:2px;background:var(--accent)}
+h3{font-size:1.05rem;margin:26px 0 8px;color:var(--mut)}
+p{margin:0 0 18px}
+a{color:var(--accent)}
+.lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
+.meta{font-size:13.5px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:26px 0}
+/* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
+   色票要能跟著深色模式走，不能寫死。 */
+:root{--wbg:#fff6f0;--wline:#c05621;--wttl:#9c4221}
+@media (prefers-color-scheme:dark){
+  :root{--wbg:#2a1b13;--wline:#c96a34;--wttl:#e9a97e}
+}
+.warnbox{background:var(--wbg);border-left:4px solid var(--wline);padding:16px 18px;
+border-radius:0 8px 8px 0;margin:22px 0}
+.warnbox b{color:var(--wttl);display:block;margin-bottom:8px;font-size:1.05rem}
+.warnbox p{margin:0 0 8px;font-size:.96rem}
+.warnbox p:last-child{margin:0}
+.contact{font-size:1.12rem;font-weight:700;margin:0 0 18px}
+/* 「本頁內容」是目錄方塊裡的小標籤，不是區塊標題，不加錨點 */
+.toc h2{display:block;font-size:14px;margin:0 0 8px;color:var(--mut);text-transform:none}
+.toc h2::before{content:none}
+.toc ol{margin:0;padding-left:20px}
+.toc li{margin:5px 0;font-size:15px}
+article.card{border-top:1px solid var(--line);padding-top:6px}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:26px 0}
+.cats a{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;
+padding:16px 18px;text-decoration:none;color:var(--fg)}
+.cats a:hover{border-color:var(--accent)}
+.cats .t{font-weight:700;margin-bottom:4px}
+.cats .d{font-size:13.5px;color:var(--mut);line-height:1.6}
+.author{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);
+border-radius:12px;padding:16px 18px;margin:40px 0 20px;font-size:14.5px;line-height:1.7}
+.author .n{font-weight:700}
+.author .r{color:var(--mut);font-size:13px}
+.disclaimer{font-size:13.5px;color:var(--mut);background:var(--card);border-left:3px solid var(--warn);
+padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
+footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
+font-size:13.5px;color:var(--mut)}
+footer.site a{color:var(--mut)}
+.fcontact{margin:8px 0 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+/* 選擇器要比 footer.site a（0,1,2）更明確，否則信箱會被壓成灰色 --mut，
+   失去「這是可以按的東西」的視覺提示 */
+footer.site .fcontact > a{font-weight:700;color:var(--fg)}
+footer.site .fcontact .note{font-size:12.5px;color:var(--mut)}
+.social{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+.social a{display:inline-flex;align-items:center;gap:6px;
+padding:6px 13px;border:1px solid var(--line);border-radius:999px;
+text-decoration:none;font-size:.92rem;color:var(--mut)}
+.social a:hover{border-color:var(--fg);color:var(--fg)}
+.social .nt{color:var(--mut);font-size:.8rem;opacity:.85}
+.sociallist a{color:var(--fg)}
+.backlink{margin:34px 0}
+ul{padding-left:22px;margin:0 0 18px}
+li{margin:7px 0}
+strong{font-weight:700}
+code{background:var(--card);padding:1px 6px;border-radius:5px;font-size:.92em}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin:22px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:var(--card);font-weight:600;font-size:13.5px;color:var(--mut)}
+tr:last-child td{border-bottom:0}
+.callout{background:var(--card);border-left:3px solid var(--accent);
+padding:14px 18px;border-radius:0 10px 10px 0;margin:22px 0;font-size:16px}
+
+/* ── 衛教圖卡 ── */
+.galnav{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 8px}
+.galnav a{font-size:13.5px;background:var(--card);border:1px solid var(--line);
+border-radius:99px;padding:6px 14px;text-decoration:none;color:var(--fg)}
+.galnav a:hover{border-color:var(--accent)}
+.galcard{display:grid;grid-template-columns:210px minmax(0,1fr);gap:22px;
+padding:24px 0;border-top:1px solid var(--line);align-items:start}
+.galcard:last-of-type{border-bottom:1px solid var(--line)}
+.galcard img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;
+border-radius:10px;border:1px solid var(--line);display:block;background:var(--card);
+transition:transform .16s,border-color .16s}
+.galcard a.shot:hover img{transform:scale(1.02);border-color:var(--accent)}
+.galcard h3{font-size:1.06rem;color:var(--fg);margin:0 0 8px;line-height:1.5}
+/* 原文保留換行；貼文的分行本身就是作者安排的節奏，攤平會很難讀 */
+.galcard .post{white-space:pre-wrap;font-size:15px;line-height:1.8;margin:0 0 10px}
+.galcard .src{font-size:12.5px;color:var(--mut)}
+/* 總覽頁：每個主題一塊，配四張縮圖預覽 */
+.galgroup{display:block;text-decoration:none;color:inherit;margin:0 0 16px;
+border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--card)}
+.galgroup:hover{border-color:var(--accent)}
+.gg-head{display:flex;justify-content:space-between;align-items:baseline;
+gap:12px;margin-bottom:12px}
+.gg-head b{font-size:1.08rem}
+.gg-head span{font-size:13.5px;color:var(--mut);white-space:nowrap}
+.gg-sub{font-size:13.5px;color:var(--mut);line-height:1.65;margin:-6px 0 12px}
+/* Day 編號做成小標籤，一眼看得出這是一堂一堂連著的課 */
+.galcard .day{display:inline-block;font-size:12px;font-weight:700;color:var(--accent2);
+background:var(--card);border:1px solid var(--line);border-radius:6px;
+padding:1px 7px;margin-right:8px;vertical-align:2px}
+.gg-prev{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.gg-prev img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;
+border-radius:7px;display:block;border:1px solid var(--line)}
+@media(max-width:640px){
+  .galcard{grid-template-columns:1fr;gap:14px;padding:20px 0}
+  .galcard img{max-width:280px}
+  .galcard .post{font-size:14.5px}
+}
+
+/* ── 醫師介紹（關於頁最上方）── */
+.docintro{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);
+gap:34px;align-items:center;margin:26px 0 40px}
+.docintro.nophoto{grid-template-columns:1fr}
+/* 原圖是全身直式，直接放會比旁邊的資歷欄高出一截。
+   裁成 3:4 並把構圖重心往上移，取到頭部與上半身，和資歷欄的高度才平衡。
+   想改成完整全身，把 aspect-ratio 與 object-fit 兩行拿掉即可。 */
+/* height:auto 不可省略——HTML 上的 height 屬性（用來避免版面跳動）
+   會被當成呈現提示而固定高度，那樣 aspect-ratio 就不會生效。 */
+.docphoto{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;
+object-position:center 12%;
+border-radius:14px;display:block;box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.docname{font-size:1.9rem;font-weight:800;letter-spacing:.5px;margin:0 0 18px;
+color:var(--accent2)}
+.docname small{display:block;font-size:.95rem;font-weight:600;color:var(--mut);
+letter-spacing:0;margin-bottom:4px}
+.doccred{list-style:none;padding:0;margin:0}
+.doccred li{display:flex;align-items:flex-start;gap:11px;margin:0 0 13px;
+font-size:1.02rem;line-height:1.55}
+.doccred svg{flex-shrink:0;margin-top:2px}
+.doccred li.key{font-weight:700}
+@media(max-width:720px){
+  .docintro{grid-template-columns:1fr;gap:22px;margin-bottom:32px}
+  .docphoto{max-width:250px;margin:0 auto}
+  .docname{font-size:1.55rem;text-align:center}
+  .doccred li{font-size:.98rem}
+}
+
+/* ── 首頁 ── */
+.hero{padding:34px 0 8px}
+.hero h1{font-size:2.1rem;margin:0 0 12px}
+.hero .sub{font-size:1.08rem;color:var(--mut);margin-bottom:6px}
+.hero .cred{font-size:14px;color:var(--mut)}
+/* 首頁區塊標題：錨點由上方的 h2 通用規則提供，這裡只調字級與間距 */
+.sect{font-size:1.15rem;margin:44px 0 4px}
+.sect + .sd{font-size:14px;color:var(--mut);margin-bottom:16px;padding-left:14px}
+/* 使用說明：定位在「先看這個再決定往哪走」，所以視覺上要跟一般段落分開，
+   但又不能重到搶走主標題的位置 */
+/* 原本是五行散文，在手機上佔掉 355px、將近半個第一屏，而且要讀完一句話
+   才找得到連結。改成方塊：同樣的資訊約 180px，而且整格可點。
+   順序刻意把商城放最後——衛教是主體，商城是其中一種學習方式。 */
+.howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
+padding:13px 14px;margin:20px 0 6px;color:var(--mut)}
+.howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:9px}
+.hgrid{display:grid;gap:7px;grid-template-columns:1fr 1fr}
+.htile{display:flex;flex-direction:column;text-decoration:none;
+padding:8px 11px;border-radius:9px;background:var(--bg);
+border:1px solid var(--line);border-left:3px solid var(--accent)}
+.htile:hover{border-color:var(--accent);border-left-color:var(--accent)}
+.htile .hq{font-size:12px;color:var(--mut);line-height:1.5}
+.htile .hgo{font-size:15px;font-weight:700;color:var(--fg);line-height:1.45}
+/* 五格為奇數，最後一格（商城）獨佔一列比留一個空格好看 */
+.htile:last-child{grid-column:1 / -1}
+.feat{display:block;border:1px solid var(--line);border-radius:12px;padding:18px 20px;
+text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
+.feat:hover{border-color:var(--accent)}
+.feat .t{font-weight:700;font-size:1.05rem;margin-bottom:5px;line-height:1.5}
+.feat .d{font-size:14px;color:var(--mut);line-height:1.65}
+
+/* 商城入口：刻意沿用商城本身的深色＋金框風格，在淺色頁面上形成強烈對比，
+   讓它成為整個首頁最醒目的元素。
+   版面以標誌為主體、文字只作為說明它的圖說，所以是置中直排、不放按鈕與箭頭。 */
+.gamebtn{display:flex;flex-direction:column;align-items:center;text-align:center;
+gap:18px;text-decoration:none;
+background:linear-gradient(120deg,#33281f,#1e1814);color:#e8c65a;
+border:3px solid #c9a227;border-radius:18px;padding:32px 26px;margin:26px 0 10px;
+box-shadow:inset 0 1px 0 rgba(255,236,200,.14),0 14px 34px rgba(0,0,0,.32);
+position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
+.gamebtn:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(201,162,39,.34)}
+.gamebtn::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
+background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent);
+animation:sheen 4.5s ease-in-out infinite}
+@keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
+@media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
+/* 標誌是橫幅比例，固定高度、寬度自動才不會被壓扁。 */
+.gamebtn img{height:132px;width:auto;max-width:100%}
+.gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
+letter-spacing:.4px;line-height:1.5}
+@media(max-width:560px){
+  .hero h1{font-size:1.68rem}
+  .gamebtn{gap:14px;padding:26px 20px}
+  .gamebtn img{height:92px}
+  .gamebtn .cap{font-size:1.06rem}
+}
+</style>
+<style>
+.calcwrap{margin:24px 0 8px}
+.cform{display:grid;gap:12px;grid-template-columns:1fr 1fr;
+background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.cfield{display:flex;flex-direction:column;gap:5px;min-width:0}
+.cfield.wide{grid-column:1 / -1}
+.cfield label{font-size:13px;color:var(--mut);font-weight:500}
+.cfield label b{color:var(--fg);font-weight:700}
+.cfield .unit{font-size:11.5px;color:var(--mut)}
+.cfield input,.cfield select{padding:11px 12px;font-size:1.02rem;border:2px solid var(--line);
+border-radius:9px;background:var(--bg);color:var(--fg);width:100%}
+.cfield input:focus,.cfield select:focus{outline:none;border-color:var(--accent2)}
+.cfield .hint{font-size:11.5px;color:var(--mut);line-height:1.5}
+.cbtns{grid-column:1 / -1;display:flex;gap:10px;flex-wrap:wrap}
+.cbtn{font:inherit;font-size:1rem;font-weight:700;padding:11px 22px;border-radius:9px;
+border:1px solid var(--accent);background:var(--accent);color:var(--bg);cursor:pointer}
+.cbtn.ghost{background:transparent;color:var(--mut);border-color:var(--line);font-weight:500}
+.cbtn:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+.cres{margin-top:16px;display:none;flex-direction:column;gap:12px}
+.cres.on{display:flex}
+.rbox{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--card)}
+.rbox .rlabel{font-size:12.5px;color:var(--mut);letter-spacing:.04em}
+.rbox .rval{font-size:2.1rem;font-weight:800;line-height:1.25;
+font-variant-numeric:tabular-nums;margin:2px 0 4px}
+.rbox .rsub{font-size:13.5px;color:var(--mut);line-height:1.6}
+.rbox .rformula{font-size:12px;color:var(--mut);margin-top:9px;
+padding-top:9px;border-top:1px dashed var(--line)}
+.stage{display:inline-block;padding:3px 11px;border-radius:999px;font-size:13px;
+font-weight:700;border:1px solid currentColor;margin-left:8px;vertical-align:middle}
+.s-g1,.s-g2{color:var(--ok,#2f7d4f)}
+.s-g3a,.s-g3b{color:var(--warnc,#9a6207)}
+.s-g4,.s-g5{color:var(--bad,#a33)}
+.cnote{font-size:13px;color:var(--mut);line-height:1.7;margin-top:4px}
+.cerr{color:#b03a2e;font-size:13.5px;margin-top:8px}
+@media(prefers-color-scheme:dark){
+  .s-g1,.s-g2{color:#7fd6a0}
+  .s-g3a,.s-g3b{color:#e0b25c}
+  .s-g4,.s-g5{color:#e88a80}
+  .cerr{color:#e88a80}
+}
+@media(max-width:560px){ .cform{grid-template-columns:1fr} }
+</style>
+<script>
+/* ── CKD-EPI 2021（Inker LA et al. NEJM 2021）───────────────────────
+   兩式都不含人種係數。Scr 單位 mg/dL，cystatin C 單位 mg/L。 */
+function ckdEpiCr(scr, age, female){
+  const k = female ? 0.7 : 0.9;
+  const a = female ? -0.241 : -0.302;
+  const r = scr / k;
+  return 142 * Math.pow(Math.min(r,1), a) * Math.pow(Math.max(r,1), -1.200)
+       * Math.pow(0.9938, age) * (female ? 1.012 : 1);
+}
+function ckdEpiCrCys(scr, cys, age, female){
+  const k = female ? 0.7 : 0.9;
+  const a = female ? -0.219 : -0.144;
+  const r = scr / k, c = cys / 0.8;
+  return 135 * Math.pow(Math.min(r,1), a) * Math.pow(Math.max(r,1), -0.544)
+       * Math.pow(Math.min(c,1), -0.323) * Math.pow(Math.max(c,1), -0.778)
+       * Math.pow(0.9961, age) * (female ? 0.963 : 1);
+}
+function stageOf(e){
+  if(e >= 90) return ["G1","正常或偏高"];
+  if(e >= 60) return ["G2","輕度下降"];
+  if(e >= 45) return ["G3a","輕到中度下降"];
+  if(e >= 30) return ["G3b","中到重度下降"];
+  if(e >= 15) return ["G4","重度下降"];
+  return ["G5","腎衰竭"];
+}
+
+/* ── KFRE 4-variable（Tangri N et al.）──────────────────────────────
+   ⚠ 以下係數與基線存活率尚待確認，確認前本區塊不會顯示。 */
+const KFRE_READY = false;
+const KFRE_B = {age: -0.2201, male: 0.2467, egfr: -0.5567, acr: 0.4510};
+const KFRE_M = {age: 7.036, male: 0.5642, egfr: 7.222, acr: 5.137};
+const KFRE_S0 = {   // 依地區校正；台灣適用哪一組待確認
+  na:    {y2: 0.9878, y5: 0.9570},
+  nonna: {y2: 0.9750, y5: 0.9240}
+};
+function kfre(age, male, egfr, acr, region){
+  const b = KFRE_B, m = KFRE_M;
+  const xb = b.age*(age/10 - m.age) + b.male*((male?1:0) - m.male)
+           + b.egfr*(egfr/5 - m.egfr) + b.acr*(Math.log(acr) - m.acr);
+  const s = KFRE_S0[region] || KFRE_S0.nonna;
+  return {y2: 1 - Math.pow(s.y2, Math.exp(xb)),
+          y5: 1 - Math.pow(s.y5, Math.exp(xb))};
+}
+
+function calcInit(){
+  const $ = id => document.getElementById(id);
+  const num = id => { const v = parseFloat($(id).value); return isFinite(v) ? v : null; };
+
+  function run(){
+    const age = num("cAge"), scr = num("cScr"), cys = num("cCys"), acr = num("cAcr");
+    const female = $("cSex").value === "f";
+    const err = $("cErr"); err.textContent = "";
+
+    if(age === null || scr === null){
+      err.textContent = "請至少填入年齡與血清肌酸酐。"; return;
+    }
+    if(age < 18 || age > 110){ err.textContent = "這些公式適用於 18 歲以上的成人。"; return; }
+    if(scr <= 0 || scr > 25){ err.textContent = "血清肌酸酐的數值看起來不合理，請確認單位是 mg/dL。"; return; }
+    if(cys !== null && (cys <= 0 || cys > 12)){
+      err.textContent = "胱抑素 C 的數值看起來不合理，請確認單位是 mg/L。"; return; }
+
+    const useCys = cys !== null;
+    const e = useCys ? ckdEpiCrCys(scr, cys, age, female) : ckdEpiCr(scr, age, female);
+    const [sg, sdesc] = stageOf(e);
+
+    $("rEgfr").innerHTML = e.toFixed(1) +
+      '<span class="stage s-' + sg.toLowerCase() + '">' + sg + '</span>';
+    $("rEgfrSub").textContent = sdesc + "　單位 mL/min/1.73m²";
+    $("rFormula").textContent = useCys
+      ? "使用公式：CKD-EPI 2021 creatinine–cystatin C（因為你填了胱抑素 C）"
+      : "使用公式：CKD-EPI 2021 creatinine";
+
+    /* 只單獨顯示肌酸酐版，方便對照兩式差異 */
+    const cmp = $("rCompare");
+    if(useCys){
+      const only = ckdEpiCr(scr, age, female);
+      cmp.style.display = "";
+      cmp.textContent = "只用肌酸酐計算會是 " + only.toFixed(1) +
+        "，差 " + (e - only >= 0 ? "+" : "") + (e - only).toFixed(1) + "。";
+    } else cmp.style.display = "none";
+
+    /* KFRE */
+    const kb = $("rKfre");
+    if(!KFRE_READY){
+      kb.style.display = "";
+      kb.innerHTML = '<div class="rlabel">腎衰竭風險（KFRE）</div>' +
+        '<div class="rsub">此區塊的公式係數尚在確認中，暫未開放。</div>';
+    } else if(acr === null){
+      kb.style.display = "";
+      kb.innerHTML = '<div class="rlabel">腎衰竭風險（KFRE）</div>' +
+        '<div class="rsub">需要尿液白蛋白／肌酸酐比值（UACR）才能計算。</div>';
+    } else if(e >= 60 || e < 10){
+      kb.style.display = "";
+      kb.innerHTML = '<div class="rlabel">腎衰竭風險（KFRE）</div>' +
+        '<div class="rsub">KFRE 的驗證範圍是慢性腎臟病第 3 到第 5 期' +
+        '（eGFR 約 10–59）。你的 eGFR 為 ' + e.toFixed(1) +
+        '，超出這個範圍，算出來的數字沒有意義，因此不顯示。</div>';
+    } else {
+      const r = kfre(age, !female, e, acr, $("cRegion").value);
+      kb.style.display = "";
+      kb.innerHTML = '<div class="rlabel">腎衰竭風險（KFRE 4 變項）</div>' +
+        '<div class="rval">' + (r.y5*100).toFixed(1) + '%</div>' +
+        '<div class="rsub">五年內進展到需要透析或移植的估計風險；' +
+        '兩年風險約 ' + (r.y2*100).toFixed(1) + '%。</div>' +
+        '<div class="rformula">這是族群層級的統計估計，不是個人的預言。' +
+        '實際結果取決於血壓、血糖、蛋白尿是否控制得好，以及有沒有規則追蹤。</div>';
+    }
+    $("cRes").classList.add("on");
+  }
+
+  $("cRun").addEventListener("click", run);
+  $("cClear").addEventListener("click", () => {
+    ["cAge","cScr","cCys","cAcr"].forEach(i => document.getElementById(i).value = "");
+    $("cRes").classList.remove("on"); $("cErr").textContent = "";
+  });
+  document.querySelectorAll(".cform input").forEach(el => {
+    el.addEventListener("keydown", e => { if(e.key === "Enter") run(); });
+  });
+}
+if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", calcInit);
+else calcInit();
+</script>
+
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "name": "腎功能計算：eGFR 與腎衰竭風險｜護腎教室", "description": "以 CKD-EPI 2021 公式計算 eGFR（可加入胱抑素 C），並依 KFRE 估算慢性腎臟病進展到腎衰竭的風險。輸入你報告上已有的數值即可。", "inLanguage": "zh-Hant", "url": "https://kidneygod.net/calc.html", "dateModified": "2026-08-30", "author": {"@type": "Person", "name": "吳政哲", "jobTitle": "腎臟科醫師", "url": "https://kidneygod.net/about.html"}}</script>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="/"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true"><path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 4.6 13.6 4.6Z"/></svg><span>護腎教室</span></a>
+<nav><a href="/articles/"><span class="np">衛教</span>文章</a><a href="/articles/gallery.html"><span class="np">衛教</span>圖卡</a><a href="/food.html">食物<span class="np">查詢</span></a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">知識</span>商城</a></nav>
+</div></header>
+<main class="wrap">
+
+<h1>腎功能計算</h1>
+<p class="lede">把你檢驗報告上<strong>已經有的數值</strong>填進來，換算成 eGFR 與分期。
+這裡不做診斷，也不會知道你的病史——它只是幫你把數字換算成比較好理解的形式。</p>
+
+<div class="warnbox">
+  <b>這個工具算的是「現在的數字」，不是「你的病情」</b>
+  <p>同一個 eGFR，在不同年齡、有沒有蛋白尿、有沒有其他共病的人身上，意義完全不同。
+  而且<strong>單次數值不能診斷慢性腎臟病</strong>——那需要異常持續超過三個月。</p>
+  <p>算出來的結果請帶去跟你的醫師討論，不要自己下結論。</p>
+</div>
+
+<div class="calcwrap">
+<div class="cform">
+  <div class="cfield">
+    <label for="cAge"><b>年齡</b> <span class="unit">歲</span></label>
+    <input id="cAge" type="number" inputmode="numeric" min="18" max="110" placeholder="例如 55">
+  </div>
+  <div class="cfield">
+    <label for="cSex"><b>生理性別</b></label>
+    <select id="cSex"><option value="m">男性</option><option value="f">女性</option></select>
+  </div>
+  <div class="cfield">
+    <label for="cScr"><b>血清肌酸酐</b> <span class="unit">mg/dL</span></label>
+    <input id="cScr" type="number" inputmode="decimal" step="0.01" min="0.1" placeholder="例如 1.20">
+    <span class="hint">報告上寫 Creatinine 或 Cr</span>
+  </div>
+  <div class="cfield">
+    <label for="cCys"><b>胱抑素 C</b> <span class="unit">mg/L・可不填</span></label>
+    <input id="cCys" type="number" inputmode="decimal" step="0.01" min="0.1" placeholder="例如 1.10">
+    <span class="hint">填了就會自動改用較準確的合併公式</span>
+  </div>
+  <div class="cfield">
+    <label for="cAcr"><b>尿液白蛋白／肌酸酐比值</b> <span class="unit">mg/g・可不填</span></label>
+    <input id="cAcr" type="number" inputmode="decimal" step="1" min="0.1" placeholder="例如 120">
+    <span class="hint">報告上寫 UACR 或 ACR</span>
+  </div>
+  <div class="cfield">
+    <label for="cRegion"><b>KFRE 校正區域</b></label>
+    <select id="cRegion">
+      <option value="nonna">北美以外</option>
+      <option value="na">北美</option>
+    </select>
+  </div>
+  <div class="cbtns">
+    <button id="cRun" class="cbtn" type="button">計算</button>
+    <button id="cClear" class="cbtn ghost" type="button">清除</button>
+  </div>
+  <div class="cfield wide"><div class="cerr" id="cErr"></div></div>
+</div>
+
+<div class="cres" id="cRes">
+  <div class="rbox">
+    <div class="rlabel">估算腎絲球過濾率</div>
+    <div class="rval" id="rEgfr">—</div>
+    <div class="rsub" id="rEgfrSub"></div>
+    <div class="rsub" id="rCompare" style="display:none"></div>
+    <div class="rformula" id="rFormula"></div>
+  </div>
+  <div class="rbox" id="rKfre" style="display:none"></div>
+</div>
+</div>
+
+<h2 id="gongshi">用的是哪些公式</h2>
+<div class="tw">
+<table>
+  <thead><tr><th>公式</th><th>用途</th><th>來源</th></tr></thead>
+  <tbody>
+    <tr><td><b>CKD-EPI 2021<br>creatinine</b></td>
+        <td>只用肌酸酐估算 eGFR。不含人種係數</td>
+        <td>Inker LA et al. <i>N Engl J Med</i> 2021;385:1737-1749</td></tr>
+    <tr><td><b>CKD-EPI 2021<br>creatinine–cystatin C</b></td>
+        <td>同時使用肌酸酐與胱抑素 C，準確度較高。填了胱抑素 C 就自動改用這一式</td>
+        <td>同上</td></tr>
+    <tr><td><b>KFRE</b><br>（4 變項）</td>
+        <td>以年齡、性別、eGFR、UACR 估算慢性腎臟病第 3–5 期患者兩年與五年內進展到腎衰竭的風險</td>
+        <td>Tangri N et al.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="xianzhi">限制與注意事項</h2>
+<ul>
+<li><strong>eGFR 是估算不是實測。</strong>肌肉量高（重訓族）會低估腎功能、肌肉量低（長者、肌少症）會高估；
+抽血前劇烈運動、大量肉類、脫水或某些藥物都會影響。詳見
+<a href="/articles/creatinine-high-what-to-do.html">肌酸酐偏高怎麼辦</a></li>
+<li><strong>單次數值不能診斷。</strong>慢性腎臟病的定義要求異常持續超過三個月，
+看的是趨勢而不是單點</li>
+<li><strong>eGFR 正常不代表腎臟沒事。</strong>腎臟的儲備能力會讓剩餘腎元代償，
+在腎元已大量流失時數值仍可能正常。真正可能提早發現的是尿液白蛋白，詳見
+<a href="/articles/egfr-meaning-ckd-stages.html">eGFR 60 是什麼意思</a></li>
+<li><strong>KFRE 有適用範圍。</strong>它在慢性腎臟病第 3 到第 5 期（eGFR 約 10–59）
+的族群中驗證，超出範圍的估計沒有意義，本工具在那種情況下不會顯示結果</li>
+<li>本工具不會保存或傳送你輸入的任何數值，計算完全在你的瀏覽器內完成</li>
+</ul>
+
+<div class="author">
+  <div>
+    <div class="n">吳政哲　<span class="r">腎臟科醫師</span></div>
+    <div>腎臟科專科醫師，臨床工作以三高、慢性腎臟病與血液透析／腹膜透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
+  </div>
+</div>
+<div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
+</main>
+<footer class="site"><div class="wrap">
+<p>護腎教室　·　最後更新 2026-08-30　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<!-- 用途說明跟著信箱一起出現。信箱會出現在每一頁，但完整的界線說明只在
+     簡介頁，所以這裡帶一句最關鍵的，並連到完整版。 -->
+<p class="fcontact"><a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a>
+<span class="note">媒體、轉載、演講、勘誤；<a href="/about.html#lian-luo">不提供個人醫療諮詢</a></span></p>
+<p class="social"><a href="https://www.threads.com/@kidney.godreborn" rel="me noopener" target="_blank">Threads<span class="nt">@kidney.godreborn</span></a><a href="https://www.instagram.com/kidney.god/" rel="me noopener" target="_blank">Instagram<span class="nt">@kidney.god</span></a><a href="https://www.instagram.com/kidney.godreborn/" rel="me noopener" target="_blank">Instagram<span class="nt">@kidney.godreborn</span></a><a href="https://www.facebook.com/kidneygod" rel="me noopener" target="_blank">Facebook<span class="nt">粉絲專頁</span></a></p>
+</div></footer>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e44b1d39221d4a5085336497dbff3ce4"}'></script>
+</body>
+</html>
