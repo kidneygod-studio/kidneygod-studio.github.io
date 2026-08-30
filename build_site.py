@@ -1611,6 +1611,11 @@ CALC_PUBLISHED = True
 
 CALC_CSS_JS = r"""
 <style>
+/* 開放使用的聲明。語氣是正面的邀請，所以用主色細邊而不是警語的橘色，
+   視覺份量刻意低於下方的警語方塊。 */
+.opencall{border-left:3px solid var(--accent);background:var(--card);
+padding:13px 16px;border-radius:0 8px 8px 0;margin:20px 0}
+.opencall p{margin:0;font-size:.95rem;line-height:1.75}
 .calcwrap{margin:24px 0 8px}
 .cform{display:grid;gap:12px;grid-template-columns:1fr 1fr;
 background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
@@ -1788,14 +1793,16 @@ def build_calc() -> str:
 
     body = """
 <h1>腎功能計算</h1>
-<p class="lede">把你檢驗報告上<strong>已經有的數值</strong>填進來，換算成 eGFR 與分期。
-這裡不做診斷，也不會知道你的病史——它只是幫你把數字換算成比較好理解的形式。</p>
+<p class="lede">腎功能計算採用最新的 <strong>2021 CKD-EPI eGFR</strong> 公式。
+健身族群或肌少症族群，還可以使用加入胱抑素 C 的進階版
+（<strong>2021 CKD-EPI eGFRcr-cys</strong>）——比起傳統的計算方法誤差更小、更準確。</p>
+
+<p class="lede">洗腎風險則使用 <strong>KFRE</strong> 公式，計算未來兩年與五年的腎衰竭風險。</p>
 
 <div class="warnbox">
-  <b>這個工具算的是「現在的數字」，不是「你的病情」</b>
-  <p>同一個 eGFR，在不同年齡、有沒有蛋白尿、有沒有其他共病的人身上，意義完全不同。
-  而且<strong>單次數值不能診斷慢性腎臟病</strong>——那需要異常持續超過三個月。</p>
-  <p>算出來的結果請帶去跟你的醫師討論，不要自己下結論。</p>
+  <b>重要提醒</b>
+  <p>本計算機<strong>不做診斷</strong>，也不會知道你的病史——它只是幫你把數字換算成
+  比較好理解的形式。若有任何疑問，請跟你的主治醫師討論喔。</p>
 </div>
 
 <div class="calcwrap">
@@ -1849,6 +1856,11 @@ def build_calc() -> str:
 </div>
 </div>
 
+<div class="opencall">
+  <p>歡迎<strong>醫療同業自由使用</strong>本計算機，協助臨床診治病患，
+  共同守護民眾的腎臟健康。<strong>本計算機永不收費。</strong></p>
+</div>
+
 <h2 id="gongshi">用的是哪些公式</h2>
 <div class="tw">
 <table>
@@ -1878,6 +1890,8 @@ def build_calc() -> str:
 <a href="/articles/creatinine-high-what-to-do.html">肌酸酐偏高怎麼辦</a></li>
 <li><strong>單次數值不能診斷。</strong>慢性腎臟病的定義要求異常持續超過三個月，
 看的是趨勢而不是單點</li>
+<li><strong>同一個數字，不同人意義不同。</strong>同樣的 eGFR，在不同年齡、
+有沒有蛋白尿、有沒有其他共病的人身上，代表的風險完全不同</li>
 <li><strong>eGFR 正常不代表腎臟沒事。</strong>腎臟的儲備能力會讓剩餘腎元代償，
 在腎元已大量流失時數值仍可能正常。真正可能提早發現的是尿液白蛋白，詳見
 <a href="/articles/egfr-meaning-ckd-stages.html">eGFR 60 是什麼意思</a></li>
