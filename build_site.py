@@ -351,8 +351,8 @@ border:1px solid var(--line);border-left:3px solid var(--accent)}
 .htile:hover{border-color:var(--accent);border-left-color:var(--accent)}
 .htile .hq{font-size:12px;color:var(--mut);line-height:1.5}
 .htile .hgo{font-size:15px;font-weight:700;color:var(--fg);line-height:1.45}
-/* 五格為奇數，最後一格（商城）獨佔一列比留一個空格好看 */
-.htile:last-child{grid-column:1 / -1}
+/* 六格剛好排滿三列，不需要讓最後一格獨佔整列。
+   （若日後項目數變成奇數，再把 .htile:last-child{grid-column:1/-1} 加回來） */
 .feat{display:block;border:1px solid var(--line);border-radius:12px;padding:18px 20px;
 text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat:hover{border-color:var(--accent)}
@@ -879,6 +879,8 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     <span class="hgo">依主題閱讀</span></a>
   <a class="htile" href="#deep"><span class="hq">想徹底弄懂一件事</span>
     <span class="hgo">深入文章</span></a>
+  <a class="htile" href="/calc.html"><span class="hq">拿到報告想換算</span>
+    <span class="hgo">腎功能計算</span></a>
   <a class="htile" href="/food.html"><span class="hq">想查某個食物</span>
     <span class="hgo">食物查詢</span></a>
   <a class="htile" href="#gallery"><span class="hq">只想快速看重點</span>
