@@ -340,21 +340,44 @@ letter-spacing:.4px;line-height:1.5}
 <p class="fcontact"><a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a>
 <span class="note">媒體、轉載、演講、勘誤；<a href="/about.html#lian-luo">不提供個人醫療諮詢</a></span></p>
 <p class="social"><a href="https://www.threads.com/@kidney.godreborn" rel="me noopener" target="_blank">Threads<span class="nt">@kidney.godreborn</span></a><a href="https://www.instagram.com/kidney.god/" rel="me noopener" target="_blank">Instagram<span class="nt">@kidney.god</span></a><a href="https://www.instagram.com/kidney.godreborn/" rel="me noopener" target="_blank">Instagram<span class="nt">@kidney.godreborn</span></a><a href="https://www.facebook.com/kidneygod" rel="me noopener" target="_blank">Facebook<span class="nt">粉絲專頁</span></a></p>
-<p class="views" id="siteViews" style="display:none">累計瀏覽 <b>–</b> 次</p><script>const VIEWS_URL="https://firestore.googleapis.com/v1/projects/kidneygod-ea61e/databases/(default)/documents/stats/site?key=AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU&mask.fieldPaths=views";</script>
+<p class="views" id="siteViews" style="display:none">累計瀏覽 <b>–</b> 次</p><script>const VIEWS_URL="https://firestore.googleapis.com/v1/projects/kidneygod-ea61e/databases/(default)/documents/stats/site?key=AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU&mask.fieldPaths=views";const VIEWS_COMMIT="https://firestore.googleapis.com/v1/projects/kidneygod-ea61e/databases/(default)/documents:commit?key=AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU";const VIEWS_PATH="projects/kidneygod-ea61e/databases/(default)/documents/stats/site";</script>
 <script>
-/* 取不到就整塊不顯示——寧可沒有，也不要顯示壞掉的數字 */
 (async () => {
   const box = document.getElementById("siteViews");
   if(!box) return;
-  try{
-    const r = await fetch(VIEWS_URL, {cache: "no-store"});
-    if(!r.ok) return;
-    const d = await r.json();
-    const n = parseInt(d?.fields?.views?.integerValue, 10);
+  const show = n => {
     if(!isFinite(n) || n <= 0) return;
     box.querySelector("b").textContent = n.toLocaleString("zh-Hant-TW");
     box.style.display = "";
-  }catch(e){ /* 靜默 */ }
+  };
+  const readNum = d => parseInt(d?.fields?.views?.integerValue, 10);
+
+  /* 每個瀏覽階段只計一次。刻意沿用商城的 kg_counted 鍵：
+     同一個人先逛商城再看衛教文章，應該算一次不是兩次。 */
+  const fresh = !sessionStorage.kg_counted;
+  if(fresh) sessionStorage.kg_counted = "1";
+
+  try{
+    if(fresh){
+      /* 未認證的 +1。Firestore 規則限定只能讓 views 加一，
+         規則沒開放時這裡會回 403，下面照樣退回單純讀取。 */
+      const r = await fetch(VIEWS_COMMIT, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({writes: [{transform: {
+          document: VIEWS_PATH,
+          fieldTransforms: [{fieldPath: "views", increment: {integerValue: "1"}}]
+        }}]})
+      });
+      if(r.ok){
+        const d = await r.json();
+        const n = parseInt(d?.writeResults?.[0]?.transformResults?.[0]?.integerValue, 10);
+        if(isFinite(n) && n > 0){ show(n); return; }
+      }
+    }
+    const r2 = await fetch(VIEWS_URL, {cache: "no-store"});
+    if(r2.ok) show(readNum(await r2.json()));
+  }catch(e){ /* 取不到就整塊不顯示——寧可沒有，也不要顯示壞掉的數字 */ }
 })();
 </script>
 

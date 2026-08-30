@@ -58,26 +58,50 @@ ANALYTICS_TOKEN = "e44b1d39221d4a5085336497dbff3ce4"
 #   讀取不需認證，一個 fetch 就好，不必為了一個數字載入 Firebase SDK；
 #   寫入則需要認證（實測未認證寫入會被規則擋下，這是正確的設定）。
 # 若要讓衛教站的瀏覽也計入，見 build_site.py 旁的說明或詢問作者調整規則。
-VIEWS_DOC = ("https://firestore.googleapis.com/v1/projects/kidneygod-ea61e"
-             "/databases/(default)/documents/stats/site"
-             "?key=AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU"
-             "&mask.fieldPaths=views")
+_FS = "https://firestore.googleapis.com/v1/projects/kidneygod-ea61e/databases/(default)"
+_KEY = "AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU"   # 前端公開識別碼，非機密
+VIEWS_DOC = f"{_FS}/documents/stats/site?key={_KEY}&mask.fieldPaths=views"
+VIEWS_COMMIT = f"{_FS}/documents:commit?key={_KEY}"
+VIEWS_PATH = "projects/kidneygod-ea61e/databases/(default)/documents/stats/site"
 
 VIEWS_SCRIPT = """
 <script>
-/* 取不到就整塊不顯示——寧可沒有，也不要顯示壞掉的數字 */
 (async () => {
   const box = document.getElementById("siteViews");
   if(!box) return;
-  try{
-    const r = await fetch(VIEWS_URL, {cache: "no-store"});
-    if(!r.ok) return;
-    const d = await r.json();
-    const n = parseInt(d?.fields?.views?.integerValue, 10);
+  const show = n => {
     if(!isFinite(n) || n <= 0) return;
     box.querySelector("b").textContent = n.toLocaleString("zh-Hant-TW");
     box.style.display = "";
-  }catch(e){ /* 靜默 */ }
+  };
+  const readNum = d => parseInt(d?.fields?.views?.integerValue, 10);
+
+  /* 每個瀏覽階段只計一次。刻意沿用商城的 kg_counted 鍵：
+     同一個人先逛商城再看衛教文章，應該算一次不是兩次。 */
+  const fresh = !sessionStorage.kg_counted;
+  if(fresh) sessionStorage.kg_counted = "1";
+
+  try{
+    if(fresh){
+      /* 未認證的 +1。Firestore 規則限定只能讓 views 加一，
+         規則沒開放時這裡會回 403，下面照樣退回單純讀取。 */
+      const r = await fetch(VIEWS_COMMIT, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({writes: [{transform: {
+          document: VIEWS_PATH,
+          fieldTransforms: [{fieldPath: "views", increment: {integerValue: "1"}}]
+        }}]})
+      });
+      if(r.ok){
+        const d = await r.json();
+        const n = parseInt(d?.writeResults?.[0]?.transformResults?.[0]?.integerValue, 10);
+        if(isFinite(n) && n > 0){ show(n); return; }
+      }
+    }
+    const r2 = await fetch(VIEWS_URL, {cache: "no-store"});
+    if(r2.ok) show(readNum(await r2.json()));
+  }catch(e){ /* 取不到就整塊不顯示——寧可沒有，也不要顯示壞掉的數字 */ }
 })();
 </script>
 """
@@ -480,7 +504,9 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     if home:
         views_block = ('<p class="views" id="siteViews" style="display:none">'
                        '累計瀏覽 <b>–</b> 次</p>'
-                       f'<script>const VIEWS_URL="{VIEWS_DOC}";</script>'
+                       f'<script>const VIEWS_URL="{VIEWS_DOC}";'
+                       f'const VIEWS_COMMIT="{VIEWS_COMMIT}";'
+                       f'const VIEWS_PATH="{VIEWS_PATH}";</script>'
                        + VIEWS_SCRIPT)
 
     ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
