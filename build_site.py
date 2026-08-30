@@ -161,7 +161,10 @@ header.site nav a[aria-current="page"]{color:var(--accent2);background:var(--car
 /* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
 header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
 header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
-@media(max-width:600px){
+/* 斷點是 700 不是 600：六個四字標籤加上品牌需要約 600px，
+   在 640px 的視窗就會擠成兩行、頁首從 60px 變 101px。
+   項目數增加時這個門檻要跟著往上調。 */
+@media(max-width:700px){
   header.site .wrap{padding-top:8px;padding-bottom:8px;gap:8px}
   .brand{font-size:.95rem;gap:7px}
   .brand svg{width:22px;height:22px}
@@ -178,11 +181,14 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
   .brand svg{width:20px;height:20px}
   header.site nav a{padding:9px 6px;font-size:12.5px}
 }
-/* 最小的一批（320px，iPhone SE 第一代）。差 4px 就排得下，收水平內距即可；
-   垂直內距不動，點擊區高度維持 41px。 */
+/* 最小的一批（320px，iPhone SE 第一代）。六個項目時差 14px 才排得下，
+   收水平內距與品牌字級即可，不必隱藏任何項目。
+   垂直內距一律不動，點擊區高度維持 41px。 */
 @media(max-width:340px){
-  header.site nav a{padding:9px 4px}
-  header.site nav{gap:1px}
+  .brand{font-size:.8rem;gap:4px}
+  .brand svg{width:18px;height:18px}
+  header.site nav a{padding:9px 2px;font-size:12px}
+  header.site nav{gap:0}
 }
 h1{font-size:1.85rem;line-height:1.35;margin:28px 0 10px;letter-spacing:-.01em}
 /* 區塊標題左側的主色錨點。長文有 10–12 個 h2，這條線提供滑動時的節奏感，
@@ -414,7 +420,8 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     in_gallery = "gallery" in path
     in_articles = path.startswith("articles/") and not in_gallery
     cur = {"articles": in_articles, "gallery": in_gallery,
-           "about": path == "about.html", "food": path == "food.html"}
+           "about": path == "about.html", "food": path == "food.html",
+           "calc": path == "calc.html"}
 
     # 四字標籤在手機上會擠成兩行、頁首變高，所以其中兩個字包進 .np 於手機隱藏。
     # 多數項目是「前綴＋主詞」（衛教文章 → 文章），但「食物查詢」相反：
@@ -427,10 +434,11 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
         suf = f'<span class="np">{suffix}</span>' if suffix else ""
         return f'<a href="{href}"{c}{mark}>{pre}{label}{suf}</a>'
 
-    # 手機上顯示：文章／圖卡／食物／作者／商城
+    # 手機上顯示：文章／圖卡／食物／計算／作者／商城
     nav = (navlink("/articles/", "衛教", "文章", "articles")
            + navlink("/articles/gallery.html", "衛教", "圖卡", "gallery")
            + navlink("/food.html", "", "食物", "food", suffix="查詢")
+           + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
            + navlink("/about.html", "關於", "作者", "about")
            + navlink("/shop.html", "知識", "商城", "shop", "shoplink"))
     ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
@@ -840,6 +848,15 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
                      f'<div class="t">查 {n_food:,} 種食物的鈉、鉀、磷、蛋白質含量</div>'
                      f'<div class="d">資料來自衛福部食藥署食品營養成分資料庫。</div></a>')
 
+    calc_sect = ""
+    if CALC_PUBLISHED:
+        calc_sect = ('<h2 class="sect" id="calc">腎功能計算</h2>'
+                     '<div class="sd">把報告上已經有的數值換算成 eGFR 與分期</div>'
+                     '<a class="feat" href="/calc.html">'
+                     '<div class="t">eGFR 與腎衰竭風險計算</div>'
+                     '<div class="d">CKD-EPI 2021 公式，填了胱抑素 C 會自動改用較準確的合併式；'
+                     '第 3–5 期另可用 KFRE 估算腎衰竭風險。</div></a>')
+
     gal_sect = (f'<h2 class="sect" id="gallery">衛教圖卡</h2>'
                 f'<div class="sd">社群上發表過的圖解，依主題整理並附上完整說明</div>'
                 f'<a class="feat" href="/articles/gallery.html">'
@@ -877,6 +894,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 <div class="cats">{cards}</div>
 
 {feat_sect}
+{calc_sect}
 {food_sect}
 {gal_sect}
 
@@ -1589,8 +1607,7 @@ def build_food() -> str:
 #     ⚠ 係數與基線存活率待作者確認後才可發布
 # ---------------------------------------------------------------------------
 
-# 這一頁尚未經作者審核，設為 False 時不進導覽列與 sitemap
-CALC_PUBLISHED = False
+CALC_PUBLISHED = True
 
 CALC_CSS_JS = r"""
 <style>
@@ -1936,14 +1953,13 @@ def main() -> int:
         (ROOT / "food.html").write_text(food_html, encoding="utf-8")
         print("  food.html　(食物營養查詢工具)")
 
-    # 計算工具：CALC_PUBLISHED 為 False 時仍會產生檔案供預覽，
-    # 但不進導覽列與 sitemap，等作者確認公式後再開放
     (ROOT / "calc.html").write_text(build_calc(), encoding="utf-8")
-    print(f"  calc.html　(腎功能計算工具{'' if CALC_PUBLISHED else '，未發布)'}")
+    print(f"  calc.html　(腎功能計算工具{'' if CALC_PUBLISHED else '，未發布'})")
 
     # sitemap：讓搜尋引擎一次拿到所有網址
     urls = ["", "articles/", "about.html", "shop.html"] + (
-        ["food.html"] if food_html else []) + [
+        ["food.html"] if food_html else []) + (
+        ["calc.html"] if CALC_PUBLISHED else []) + [
         p for p in written if not p.endswith("index.html")]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>',
           '<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9">'.replace(
