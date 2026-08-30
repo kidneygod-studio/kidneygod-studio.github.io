@@ -332,14 +332,16 @@ function stageOf(e){
   return ["G5","腎衰竭"];
 }
 
-/* ── KFRE 4-variable（Tangri N et al.）──────────────────────────────
-   ⚠ 以下係數與基線存活率尚待確認，確認前本區塊不會顯示。 */
-const KFRE_READY = false;
+/* ── KFRE 4 變項（Tangri N et al. JAMA 2011;305:1553 / JAMA 2016;315:164）──
+   係數與基線存活率取自官方計算機 kidneyfailurerisk.com 的實作，
+   ACR 以 mg/g 代入（官方在 mg/g 時的換算係數為 1）。
+   台灣屬非北美校正。 */
+const KFRE_READY = true;
 const KFRE_B = {age: -0.2201, male: 0.2467, egfr: -0.5567, acr: 0.4510};
 const KFRE_M = {age: 7.036, male: 0.5642, egfr: 7.222, acr: 5.137};
-const KFRE_S0 = {   // 依地區校正；台灣適用哪一組待確認
-  na:    {y2: 0.9878, y5: 0.9570},
-  nonna: {y2: 0.9750, y5: 0.9240}
+const KFRE_S0 = {
+  na:    {y2: 0.9750, y5: 0.9240},
+  nonna: {y2: 0.9832, y5: 0.9365}
 };
 function kfre(age, male, egfr, acr, region){
   const b = KFRE_B, m = KFRE_M;
@@ -512,8 +514,12 @@ else calcInit();
         <td>同時使用肌酸酐與胱抑素 C，準確度較高。填了胱抑素 C 就自動改用這一式</td>
         <td>同上</td></tr>
     <tr><td><b>KFRE</b><br>（4 變項）</td>
-        <td>以年齡、性別、eGFR、UACR 估算慢性腎臟病第 3–5 期患者兩年與五年內進展到腎衰竭的風險</td>
-        <td>Tangri N et al.</td></tr>
+        <td>以年齡、性別、eGFR、UACR 估算慢性腎臟病第 3–5 期患者兩年與五年內進展到腎衰竭的風險。
+        台灣採<strong>非北美校正</strong></td>
+        <td>Tangri N et al. <i>JAMA</i> 2011;305(15):1553-1559<br>
+        Tangri N, Grams ME, Levey AS, et al. <i>JAMA</i> 2016;315(2):164-174<br>
+        係數與基線存活率對照官方計算機
+        <a href="https://kidneyfailurerisk.com" rel="noopener" target="_blank">kidneyfailurerisk.com</a></td></tr>
   </tbody>
 </table>
 </div>
