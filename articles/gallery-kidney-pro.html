@@ -128,6 +128,14 @@ border-radius:12px;padding:16px 18px;margin:40px 0 20px;font-size:14.5px;line-he
 font-size:12.5px;color:var(--mut)}
 .disclaimer{font-size:13.5px;color:var(--mut);background:var(--card);border-left:3px solid var(--warn);
 padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
+/* 參考來源：是佐證不是主文，所以整體壓小、用 --mut，但連結本身要看得出可以按。
+   機構名另起一行當附屬資訊，避免和指引名稱在視覺上打架。 */
+.refs ul{list-style:none;padding:0;margin:14px 0 0}
+.refs li{padding:11px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.6}
+.refs li:first-child{border-top:0}
+.refs li a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line)}
+.refs li a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.refs .org{display:block;margin-top:3px;font-size:12.5px;color:var(--mut)}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
 font-size:13.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}

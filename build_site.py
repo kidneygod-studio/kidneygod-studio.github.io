@@ -198,6 +198,95 @@ DISCLAIMER = ("本站內容為一般健康衛教資訊，不針對任何個人�
               "亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，"
               "請與您的醫師或藥師討論後再做決定。")
 
+# 權威來源。每一條的網址都實際連過、確認標題正確且沒有被導走，
+# 學會名稱一律用官網上的正式全名（例如糖尿病學會的正式名稱含「內分泌暨」）。
+#
+# 一律連學會的官方指引頁，不連期刊 DOI 全文：全文多半擋機器人或要付費，
+# 對民眾讀者沒有意義，而且指引改版時學會頁面會跟著更新、DOI 不會。
+SOURCES: dict[str, tuple[str, str, str]] = {
+    # key: (顯示名稱, 網址, 機構)
+    "kdigo_ckd": ("KDIGO 2024 慢性腎臟病評估與處置臨床指引",
+                  "https://kdigo.org/guidelines/ckd-evaluation-and-management/", "KDIGO"),
+    "kdigo_bp": ("KDIGO 2021 慢性腎臟病血壓管理臨床指引",
+                 "https://kdigo.org/guidelines/blood-pressure-in-ckd/", "KDIGO"),
+    "kdigo_dm": ("KDIGO 2022 慢性腎臟病糖尿病管理臨床指引",
+                 "https://kdigo.org/guidelines/diabetes-ckd/", "KDIGO"),
+    "kdigo_lipid": ("KDIGO 慢性腎臟病血脂管理臨床指引",
+                    "https://kdigo.org/guidelines/lipids-in-ckd/", "KDIGO"),
+    "aha_bp": ("2025 AHA/ACC 成人高血壓預防、偵測、評估與處置指引",
+               "https://professional.heart.org/en/science-news/"
+               "2025-high-blood-pressure-guideline", "American Heart Association"),
+    "aha_lipid": ("2026 ACC/AHA 血脂異常處置指引",
+                  "https://professional.heart.org/en/science-news/"
+                  "2026-guideline-on-the-management-of-dyslipidemia",
+                  "American Heart Association"),
+    "ada_soc": ("ADA Standards of Care in Diabetes（糖尿病照護標準，每年更新）",
+                "https://professional.diabetes.org/standards-of-care",
+                "American Diabetes Association"),
+    "tsn": ("台灣腎臟醫學會", "https://www.tsn.org.tw/", "台灣腎臟醫學會"),
+    "tsoc": ("中華民國心臟學會", "https://www.tsoc.org.tw/", "中華民國心臟學會"),
+    "endo_dm": ("中華民國內分泌暨糖尿病學會", "https://www.endo-dm.org.tw/",
+                "中華民國內分泌暨糖尿病學會"),
+    "hpa_kidney": ("國民健康署 腎臟病主題專區",
+                   "https://www.hpa.gov.tw/Pages/List.aspx?nodeid=217",
+                   "衛生福利部國民健康署"),
+    "hpa_3high": ("國民健康署 遠離腎臟病，控制三高是關鍵",
+                  "https://www.hpa.gov.tw/Pages/Detail.aspx?nodeid=4705&pid=17467",
+                  "衛生福利部國民健康署"),
+    "fda_tfnd": ("食品藥物管理署 食品營養成分資料庫",
+                 "https://consumer.fda.gov.tw/Food/TFND.aspx?nodeID=178",
+                 "衛生福利部食品藥物管理署"),
+    "niddk": ("NIDDK 慢性腎臟病專區",
+              "https://www.niddk.nih.gov/health-information/kidney-disease/"
+              "chronic-kidney-disease-ckd",
+              "National Institute of Diabetes and Digestive and Kidney Diseases"),
+}
+
+# 每頁 2–3 條。分類頁是十幾則知識卡的彙整、主題跨得廣，所以這裡標示的是
+# 「整頁內容依據哪些指引」，不是逐句對應的參考文獻——措辭上要老實反映這件事。
+PAGE_SOURCES: dict[str, list[str]] = {
+    # 八個分類頁（用分類名當 key）
+    "血壓管理": ["kdigo_bp", "aha_bp", "hpa_3high"],
+    "血糖管理": ["kdigo_dm", "ada_soc", "endo_dm"],
+    "血脂代謝": ["kdigo_lipid", "aha_lipid", "tsoc"],
+    "飲食護腎": ["kdigo_ckd", "fda_tfnd", "hpa_kidney"],
+    "檢查數值": ["kdigo_ckd", "tsn", "niddk"],
+    "用藥安全": ["kdigo_ckd", "tsn", "niddk"],
+    "生活習慣": ["kdigo_ckd", "hpa_kidney", "niddk"],
+    "警訊與迷思": ["kdigo_ckd", "tsn", "hpa_kidney"],
+    # 四篇長文（用 slug 當 key）
+    "egfr-meaning-ckd-stages": ["kdigo_ckd", "tsn", "niddk"],
+    "creatinine-high-what-to-do": ["kdigo_ckd", "tsn", "niddk"],
+    "foamy-urine-proteinuria": ["kdigo_ckd", "tsn", "niddk"],
+    "taiwan-eating-out-sodium": ["kdigo_ckd", "fda_tfnd", "hpa_kidney"],
+}
+
+
+def sources_html(keys: list[str]) -> str:
+    """文末的參考來源區塊。外連一律 rel="nofollow noopener"：
+    這些是佐證用的引用，不是要把權重推給對方，也避免被當成換連結。"""
+    if not keys:
+        return ""
+    parts = []
+    for k in keys:
+        name, url, org = SOURCES[k]
+        # 學會類來源的名稱本身就是機構名（例如「中華民國心臟學會」），
+        # 再補一行機構會變成同一個名字印兩次，所以相同時就不印。
+        sub = f'<span class="org">{esc(org)}</span>' if org != name else ""
+        parts.append(f'<li><a href="{esc(url)}" target="_blank" '
+                     f'rel="nofollow noopener">{esc(name)}</a>{sub}</li>')
+    li = "".join(parts)
+    return (f'<h2 class="backlink" id="refs">參考來源</h2>'
+            f'<div class="refs"><p class="sd">本頁內容依據下列指引與官方資料整理，'
+            f'指引改版時本頁會一併更新。</p><ul>{li}</ul></div>')
+
+
+def citation_ld(keys: list[str]) -> list[dict]:
+    """schema.org 的 citation 欄位，讓搜尋引擎讀得到這頁引用了哪些來源。"""
+    return [{"@type": "CreativeWork", "name": SOURCES[k][0], "url": SOURCES[k][1],
+             "publisher": {"@type": "Organization", "name": SOURCES[k][2]}}
+            for k in keys]
+
 CAT_SLUG = {
     "血壓管理": "blood-pressure",
     "血糖管理": "blood-sugar",
@@ -344,6 +433,14 @@ border-radius:12px;padding:16px 18px;margin:40px 0 20px;font-size:14.5px;line-he
 font-size:12.5px;color:var(--mut)}
 .disclaimer{font-size:13.5px;color:var(--mut);background:var(--card);border-left:3px solid var(--warn);
 padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
+/* 參考來源：是佐證不是主文，所以整體壓小、用 --mut，但連結本身要看得出可以按。
+   機構名另起一行當附屬資訊，避免和指引名稱在視覺上打架。 */
+.refs ul{list-style:none;padding:0;margin:14px 0 0}
+.refs li{padding:11px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.6}
+.refs li:first-child{border-top:0}
+.refs li a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line)}
+.refs li a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.refs .org{display:block;margin-top:3px;font-size:12.5px;color:var(--mut)}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
 font-size:13.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}
@@ -668,6 +765,7 @@ def build_category(cat: str, items: list[dict],
 {deep_html}
 <div class="toc"><h2>本頁內容</h2><ol>{toc}</ol></div>
 {''.join(secs)}
+{sources_html(PAGE_SOURCES.get(cat, []))}
 <h2 class="backlink">其他主題</h2>
 <div class="cats">{others}</div>
 """
@@ -686,6 +784,8 @@ def build_category(cat: str, items: list[dict],
         "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"},
         "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}},
     }
+    if cites := citation_ld(PAGE_SOURCES.get(cat, [])):
+        jsonld["citation"] = cites
     return path, page(title, desc, path, body, jsonld), title
 
 
@@ -911,9 +1011,10 @@ def build_markdown_articles() -> list[dict]:
         body = f"<h1>{esc(a['title'])}</h1>"
         if a["summary"]:
             body += f"<p class='lede'>{esc(a['summary'])}</p>"
+        refs = PAGE_SOURCES.get(a["slug"], [])
         body += (f"<p class='meta'>作者：<a href='/about.html'>{esc(AUTHOR_NAME)}</a>"
                  f"（{esc(AUTHOR_TITLE)}）　·　{datestr}</p>{toc}"
-                 + "".join(paras) + related)
+                 + "".join(paras) + sources_html(refs) + related)
 
         jsonld = {
             "@context": "https://schema.org", "@type": "MedicalWebPage",
@@ -925,6 +1026,8 @@ def build_markdown_articles() -> list[dict]:
             "publisher": {"@type": "Organization", "name": SITE_NAME},
             "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"},
         }
+        if cites := citation_ld(refs):
+            jsonld["citation"] = cites
 
         faqs = extract_faq(a["raw"])
         extra_ld = ""
