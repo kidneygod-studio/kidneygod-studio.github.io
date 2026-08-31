@@ -352,28 +352,22 @@ letter-spacing:.4px;line-height:1.5}
   };
   const readNum = d => parseInt(d?.fields?.views?.integerValue, 10);
 
-  /* 每個瀏覽階段只計一次。刻意沿用商城的 kg_counted 鍵：
-     同一個人先逛商城再看衛教文章，應該算一次不是兩次。 */
-  const fresh = !sessionStorage.kg_counted;
-  if(fresh) sessionStorage.kg_counted = "1";
-
   try{
-    if(fresh){
-      /* 未認證的 +1。Firestore 規則限定只能讓 views 加一，
-         規則沒開放時這裡會回 403，下面照樣退回單純讀取。 */
-      const r = await fetch(VIEWS_COMMIT, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({writes: [{transform: {
-          document: VIEWS_PATH,
-          fieldTransforms: [{fieldPath: "views", increment: {integerValue: "1"}}]
-        }}]})
-      });
-      if(r.ok){
-        const d = await r.json();
-        const n = parseInt(d?.writeResults?.[0]?.transformResults?.[0]?.integerValue, 10);
-        if(isFinite(n) && n > 0){ show(n); return; }
-      }
+    /* 未認證的 +1。Firestore 規則限定只能讓 views 加一，
+       寫不進去時（規則有變、離線、被擋）就退回下面的單純讀取。 */
+    const r = await fetch(VIEWS_COMMIT, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({writes: [{transform: {
+        document: VIEWS_PATH,
+        fieldTransforms: [{fieldPath: "views", increment: {integerValue: "1"}}]
+      }}]})
+    });
+    if(r.ok){
+      /* 寫入會把加完的新值回傳，省一次讀取 */
+      const d = await r.json();
+      const n = parseInt(d?.writeResults?.[0]?.transformResults?.[0]?.integerValue, 10);
+      if(isFinite(n) && n > 0){ show(n); return; }
     }
     const r2 = await fetch(VIEWS_URL, {cache: "no-store"});
     if(r2.ok) show(readNum(await r2.json()));

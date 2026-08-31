@@ -182,13 +182,12 @@ if (FIREBASE_CONFIG) {
       const u = auth.currentUser;
       return u && !u.isAnonymous && u.email ? u.email.trim().toLowerCase() : "";
     },
-    /* 每個瀏覽階段只計一次，避免重整灌水也節省寫入配額 */
+    /* 每次頁面載入都 +1，與衛教站那邊算法一致——頁尾那個數字是全站
+       瀏覽數，不是不重複訪客數。未登入也寫得進去，安全規則只放行
+       「views 剛好 +1」的更新。 */
     async bumpViews(){
       try{
-        if(!sessionStorage.kg_counted){
-          sessionStorage.kg_counted = "1";
-          await setDoc(statsDoc(), {views: increment(1)}, {merge: true});
-        }
+        await setDoc(statsDoc(), {views: increment(1)}, {merge: true});
         return await this.getViews();
       }catch(e){ console.debug("views bump", e); return null; }
     },

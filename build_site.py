@@ -53,11 +53,14 @@ CONTACT_EMAIL = "contact@kidneygod.net"
 ANALYTICS_TOKEN = "e44b1d39221d4a5085336497dbff3ce4"
 
 
-# 累計瀏覽數。數字存在 Firestore 的 stats/site，商城與遊戲場自 2026-08 起
-# 持續累加（每個瀏覽階段計一次）。衛教站這邊只讀不寫：
-#   讀取不需認證，一個 fetch 就好，不必為了一個數字載入 Firebase SDK；
-#   寫入則需要認證（實測未認證寫入會被規則擋下，這是正確的設定）。
-# 若要讓衛教站的瀏覽也計入，見 build_site.py 旁的說明或詢問作者調整規則。
+# 累計瀏覽數。數字存在 Firestore 的 stats/site，全站每一頁載入都 +1。
+# 不載入 Firebase SDK：讀寫各一個 fetch 就夠，為了一個數字拉整套 SDK 不划算。
+#
+# 未認證也能寫，靠安全規則守住——stats/site 只允許「views 剛好 +1、
+# 且不得夾帶其他欄位」的更新，設任意值、減少、刪除、灌水都會被擋（已實測）。
+#
+# 這是頁面瀏覽數，不是不重複訪客數：重整一次就多一次。真正的流量分析看
+# Cloudflare Web Analytics，這裡只是頁尾給讀者看的累計數字。
 _FS = "https://firestore.googleapis.com/v1/projects/kidneygod-ea61e/databases/(default)"
 _KEY = "AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU"   # 前端公開識別碼，非機密
 VIEWS_DOC = f"{_FS}/documents/stats/site?key={_KEY}&mask.fieldPaths=views"
@@ -76,28 +79,22 @@ VIEWS_SCRIPT = """
   };
   const readNum = d => parseInt(d?.fields?.views?.integerValue, 10);
 
-  /* 每個瀏覽階段只計一次。刻意沿用商城的 kg_counted 鍵：
-     同一個人先逛商城再看衛教文章，應該算一次不是兩次。 */
-  const fresh = !sessionStorage.kg_counted;
-  if(fresh) sessionStorage.kg_counted = "1";
-
   try{
-    if(fresh){
-      /* 未認證的 +1。Firestore 規則限定只能讓 views 加一，
-         規則沒開放時這裡會回 403，下面照樣退回單純讀取。 */
-      const r = await fetch(VIEWS_COMMIT, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({writes: [{transform: {
-          document: VIEWS_PATH,
-          fieldTransforms: [{fieldPath: "views", increment: {integerValue: "1"}}]
-        }}]})
-      });
-      if(r.ok){
-        const d = await r.json();
-        const n = parseInt(d?.writeResults?.[0]?.transformResults?.[0]?.integerValue, 10);
-        if(isFinite(n) && n > 0){ show(n); return; }
-      }
+    /* 未認證的 +1。Firestore 規則限定只能讓 views 加一，
+       寫不進去時（規則有變、離線、被擋）就退回下面的單純讀取。 */
+    const r = await fetch(VIEWS_COMMIT, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({writes: [{transform: {
+        document: VIEWS_PATH,
+        fieldTransforms: [{fieldPath: "views", increment: {integerValue: "1"}}]
+      }}]})
+    });
+    if(r.ok){
+      /* 寫入會把加完的新值回傳，省一次讀取 */
+      const d = await r.json();
+      const n = parseInt(d?.writeResults?.[0]?.transformResults?.[0]?.integerValue, 10);
+      if(isFinite(n) && n > 0){ show(n); return; }
     }
     const r2 = await fetch(VIEWS_URL, {cache: "no-store"});
     if(r2.ok) show(readNum(await r2.json()));
@@ -467,7 +464,7 @@ def social_links() -> str:
 
 
 def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None,
-         extra_head: str = "", home: bool = False) -> str:
+         extra_head: str = "") -> str:
     """所有頁面共用的骨架。canonical 與 OG 是搜尋引擎與分享預覽的基本要求。"""
     # canonical 必須和 sitemap 宣告的網址逐字相同，否則等於叫 Google 索引兩個位址。
     # sitemap 用的是目錄形式（/articles/），這裡把 index.html 收掉對齊。
@@ -498,16 +495,14 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
            + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
            + navlink("/about.html", "關於", "作者", "about")
            + navlink("/shop.html", "知識", "商城", "shop", "shoplink"))
-    # 累計瀏覽只放首頁：它是全站的總數，每一頁都掛一個相同的數字沒有意義，
-    # 也會讓每頁都多打一次 Firestore。
-    views_block = ""
-    if home:
-        views_block = ('<p class="views" id="siteViews" style="display:none">'
-                       '累計瀏覽 <b>–</b> 次</p>'
-                       f'<script>const VIEWS_URL="{VIEWS_DOC}";'
-                       f'const VIEWS_COMMIT="{VIEWS_COMMIT}";'
-                       f'const VIEWS_PATH="{VIEWS_PATH}";</script>'
-                       + VIEWS_SCRIPT)
+    # 每一頁都掛：要的是全站瀏覽數，只算首頁會漏掉從搜尋直接進到某篇文章
+    # 就離開的人——而那正是這個站大部分的流量。
+    views_block = ('<p class="views" id="siteViews" style="display:none">'
+                   '累計瀏覽 <b>–</b> 次</p>'
+                   f'<script>const VIEWS_URL="{VIEWS_DOC}";'
+                   f'const VIEWS_COMMIT="{VIEWS_COMMIT}";'
+                   f'const VIEWS_PATH="{VIEWS_PATH}";</script>'
+                   + VIEWS_SCRIPT)
 
     ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
     return f"""<!doctype html>
@@ -989,7 +984,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
                    "url": f"{BASE_URL}/about.html",
                    "sameAs": [s["url"] for s in SOCIAL_LIVE]},
     }
-    return page(title, desc, "", body, jsonld, home=True)
+    return page(title, desc, "", body, jsonld)
 
 
 # 醫師介紹要條列的資歷。第一項是最強的權威訊號，刻意排在最前面。

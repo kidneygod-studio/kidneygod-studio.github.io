@@ -188,6 +188,9 @@
          padding:26px 20px 40px;}
   .fwrap{max-width:900px;margin:0 auto;font-size:13px;color:#6e5f4c;}
   .fwrap a{color:#5b3fd6;font-weight:700;}
+  .fmeta{margin-top:22px;padding-top:16px;border-top:1px solid var(--line);
+         text-align:center;font-size:12.5px;letter-spacing:.03em;cursor:default;}
+  .fmeta b{color:var(--ink);font-variant-numeric:tabular-nums;}
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);
          background:#0f0c0a;color:var(--gold2);font-size:14px;font-weight:600;
          padding:11px 22px;border-radius:99px;z-index:99;transition:.3s;opacity:0;}
@@ -250,6 +253,7 @@
     <p class="byline">✍️ 內容編寫｜<b>護腎專家 吳政哲醫師</b><span>本站衛教內容由本人編寫與審訂，每則皆標註所依據的臨床指引。</span></p>
     <p class="byline contactline">📮 聯絡｜<b><a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a></b><span>媒體、轉載、演講、勘誤。<a href="/about.html#lian-luo">不提供個人醫療諮詢</a>，也請勿在信中提供檢查數值或病歷。</span></p>
     <p style="margin-top:8px"><a href="shop.html">← 回商城繼續收集</a></p>
+    <div class="fmeta" id="viewBox" style="display:none">累計瀏覽 <b id="viewCnt">–</b> 次</div>
   </div>
 </footer>
 
@@ -391,7 +395,22 @@ window.onStateApplied = function(){ syncCoinBar(); renderK(); renderS(); };
   renderK(); renderS();
 })();
 </script>
-<script type="module" src="sync.js?v=f85e3a91"></script>
+<script>
+/* 頁尾累計瀏覽。sync.js 是 module，載入後才有 window.site，所以等它出現。 */
+(function initViews(tries){
+  tries = tries || 0;
+  if(!window.site){
+    if(tries < 40) setTimeout(() => initViews(tries + 1), 250);
+    return;
+  }
+  window.site.bumpViews().then(n => {
+    if(n == null) return;
+    document.getElementById("viewCnt").textContent = n.toLocaleString("zh-Hant-TW");
+    document.getElementById("viewBox").style.display = "";
+  });
+})();
+</script>
+<script type="module" src="sync.js?v=dba1061f"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e44b1d39221d4a5085336497dbff3ce4"}'></script>
 </body>
 </html>
