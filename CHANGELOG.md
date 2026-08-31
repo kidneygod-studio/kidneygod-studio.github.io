@@ -18,6 +18,7 @@ git diff 就有，值得記下來的是當時的判斷理由，以及那些不�
 | `og/*.jpg`（分享預覽圖） | `make_og.py` | `Downloads/kidneygod.png` |
 | `logo.png` | `make_logo.py` | `Downloads/kidneygod.png` |
 | `food_db.json` | `build_food_db.py` | 食藥署開放資料 CSV |
+| 文章頁的「專家訪談」區塊 | `build_site.py` | `interviews.json` |
 | `sw.js` 的 `VERSION` | `bump_assets.py` | 全站資產的雜湊 |
 
 **手寫、不由產生器管的**：`shop.html`、`game.html`、`library.html`、`dash.html`。
@@ -36,6 +37,27 @@ python check_site.py      # 推之前對帳
 ---
 
 ## 2026-08-31
+
+### 文章頁新增「專家訪談」區塊
+
+未來收到專家文稿就放進 `interviews.json`，不必再動程式。
+
+**沒有稿子就完全不輸出，不留空占位。** 醫療衛教站掛一個空的「專家訪談」標題，
+讀者看到的是「這站沒做完」，對 YMYL 內容是扣分而不是加分。
+
+鍵與 `PAGE_SOURCES` 相同：八個分類頁用分類名，四篇長文用 slug。**鍵以底線
+開頭 = 草稿**，不會上線，與 `articles_src` 的規則一致——醫療內容掛別人的名字
+發布前必須先取得對方同意，需要一個「能寫進檔案但不會上線」的狀態。
+
+結構化資料用 `mentions` 指出受訪者。schema.org **沒有 Interview 型別**，硬套一個
+不存在的型別只會讓驗證器報錯，`mentions` 是能誠實表達的最貼近描述。
+
+`check_site.py` 加了第 8 項檢查鍵名。鍵名打錯的話訪談稿就是靜靜地不顯示——
+沒有錯誤、沒有空區塊，只有「我明明寫了怎麼沒出現」，正是這個專案一再遇到的
+那類問題。
+
+**刊出前**：取得受訪者書面同意（姓名、職稱、內容的使用範圍）；受訪者若為
+執業醫師，內容不要出現招攬或指名看診的字句（醫療法 87 條）。
 
 ### 新增 `check_site.py`｜`ce472a4`
 

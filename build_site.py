@@ -281,6 +281,71 @@ def sources_html(keys: list[str]) -> str:
             f'指引改版時本頁會一併更新。</p><ul>{li}</ul></div>')
 
 
+INTERVIEWS = ROOT / "interviews.json"
+
+
+def load_interviews() -> dict:
+    """讀取專家訪談稿。鍵與 PAGE_SOURCES 相同：分類頁用分類名，長文用 slug。
+
+    檔名以底線開頭的鍵視為草稿，不會出現在網站上——與 articles_src 的規則
+    一致。醫療內容掛別人的名字發布前必須先取得對方同意，留一個能寫進檔案
+    但不會上線的狀態是必要的。
+    """
+    if not INTERVIEWS.exists():
+        return {}
+    try:
+        data = json.loads(INTERVIEWS.read_text("utf-8"))
+    except json.JSONDecodeError as e:
+        print(f"  ！interviews.json 格式有誤，訪談區塊全部略過：{e}")
+        return {}
+    return {k: v for k, v in data.items() if not k.startswith("_")}
+
+
+def interview_html(item: dict | None) -> str:
+    """文末的專家訪談區塊。沒有稿子就完全不輸出。
+
+    刻意不留空占位：醫療衛教站掛一個空的「專家訪談」標題，讀者看到的是
+    「這站沒做完」，對 YMYL 內容是扣分而不是加分。有稿才出現。
+    """
+    if not item:
+        return ""
+    qa = "".join(
+        f'<div class="qa"><p class="q">{esc(x["q"])}</p>'
+        + "".join(f"<p>{esc(p)}</p>" for p in x["a"].split("\n") if p.strip())
+        + "</div>"
+        for x in item.get("qa", []))
+    if not qa:
+        return ""
+    who = esc(item.get("expert", ""))
+    role = esc(item.get("role", ""))
+    dated = f'　·　{esc(item["date"])}' if item.get("date") else ""
+    note = (f'<p class="sd">{esc(item["note"])}</p>' if item.get("note") else "")
+    return (f'<h2 class="backlink" id="interview">專家訪談</h2>'
+            f'<div class="itv"><p class="who"><b>{who}</b>'
+            f'<span class="role">{role}</span></p>'
+            f'<p class="sd">受訪內容由受訪者確認後刊出{dated}</p>'
+            f'{qa}{note}</div>')
+
+
+def interviewee_ld(item: dict | None) -> dict | None:
+    """把受訪者寫進結構化資料。
+
+    schema.org 沒有 Interview 型別，硬套一個不存在的型別只會讓驗證器報錯，
+    所以用 mentions 指出這頁提到了誰——這是能誠實表達的最貼近描述。
+    """
+    if not item or not item.get("expert"):
+        return None
+    p = {"@type": "Person", "name": item["expert"]}
+    if item.get("role"):
+        p["jobTitle"] = item["role"]
+    if item.get("url"):
+        p["url"] = item["url"]
+    return p
+
+
+ITV = load_interviews()
+
+
 def citation_ld(keys: list[str]) -> list[dict]:
     """schema.org 的 citation 欄位，讓搜尋引擎讀得到這頁引用了哪些來源。"""
     return [{"@type": "CreativeWork", "name": SOURCES[k][0], "url": SOURCES[k][1],
@@ -441,6 +506,15 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 .refs li a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line)}
 .refs li a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 .refs .org{display:block;margin-top:3px;font-size:12.5px;color:var(--mut)}
+/* 專家訪談：與內文明顯區隔，讀者要一眼看出「這段話是別人說的，不是本站」。
+   用左側粗線而不是整塊底色，長篇問答鋪滿色塊會很沉重。 */
+.itv{border-left:3px solid var(--accent);padding:2px 0 2px 18px;margin:14px 0 0}
+.itv .who{margin:0 0 2px;font-size:16px}
+.itv .who .role{margin-left:10px;font-size:13px;color:var(--mut);font-weight:400}
+.itv .qa{margin-top:16px}
+.itv .q{margin:0 0 6px;font-weight:700}
+.itv .q::before{content:"Q　";color:var(--accent)}
+.itv .qa p+p{margin-top:8px}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
 font-size:13.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}
@@ -765,6 +839,7 @@ def build_category(cat: str, items: list[dict],
 {deep_html}
 <div class="toc"><h2>本頁內容</h2><ol>{toc}</ol></div>
 {''.join(secs)}
+{interview_html(ITV.get(cat))}
 {sources_html(PAGE_SOURCES.get(cat, []))}
 <h2 class="backlink">其他主題</h2>
 <div class="cats">{others}</div>
@@ -786,6 +861,8 @@ def build_category(cat: str, items: list[dict],
     }
     if cites := citation_ld(PAGE_SOURCES.get(cat, [])):
         jsonld["citation"] = cites
+    if who := interviewee_ld(ITV.get(cat)):
+        jsonld["mentions"] = who
     return path, page(title, desc, path, body, jsonld), title
 
 
@@ -1012,9 +1089,10 @@ def build_markdown_articles() -> list[dict]:
         if a["summary"]:
             body += f"<p class='lede'>{esc(a['summary'])}</p>"
         refs = PAGE_SOURCES.get(a["slug"], [])
+        itv = ITV.get(a["slug"])
         body += (f"<p class='meta'>作者：<a href='/about.html'>{esc(AUTHOR_NAME)}</a>"
                  f"（{esc(AUTHOR_TITLE)}）　·　{datestr}</p>{toc}"
-                 + "".join(paras) + sources_html(refs) + related)
+                 + "".join(paras) + interview_html(itv) + sources_html(refs) + related)
 
         jsonld = {
             "@context": "https://schema.org", "@type": "MedicalWebPage",
@@ -1028,6 +1106,8 @@ def build_markdown_articles() -> list[dict]:
         }
         if cites := citation_ld(refs):
             jsonld["citation"] = cites
+        if who := interviewee_ld(itv):
+            jsonld["mentions"] = who
 
         faqs = extract_faq(a["raw"])
         extra_ld = ""

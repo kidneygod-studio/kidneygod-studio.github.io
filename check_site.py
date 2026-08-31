@@ -16,7 +16,8 @@
     python check_site.py          全部檢查，有問題回傳 1
     python check_site.py -v       連通過的細節也印出來
 """
-import hashlib
+import contextlib
+import io
 import json
 import os
 import pathlib
@@ -29,6 +30,14 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 ROOT = pathlib.Path(__file__).resolve().parent
 VERBOSE = "-v" in sys.argv
+
+# 必須在任何 stdout 轉向之前先匯入：bump_assets 在模組層呼叫
+# sys.stdout.reconfigure()，而轉向後的 StringIO 沒有那個方法。
+sys.path.insert(0, str(ROOT))
+try:
+    import bump_assets
+except Exception:                       # 沒有它就跳過版本號檢查，不要整支掛掉
+    bump_assets = None
 
 # 掃描 HTML 時要跳過的：卡片圖產出目錄沒有 HTML，備份與相依套件也不是我們的
 SKIP_DIRS = {".git", "node_modules", "__pycache__", "cards"}
@@ -214,11 +223,11 @@ def check_text_size_adjust():
 # 圖片是快取優先且網址不帶 ?v=，版本號沒跟著換的話，看過那張圖的人會
 # 永遠停在舊圖，而且沒有任何錯誤訊息。
 def check_sw_version():
-    sys.path.insert(0, str(ROOT))
+    if bump_assets is None:
+        return ["無法載入 bump_assets，跳不過去就等於沒在檢查快取版本號"]
     cwd = os.getcwd()
     try:
-        os.chdir(ROOT)
-        import bump_assets
+        os.chdir(ROOT)              # sw_version() 讀的是相對路徑
         want = bump_assets.sw_version()
     except Exception as e:
         return [f"無法計算應有的版本號：{type(e).__name__} {e}"]
@@ -264,6 +273,44 @@ def check_generator_sources():
     return bad
 
 
+# ── 8. 專家訪談稿的鍵是否對得到頁面 ─────────────────────────────────
+# 鍵名打錯的話，訪談稿就是靜靜地不顯示——沒有錯誤、沒有空區塊，只有
+# 「我明明寫了怎麼沒出現」。這一項就是為了讓它當場說出來。
+def check_interviews():
+    f = ROOT / "interviews.json"
+    if not f.exists():
+        return []
+    try:
+        data = json.loads(f.read_text("utf-8"))
+    except json.JSONDecodeError as e:
+        return [f"interviews.json 不是合法的 JSON：{e}"]
+
+    src = (ROOT / "build_site.py").read_text("utf-8")
+    cats = set(re.findall(r'^\s*"([^"]+)":\s*"[a-z-]+",\s*$',
+                          re.search(r"(?s)CAT_SLUG = \{(.*?)\}", src).group(1), re.M))
+    slugs = {p.stem for p in (ROOT / "articles_src").glob("*.md")
+             if not p.name.startswith("_")}
+    valid = cats | slugs
+
+    bad = []
+    live = 0
+    for k, v in data.items():
+        if k.startswith("_"):
+            continue          # 草稿，不檢查也不上線
+        live += 1
+        if k not in valid:
+            bad.append(f'鍵 "{k}" 對不到任何頁面（可用的分類：{sorted(cats)[:3]}… '
+                       f"或長文 slug：{sorted(slugs)[:2]}…）")
+        elif not isinstance(v, dict) or not v.get("qa"):
+            bad.append(f'"{k}" 沒有 qa 內容，不會顯示')
+        elif not v.get("expert"):
+            bad.append(f'"{k}" 沒有填 expert，訪談沒有署名')
+    if VERBOSE and not bad:
+        drafts = sum(1 for k in data if k.startswith("_"))
+        print(f"    上線 {live} 篇、草稿 {drafts} 筆，鍵都對得到頁面")
+    return bad
+
+
 CHECKS = [
     ("卡片資料兩份是否同步", check_card_data_sync),
     ("卡片插圖與產出是否齊全", check_card_assets),
@@ -272,14 +319,19 @@ CHECKS = [
     ("手機字級是否被接管", check_text_size_adjust),
     ("快取版本號是否最新", check_sw_version),
     ("產生器的來源檔", check_generator_sources),
+    ("專家訪談稿的鍵", check_interviews),
 ]
 
 
 def main() -> int:
     fails = 0
     for name, fn in CHECKS:
+        # 檢查函式在 -v 時會自己印細節，但那會跑在 ✓/✗ 標題之前、看起來像
+        # 掛在上一項底下。先把它的輸出接住，等標題印完再放出來。
+        buf = io.StringIO()
         try:
-            problems = fn()
+            with contextlib.redirect_stdout(buf):
+                problems = fn()
         except Exception as e:
             problems = [f"檢查本身出錯：{type(e).__name__} {e}"]
         if problems:
@@ -291,8 +343,8 @@ def main() -> int:
                 print(f"    …另外還有 {len(problems) - 12} 項")
         else:
             print(f"✓ {name}")
-            if VERBOSE:
-                fn()      # 讓通過的細節也印出來
+        if VERBOSE and buf.getvalue():
+            print(buf.getvalue(), end="")
     print()
     if fails:
         print(f"有 {fails} 項沒過。上面每一項都是「不會噴錯但使用者看到錯的」那一類。")
