@@ -141,6 +141,59 @@ SOCIAL = [
 ]
 SOCIAL_LIVE = [s for s in SOCIAL if s["url"]]
 
+# 作者實體。每一頁的 author 欄位都指向同一個 @id，搜尋引擎才會把散落在
+# 各頁的文章歸給同一個人，而不是二十幾個同名的作者。
+#
+# 內容全部取自簡介頁上已經公開、可查證的資歷——結構化資料的用途是讓機器
+# 讀得懂人眼已經看得到的東西，不是拿來多宣稱什麼。
+AUTHOR_ID = f"{BASE_URL}/about.html#author"
+
+
+def author_ld(full: bool = False) -> dict:
+    """文章頁用精簡版（靠 @id 接回完整版），簡介頁用 full=True 的完整版。"""
+    d = {
+        "@type": "Physician",
+        "@id": AUTHOR_ID,
+        "name": AUTHOR_NAME,
+        "jobTitle": AUTHOR_TITLE,
+        "url": f"{BASE_URL}/about.html",
+        "medicalSpecialty": ["Nephrologic", "InternalMedicine"],
+        "hasCredential": [
+            {"@type": "EducationalOccupationalCredential",
+             "credentialCategory": "專科醫師證書", "name": "腎臟科專科醫師"},
+            {"@type": "EducationalOccupationalCredential",
+             "credentialCategory": "專科醫師證書", "name": "內科專科醫師"},
+            {"@type": "EducationalOccupationalCredential",
+             "credentialCategory": "認證", "name": "戒菸治療醫師"},
+            {"@type": "EducationalOccupationalCredential",
+             "credentialCategory": "認證", "name": "糖尿病共同照護網醫師"},
+        ],
+        "worksFor": {"@type": "Hospital", "name": "郭綜合醫院",
+                     "department": {"@type": "MedicalOrganization", "name": "腎臟內科"}},
+        "alumniOf": {"@type": "CollegeOrUniversity", "name": "國立成功大學醫學系"},
+        "memberOf": [
+            {"@type": "Organization", "name": "台灣慢性腎臟病臨床診療指引編撰委員會"},
+            {"@type": "MedicalOrganization", "name": "台灣腎臟醫學會"},
+            {"@type": "MedicalOrganization", "name": "美國腎臟醫學會",
+             "alternateName": "American Society of Nephrology"},
+        ],
+        "sameAs": [s["url"] for s in SOCIAL_LIVE],
+    }
+    if full:
+        d["description"] = AUTHOR_BIO
+        d["email"] = CONTACT_EMAIL
+        d["knowsAbout"] = ["慢性腎臟病", "急性腎衰竭", "血液透析", "腹膜透析", "多囊腎",
+                           "電解質異常", "高血壓", "糖尿病", "高血脂", "痛風",
+                           "代謝症候群", "戒菸治療"]
+    return d
+
+
+def reviewed_ld() -> dict:
+    """醫療內容專用的審閱欄位。Google 對 MedicalWebPage 明確支援這兩個欄位，
+    是「這篇有醫師看過」最直接的機器可讀訊號。審閱者就是作者本人。"""
+    return {"lastReviewed": TODAY, "reviewedBy": {"@id": AUTHOR_ID}}
+
+
 DISCLAIMER = ("本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，"
               "亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，"
               "請與您的醫師或藥師討論後再做決定。")
@@ -282,7 +335,13 @@ padding:16px 18px;text-decoration:none;color:var(--fg)}
 .author{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);
 border-radius:12px;padding:16px 18px;margin:40px 0 20px;font-size:14.5px;line-height:1.7}
 .author .n{font-weight:700}
+.author .n a{color:var(--fg);text-decoration:none}
+.author .n a:hover{color:var(--accent);text-decoration:underline}
 .author .r{color:var(--mut);font-size:13px}
+/* 審閱資訊：讀者與搜尋引擎都在找「這篇有沒有醫師看過、什麼時候看的」，
+   但它是佐證不是主文，所以壓小、放在簡介之後。 */
+.author .rev{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--mut)}
 .disclaimer{font-size:13.5px;color:var(--mut);background:var(--card);border-left:3px solid var(--warn);
 padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
@@ -470,6 +529,11 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     # sitemap 用的是目錄形式（/articles/），這裡把 index.html 收掉對齊。
     url = f"{BASE_URL}/{re.sub(r'(^|/)index\.html$', r'\1', path)}"
 
+    # 分享預覽圖。檔名由網址推出來，og/ 底下的圖由 make_og.py 產生，
+    # 兩邊用同一條規則命名，不必在每個呼叫點各自指定。
+    og_slug = re.sub(r"[^a-z0-9]+", "-",
+                     path.replace(".html", "").replace("/", "-")).strip("-") or "index"
+
     # 目前所在區塊要標示出來，讀者才知道自己在哪一層
     in_gallery = "gallery" in path
     in_articles = path.startswith("articles/") and not in_gallery
@@ -518,7 +582,11 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{url}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="{BASE_URL}/og/{og_slug}.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{esc(title)}">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>{CSS}</style>{extra_head}
 {ld}
@@ -532,8 +600,9 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 {body}
 <div class="author">
   <div>
-    <div class="n">{esc(AUTHOR_NAME)}　<span class="r">{esc(AUTHOR_TITLE)}</span></div>
+    <div class="n"><a href="/about.html">{esc(AUTHOR_NAME)}</a>　<span class="r">{esc(AUTHOR_TITLE)}</span></div>
     <div>{esc(AUTHOR_BIO)}</div>
+    <div class="rev">本頁內容最後由{esc(AUTHOR_NAME)}醫師審閱於 {TODAY}　·　<a href="/about.html">完整資歷與撰寫原則</a></div>
   </div>
 </div>
 <div class="disclaimer">{esc(DISCLAIMER)}</div>
@@ -611,7 +680,8 @@ def build_category(cat: str, items: list[dict],
         "inLanguage": "zh-Hant",
         "url": f"{BASE_URL}/{path}",
         "dateModified": TODAY,
-        "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE},
+        "author": author_ld(),
+        **reviewed_ld(),
         "publisher": {"@type": "Organization", "name": SITE_NAME},
         "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"},
         "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}},
@@ -665,7 +735,7 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
         "description": desc,
         "inLanguage": "zh-Hant",
         "url": f"{BASE_URL}/{path}",
-        "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE},
+        "author": author_ld(),
     }
     return path, page(title, desc, path, body, jsonld)
 
@@ -850,8 +920,8 @@ def build_markdown_articles() -> list[dict]:
             "headline": a["title"], "description": desc, "inLanguage": "zh-Hant",
             "url": f"{BASE_URL}/{path}",
             "datePublished": published, "dateModified": TODAY,
-            "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
-                       "url": f"{BASE_URL}/about.html"},
+            "author": author_ld(),
+            **reviewed_ld(),
             "publisher": {"@type": "Organization", "name": SITE_NAME},
             "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"},
         }
@@ -980,9 +1050,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         "description": desc,
         "inLanguage": "zh-Hant",
         "url": f"{BASE_URL}/",
-        "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
-                   "url": f"{BASE_URL}/about.html",
-                   "sameAs": [s["url"] for s in SOCIAL_LIVE]},
+        "author": author_ld(),
     }
     return page(title, desc, "", body, jsonld)
 
@@ -1134,8 +1202,7 @@ def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
             "name": name, "description": desc, "inLanguage": "zh-Hant",
             "url": f"{BASE_URL}/{path}", "dateModified": TODAY,
             "numberOfItems": len(group),
-            "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
-                       "url": f"{BASE_URL}/about.html"},
+            "author": author_ld(),
         }
         out.append((path, page(title, desc, path, body, jsonld)))
 
@@ -1173,8 +1240,7 @@ def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
         "@context": "https://schema.org", "@type": "CollectionPage",
         "name": title, "description": desc, "inLanguage": "zh-Hant",
         "url": f"{BASE_URL}/{path}", "dateModified": TODAY,
-        "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
-                   "url": f"{BASE_URL}/about.html"},
+        "author": author_ld(),
     }
     out.append((path, page(title, desc, path, body, jsonld)))
     return out
@@ -1296,31 +1362,8 @@ def build_about() -> str:
         "dateModified": TODAY,
         # 結構化資料把資歷寫成機器讀得懂的欄位。醫療內容的可信度評估
         # 很吃「作者是誰、憑什麼」，學歷、任職與指引編撰身分都是可查證的訊號。
-        "mainEntity": {
-            "@type": "Physician",
-            "name": AUTHOR_NAME,
-            "jobTitle": AUTHOR_TITLE,
-            "description": AUTHOR_BIO,
-            "medicalSpecialty": ["Nephrologic", "InternalMedicine"],
-            "knowsAbout": ["慢性腎臟病", "急性腎衰竭", "血液透析", "腹膜透析", "多囊腎",
-                           "電解質異常", "高血壓", "糖尿病", "高血脂", "痛風",
-                           "代謝症候群", "戒菸治療"],
-            "alumniOf": {"@type": "CollegeOrUniversity", "name": "國立成功大學醫學系"},
-            "worksFor": {"@type": "Hospital", "name": "郭綜合醫院",
-                         "department": {"@type": "MedicalOrganization", "name": "腎臟內科"}},
-            "memberOf": [
-                {"@type": "Organization", "name": "台灣慢性腎臟病臨床診療指引編撰委員會"},
-                {"@type": "MedicalOrganization", "name": "台灣腎臟醫學會"},
-                {"@type": "MedicalOrganization", "name": "美國腎臟醫學會",
-                 "alternateName": "American Society of Nephrology"},
-            ],
-            "url": f"{BASE_URL}/about.html",
-            # 醫療類內容（YMYL）的可信度評估看重「找不找得到人」，
-            # 公開的聯絡管道本身就是一個信任訊號
-            "email": CONTACT_EMAIL,
-            # 宣告這些社群帳號與本人是同一個實體，協助搜尋引擎建立作者身分
-            "sameAs": [s["url"] for s in SOCIAL_LIVE],
-        },
+        # 完整版只放這一頁，其他頁用同一個 @id 指回來。
+        "mainEntity": author_ld(full=True),
     }
     return page(title, desc, "about.html", body, jsonld)
 
@@ -1645,8 +1688,8 @@ def build_food() -> str:
         "inLanguage": "zh-Hant",
         "url": f"{BASE_URL}/food.html",
         "dateModified": TODAY,
-        "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
-                   "url": f"{BASE_URL}/about.html"},
+        "author": author_ld(),
+        **reviewed_ld(),
         "citation": {"@type": "Dataset", "name": db["source"], "url": db["source_url"]},
     }
     return page(title, desc, "food.html", body, jsonld, extra_head=extra)
@@ -1975,8 +2018,8 @@ def build_calc() -> str:
         "inLanguage": "zh-Hant",
         "url": f"{BASE_URL}/calc.html",
         "dateModified": TODAY,
-        "author": {"@type": "Person", "name": AUTHOR_NAME, "jobTitle": AUTHOR_TITLE,
-                   "url": f"{BASE_URL}/about.html"},
+        "author": author_ld(),
+        **reviewed_ld(),
     }
     return page(title, desc, "calc.html", body, jsonld, extra_head=CALC_CSS_JS)
 

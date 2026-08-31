@@ -9,7 +9,7 @@
      其他來源 一律不碰（Firebase、Google 字型等交給瀏覽器自己處理）
 
    VERSION 由 bump_assets.py 自動更新，改版時舊快取會整批清掉。 */
-const VERSION = "kg-ca0128adce";
+const VERSION = "kg-0988e5aff3";
 const SHELL = `${VERSION}-shell`, IMG = `${VERSION}-img`;
 
 /* 先抓起來的骨架：三個頁面加標誌。JS 與圖片留給實際瀏覽時自然填入，
