@@ -55,15 +55,15 @@ def main():
     bump_sw(ver)
 
 
-def bump_sw(ver):
-    """把整站內容摘要寫進 sw.js 的 VERSION。
+def sw_version():
+    """算出目前內容對應的 VERSION，不寫檔。
 
-    Service Worker 的快取名字要跟著內容一起變，否則改版之後使用者會停在
-    舊快取上。這裡把三個頁面加上四支 js 的雜湊再壓成一個短碼 —— 任何一處
-    有改動，快取名就換，activate 時舊的會整批清掉。
+    抽成獨立函式是為了讓 check_site.py 能重用同一份邏輯——各自實作一份
+    遲早會走鐘，而走鐘的後果正是這個版本號要防的那種靜默錯誤。
+    回傳 None 表示沒有 sw.js。
     """
     if not os.path.exists("sw.js"):
-        return
+        return None
     h = hashlib.md5()
     for f in list(ASSETS) + list(PAGES) + list(HASH_ONLY):
         if os.path.exists(f):
@@ -79,7 +79,18 @@ def bump_sw(ver):
     # 舊快取不會被清掉。把 VERSION 那行剔除以免自我循環。
     sw_body = re.sub(r'const VERSION = "[^"]*";', "", io.open("sw.js", encoding="utf-8").read())
     h.update(sw_body.encode("utf-8"))
-    tag = "kg-" + h.hexdigest()[:10]
+    return "kg-" + h.hexdigest()[:10]
+
+
+def bump_sw(ver):
+    """把整站內容摘要寫進 sw.js 的 VERSION。
+
+    Service Worker 的快取名字要跟著內容一起變，否則改版之後使用者會停在
+    舊快取上；activate 時舊的會整批清掉。
+    """
+    tag = sw_version()
+    if tag is None:
+        return
     s = old = io.open("sw.js", encoding="utf-8").read()
     s = re.sub(r'const VERSION = "[^"]*";', f'const VERSION = "{tag}";', s)
     if s != old:
