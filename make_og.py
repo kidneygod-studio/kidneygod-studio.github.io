@@ -7,148 +7,57 @@
 斜線換成減號，首頁叫 index。兩邊的規則不一致就會變成破圖，所以最後
 會用 build 出來的 HTML 反查一次，確認每個被引用的檔案都真的存在。
 
-設計上刻意不放整張卡片圖：卡片是 900×1080 直式，硬塞進橫式會變形。
-改成右側裁切出一條直幅，左側留給標題——社群動態牆上字要夠大才讀得到。
+依作者指定，全站共用同一張：商城的那張 logo。所有頁面的預覽圖內容相同，
+只是檔名不同——保留一頁一檔是為了不必改動任何 HTML 的 og:image，將來想
+改回一頁一張也不用再動 build_site.py。
+
+⚠ 別改回 make_logo.py 指的那份原圖（Downloads/知識卡插圖/護腎教室.jpg）：
+它雖然有 2752×1536，但字是舊的 KIDNEYGOD.STUDIO，而網站在 kidneygod.net，
+拿它當預覽圖等於每一則分享都印一個不存在的網域。這裡用的是作者另外提供的
+.NET 版原圖，1678×937 縮到 1200×630 是縮小，所以邊緣銳利。
 """
 import pathlib
 import re
 import sys
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 
 ROOT = pathlib.Path(__file__).parent
 OUT = ROOT / "og"
-CARDS = ROOT / "cards" / "gi"
 
 W, H = 1200, 630
-PAD = 64
-ART_W = 430                      # 右側圖片寬度
 
-# 衛教站的色票，與 build_site.py 的 :root 一致
-BG = "#fdfcfa"
-FG = "#22201d"
-MUT = "#6b645c"
-LINE = "#e6e1d8"
-ACCENT = "#0f766e"
-CARDBG = "#f6f3ed"               # 右側面板底色，與站上 --card 同一個值
+LOGO = pathlib.Path(r"C:\Users\user\Downloads\kidneygod.png")   # 1678×937 白底
 
-FONT_BD = "C:/Windows/Fonts/msjhbd.ttc"     # 微軟正黑體 Bold
-FONT_RG = "C:/Windows/Fonts/msjh.ttc"
-
-# 每頁配一張主題相符的卡片圖。挑的原則是「一眼看得出這篇在講什麼」，
-# 不是好不好看——預覽圖在動態牆上只有半秒的時間說明自己是什麼。
-ART = {
-    "index":                        "egfr",
-    "about":                        None,          # 用醫師本人照片
-    "calc":                         "egfr",
-    "food":                         "eatout",
-    "articles-index":               "five-signs",
-    "articles-gallery":             "bp-howto",
-    "articles-blood-pressure":      "bp",
-    "articles-blood-sugar":         "dm-a1c",
-    "articles-diet":                "salt",
-    "articles-lab-values":          "bun",
-    "articles-lifestyle":           "exercise",
-    "articles-lipids":              "lp-ldl",
-    "articles-medication-safety":   "nsaid",
-    "articles-myths":               "detox",
-    "articles-creatinine-high-what-to-do":  "bun",
-    "articles-egfr-meaning-ckd-stages":     "egfr",
-    "articles-foamy-urine-proteinuria":     "proteinuria",
-    "articles-taiwan-eating-out-sodium":    "eatout",
-    "articles-gallery-kidney":      "water",
-    "articles-gallery-kidney-pro":  "dialysis-myth",
-    "articles-gallery-metabolic":   "ms-cluster",
-    "articles-gallery-metabolic-pro": "ms-kidney",
-    "articles-gallery-companion":   "sleep",
-    # 商城側三頁是手寫的，不走 build_site.py，但一樣需要像樣的預覽圖：
-    # 原本掛的 logo.png 只有 684×370，比社群要求的 1200×630 小，會被放大糊掉。
-    "shop":                         "five-signs",
-    "game":                         "exercise",
-    "library":                      "water",
-}
-
-EYEBROW = "護腎教室　·　kidneygod.net"
-BYLINE = "腎臟科專科醫師　吳政哲"
+# logo 只放在「中央正方形」裡，不橫跨滿版。
+#
+# 各家社群裁法不同：Facebook／Threads 大致照 1.91:1 顯示，Twitter 用 2:1，
+# LINE 與部分動態牆會裁成接近 1:1。滿版的 logo 遇到正方形裁切，左右兩端的
+# 「護」和「.NET」就會被切掉。改成塞進以短邊為準的中央方形，最嚴苛的 1:1
+# 裁切也還是完整的——代價是滿版顯示時周圍留白較多，但白底本來就是這張圖的
+# 底色，看起來像刻意的留白而不是破圖。
+SAFE = 0.92                      # 佔中央方形的比例，留一點呼吸空間
 
 
-def font(path, size):
-    return ImageFont.truetype(path, size)
+def make_card() -> Image.Image:
+    """白底 + 置中的 logo，整體塞進中央正方形安全區。"""
+    im = Image.open(LOGO)
+    if im.mode in ("RGBA", "LA", "P"):
+        im = im.convert("RGBA")
+        flat = Image.new("RGB", im.size, "white")
+        flat.paste(im, mask=im.split()[-1])
+        im = flat
+    else:
+        im = im.convert("RGB")
 
-
-def wrap(draw, text, f, maxw):
-    """中文逐字斷行。中文沒有空格，用英文的斷詞邏輯會整段不換行。"""
-    lines, cur = [], ""
-    for ch in text:
-        if ch == "\n":
-            lines.append(cur)
-            cur = ""
-            continue
-        if draw.textlength(cur + ch, font=f) <= maxw:
-            cur += ch
-        else:
-            lines.append(cur)
-            cur = ch
-    if cur:
-        lines.append(cur)
-    return lines
-
-
-def art_strip(name):
-    """右側面板：整張卡片縮進去，不裁切。
-
-    一開始是裁成滿版直幅，但卡片本身有標題列與頁尾字，裁完邊緣會出現
-    半個字，看起來像出錯而不像設計。寧可留白邊也要讓卡片完整。
-    """
-    src = CARDS / f"{name}.png" if name else ROOT / "doctor.jpg"
-    if not src.exists():
-        return None
-
-    panel = Image.new("RGB", (ART_W, H), CARDBG)
-    inner_w, inner_h = ART_W - 44, H - 44
-    im = Image.open(src).convert("RGB")
-    scale = min(inner_w / im.width, inner_h / im.height)
+    box = min(W, H) * SAFE
+    scale = min(box / im.width, box / im.height)
     im = im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
-    panel.paste(im, ((ART_W - im.width) // 2, (H - im.height) // 2))
-    return panel
 
-
-def build(slug, title, art_name):
-    img = Image.new("RGB", (W, H), BG)
-    d = ImageDraw.Draw(img)
-
-    strip = art_strip(art_name)
-    if strip:
-        img.paste(strip, (W - ART_W, 0))
-        # 圖與底色之間拉一條細線，避免兩塊淺色糊在一起
-        d.line([(W - ART_W, 0), (W - ART_W, H)], fill=LINE, width=2)
-
-    text_w = W - ART_W - PAD * 2
-
-    # 頂部的品牌色錨點，與網站上 h2 前面那條短線是同一個語彙
-    d.rectangle([PAD, PAD, PAD + 52, PAD + 6], fill=ACCENT)
-
-    y = PAD + 30
-    f_eye = font(FONT_RG, 25)
-    d.text((PAD, y), EYEBROW, font=f_eye, fill=MUT)
-    y += 54
-
-    # 標題字級依長度調整：短標題放大，長標題縮小，都要能塞進版面
-    for size in (60, 54, 48, 43, 38):
-        f_title = font(FONT_BD, size)
-        lines = wrap(d, title, f_title, text_w)
-        if len(lines) * (size + 14) <= 330:
-            break
-    for ln in lines:
-        d.text((PAD, y), ln, font=f_title, fill=FG)
-        y += size + 14
-
-    # 署名固定貼在底部，不隨標題長度浮動
-    f_by = font(FONT_RG, 27)
-    by_y = H - PAD - 34
-    d.line([(PAD, by_y - 24), (PAD + text_w, by_y - 24)], fill=LINE, width=2)
-    d.text((PAD, by_y), BYLINE, font=f_by, fill=ACCENT)
-    return img
+    # 底色取原圖角落，補出來的邊才會跟 logo 自己的底無縫接上
+    card = Image.new("RGB", (W, H), im.getpixel((0, 0)))
+    card.paste(im, ((W - im.width) // 2, (H - im.height) // 2))
+    return card
 
 
 def main():
@@ -158,36 +67,24 @@ def main():
 
     OUT.mkdir(exist_ok=True)
 
-    # 標題取自實際 build 出來的 H1，不另外維護一份，避免兩邊對不上
-    titles = {}
+    # 檔名仍取自實際 build 出來的頁面，才不會與 og:image 的引用對不上
+    slugs = set()
     for p in ROOT.rglob("*.html"):
         rel = str(p.relative_to(ROOT)).replace("\\", "/")
         if "/gi/" in "/" + rel or rel in {"dash.html"}:
             continue
         h = p.read_text("utf-8", "replace")
-        m = re.search(r"(?s)<h1[^>]*>(.*?)</h1>", h)
-        if not m:
+        if not re.search(r"(?s)<h1[^>]*>(.*?)</h1>", h):
             continue
-        # 與 build_site.py 的 og_slug 逐字相同的規則。首頁在那邊的 path 是
-        # 空字串，這裡是 index.html，兩邊都會得到 index。
-        slug = re.sub(r"[^a-z0-9]+", "-",
-                      rel.replace(".html", "").replace("/", "-")).strip("-")
-        t = re.sub(r"\s+", " ", re.sub(r"(?s)<[^>]+>", "", m.group(1))).strip()
-        titles[slug] = t
+        slugs.add(re.sub(r"[^a-z0-9]+", "-",
+                         rel.replace(".html", "").replace("/", "-")).strip("-"))
 
-    made = 0
-    for slug, title in sorted(titles.items()):
-        if slug not in ART:
-            print(f"  ！ {slug} 沒有指定配圖，用預設")
-        img = build(slug, title, ART.get(slug, "egfr"))
-        # 用 JPEG 不用 PNG：卡片圖是連續色調的插畫，PNG 存成一張要 230 KB，
-        # 同樣畫質的 JPEG 只要五分之一。預覽圖是別人滑手機時才載入的，
-        # 檔案小一點就是多一點機會在他滑過去之前顯示出來。
-        img.save(OUT / f"{slug}.jpg", quality=88, optimize=True, progressive=True)
-        made += 1
-        print(f"  {slug}.jpg　{title[:26]}")
-
-    print(f"\n產生 {made} 張")
+    card = make_card()
+    for slug in sorted(slugs):
+        # 用 JPEG 不用 PNG：這是連續色調的插畫，同畫質下 JPEG 小得多。
+        # 預覽圖是別人滑手機時才載入的，小一點就是多一點機會在滑過去之前顯示。
+        card.save(OUT / f"{slug}.jpg", quality=88, optimize=True, progressive=True)
+    print(f"產生 {len(slugs)} 張（內容相同，{card.size[0]}×{card.size[1]}）")
 
     # 反查：HTML 引用的每一張 og:image 都要真的存在
     missing = []
