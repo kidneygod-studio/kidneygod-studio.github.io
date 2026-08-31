@@ -62,8 +62,19 @@
 
   .honest{position:sticky;top:0;z-index:60;background:#0f0c0a;color:#e6d9c2;
           border-bottom:1px solid var(--edge);
-          text-align:center;font-size:13px;padding:7px 12px;}
+          font-size:13px;padding:7px 12px;
+          display:flex;align-items:center;gap:10px;}
   .honest b{color:var(--gold2);}
+  .htext{flex:1;text-align:center;}
+  /* 衛教站首頁連結，與誠實橫幅同一排。標誌用衛教站深色模式的主色
+     #5eead4（在 #0f0c0a 上對比 13.18），文字沿用橫幅本來的米色。
+     窄螢幕只留標誌：header 的 sticky top 寫死 34px，橫幅一換行就會對不齊，
+     所以這裡要盡量不增加寬度。 */
+  .hbrand{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;
+          text-decoration:none;color:#e6d9c2;font-weight:700;}
+  .hbrand svg{color:#5eead4;flex-shrink:0;}
+  .hbrand:hover span{text-decoration:underline;}
+  @media(max-width:640px){ .hbrand span{display:none;} }
   .ki{width:1.15em;height:1.15em;border-radius:50%;vertical-align:-.24em;
       margin-right:.18em;object-fit:cover;box-shadow:0 0 0 1px rgba(61,44,41,.13);background:#fff;}
   .bki{box-shadow:0 0 0 1.5px rgba(255,233,214,.7);margin-right:.4em;
@@ -279,7 +290,7 @@
 <body>
 <h1 class="vh">護腎教室遊戲場</h1>
 
-<div class="honest"><img class="ki bki" alt="">這裡的腎元只能在<b>護腎教室</b>換知識與貼圖 — 不是真錢，也換不了真錢</div>
+<div class="honest"><a class="hbrand" href="/" title="回護腎教室衛教首頁"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 4.6 13.6 4.6Z"/></svg><span>護腎教室</span></a><span class="htext"><img class="ki bki" alt="">這裡的腎元只能在<b>護腎教室</b>換知識與貼圖 — 不是真錢，也換不了真錢</span></div>
 
 <header>
   <div class="hwrap">
