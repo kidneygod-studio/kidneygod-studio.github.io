@@ -30,6 +30,11 @@ PAGES = ("shop.html", "game.html", "library.html", "dash.html")
 HASH_ONLY = ("index.html", "logo.png", "doctor.jpg", "apple-touch-icon.png",
              "food_db.json")
 
+# 整個目錄都要計入雜湊的。知識卡圖片是 sw.js 快取優先、網址又不帶 ?v=，
+# 換了圖卻沒換 VERSION 的話，看過那張卡的人會永遠停在舊圖上而且毫無錯誤訊息。
+# 2026-08-31 換上 40 張新插圖時發現這裡漏了 cards/gi。
+HASH_DIRS = ("cards/gi",)
+
 
 def main():
     ver = {f: hashlib.md5(io.open(f, "rb").read()).hexdigest()[:8] for f in ASSETS}
@@ -63,6 +68,13 @@ def bump_sw(ver):
     for f in list(ASSETS) + list(PAGES) + list(HASH_ONLY):
         if os.path.exists(f):
             h.update(io.open(f, "rb").read())
+    # 目錄要排序後再逐檔計入，否則檔案系統的列舉順序一變，內容沒動版本號也會變
+    for d in HASH_DIRS:
+        for root, _dirs, files in sorted(os.walk(d)):
+            for f in sorted(files):
+                p = os.path.join(root, f)
+                h.update(p.replace("\\", "/").encode("utf-8"))
+                h.update(io.open(p, "rb").read())
     # sw.js 自己的內容也要計入，否則改了快取策略卻不換版本號，
     # 舊快取不會被清掉。把 VERSION 那行剔除以免自我循環。
     sw_body = re.sub(r'const VERSION = "[^"]*";', "", io.open("sw.js", encoding="utf-8").read())
