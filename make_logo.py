@@ -17,11 +17,16 @@ from scipy import ndimage
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-SRC = r"C:\Users\user\Downloads\知識卡插圖\護腎教室.jpg"
+# ⚠ 別改回 知識卡插圖\護腎教室.jpg：那張雖然有 2752×1536，但字是改網域之前的
+# KIDNEYGOD.STUDIO。2026-08-27 換成 .NET 版時，logo.png 是直接放進倉庫的，
+# 這裡的 SRC 沒有跟著更新，等於留了一顆地雷——只要有人跑一次這支腳本，
+# 頁首的標誌就會被悄悄換回不存在的舊網域，而且不會有任何錯誤訊息。
+SRC = r"C:\Users\user\Downloads\kidneygod.png"
 OUT = "logo.png"
 FLOOD_T = 215      # 這個亮度以上、且與邊緣連通者視為背景
 FADE_LO = 215      # alpha 漸變的下限（比這暗就是完全不透明）
-MAX_W = 480        # 頁首顯示約 100–160px 寬，480 已足夠三倍圖
+MAX_W = 684        # 與倉庫現有的 logo.png 同寬。頁首顯示約 100–160px，
+                   # 這個尺寸連高解析螢幕都夠；設小於此會讓標誌變糊
 CROP_T = 55        # 裁切時視為「實心內容」的 alpha 門檻（低於此的只是暈光）
 CROP_PAD = 0.025   # 裁切框外留的邊，讓光暈自然收尾
 
