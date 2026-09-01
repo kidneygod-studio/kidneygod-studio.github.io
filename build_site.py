@@ -259,6 +259,7 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "creatinine-high-what-to-do": ["kdigo_ckd", "tsn", "niddk"],
     "foamy-urine-proteinuria": ["kdigo_ckd", "tsn", "niddk"],
     "taiwan-eating-out-sodium": ["kdigo_ckd", "fda_tfnd", "hpa_kidney"],
+    "painkiller-nsaid-kidney": ["kdigo_ckd", "tsn", "niddk"],
 }
 
 
