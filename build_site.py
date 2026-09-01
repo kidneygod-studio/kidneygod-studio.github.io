@@ -264,6 +264,7 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "kidney-function-recovery": ["kdigo_ckd", "tsn", "hpa_kidney"],
     "home-blood-pressure-measurement": ["kdigo_bp", "aha_bp", "tsoc"],
     "cholesterol-report-ckd": ["kdigo_lipid", "aha_lipid", "tsoc"],
+    "kidney-lifestyle-evidence": ["kdigo_ckd", "hpa_kidney", "niddk"],
 }
 
 
