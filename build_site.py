@@ -400,19 +400,32 @@ def share_html(path: str, title: str) -> str:
 <div class="share">
 <p class="sd">覺得有幫助的話，轉給需要的人。</p>
 <div class="sbtns">
+<button class="sb native" type="button" hidden
+        data-title="{esc(title)}" data-url="{esc(url)}">{icon("native")}分享</button>
 <a class="sb line" href="{line}" target="_blank" rel="noopener">{icon("line")}LINE</a>
 <a class="sb fb" href="{fb}" target="_blank" rel="noopener">{icon("fb")}Facebook</a>
 <a class="sb th" href="{th}" target="_blank" rel="noopener">{icon("th")}Threads</a>
 <button class="sb copy" type="button" data-url="{esc(url)}">{icon("copy")}<span>複製連結</span></button>
-<button class="sb native" type="button" hidden
-        data-title="{esc(title)}" data-url="{esc(url)}">{icon("native")}其他…</button>
 </div></div>
 <script>
 (function(){{
   var box = document.querySelector('.share');
   if (!box) return;
   var copy = box.querySelector('.copy'), native = box.querySelector('.native');
-  // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕
+  // 各平台的分享頁本來就是設計成用彈出視窗開啟的。當成整頁跳轉時，
+  // Facebook 常常把人丟到動態牆而不是發文框——這是回報過的實際症狀。
+  // 開不出彈窗（被瀏覽器擋、或手機不支援）就讓 <a> 原本的行為繼續。
+  box.addEventListener('click', function(e){{
+    var a = e.target.closest && e.target.closest('a.sb');
+    if (!a) return;
+    var w = window.open(a.href, 'kgshare', 'width=600,height=540');
+    if (!w) return;
+    try {{ w.opener = null; }} catch (err) {{}}   // window.open 不吃 rel=noopener
+    e.preventDefault();
+  }});
+  // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕。
+  // 它排在第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App，
+  // 不會像網頁版分享頁那樣被 App 攔截後跳到動態牆。
   if (navigator.share) {{
     native.hidden = false;
     native.addEventListener('click', function(){{
