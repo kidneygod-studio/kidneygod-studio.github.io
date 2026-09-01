@@ -54,6 +54,30 @@ python check_site.py      # 推之前對帳
 
 全站掃過，除上述兩處外沒有其他「不收集資料／不會收集／不蒐集」類的文字。
 
+### 手機版移除 Facebook 分享鈕；修掉 hidden 被 CSS 蓋掉的 bug
+
+作者實測回報：手機上 LINE 與 Threads 都正常，**只有 Facebook 會落到動態牆**。
+
+**Facebook App 的攔截無法從網頁端繞過。** facebook.com 是 FB App 宣告擁有的
+網域，Android 的 App Links／iOS 的 Universal Links 會在載入網頁「之前」就把
+連結交給 App，而 App 不認得 `sharer.php` 的路徑。這個決定在作業系統層，
+`window.open`、`target`、`rel` 都影響不了。改用 `m.facebook.com` 或透過自家
+網域轉址也沒用——最後一步還是走到 facebook.com。就算真的強迫用瀏覽器開，
+多數人手機瀏覽器並沒有登入 Facebook（他們登入在 App 裡），只會看到登入頁。
+
+依作者指示，**偵測到 `navigator.share` 時（即手機）隱藏 Facebook 那顆**。
+第一顆「分享」走系統面板，選 Facebook 會開 App 自己的原生發文框，是行動
+裝置上正常運作的路徑。LINE 與 Threads 實測正常，保留。
+
+**同時修掉一個自己寫的 bug**：`.sb` 設了 `display:inline-flex`，而 `hidden`
+屬性是靠瀏覽器預設樣式的 `display:none` 生效的——**作者樣式優先於瀏覽器預設
+樣式，所以 hidden 被蓋掉了**。也就是說桌機上那顆「分享」一直是看得見的，但
+按下去完全沒反應（桌機沒有 navigator.share，事件根本沒掛上）。補
+`.sb[hidden]{display:none}` 解決。作者在手機測所以沒遇到。
+
+DOM stub 加了「手機隱藏 Facebook」與「桌機保留 Facebook」兩項，共 15 項行為
+檢查全過。
+
 ### 修正 Facebook 分享跳到動態牆而不是發文框
 
 回報：按 Facebook 分享後跳到 Facebook，但沒有進入貼文畫面。

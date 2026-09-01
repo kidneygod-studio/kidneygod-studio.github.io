@@ -155,6 +155,10 @@ border:1.5px solid var(--line);background:var(--card);color:var(--fg);
 font-family:inherit;transition:border-color .15s,color .15s}
 .sb:hover{border-color:var(--accent);color:var(--accent)}
 .sb svg{margin-right:7px;flex-shrink:0}
+/* 這一行是必要的：hidden 屬性靠的是瀏覽器預設樣式的 display:none，而作者
+   樣式優先於瀏覽器預設樣式，上面的 display:inline-flex 會把它蓋掉——結果
+   是「隱藏」的按鈕照樣顯示出來，而且按了沒反應。 */
+.sb[hidden]{display:none}
 /* 各平台用自己的識別色只上在邊框與文字，不填滿——填滿會讓文末變成廣告帶 */
 .sb.line:hover{border-color:#06c755;color:#06c755}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}
@@ -363,6 +367,13 @@ letter-spacing:.4px;line-height:1.5}
   // 不會像網頁版分享頁那樣被 App 攔截後跳到動態牆。
   if (navigator.share) {
     native.hidden = false;
+    // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
+    // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
+    // 使用者會落在動態牆而不是發文框。這是 OS 層的決定，網頁端擋不掉。
+    // 上面那顆「分享」走系統面板，選 Facebook 會開它自己的原生發文框，
+    // 是行動裝置上正常運作的路徑。LINE 與 Threads 實測正常，保留。
+    var fbBtn = box.querySelector('a.fb');
+    if (fbBtn) fbBtn.hidden = true;
     native.addEventListener('click', function(){
       navigator.share({title: native.dataset.title, url: native.dataset.url})
         .catch(function(){});   // 使用者取消分享會 reject，不是錯誤

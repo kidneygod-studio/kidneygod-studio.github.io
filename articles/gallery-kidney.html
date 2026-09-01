@@ -155,6 +155,10 @@ border:1.5px solid var(--line);background:var(--card);color:var(--fg);
 font-family:inherit;transition:border-color .15s,color .15s}
 .sb:hover{border-color:var(--accent);color:var(--accent)}
 .sb svg{margin-right:7px;flex-shrink:0}
+/* 這一行是必要的：hidden 屬性靠的是瀏覽器預設樣式的 display:none，而作者
+   樣式優先於瀏覽器預設樣式，上面的 display:inline-flex 會把它蓋掉——結果
+   是「隱藏」的按鈕照樣顯示出來，而且按了沒反應。 */
+.sb[hidden]{display:none}
 /* 各平台用自己的識別色只上在邊框與文字，不填滿——填滿會讓文末變成廣告帶 */
 .sb.line:hover{border-color:#06c755;color:#06c755}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}
