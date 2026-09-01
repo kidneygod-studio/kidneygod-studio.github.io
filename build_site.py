@@ -380,6 +380,10 @@ def icon(key: str, cls: str = "", hidden: bool = False) -> str:
             f'{attrs}><path d="{d}"/></svg>')
 
 
+# 首頁分享時帶的標題。與首頁的 h1 一致，別人轉出去看到的名稱才對得上。
+HOME_SHARE_TITLE = f"護腎專家－{AUTHOR_NAME}醫師的護腎教室"
+
+
 def share_buttons(path: str, title: str, top: bool = False) -> str:
     """轉發按鈕。文章頂端與文末各放一組，內容相同。
 
@@ -851,7 +855,7 @@ def social_links() -> str:
 
 
 def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None,
-         extra_head: str = "") -> str:
+         extra_head: str = "", after_disclaimer: str = "") -> str:
     """所有頁面共用的骨架。canonical 與 OG 是搜尋引擎與分享預覽的基本要求。"""
     # canonical 必須和 sitemap 宣告的網址逐字相同，否則等於叫 Google 索引兩個位址。
     # sitemap 用的是目錄形式（/articles/），這裡把 index.html 收掉對齊。
@@ -934,6 +938,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
   </div>
 </div>
 <div class="disclaimer">{esc(DISCLAIMER)}</div>
+{after_disclaimer}
 </main>
 <footer class="site"><div class="wrap">
 <p>{SITE_NAME}　·　最後更新 {TODAY}　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
@@ -1367,6 +1372,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     <span class="hgo">遊戲商城</span></a>
 </div>
 </div>
+{share_buttons("", HOME_SHARE_TITLE, top=True)}
 </div>
 
 <h2 class="sect" id="topics">依主題閱讀</h2>
@@ -1396,7 +1402,11 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         "url": f"{BASE_URL}/",
         "author": author_ld(),
     }
-    return page(title, desc, "", body, jsonld)
+    # 首頁的分享圖示放兩處：「這個網站怎麼用」下方，以及免責聲明下方。
+    # 腳本只輸出一次，掛在後者——它在文件的後面，執行時兩組都已經存在。
+    return page(title, desc, "", body, jsonld,
+                after_disclaimer=share_buttons("", HOME_SHARE_TITLE, top=True)
+                + share_script())
 
 
 # 醫師介紹要條列的資歷。第一項是最強的權威訊號，刻意排在最前面。
