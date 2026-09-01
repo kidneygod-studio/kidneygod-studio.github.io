@@ -147,18 +147,22 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 .itv .qa p+p{margin-top:8px}
 /* 轉發按鈕：外框樣式而非填色，文末已經有參考來源與延伸閱讀，
    再加一排實心色塊會太吵。手指目標維持 44px 高。 */
-.share .sbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+/* 純圖示、固定一排：帶文字的四顆在 375px 手機上約需 445px，可用寬度只有
+   約 335px，排不成一排。圖示版每顆 44px、四顆加間距約 206px。
+   nowrap 是刻意的——這排永遠不該換行。 */
+.share .sbtns{display:flex;flex-wrap:nowrap;gap:10px;margin-top:14px}
+.share.top{margin:18px 0 6px}
+.share.top .sbtns{margin-top:0}
 .sb{display:inline-flex;align-items:center;justify-content:center;
-min-height:44px;padding:0 18px;border-radius:999px;font-size:14.5px;
-font-weight:700;text-decoration:none;cursor:pointer;
+width:44px;height:44px;flex-shrink:0;border-radius:999px;cursor:pointer;
 border:1.5px solid var(--line);background:var(--card);color:var(--fg);
-font-family:inherit;transition:border-color .15s,color .15s}
+transition:border-color .15s,color .15s}
 .sb:hover{border-color:var(--accent);color:var(--accent)}
-.sb svg{margin-right:7px;flex-shrink:0}
+.sb svg{flex-shrink:0}
 /* 這一行是必要的：hidden 屬性靠的是瀏覽器預設樣式的 display:none，而作者
    樣式優先於瀏覽器預設樣式，上面的 display:inline-flex 會把它蓋掉——結果
    是「隱藏」的按鈕照樣顯示出來，而且按了沒反應。 */
-.sb[hidden]{display:none}
+.sb[hidden],.sb svg[hidden]{display:none}
 /* 各平台用自己的識別色只上在邊框與文字，不填滿——填滿會讓文末變成廣告帶 */
 .sb.line:hover{border-color:#06c755;color:#06c755}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}

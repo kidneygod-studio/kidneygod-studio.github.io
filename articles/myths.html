@@ -147,18 +147,22 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 .itv .qa p+p{margin-top:8px}
 /* 轉發按鈕：外框樣式而非填色，文末已經有參考來源與延伸閱讀，
    再加一排實心色塊會太吵。手指目標維持 44px 高。 */
-.share .sbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+/* 純圖示、固定一排：帶文字的四顆在 375px 手機上約需 445px，可用寬度只有
+   約 335px，排不成一排。圖示版每顆 44px、四顆加間距約 206px。
+   nowrap 是刻意的——這排永遠不該換行。 */
+.share .sbtns{display:flex;flex-wrap:nowrap;gap:10px;margin-top:14px}
+.share.top{margin:18px 0 6px}
+.share.top .sbtns{margin-top:0}
 .sb{display:inline-flex;align-items:center;justify-content:center;
-min-height:44px;padding:0 18px;border-radius:999px;font-size:14.5px;
-font-weight:700;text-decoration:none;cursor:pointer;
+width:44px;height:44px;flex-shrink:0;border-radius:999px;cursor:pointer;
 border:1.5px solid var(--line);background:var(--card);color:var(--fg);
-font-family:inherit;transition:border-color .15s,color .15s}
+transition:border-color .15s,color .15s}
 .sb:hover{border-color:var(--accent);color:var(--accent)}
-.sb svg{margin-right:7px;flex-shrink:0}
+.sb svg{flex-shrink:0}
 /* 這一行是必要的：hidden 屬性靠的是瀏覽器預設樣式的 display:none，而作者
    樣式優先於瀏覽器預設樣式，上面的 display:inline-flex 會把它蓋掉——結果
    是「隱藏」的按鈕照樣顯示出來，而且按了沒反應。 */
-.sb[hidden]{display:none}
+.sb[hidden],.sb svg[hidden]{display:none}
 /* 各平台用自己的識別色只上在邊框與文字，不填滿——填滿會讓文末變成廣告帶 */
 .sb.line:hover{border-color:#06c755;color:#06c755}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}
@@ -329,77 +333,66 @@ letter-spacing:.4px;line-height:1.5}
 <h1>警訊與迷思：腎臟健康重點整理</h1>
 <p class="lede">哪些症狀該就醫、哪些流傳很廣的說法其實沒有根據。這一頁整理腎臟相關的警訊與常見迷思。</p>
 <p class="meta">作者：<a href="/about.html">吳政哲</a>（腎臟科醫師）　·　更新於 2026-09-01　·　共 8 則</p>
+<div class="share top"><div class="sbtns"><button class="sb native" type="button" hidden aria-label="分享" title="分享" data-title="警訊與迷思：腎臟健康重點整理" data-url="https://kidneygod.net/articles/myths.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg></button><a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmyths.html" target="_blank" rel="noopener" aria-label="分享到 LINE" title="分享到 LINE"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmyths.html" target="_blank" rel="noopener" aria-label="分享到 Facebook" title="分享到 Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a class="sb th" href="https://www.threads.com/intent/post?text=%E8%AD%A6%E8%A8%8A%E8%88%87%E8%BF%B7%E6%80%9D%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fmyths.html" target="_blank" rel="noopener" aria-label="分享到 Threads" title="分享到 Threads"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg></a><button class="sb copy" type="button" aria-label="複製連結" title="複製連結" data-url="https://kidneygod.net/articles/myths.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-off fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-on hidden fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></button></div></div>
 <h2 class="backlink">深入閱讀</h2><div class="sd">這個主題的完整長文</div><a class="feat" href="/articles/kidney-function-recovery.html"><div class="t">腎功能還能不能恢復？急性與慢性的差別</div><div class="d">一次抽血異常不等於要洗腎，長期慢性也不等於沒救。這篇說明急性腎損傷與慢性腎臟病差在哪裡、各自的恢復機會有多少，以及為什麼「急性好了」之後仍然需要追蹤。…</div></a>
 <div class="toc"><h2>本頁內容</h2><ol><li><a href="#edema">水腫：用手指壓一下就能做的初步檢查</a></li><li><a href="#five-signs">泡、水、高、貧、倦：五個字記住腎病警訊</a></li><li><a href="#backpain">腰痛就是腎不好？大多數時候不是</a></li><li><a href="#organ-food">吃腰子補腰子？補到的只有尿酸和磷</a></li><li><a href="#dialysis-myth">「洗腎是西藥吃太多」？真相恰恰相反</a></li><li><a href="#shenkui">「腎虧」不是醫學診斷，也不等於腎臟有病</a></li><li><a href="#dialysis-forever">洗腎一定是一輩子的嗎？要看是急性還是慢性</a></li><li><a href="#detox">「排毒」「清血」：腎臟本來就在做這件事</a></li></ol></div>
 <article class="card"><h2 id="edema">水腫：用手指壓一下就能做的初步檢查</h2><p>用拇指壓小腿脛骨前方五秒，放開後留下凹陷久久不平——這是「凹陷性水腫」。腎臟性水腫的特色是早上眼皮腫、下午往下肢移動；若合併大量泡泡尿，要想到腎病症候群（大量蛋白尿）。不過水腫的鑑別很廣：心衰竭、肝硬化、藥物（某些降壓藥）、久站都可能。重點是：新出現、持續惡化、或合併喘與尿量減少的水腫，請就醫抽血驗尿，不要先買利尿劑自己消。</p></article><article class="card"><h2 id="five-signs">泡、水、高、貧、倦：五個字記住腎病警訊</h2><p>台灣腎臟醫學界推廣的五字口訣：「泡」泡泡尿（蛋白尿）、「水」水腫、「高」高血壓、「貧」不明原因貧血、「倦」持續倦怠。中了任何一項，就值得抽血驗尿檢查腎功能。要特別強調：慢性腎臟病早期常常完全沒症狀，等到症狀明顯往往已是中後期——所以有糖尿病、高血壓、痛風、腎病家族史、長期用藥史的高風險族群，不要等症狀，每年定期檢驗肌酸酐與尿蛋白才是正解。</p></article><article class="card"><h2 id="backpain">腰痛就是腎不好？大多數時候不是</h2><p>門診最常見的誤會之一。絕大多數腰痛來自肌肉、筋膜與脊椎——彎腰搬重物後痛、姿勢改變會加劇的，幾乎都是骨骼肌肉問題。腎臟本身痛起來通常是結石的劇烈絞痛（痛到打滾、可能合併血尿）或腎盂腎炎的悶痛加發燒、敲擊腰部會痛。最容易被忽略的真相是反過來的：慢性腎臟病早期通常「完全不會痛」。與其用腰痛猜腎，不如用驗血驗尿確認。</p></article><article class="card"><h2 id="organ-food">吃腰子補腰子？補到的只有尿酸和磷</h2><p>「以形補形」沒有任何科學依據。動物內臟（腰子、肝、腦）是高普林、高磷、高膽固醇食物——高普林升尿酸傷腎，高磷正是腎友要嚴格限制的，等於「補腎餐」吃進雙倍傷腎成分。同理，號稱補腎的藥燉排骨湯是濃肉湯（高普林）加上來源不明的藥材（風險見馬兜鈴酸篇）。真想對腎臟好：控三高、喝白開水、少吃鹽，樸素但有效。</p></article><article class="card"><h2 id="dialysis-myth">「洗腎是西藥吃太多」？真相恰恰相反</h2><p>台灣人進入透析的最主要原因是糖尿病與高血壓控制不良，不是「按醫囑吃藥」。這個迷思最大的傷害在於：病人因為怕「吃藥傷腎」自行停掉降壓藥降糖藥，改吃來路不明的偏方——結果血壓血糖失控，腎臟加速報銷，反而應驗了預言。事實是：正規的降壓藥（ACEI/ARB）與排糖藥（SGLT2i）是目前實證最強的「護腎藥」。真正該怕的是不明藥物、NSAID 濫用與擅自停藥。相信你的腎臟科醫師，規律回診，這是保住腎功能最可靠的路。</p></article><article class="card"><h2 id="shenkui">「腎虧」不是醫學診斷，也不等於腎臟有病</h2><p>日常說的「腎虧」「顧腰子」多半指的是疲倦、腰痠、性功能問題，這些與西醫的腎臟功能沒有直接關係。腎臟的工作是過濾血液、調節水分電解質與血壓，出問題時的表現是泡泡尿、水腫、貧血、倦怠與檢驗數值異常，而不是「腰痠」。這個誤解造成的實際傷害是：很多人花錢吃補腎產品，卻從來沒驗過 eGFR 與尿液白蛋白——而真正的早期腎臟病，恰恰是沒有任何感覺的。想知道腎好不好，抽血驗尿比任何感覺都準。</p></article><article class="card"><h2 id="dialysis-forever">洗腎一定是一輩子的嗎？要看是急性還是慢性</h2><p>這是門診最常被問到的問題之一，答案取決於原因。因為急性腎損傷（例如嚴重脫水、感染、藥物傷害）而暫時透析的人，腎功能恢復後有機會脫離透析。而慢性腎臟病進展到末期造成的透析，通常是長期的，因為腎元的流失不可逆。但即使如此，仍有選擇：血液透析、腹膜透析、以及腎臟移植，各有適合的生活型態。真正該擔心的不是「會不會洗一輩子」，而是「能不能延後或避免走到那一步」——那取決於現在的血壓、血糖與蛋白尿控制得好不好。</p></article><article class="card"><h2 id="detox">「排毒」「清血」：腎臟本來就在做這件事</h2><p>腎臟每天過濾約 180 公升的血液，把代謝廢物排出去——它本身就是身體的排毒系統，不需要外來的產品幫忙「清」。宣稱能排毒清血的產品，多數沒有臨床證據，有些還含有利尿或瀉下成分，造成脫水反而傷腎。幾句常見的話術值得警覺：「把毒素排出來就不用洗腎」、「西藥治標我們治本」、「這是醫院不會告訴你的」。真正能保護腎臟的做法很無聊：控制血壓血糖、不亂吃藥、定期追蹤數值。無聊，但有證據。</p></article>
 
 <h2 class="backlink" id="refs">參考來源</h2><div class="refs"><p class="sd">本頁內容依據下列指引與官方資料整理，指引改版時本頁會一併更新。</p><ul><li><a href="https://kdigo.org/guidelines/ckd-evaluation-and-management/" target="_blank" rel="nofollow noopener">KDIGO 2024 慢性腎臟病評估與處置臨床指引</a><span class="org">KDIGO</span></li><li><a href="https://www.tsn.org.tw/" target="_blank" rel="nofollow noopener">台灣腎臟醫學會</a></li><li><a href="https://www.hpa.gov.tw/Pages/List.aspx?nodeid=217" target="_blank" rel="nofollow noopener">國民健康署 腎臟病主題專區</a><span class="org">衛生福利部國民健康署</span></li></ul></div>
-
-<h2 class="backlink" id="share">分享這篇</h2>
-<div class="share">
-<p class="sd">覺得有幫助的話，轉給需要的人。</p>
-<div class="sbtns">
-<button class="sb native" type="button" hidden
-        data-title="警訊與迷思：腎臟健康重點整理" data-url="https://kidneygod.net/articles/myths.html"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg>分享</button>
-<a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmyths.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>LINE</a>
-<a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmyths.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>Facebook</a>
-<a class="sb th" href="https://www.threads.com/intent/post?text=%E8%AD%A6%E8%A8%8A%E8%88%87%E8%BF%B7%E6%80%9D%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fmyths.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg>Threads</a>
-<button class="sb copy" type="button" data-url="https://kidneygod.net/articles/myths.html"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><span>複製連結</span></button>
-</div></div>
+<h2 class="backlink" id="share">分享這篇</h2><div class="share"><p class="sd">覺得有幫助的話，轉給需要的人。</p><div class="sbtns"><button class="sb native" type="button" hidden aria-label="分享" title="分享" data-title="警訊與迷思：腎臟健康重點整理" data-url="https://kidneygod.net/articles/myths.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg></button><a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmyths.html" target="_blank" rel="noopener" aria-label="分享到 LINE" title="分享到 LINE"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmyths.html" target="_blank" rel="noopener" aria-label="分享到 Facebook" title="分享到 Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a class="sb th" href="https://www.threads.com/intent/post?text=%E8%AD%A6%E8%A8%8A%E8%88%87%E8%BF%B7%E6%80%9D%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fmyths.html" target="_blank" rel="noopener" aria-label="分享到 Threads" title="分享到 Threads"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg></a><button class="sb copy" type="button" aria-label="複製連結" title="複製連結" data-url="https://kidneygod.net/articles/myths.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-off fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-on hidden fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></button></div></div>
 <script>
 (function(){
-  var box = document.querySelector('.share');
-  if (!box) return;
-  var copy = box.querySelector('.copy'), native = box.querySelector('.native');
-  // 各平台的分享頁本來就是設計成用彈出視窗開啟的。當成整頁跳轉時，
-  // Facebook 常常把人丟到動態牆而不是發文框——這是回報過的實際症狀。
-  // 開不出彈窗（被瀏覽器擋、或手機不支援）就讓 <a> 原本的行為繼續。
-  box.addEventListener('click', function(e){
-    var a = e.target.closest && e.target.closest('a.sb');
-    if (!a) return;
-    var w = window.open(a.href, 'kgshare', 'width=600,height=540');
-    if (!w) return;
-    try { w.opener = null; } catch (err) {}   // window.open 不吃 rel=noopener
-    e.preventDefault();
-  });
-  // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕。
-  // 它排在第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App，
-  // 不會像網頁版分享頁那樣被 App 攔截後跳到動態牆。
-  if (navigator.share) {
-    native.hidden = false;
-    // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
-    // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
-    // 使用者會落在動態牆而不是發文框。這是 OS 層的決定，網頁端擋不掉。
-    // 上面那顆「分享」走系統面板，選 Facebook 會開它自己的原生發文框，
-    // 是行動裝置上正常運作的路徑。LINE 與 Threads 實測正常，保留。
-    var fbBtn = box.querySelector('a.fb');
-    if (fbBtn) fbBtn.hidden = true;
-    native.addEventListener('click', function(){
-      navigator.share({title: native.dataset.title, url: native.dataset.url})
-        .catch(function(){});   // 使用者取消分享會 reject，不是錯誤
+  var boxes = document.querySelectorAll('.share');
+  if (!boxes.length) return;
+  Array.prototype.forEach.call(boxes, function(box){
+    var copy = box.querySelector('.copy'), native = box.querySelector('.native');
+    // 各平台的分享頁本來就是設計成用彈出視窗開啟的。當成整頁跳轉時，
+    // Facebook 常常把人丟到動態牆而不是發文框——這是回報過的實際症狀。
+    // 開不出彈窗（被瀏覽器擋、或手機不支援）就讓 <a> 原本的行為繼續。
+    box.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a.sb');
+      if (!a) return;
+      var w = window.open(a.href, 'kgshare', 'width=600,height=540');
+      if (!w) return;
+      try { w.opener = null; } catch (err) {}   // window.open 不吃 rel=noopener
+      e.preventDefault();
     });
-  }
-  copy.addEventListener('click', function(){
-    // 只換 span 裡的字：按鈕內還有一個 SVG 圖示，動 button.textContent
-    // 會把圖示一起清掉，而且清掉之後不會再回來
-    var label = copy.querySelector('span') || copy;
-    var url = copy.dataset.url, done = function(){
-      var old = label.textContent;
-      label.textContent = '已複製';
-      setTimeout(function(){ label.textContent = old; }, 1600);
-    };
-    // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(done, fallback);
-    } else { fallback(); }
-    function fallback(){
-      var ta = document.createElement('textarea');
-      ta.value = url; ta.setAttribute('readonly', '');
-      ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); done(); } catch (e) {}
-      document.body.removeChild(ta);
+    // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕。
+    // 它排第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App。
+    if (navigator.share) {
+      native.hidden = false;
+      // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
+      // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
+      // 使用者會落在動態牆。這是 OS 層的決定，網頁端擋不掉。LINE 與 Threads
+      // 實測正常，保留。
+      var fbBtn = box.querySelector('a.fb');
+      if (fbBtn) fbBtn.hidden = true;
+      native.addEventListener('click', function(){
+        navigator.share({title: native.dataset.title, url: native.dataset.url})
+          .catch(function(){});   // 使用者取消分享會 reject，不是錯誤
+      });
     }
+    copy.addEventListener('click', function(){
+      // 純圖示按鈕沒有文字可以換，改成把鏈結圖示換成打勾。不要動
+      // button.textContent——那會把裡面的 SVG 一起清掉且不會回來。
+      var off = copy.querySelector('.i-off'), on = copy.querySelector('.i-on');
+      var url = copy.dataset.url, done = function(){
+        off.hidden = true; on.hidden = false;
+        setTimeout(function(){ off.hidden = false; on.hidden = true; }, 1600);
+      };
+      // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(done, fallback);
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = url; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
   });
 })();
 </script>

@@ -147,18 +147,22 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 .itv .qa p+p{margin-top:8px}
 /* 轉發按鈕：外框樣式而非填色，文末已經有參考來源與延伸閱讀，
    再加一排實心色塊會太吵。手指目標維持 44px 高。 */
-.share .sbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+/* 純圖示、固定一排：帶文字的四顆在 375px 手機上約需 445px，可用寬度只有
+   約 335px，排不成一排。圖示版每顆 44px、四顆加間距約 206px。
+   nowrap 是刻意的——這排永遠不該換行。 */
+.share .sbtns{display:flex;flex-wrap:nowrap;gap:10px;margin-top:14px}
+.share.top{margin:18px 0 6px}
+.share.top .sbtns{margin-top:0}
 .sb{display:inline-flex;align-items:center;justify-content:center;
-min-height:44px;padding:0 18px;border-radius:999px;font-size:14.5px;
-font-weight:700;text-decoration:none;cursor:pointer;
+width:44px;height:44px;flex-shrink:0;border-radius:999px;cursor:pointer;
 border:1.5px solid var(--line);background:var(--card);color:var(--fg);
-font-family:inherit;transition:border-color .15s,color .15s}
+transition:border-color .15s,color .15s}
 .sb:hover{border-color:var(--accent);color:var(--accent)}
-.sb svg{margin-right:7px;flex-shrink:0}
+.sb svg{flex-shrink:0}
 /* 這一行是必要的：hidden 屬性靠的是瀏覽器預設樣式的 display:none，而作者
    樣式優先於瀏覽器預設樣式，上面的 display:inline-flex 會把它蓋掉——結果
    是「隱藏」的按鈕照樣顯示出來，而且按了沒反應。 */
-.sb[hidden]{display:none}
+.sb[hidden],.sb svg[hidden]{display:none}
 /* 各平台用自己的識別色只上在邊框與文字，不填滿——填滿會讓文末變成廣告帶 */
 .sb.line:hover{border-color:#06c755;color:#06c755}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}
@@ -329,77 +333,66 @@ letter-spacing:.4px;line-height:1.5}
 <h1>血糖管理：腎臟健康重點整理</h1>
 <p class="lede">糖尿病是台灣洗腎最主要的原因。血糖控制得好不好，直接決定腎臟能撐多久。這一頁整理血糖與腎臟的關聯與實際做法。</p>
 <p class="meta">作者：<a href="/about.html">吳政哲</a>（腎臟科醫師）　·　更新於 2026-09-01　·　共 17 則</p>
+<div class="share top"><div class="sbtns"><button class="sb native" type="button" hidden aria-label="分享" title="分享" data-title="血糖管理：腎臟健康重點整理" data-url="https://kidneygod.net/articles/blood-sugar.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg></button><a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fblood-sugar.html" target="_blank" rel="noopener" aria-label="分享到 LINE" title="分享到 LINE"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fblood-sugar.html" target="_blank" rel="noopener" aria-label="分享到 Facebook" title="分享到 Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a class="sb th" href="https://www.threads.com/intent/post?text=%E8%A1%80%E7%B3%96%E7%AE%A1%E7%90%86%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fblood-sugar.html" target="_blank" rel="noopener" aria-label="分享到 Threads" title="分享到 Threads"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg></a><button class="sb copy" type="button" aria-label="複製連結" title="複製連結" data-url="https://kidneygod.net/articles/blood-sugar.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-off fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-on hidden fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></button></div></div>
 <h2 class="backlink">深入閱讀</h2><div class="sd">這個主題的完整長文</div><a class="feat" href="/articles/diabetes-kidney-disease.html"><div class="t">糖尿病腎病變：為什麼要在還沒有症狀的時候就開始處理</div><div class="d">糖尿病是台灣洗腎最主要的原因，而腎臟出問題的前期幾乎沒有感覺。這篇說明它怎麼發展、該驗什麼、多久驗一次，以及在哪個階段介入效果最好。…</div></a>
 <div class="toc"><h2>本頁內容</h2><ol><li><a href="#dm-no1">糖尿病是台灣洗腎的第一大原因</a></li><li><a href="#dm-a1c">HbA1c：三個月的血糖成績單</a></li><li><a href="#dm-screen">糖尿病患者的護腎行事曆：每年兩項檢查</a></li><li><a href="#dm-uacr">UACR 怎麼看：30 和 300 是兩道分水嶺</a></li><li><a href="#dm-sglt2">SGLT2 抑制劑：意外變成護腎主力的排糖藥</a></li><li><a href="#dm-glp1">GLP-1 受體促效劑：降糖、減重、還護心腎</a></li><li><a href="#dm-fine">Finerenone：RASi 加 SGLT2i 之後的第三張牌</a></li><li><a href="#dm-keep">血糖控制好了，藥還要繼續吃嗎</a></li><li><a href="#dm-hypo">低血糖：腎功能不好的人風險更高</a></li><li><a href="#dm-met">Metformin：好藥，但要看腎功能調整</a></li><li><a href="#dm-three">空腹、飯後、HbA1c：三個數字看的不是同一件事</a></li><li><a href="#dm-pre">糖尿病前期：還來得及的那個階段</a></li><li><a href="#dm-cgm">連續血糖監測：看見 HbA1c 藏起來的波動</a></li><li><a href="#dm-foot">糖尿病足：最怕的是「不會痛」</a></li><li><a href="#dm-eye-kidney">眼底檢查看到的，往往預告了腎臟的狀況</a></li><li><a href="#dm-smbg">血糖機不是測心安的，要測在對的時間</a></li><li><a href="#dm-sickday">感冒、腸胃炎的時候，血糖藥該怎麼辦</a></li></ol></div>
 <article class="card"><h2 id="dm-no1">糖尿病是台灣洗腎的第一大原因</h2><p>依 2022 台灣腎病年報，2020 年進入透析的患者中，前一年已有糖尿病的比率接近五成；台灣的透析發生率與盛行率長年位居世界前列。糖尿病傷腎的路徑很安靜：先是腎絲球高過濾，接著出現微量白蛋白尿，然後蛋白尿變多、eGFR 開始下滑，最後進入末期腎病。前面兩個階段幾乎沒有症狀，卻正是唯一能有效逆轉或延緩的窗口。所以糖尿病患者最重要的護腎動作不是吃什麼補品，而是每年準時驗尿。</p></article><article class="card"><h2 id="dm-a1c">HbA1c：三個月的血糖成績單</h2><p>糖化血色素反映的是近二到三個月的平均血糖，不會因為抽血前一天忌口就變漂亮，這是它比空腹血糖更能反映真實控制狀況的原因。一般成人的控制目標是 7% 以下，但要個別化：年輕、病程短、沒有併發症的人可以更嚴格；年長、有心血管疾病、容易低血糖或獨居的人，目標會放寬到 7.5–8%，因為對這些人來說低血糖的風險比高血糖更立即。目標值要由醫師依你的狀況設定，別拿別人的數字要求自己。</p></article><article class="card"><h2 id="dm-screen">糖尿病患者的護腎行事曆：每年兩項檢查</h2><p>糖尿病照護指引建議，尚未出現腎病變者每年至少檢查一次「尿液白蛋白／肌酸酐比值（UACR）」與「腎絲球過濾率（eGFR）」；已經診斷腎臟病（eGFR &lt; 60 或 UACR ≥ 30）者，則建議每 3–6 個月追蹤一次。這兩項要一起看：eGFR 反映過濾功能剩多少，UACR 反映腎絲球有沒有在漏蛋白，而蛋白尿往往比 eGFR 更早出現。很多糖友每次回診都驗血糖，卻好幾年沒驗過尿——那等於只顧著看油表，沒在看引擎。</p></article><article class="card"><h2 id="dm-uacr">UACR 怎麼看：30 和 300 是兩道分水嶺</h2><p>尿液白蛋白／肌酸酐比值（UACR）用單次尿液就能檢驗，比留 24 小時尿方便得多。判讀分三級：小於 30 mg/g 為正常；30–300 mg/g 稱為微量白蛋白尿，是腎絲球受損的早期訊號；大於 300 mg/g 為巨量白蛋白尿，代表損傷已較嚴重。要注意幾個會造成暫時偏高的情況：發燒、感染、劇烈運動後、月經期間、血糖或血壓當下很不穩定。因此單次異常不等於確診，通常會在三到六個月內再驗，三次中有兩次異常才成立。</p></article><article class="card"><h2 id="dm-sglt2">SGLT2 抑制劑：意外變成護腎主力的排糖藥</h2><p>SGLT2 抑制劑原本是降血糖藥，讓多餘的糖從尿液排出，但一系列大型試驗發現它能實質延緩腎功能惡化、減少心衰竭住院，效果好到讓它從糖尿病用藥躍升為腎臟病用藥。KDIGO 2024 指引建議：第二型糖尿病合併慢性腎臟病、eGFR ≥ 20 者使用；即使沒有糖尿病，慢性腎臟病患者 eGFR ≥ 20 且 UACR ≥ 200 mg/g，或合併心衰竭者，也建議使用。常見注意事項是泌尿道與生殖器黴菌感染，注意清潔、水分喝夠；生病脫水、要動手術或禁食時通常需暫停，請依醫囑。</p></article><article class="card"><h2 id="dm-glp1">GLP-1 受體促效劑：降糖、減重、還護心腎</h2><p>GLP-1 受體促效劑透過延緩胃排空、促進胰島素分泌並抑制食慾，達到降血糖與明顯減重的效果，研究也顯示能降低心血管事件，並有減少蛋白尿、延緩腎功能惡化的證據。它多為針劑（部分有口服劑型），常見副作用是噁心、腹脹、食慾下降，通常從低劑量開始、隨時間緩解。要提醒的是，這類藥近年被大量當成「減肥針」使用，但它是處方藥，需要醫師評估適應症與禁忌症（例如甲狀腺髓質癌病史、胰臟炎病史），透過非正規管道取得風險很高。</p></article><article class="card"><h2 id="dm-fine">Finerenone：RASi 加 SGLT2i 之後的第三張牌</h2><p>有些糖尿病腎病變患者，即使已使用最大耐受劑量的 ACEI／ARB，蛋白尿仍降不下來。非類固醇型礦物皮質素受體拮抗劑（如 finerenone）就是為這種情況設計的：它抑制發炎與纖維化路徑，能進一步減少蛋白尿並延緩腎功能惡化。KDIGO 2024 建議用於第二型糖尿病、eGFR &gt; 25、血鉀正常、且在最大耐受劑量 RASi 之下 UACR 仍 &gt; 30 mg/g 的患者。最重要的監測項目是血鉀——開始用藥與調整劑量後都需要抽血追蹤，這也是為什麼這類藥一定要在醫師監督下使用。</p></article><article class="card"><h2 id="dm-keep">血糖控制好了，藥還要繼續吃嗎</h2><p>血糖漂亮通常代表藥物、飲食與運動三者合力的結果，不是糖尿病消失了。自行停藥後血糖多半在數週內回升，而高血糖對腎絲球、視網膜、神經的傷害是累積且大多不可逆的。不過確實有機會減藥：透過顯著減重（尤其是新診斷、病程短的患者）、規律運動與飲食調整，部分人可以減少藥物種類或劑量，少數甚至達到緩解。關鍵在於「由醫師依據 HbA1c 與血糖紀錄調整」，而不是自己覺得好了就停。另外要知道，近年 SGLT2i 與 GLP-1 這類藥的價值不只在降糖，還在護心護腎——即使血糖達標，醫師仍可能建議繼續使用。</p></article><article class="card"><h2 id="dm-hypo">低血糖：腎功能不好的人風險更高</h2><p>低血糖的典型表現是冒冷汗、心悸、手抖、頭暈、視力模糊、意識混亂，嚴重可致抽搐昏迷。處理用「15-15 法則」：先補充約 15 克快速糖（半罐含糖飲料、三到四顆方糖、一湯匙蜂蜜），休息 15 分鐘後再測血糖，未改善就再一次；意識不清時千萬不要餵食，應立即送醫。腎友要特別小心：腎臟參與胰島素與部分口服降糖藥的代謝清除，腎功能變差時藥物容易累積，加上食慾差、透析時葡萄糖流失，低血糖風險明顯升高。因此腎友的血糖目標通常會放寬，藥物劑量也需要隨腎功能調整。</p></article><article class="card"><h2 id="dm-met">Metformin：好藥，但要看腎功能調整</h2><p>二甲雙胍（metformin）便宜、有效、低血糖風險低，是第二型糖尿病的基礎用藥。它主要由腎臟排除，腎功能不佳時可能累積並增加乳酸中毒風險（雖然罕見），因此用藥依 eGFR 分級：eGFR ≥ 45 一般可正常使用；30–44 通常需減量並密切追蹤，且不建議新開立；低於 30 則不建議使用。另外兩個時機要暫停：一是打含碘顯影劑的檢查（依醫囑於檢查前後暫停數天）；二是嚴重脫水、感染、腹瀉嘔吐或準備手術禁食時。這些都是醫師會處理的細節，但你主動提醒自己的腎功能，能讓判斷更安全。</p></article><article class="card"><h2 id="dm-three">空腹、飯後、HbA1c：三個數字看的不是同一件事</h2><p>空腹血糖看的是身體在沒有進食時的基礎調節；飯後兩小時血糖看的是身體處理一餐的能力；HbA1c 則是過去二到三個月的平均。三者可能不一致——常見的情況是空腹正常但飯後偏高，或 HbA1c 達標但血糖起伏很大。只看其中一個容易誤判，尤其飯後高血糖對血管的傷害不亞於空腹高血糖。拿到報告時三個都看，並問醫師「我的波動大不大」。</p></article><article class="card"><h2 id="dm-pre">糖尿病前期：還來得及的那個階段</h2><p>空腹血糖 100 至 125，或 HbA1c 5.7% 至 6.4%，屬於糖尿病前期。很多人聽到「還不算糖尿病」就放心了，但這個階段每年約有 5% 至 10% 的人會進展成糖尿病，而且血管傷害其實已經開始。好消息是這是整個病程中最容易逆轉的時期：研究顯示調整飲食與規律運動、體重減少 5% 至 7%，可以大幅降低進展風險，效果甚至優於藥物。這一年不做什麼，和做一點什麼，五年後差很多。</p></article><article class="card"><h2 id="dm-cgm">連續血糖監測：看見 HbA1c 藏起來的波動</h2><p>連續血糖監測（CGM）用貼在手臂的感測器每幾分鐘記錄一次血糖，呈現的是一整天的曲線而不是幾個點。它最大的價值在於揭露 HbA1c 看不到的東西：同樣是 HbA1c 7%，可能是平穩的 7%，也可能是高低震盪的平均值，兩者的風險不同。常用的指標是 TIR（在目標範圍內的時間比例）。它也讓人直接看到「這一餐、這次運動、這次熬夜」對血糖的影響，衛教效果往往比講一百次還好。適不適合、有沒有給付，跟你的醫師討論。</p></article><article class="card"><h2 id="dm-foot">糖尿病足：最怕的是「不會痛」</h2><p>長期高血糖會傷害周邊神經，讓腳的痛覺與溫度覺變遲鈍。危險就在這裡——水泡、割傷、燙傷、鞋子磨破皮，患者可能完全沒感覺，等到發現時已經感染或潰瘍。加上血管病變讓傷口難癒合，小傷變成截肢的路徑比想像中短。每天花一分鐘：看腳底（用鏡子）、看趾縫、摸溫度、確認有沒有破皮。不要自己修厚繭與雞眼，不要泡熱水（感覺不到燙），鞋子買下午試穿。</p></article><article class="card"><h2 id="dm-eye-kidney">眼底檢查看到的，往往預告了腎臟的狀況</h2><p>糖尿病視網膜病變與糖尿病腎病變都是微血管病變，兩者由同一個機轉造成，所以在臨床上高度相關：出現明顯視網膜病變的第一型糖尿病患，腎臟往往也已經受影響。反過來，如果蛋白尿明顯但眼底完全正常，醫師可能會考慮腎臟問題是否另有原因、需不需要進一步檢查。這是糖尿病患每年都該做眼底檢查的另一個理由——它不只是為了眼睛。</p></article><article class="card"><h2 id="dm-smbg">血糖機不是測心安的，要測在對的時間</h2><p>隨機亂測、只測空腹、或只在覺得不舒服時測，得到的資訊很有限。有意義的做法是配對測量：同一餐的餐前與餐後兩小時各一次，這樣才知道「這一餐」對你的影響，而不只是一個孤立的數字。另外幾個關鍵時機：懷疑低血糖時、生病時、調整藥物後、以及運動前後。記錄時把當下的飲食與活動一起寫下來，回診時醫師看得懂脈絡，調整才會精準。測完就丟的數字，等於白扎那一針。</p></article><article class="card"><h2 id="dm-sickday">感冒、腸胃炎的時候，血糖藥該怎麼辦</h2><p>生病時身體會分泌壓力荷爾蒙，血糖常常上升；但同時食慾差、又可能嘔吐腹瀉，脫水風險大增——這正是急性腎損傷最常見的開場。幾個原則：不要因為吃不下就自行全部停藥，胰島素尤其不能貿然停；確保水分攝取；更頻繁地測血糖。特別注意 SGLT2 抑制劑與 metformin，在嚴重脫水、無法進食或準備手術時通常需要暫停，但停哪一種、停多久要問你的醫師。生病前先問清楚，比生病後才想起來好。</p></article>
 
 <h2 class="backlink" id="refs">參考來源</h2><div class="refs"><p class="sd">本頁內容依據下列指引與官方資料整理，指引改版時本頁會一併更新。</p><ul><li><a href="https://kdigo.org/guidelines/diabetes-ckd/" target="_blank" rel="nofollow noopener">KDIGO 2022 慢性腎臟病糖尿病管理臨床指引</a><span class="org">KDIGO</span></li><li><a href="https://professional.diabetes.org/standards-of-care" target="_blank" rel="nofollow noopener">ADA Standards of Care in Diabetes（糖尿病照護標準，每年更新）</a><span class="org">American Diabetes Association</span></li><li><a href="https://www.endo-dm.org.tw/" target="_blank" rel="nofollow noopener">中華民國內分泌暨糖尿病學會</a></li></ul></div>
-
-<h2 class="backlink" id="share">分享這篇</h2>
-<div class="share">
-<p class="sd">覺得有幫助的話，轉給需要的人。</p>
-<div class="sbtns">
-<button class="sb native" type="button" hidden
-        data-title="血糖管理：腎臟健康重點整理" data-url="https://kidneygod.net/articles/blood-sugar.html"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg>分享</button>
-<a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fblood-sugar.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>LINE</a>
-<a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fblood-sugar.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>Facebook</a>
-<a class="sb th" href="https://www.threads.com/intent/post?text=%E8%A1%80%E7%B3%96%E7%AE%A1%E7%90%86%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fblood-sugar.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg>Threads</a>
-<button class="sb copy" type="button" data-url="https://kidneygod.net/articles/blood-sugar.html"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><span>複製連結</span></button>
-</div></div>
+<h2 class="backlink" id="share">分享這篇</h2><div class="share"><p class="sd">覺得有幫助的話，轉給需要的人。</p><div class="sbtns"><button class="sb native" type="button" hidden aria-label="分享" title="分享" data-title="血糖管理：腎臟健康重點整理" data-url="https://kidneygod.net/articles/blood-sugar.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg></button><a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fblood-sugar.html" target="_blank" rel="noopener" aria-label="分享到 LINE" title="分享到 LINE"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fblood-sugar.html" target="_blank" rel="noopener" aria-label="分享到 Facebook" title="分享到 Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a class="sb th" href="https://www.threads.com/intent/post?text=%E8%A1%80%E7%B3%96%E7%AE%A1%E7%90%86%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fblood-sugar.html" target="_blank" rel="noopener" aria-label="分享到 Threads" title="分享到 Threads"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg></a><button class="sb copy" type="button" aria-label="複製連結" title="複製連結" data-url="https://kidneygod.net/articles/blood-sugar.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-off fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-on hidden fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></button></div></div>
 <script>
 (function(){
-  var box = document.querySelector('.share');
-  if (!box) return;
-  var copy = box.querySelector('.copy'), native = box.querySelector('.native');
-  // 各平台的分享頁本來就是設計成用彈出視窗開啟的。當成整頁跳轉時，
-  // Facebook 常常把人丟到動態牆而不是發文框——這是回報過的實際症狀。
-  // 開不出彈窗（被瀏覽器擋、或手機不支援）就讓 <a> 原本的行為繼續。
-  box.addEventListener('click', function(e){
-    var a = e.target.closest && e.target.closest('a.sb');
-    if (!a) return;
-    var w = window.open(a.href, 'kgshare', 'width=600,height=540');
-    if (!w) return;
-    try { w.opener = null; } catch (err) {}   // window.open 不吃 rel=noopener
-    e.preventDefault();
-  });
-  // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕。
-  // 它排在第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App，
-  // 不會像網頁版分享頁那樣被 App 攔截後跳到動態牆。
-  if (navigator.share) {
-    native.hidden = false;
-    // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
-    // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
-    // 使用者會落在動態牆而不是發文框。這是 OS 層的決定，網頁端擋不掉。
-    // 上面那顆「分享」走系統面板，選 Facebook 會開它自己的原生發文框，
-    // 是行動裝置上正常運作的路徑。LINE 與 Threads 實測正常，保留。
-    var fbBtn = box.querySelector('a.fb');
-    if (fbBtn) fbBtn.hidden = true;
-    native.addEventListener('click', function(){
-      navigator.share({title: native.dataset.title, url: native.dataset.url})
-        .catch(function(){});   // 使用者取消分享會 reject，不是錯誤
+  var boxes = document.querySelectorAll('.share');
+  if (!boxes.length) return;
+  Array.prototype.forEach.call(boxes, function(box){
+    var copy = box.querySelector('.copy'), native = box.querySelector('.native');
+    // 各平台的分享頁本來就是設計成用彈出視窗開啟的。當成整頁跳轉時，
+    // Facebook 常常把人丟到動態牆而不是發文框——這是回報過的實際症狀。
+    // 開不出彈窗（被瀏覽器擋、或手機不支援）就讓 <a> 原本的行為繼續。
+    box.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a.sb');
+      if (!a) return;
+      var w = window.open(a.href, 'kgshare', 'width=600,height=540');
+      if (!w) return;
+      try { w.opener = null; } catch (err) {}   // window.open 不吃 rel=noopener
+      e.preventDefault();
     });
-  }
-  copy.addEventListener('click', function(){
-    // 只換 span 裡的字：按鈕內還有一個 SVG 圖示，動 button.textContent
-    // 會把圖示一起清掉，而且清掉之後不會再回來
-    var label = copy.querySelector('span') || copy;
-    var url = copy.dataset.url, done = function(){
-      var old = label.textContent;
-      label.textContent = '已複製';
-      setTimeout(function(){ label.textContent = old; }, 1600);
-    };
-    // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(done, fallback);
-    } else { fallback(); }
-    function fallback(){
-      var ta = document.createElement('textarea');
-      ta.value = url; ta.setAttribute('readonly', '');
-      ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); done(); } catch (e) {}
-      document.body.removeChild(ta);
+    // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕。
+    // 它排第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App。
+    if (navigator.share) {
+      native.hidden = false;
+      // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
+      // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
+      // 使用者會落在動態牆。這是 OS 層的決定，網頁端擋不掉。LINE 與 Threads
+      // 實測正常，保留。
+      var fbBtn = box.querySelector('a.fb');
+      if (fbBtn) fbBtn.hidden = true;
+      native.addEventListener('click', function(){
+        navigator.share({title: native.dataset.title, url: native.dataset.url})
+          .catch(function(){});   // 使用者取消分享會 reject，不是錯誤
+      });
     }
+    copy.addEventListener('click', function(){
+      // 純圖示按鈕沒有文字可以換，改成把鏈結圖示換成打勾。不要動
+      // button.textContent——那會把裡面的 SVG 一起清掉且不會回來。
+      var off = copy.querySelector('.i-off'), on = copy.querySelector('.i-on');
+      var url = copy.dataset.url, done = function(){
+        off.hidden = true; on.hidden = false;
+        setTimeout(function(){ off.hidden = false; on.hidden = true; }, 1600);
+      };
+      // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(done, fallback);
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = url; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
   });
 })();
 </script>

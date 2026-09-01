@@ -363,106 +363,120 @@ ICONS = {
     "line": ("fill", "M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"),
     "fb": ("fill", "M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"),
     "th": ("fill", "M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"),
-    # 這兩個不是品牌標誌，自己畫：鏈結與分享箭頭
+    # 這三個不是品牌標誌，自己畫：鏈結、分享箭頭、打勾
     "copy": ("stroke", "M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"),
     "native": ("stroke", "M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"),
+    "done": ("stroke", "M4 12.5l5.5 5.5L20 7"),
 }
 
 
-def icon(key: str) -> str:
+def icon(key: str, cls: str = "", hidden: bool = False) -> str:
     mode, d = ICONS[key]
     attrs = ('fill="currentColor"' if mode == "fill" else
              'fill="none" stroke="currentColor" stroke-width="2" '
              'stroke-linecap="round" stroke-linejoin="round"')
-    return (f'<svg viewBox="0 0 24 24" width="17" height="17" '
-            f'aria-hidden="true" {attrs}><path d="{d}"/></svg>')
+    return (f'<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"'
+            f'{f" class={cls}" if cls else ""}{" hidden" if hidden else ""} '
+            f'{attrs}><path d="{d}"/></svg>')
 
 
-def share_html(path: str, title: str) -> str:
-    """文末的轉發按鈕。
+def share_buttons(path: str, title: str, top: bool = False) -> str:
+    """轉發按鈕。文章頂端與文末各放一組，內容相同。
 
-    用純連結的分享網址，不掛 Facebook／LINE 的官方外掛。理由是功能面：那些
-    外掛能多做的只有顯示分享次數，卻要多載入數十 KB 的第三方腳本、拖慢頁面。
-    連結版的功能一樣完整，而手機上的原生分享面板涵蓋得比它們更廣。
+    純圖示、不放文字：四顆帶文字的按鈕在 375px 手機上約需 445px，而可用寬度
+    只有約 335px，排不成一排。圖示版每顆 44px，四顆加間距約 206px，綽綽有餘。
+    文字拿掉之後靠 aria-label 與 title 保留語意，讀螢幕軟體與滑鼠停留都讀得到。
 
-    LINE 放第一個：受眾是民眾與病患，在台灣把衛教轉給家人最常用的就是 LINE。
+    用純連結的分享網址，不掛 Facebook／LINE 的官方外掛：那些能多做的只有顯示
+    分享次數，卻要多載入數十 KB 的第三方腳本。連結版功能一樣完整。
 
-    手機上另外提供系統原生的分享面板（navigator.share），它能叫出所有已安裝的
-    App，涵蓋範圍比固定幾顆按鈕大得多；不支援的瀏覽器就看不到那顆，其餘照常。
+    腳本只在文末那一組輸出一次，但會綁定頁面上所有的 .share——文末在文件後面，
+    執行時兩組都已經存在。
     """
-    url = f"{BASE_URL}/{re.sub(r'(^|/)index[.]html$', r'\1', path)}"
+    url = f"{BASE_URL}/{re.sub(r'(^|/)index[.]html$', r'', path)}"
     u, t = urllib.parse.quote(url, safe=""), urllib.parse.quote(title, safe="")
     line = f"https://social-plugins.line.me/lineit/share?url={u}"
     fb = f"https://www.facebook.com/sharer/sharer.php?u={u}"
     th = f"https://www.threads.com/intent/post?text={t}%20{u}"
-    return f"""
-<h2 class="backlink" id="share">分享這篇</h2>
-<div class="share">
-<p class="sd">覺得有幫助的話，轉給需要的人。</p>
-<div class="sbtns">
-<button class="sb native" type="button" hidden
-        data-title="{esc(title)}" data-url="{esc(url)}">{icon("native")}分享</button>
-<a class="sb line" href="{line}" target="_blank" rel="noopener">{icon("line")}LINE</a>
-<a class="sb fb" href="{fb}" target="_blank" rel="noopener">{icon("fb")}Facebook</a>
-<a class="sb th" href="{th}" target="_blank" rel="noopener">{icon("th")}Threads</a>
-<button class="sb copy" type="button" data-url="{esc(url)}">{icon("copy")}<span>複製連結</span></button>
-</div></div>
+
+    def a(cls, href, label):
+        return (f'<a class="sb {cls}" href="{href}" target="_blank" rel="noopener" '
+                f'aria-label="分享到 {label}" title="分享到 {label}">{icon(cls)}</a>')
+
+    btns = (
+        f'<button class="sb native" type="button" hidden aria-label="分享" title="分享"'
+        f' data-title="{esc(title)}" data-url="{esc(url)}">{icon("native")}</button>'
+        + a("line", line, "LINE")
+        + a("fb", fb, "Facebook")
+        + a("th", th, "Threads")
+        + f'<button class="sb copy" type="button" aria-label="複製連結" '
+          f'title="複製連結" data-url="{esc(url)}">'
+          f'{icon("copy", cls="i-off")}{icon("done", cls="i-on", hidden=True)}</button>'
+    )
+    head = "" if top else '<h2 class="backlink" id="share">分享這篇</h2>'
+    note = "" if top else '<p class="sd">覺得有幫助的話，轉給需要的人。</p>'
+    cls = "share top" if top else "share"
+    return f'{head}<div class="{cls}">{note}<div class="sbtns">{btns}</div></div>'
+
+
+def share_script() -> str:
+    """綁定頁面上所有的 .share 區塊。整頁只輸出一次。"""
+    return """
 <script>
-(function(){{
-  var box = document.querySelector('.share');
-  if (!box) return;
-  var copy = box.querySelector('.copy'), native = box.querySelector('.native');
-  // 各平台的分享頁本來就是設計成用彈出視窗開啟的。當成整頁跳轉時，
-  // Facebook 常常把人丟到動態牆而不是發文框——這是回報過的實際症狀。
-  // 開不出彈窗（被瀏覽器擋、或手機不支援）就讓 <a> 原本的行為繼續。
-  box.addEventListener('click', function(e){{
-    var a = e.target.closest && e.target.closest('a.sb');
-    if (!a) return;
-    var w = window.open(a.href, 'kgshare', 'width=600,height=540');
-    if (!w) return;
-    try {{ w.opener = null; }} catch (err) {{}}   // window.open 不吃 rel=noopener
-    e.preventDefault();
-  }});
-  // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕。
-  // 它排在第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App，
-  // 不會像網頁版分享頁那樣被 App 攔截後跳到動態牆。
-  if (navigator.share) {{
-    native.hidden = false;
-    // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
-    // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
-    // 使用者會落在動態牆而不是發文框。這是 OS 層的決定，網頁端擋不掉。
-    // 上面那顆「分享」走系統面板，選 Facebook 會開它自己的原生發文框，
-    // 是行動裝置上正常運作的路徑。LINE 與 Threads 實測正常，保留。
-    var fbBtn = box.querySelector('a.fb');
-    if (fbBtn) fbBtn.hidden = true;
-    native.addEventListener('click', function(){{
-      navigator.share({{title: native.dataset.title, url: native.dataset.url}})
-        .catch(function(){{}});   // 使用者取消分享會 reject，不是錯誤
-    }});
-  }}
-  copy.addEventListener('click', function(){{
-    // 只換 span 裡的字：按鈕內還有一個 SVG 圖示，動 button.textContent
-    // 會把圖示一起清掉，而且清掉之後不會再回來
-    var label = copy.querySelector('span') || copy;
-    var url = copy.dataset.url, done = function(){{
-      var old = label.textContent;
-      label.textContent = '已複製';
-      setTimeout(function(){{ label.textContent = old; }}, 1600);
-    }};
-    // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
-    if (navigator.clipboard) {{
-      navigator.clipboard.writeText(url).then(done, fallback);
-    }} else {{ fallback(); }}
-    function fallback(){{
-      var ta = document.createElement('textarea');
-      ta.value = url; ta.setAttribute('readonly', '');
-      ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try {{ document.execCommand('copy'); done(); }} catch (e) {{}}
-      document.body.removeChild(ta);
-    }}
-  }});
-}})();
+(function(){
+  var boxes = document.querySelectorAll('.share');
+  if (!boxes.length) return;
+  Array.prototype.forEach.call(boxes, function(box){
+    var copy = box.querySelector('.copy'), native = box.querySelector('.native');
+    // 各平台的分享頁本來就是設計成用彈出視窗開啟的。當成整頁跳轉時，
+    // Facebook 常常把人丟到動態牆而不是發文框——這是回報過的實際症狀。
+    // 開不出彈窗（被瀏覽器擋、或手機不支援）就讓 <a> 原本的行為繼續。
+    box.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a.sb');
+      if (!a) return;
+      var w = window.open(a.href, 'kgshare', 'width=600,height=540');
+      if (!w) return;
+      try { w.opener = null; } catch (err) {}   // window.open 不吃 rel=noopener
+      e.preventDefault();
+    });
+    // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕。
+    // 它排第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App。
+    if (navigator.share) {
+      native.hidden = false;
+      // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
+      // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
+      // 使用者會落在動態牆。這是 OS 層的決定，網頁端擋不掉。LINE 與 Threads
+      // 實測正常，保留。
+      var fbBtn = box.querySelector('a.fb');
+      if (fbBtn) fbBtn.hidden = true;
+      native.addEventListener('click', function(){
+        navigator.share({title: native.dataset.title, url: native.dataset.url})
+          .catch(function(){});   // 使用者取消分享會 reject，不是錯誤
+      });
+    }
+    copy.addEventListener('click', function(){
+      // 純圖示按鈕沒有文字可以換，改成把鏈結圖示換成打勾。不要動
+      // button.textContent——那會把裡面的 SVG 一起清掉且不會回來。
+      var off = copy.querySelector('.i-off'), on = copy.querySelector('.i-on');
+      var url = copy.dataset.url, done = function(){
+        off.hidden = true; on.hidden = false;
+        setTimeout(function(){ off.hidden = false; on.hidden = true; }, 1600);
+      };
+      // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(done, fallback);
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = url; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+})();
 </script>
 """
 
@@ -638,18 +652,22 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 .itv .qa p+p{margin-top:8px}
 /* 轉發按鈕：外框樣式而非填色，文末已經有參考來源與延伸閱讀，
    再加一排實心色塊會太吵。手指目標維持 44px 高。 */
-.share .sbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+/* 純圖示、固定一排：帶文字的四顆在 375px 手機上約需 445px，可用寬度只有
+   約 335px，排不成一排。圖示版每顆 44px、四顆加間距約 206px。
+   nowrap 是刻意的——這排永遠不該換行。 */
+.share .sbtns{display:flex;flex-wrap:nowrap;gap:10px;margin-top:14px}
+.share.top{margin:18px 0 6px}
+.share.top .sbtns{margin-top:0}
 .sb{display:inline-flex;align-items:center;justify-content:center;
-min-height:44px;padding:0 18px;border-radius:999px;font-size:14.5px;
-font-weight:700;text-decoration:none;cursor:pointer;
+width:44px;height:44px;flex-shrink:0;border-radius:999px;cursor:pointer;
 border:1.5px solid var(--line);background:var(--card);color:var(--fg);
-font-family:inherit;transition:border-color .15s,color .15s}
+transition:border-color .15s,color .15s}
 .sb:hover{border-color:var(--accent);color:var(--accent)}
-.sb svg{margin-right:7px;flex-shrink:0}
+.sb svg{flex-shrink:0}
 /* 這一行是必要的：hidden 屬性靠的是瀏覽器預設樣式的 display:none，而作者
    樣式優先於瀏覽器預設樣式，上面的 display:inline-flex 會把它蓋掉——結果
    是「隱藏」的按鈕照樣顯示出來，而且按了沒反應。 */
-.sb[hidden]{display:none}
+.sb[hidden],.sb svg[hidden]{display:none}
 /* 各平台用自己的識別色只上在邊框與文字，不填滿——填滿會讓文末變成廣告帶 */
 .sb.line:hover{border-color:#06c755;color:#06c755}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}
@@ -975,12 +993,13 @@ def build_category(cat: str, items: list[dict],
 <h1>{esc(cat)}：腎臟健康重點整理</h1>
 <p class="lede">{esc(intro)}</p>
 <p class="meta">作者：<a href="/about.html">{esc(AUTHOR_NAME)}</a>（{esc(AUTHOR_TITLE)}）　·　更新於 {TODAY}　·　共 {len(items)} 則</p>
+{share_buttons(path, f"{cat}：腎臟健康重點整理", top=True)}
 {deep_html}
 <div class="toc"><h2>本頁內容</h2><ol>{toc}</ol></div>
 {''.join(secs)}
 {interview_html(ITV.get(cat))}
 {sources_html(PAGE_SOURCES.get(cat, []))}
-{share_html(path, f"{cat}：腎臟健康重點整理")}
+{share_buttons(path, f"{cat}：腎臟健康重點整理")}{share_script()}
 <h2 class="backlink">其他主題</h2>
 <div class="cats">{others}</div>
 """
@@ -1231,9 +1250,10 @@ def build_markdown_articles() -> list[dict]:
         refs = PAGE_SOURCES.get(a["slug"], [])
         itv = ITV.get(a["slug"])
         body += (f"<p class='meta'>作者：<a href='/about.html'>{esc(AUTHOR_NAME)}</a>"
-                 f"（{esc(AUTHOR_TITLE)}）　·　{datestr}</p>{toc}"
+                 f"（{esc(AUTHOR_TITLE)}）　·　{datestr}</p>"
+                 + share_buttons(path, a["title"], top=True) + toc
                  + "".join(paras) + interview_html(itv) + sources_html(refs)
-                 + share_html(path, a["title"]) + related)
+                 + share_buttons(path, a["title"]) + share_script() + related)
 
         jsonld = {
             "@context": "https://schema.org", "@type": "MedicalWebPage",

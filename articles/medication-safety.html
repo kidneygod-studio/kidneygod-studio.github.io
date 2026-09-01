@@ -147,18 +147,22 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 .itv .qa p+p{margin-top:8px}
 /* 轉發按鈕：外框樣式而非填色，文末已經有參考來源與延伸閱讀，
    再加一排實心色塊會太吵。手指目標維持 44px 高。 */
-.share .sbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+/* 純圖示、固定一排：帶文字的四顆在 375px 手機上約需 445px，可用寬度只有
+   約 335px，排不成一排。圖示版每顆 44px、四顆加間距約 206px。
+   nowrap 是刻意的——這排永遠不該換行。 */
+.share .sbtns{display:flex;flex-wrap:nowrap;gap:10px;margin-top:14px}
+.share.top{margin:18px 0 6px}
+.share.top .sbtns{margin-top:0}
 .sb{display:inline-flex;align-items:center;justify-content:center;
-min-height:44px;padding:0 18px;border-radius:999px;font-size:14.5px;
-font-weight:700;text-decoration:none;cursor:pointer;
+width:44px;height:44px;flex-shrink:0;border-radius:999px;cursor:pointer;
 border:1.5px solid var(--line);background:var(--card);color:var(--fg);
-font-family:inherit;transition:border-color .15s,color .15s}
+transition:border-color .15s,color .15s}
 .sb:hover{border-color:var(--accent);color:var(--accent)}
-.sb svg{margin-right:7px;flex-shrink:0}
+.sb svg{flex-shrink:0}
 /* 這一行是必要的：hidden 屬性靠的是瀏覽器預設樣式的 display:none，而作者
    樣式優先於瀏覽器預設樣式，上面的 display:inline-flex 會把它蓋掉——結果
    是「隱藏」的按鈕照樣顯示出來，而且按了沒反應。 */
-.sb[hidden]{display:none}
+.sb[hidden],.sb svg[hidden]{display:none}
 /* 各平台用自己的識別色只上在邊框與文字，不填滿——填滿會讓文末變成廣告帶 */
 .sb.line:hover{border-color:#06c755;color:#06c755}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}
@@ -329,77 +333,66 @@ letter-spacing:.4px;line-height:1.5}
 <h1>用藥安全：腎臟健康重點整理</h1>
 <p class="lede">很多腎損傷來自可以避免的用藥。這一頁整理常見的傷腎藥物、危險組合，以及什麼情況下該先問過醫師。</p>
 <p class="meta">作者：<a href="/about.html">吳政哲</a>（腎臟科醫師）　·　更新於 2026-09-01　·　共 10 則</p>
+<div class="share top"><div class="sbtns"><button class="sb native" type="button" hidden aria-label="分享" title="分享" data-title="用藥安全：腎臟健康重點整理" data-url="https://kidneygod.net/articles/medication-safety.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg></button><a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener" aria-label="分享到 LINE" title="分享到 LINE"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener" aria-label="分享到 Facebook" title="分享到 Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a class="sb th" href="https://www.threads.com/intent/post?text=%E7%94%A8%E8%97%A5%E5%AE%89%E5%85%A8%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener" aria-label="分享到 Threads" title="分享到 Threads"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg></a><button class="sb copy" type="button" aria-label="複製連結" title="複製連結" data-url="https://kidneygod.net/articles/medication-safety.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-off fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-on hidden fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></button></div></div>
 <h2 class="backlink">深入閱讀</h2><div class="sd">這個主題的完整長文</div><a class="feat" href="/articles/painkiller-nsaid-kidney.html"><div class="t">止痛藥會傷腎嗎？NSAID 的風險、誰該小心，以及安全的替代做法</div><div class="d">止痛藥傷腎是真的，但「所有人都不能吃」是誤解。這篇說明 NSAID 傷腎的機轉、哪些人是真正的高風險族群、什麼組合最危險，以及痛起來的時候還有哪些選擇。…</div></a>
 <div class="toc"><h2>本頁內容</h2><ol><li><a href="#nsaid">NSAID 止痛藥：腎臟的頭號黑名單</a></li><li><a href="#unknown-med">來路不明的止痛藥，成分永遠是驚喜</a></li><li><a href="#aristo">馬兜鈴酸：一次傷害，終身有效</a></li><li><a href="#contrast">打顯影劑前，先讓醫師知道你的腎</a></li><li><a href="#ppi">胃藥不是保養品：PPI 的腎臟冷知識</a></li><li><a href="#abx">抗生素：該吃就吃好吃滿，不該吃別碰</a></li><li><a href="#cold-med">感冒藥裡也有止痛藥，很多人重複吃了不知道</a></li><li><a href="#phosphate-enema">清腸用的瀉劑，腎功能不好的人要換一種</a></li><li><a href="#dose-adjust">很多藥不是不能吃，是要換一個劑量</a></li><li><a href="#herb-interact">中藥、保健品和西藥一起吃，要讓兩邊都知道</a></li></ol></div>
 <article class="card"><h2 id="nsaid">NSAID 止痛藥：腎臟的頭號黑名單</h2><p>布洛芬、雙氯芬酸等非類固醇消炎止痛藥（NSAID）會抑制前列腺素，讓腎臟血流減少。健康人偶爾短期使用通常沒事，但在脫水、年長、慢性腎臟病，或同時使用利尿劑與降壓藥（ACEI/ARB）時，急性腎損傷風險大幅上升——這個組合在醫界被稱為「三重打擊」。腎功能不好的人止痛請先與醫師或藥師討論，普拿疼（乙醯胺酚）在建議劑量內對腎臟相對安全。</p></article><article class="card"><h2 id="unknown-med">來路不明的止痛藥，成分永遠是驚喜</h2><p>地下電台、遊覽車團購、標示不清的「祖傳秘方」止痛粉，經常摻入高劑量 NSAID、類固醇，甚至已禁用成分。長期服用不明複方止痛藥與慢性間質性腎炎、止痛藥腎病變有明確關聯。買藥認明兩件事：包裝上的衛福部藥品許可證字號，以及願意回答你問題的藥師。便宜有效又神秘的藥，通常是腎臟在幫你付帳。</p></article><article class="card"><h2 id="aristo">馬兜鈴酸：一次傷害，終身有效</h2><p>含馬兜鈴酸的中草藥（關木通、廣防己等）會造成不可逆的腎間質纖維化，還會大幅提高泌尿道上皮癌風險——台灣曾是全球馬兜鈴酸腎病變最盛行的地區之一，因此已全面禁用。但地下管道與來源不明的草藥、藥粉仍可能含有。想用中藥調理沒問題，請找合格中醫師開立、在有 GMP 認證的藥廠產品範圍內使用，不要吃朋友送的、山上採的、夜市買的。</p></article><article class="card"><h2 id="contrast">打顯影劑前，先讓醫師知道你的腎</h2><p>電腦斷層與心導管使用的含碘顯影劑可能造成顯影劑腎病變，高風險族群是原本腎功能就差、糖尿病、脫水與年長者。要做檢查前：主動告知醫師自己的腎功能或直接出示抽血報告；檢查前後依醫囑補充水分；服用 metformin（二甲雙胍）的糖尿病患者，醫師可能會請你暫停幾天。多數人風險很低，不需要因噎廢食拒絕必要檢查——關鍵是讓團隊知道你的腎，事先準備。</p></article><article class="card"><h2 id="ppi">胃藥不是保養品：PPI 的腎臟冷知識</h2><p>氫離子幫浦阻斷劑（PPI，常見的「強效胃藥」）長期使用與急性間質性腎炎及慢性腎臟病風險上升有關。短期依醫囑治療胃食道逆流、胃潰瘍沒有問題，有明確適應症就該用；問題出在「吃了舒服就一直吃」、把胃藥當日常保養。任何藥要不要長期吃，答案都應該來自回診評估，而不是習慣。</p></article><article class="card"><h2 id="abx">抗生素：該吃就吃好吃滿，不該吃別碰</h2><p>部分抗生素（如胺基糖苷類）本身有腎毒性，醫師開立時會依腎功能調整劑量並監測——這是專業判斷，請照醫囑完成療程，自行停藥反而養出抗藥菌。真正傷腎的常見情境是：自行到藥房買抗生素、吃別人剩下的藥、感冒（多為病毒）卻硬要吃抗生素。抗生素不是消炎藥，也不是退燒藥。</p></article><article class="card"><h2 id="cold-med">感冒藥裡也有止痛藥，很多人重複吃了不知道</h2><p>市售綜合感冒藥多半是複方，裡面常含有解熱鎮痛成分。如果同時再吃一顆止痛藥，等於重複用藥——含 NSAID 的情況下會增加腎臟負擔，含乙醯胺酚的情況下則要注意肝臟的總劑量。更麻煩的是不同品牌的成分不同，光看包裝名稱看不出來。做法很簡單：拿藥時直接問藥師「這裡面有沒有止痛成分」，或看包裝背面的成分表。腎功能不好的人，感冒藥不是可以隨便疊加的東西。</p></article><article class="card"><h2 id="phosphate-enema">清腸用的瀉劑，腎功能不好的人要換一種</h2><p>含磷酸鈉的口服瀉劑與灌腸劑（常用於大腸鏡前清腸或嚴重便秘）可能造成急性磷酸鹽腎病變，導致不可逆的腎功能惡化。高風險族群是原本腎功能就不好、年長、脫水，或正在服用 ACEI／ARB、利尿劑、NSAID 的人。這不表示不能做大腸鏡——而是要讓醫師知道你的腎功能，他們可以改用聚乙二醇（PEG）等其他清腸配方。自己去藥局買浣腸劑之前，也先問過藥師。</p></article><article class="card"><h2 id="dose-adjust">很多藥不是不能吃，是要換一個劑量</h2><p>大量藥物經由腎臟排除，腎功能下降時排得慢、血中濃度上升，同樣的劑量就可能變成過量。所以臨床上常見的處理不是停藥，而是依 eGFR 調整劑量或給藥間隔——抗生素、部分降糖藥、抗凝血劑、某些止痛藥都屬於這一類。你要做的只有一件事：每次看新的醫師、拿新的藥、或到藥局買成藥時，主動說「我腎功能不好，eGFR 大約多少」。這句話比任何保健品都護腎。</p></article><article class="card"><h2 id="herb-interact">中藥、保健品和西藥一起吃，要讓兩邊都知道</h2><p>問題通常不是「中藥或西藥比較傷腎」，而是交互作用沒有人在看。例如某些草藥會影響抗凝血劑的效果、含甘草的方劑可能造成低血鉀與血壓上升、高劑量魚油會增加出血風險。當西醫不知道你在吃中藥、中醫也不知道你在吃西藥時，風險就落在你身上。做法是把所有正在吃的東西（含保健食品）列一張清單，兩邊看診都出示。合格中醫師開立的處方與有 GMP 認證的產品，資訊透明時安全性高得多。</p></article>
 
 <h2 class="backlink" id="refs">參考來源</h2><div class="refs"><p class="sd">本頁內容依據下列指引與官方資料整理，指引改版時本頁會一併更新。</p><ul><li><a href="https://kdigo.org/guidelines/ckd-evaluation-and-management/" target="_blank" rel="nofollow noopener">KDIGO 2024 慢性腎臟病評估與處置臨床指引</a><span class="org">KDIGO</span></li><li><a href="https://www.tsn.org.tw/" target="_blank" rel="nofollow noopener">台灣腎臟醫學會</a></li><li><a href="https://www.niddk.nih.gov/health-information/kidney-disease/chronic-kidney-disease-ckd" target="_blank" rel="nofollow noopener">NIDDK 慢性腎臟病專區</a><span class="org">National Institute of Diabetes and Digestive and Kidney Diseases</span></li></ul></div>
-
-<h2 class="backlink" id="share">分享這篇</h2>
-<div class="share">
-<p class="sd">覺得有幫助的話，轉給需要的人。</p>
-<div class="sbtns">
-<button class="sb native" type="button" hidden
-        data-title="用藥安全：腎臟健康重點整理" data-url="https://kidneygod.net/articles/medication-safety.html"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg>分享</button>
-<a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>LINE</a>
-<a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>Facebook</a>
-<a class="sb th" href="https://www.threads.com/intent/post?text=%E7%94%A8%E8%97%A5%E5%AE%89%E5%85%A8%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg>Threads</a>
-<button class="sb copy" type="button" data-url="https://kidneygod.net/articles/medication-safety.html"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><span>複製連結</span></button>
-</div></div>
+<h2 class="backlink" id="share">分享這篇</h2><div class="share"><p class="sd">覺得有幫助的話，轉給需要的人。</p><div class="sbtns"><button class="sb native" type="button" hidden aria-label="分享" title="分享" data-title="用藥安全：腎臟健康重點整理" data-url="https://kidneygod.net/articles/medication-safety.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg></button><a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener" aria-label="分享到 LINE" title="分享到 LINE"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener" aria-label="分享到 Facebook" title="分享到 Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a class="sb th" href="https://www.threads.com/intent/post?text=%E7%94%A8%E8%97%A5%E5%AE%89%E5%85%A8%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener" aria-label="分享到 Threads" title="分享到 Threads"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg></a><button class="sb copy" type="button" aria-label="複製連結" title="複製連結" data-url="https://kidneygod.net/articles/medication-safety.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-off fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-on hidden fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></button></div></div>
 <script>
 (function(){
-  var box = document.querySelector('.share');
-  if (!box) return;
-  var copy = box.querySelector('.copy'), native = box.querySelector('.native');
-  // 各平台的分享頁本來就是設計成用彈出視窗開啟的。當成整頁跳轉時，
-  // Facebook 常常把人丟到動態牆而不是發文框——這是回報過的實際症狀。
-  // 開不出彈窗（被瀏覽器擋、或手機不支援）就讓 <a> 原本的行為繼續。
-  box.addEventListener('click', function(e){
-    var a = e.target.closest && e.target.closest('a.sb');
-    if (!a) return;
-    var w = window.open(a.href, 'kgshare', 'width=600,height=540');
-    if (!w) return;
-    try { w.opener = null; } catch (err) {}   // window.open 不吃 rel=noopener
-    e.preventDefault();
-  });
-  // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕。
-  // 它排在第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App，
-  // 不會像網頁版分享頁那樣被 App 攔截後跳到動態牆。
-  if (navigator.share) {
-    native.hidden = false;
-    // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
-    // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
-    // 使用者會落在動態牆而不是發文框。這是 OS 層的決定，網頁端擋不掉。
-    // 上面那顆「分享」走系統面板，選 Facebook 會開它自己的原生發文框，
-    // 是行動裝置上正常運作的路徑。LINE 與 Threads 實測正常，保留。
-    var fbBtn = box.querySelector('a.fb');
-    if (fbBtn) fbBtn.hidden = true;
-    native.addEventListener('click', function(){
-      navigator.share({title: native.dataset.title, url: native.dataset.url})
-        .catch(function(){});   // 使用者取消分享會 reject，不是錯誤
+  var boxes = document.querySelectorAll('.share');
+  if (!boxes.length) return;
+  Array.prototype.forEach.call(boxes, function(box){
+    var copy = box.querySelector('.copy'), native = box.querySelector('.native');
+    // 各平台的分享頁本來就是設計成用彈出視窗開啟的。當成整頁跳轉時，
+    // Facebook 常常把人丟到動態牆而不是發文框——這是回報過的實際症狀。
+    // 開不出彈窗（被瀏覽器擋、或手機不支援）就讓 <a> 原本的行為繼續。
+    box.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a.sb');
+      if (!a) return;
+      var w = window.open(a.href, 'kgshare', 'width=600,height=540');
+      if (!w) return;
+      try { w.opener = null; } catch (err) {}   // window.open 不吃 rel=noopener
+      e.preventDefault();
     });
-  }
-  copy.addEventListener('click', function(){
-    // 只換 span 裡的字：按鈕內還有一個 SVG 圖示，動 button.textContent
-    // 會把圖示一起清掉，而且清掉之後不會再回來
-    var label = copy.querySelector('span') || copy;
-    var url = copy.dataset.url, done = function(){
-      var old = label.textContent;
-      label.textContent = '已複製';
-      setTimeout(function(){ label.textContent = old; }, 1600);
-    };
-    // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(done, fallback);
-    } else { fallback(); }
-    function fallback(){
-      var ta = document.createElement('textarea');
-      ta.value = url; ta.setAttribute('readonly', '');
-      ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); done(); } catch (e) {}
-      document.body.removeChild(ta);
+    // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕。
+    // 它排第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App。
+    if (navigator.share) {
+      native.hidden = false;
+      // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
+      // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
+      // 使用者會落在動態牆。這是 OS 層的決定，網頁端擋不掉。LINE 與 Threads
+      // 實測正常，保留。
+      var fbBtn = box.querySelector('a.fb');
+      if (fbBtn) fbBtn.hidden = true;
+      native.addEventListener('click', function(){
+        navigator.share({title: native.dataset.title, url: native.dataset.url})
+          .catch(function(){});   // 使用者取消分享會 reject，不是錯誤
+      });
     }
+    copy.addEventListener('click', function(){
+      // 純圖示按鈕沒有文字可以換，改成把鏈結圖示換成打勾。不要動
+      // button.textContent——那會把裡面的 SVG 一起清掉且不會回來。
+      var off = copy.querySelector('.i-off'), on = copy.querySelector('.i-on');
+      var url = copy.dataset.url, done = function(){
+        off.hidden = true; on.hidden = false;
+        setTimeout(function(){ off.hidden = false; on.hidden = true; }, 1600);
+      };
+      // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(done, fallback);
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = url; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
   });
 })();
 </script>

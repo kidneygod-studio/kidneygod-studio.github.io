@@ -147,18 +147,22 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 .itv .qa p+p{margin-top:8px}
 /* 轉發按鈕：外框樣式而非填色，文末已經有參考來源與延伸閱讀，
    再加一排實心色塊會太吵。手指目標維持 44px 高。 */
-.share .sbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+/* 純圖示、固定一排：帶文字的四顆在 375px 手機上約需 445px，可用寬度只有
+   約 335px，排不成一排。圖示版每顆 44px、四顆加間距約 206px。
+   nowrap 是刻意的——這排永遠不該換行。 */
+.share .sbtns{display:flex;flex-wrap:nowrap;gap:10px;margin-top:14px}
+.share.top{margin:18px 0 6px}
+.share.top .sbtns{margin-top:0}
 .sb{display:inline-flex;align-items:center;justify-content:center;
-min-height:44px;padding:0 18px;border-radius:999px;font-size:14.5px;
-font-weight:700;text-decoration:none;cursor:pointer;
+width:44px;height:44px;flex-shrink:0;border-radius:999px;cursor:pointer;
 border:1.5px solid var(--line);background:var(--card);color:var(--fg);
-font-family:inherit;transition:border-color .15s,color .15s}
+transition:border-color .15s,color .15s}
 .sb:hover{border-color:var(--accent);color:var(--accent)}
-.sb svg{margin-right:7px;flex-shrink:0}
+.sb svg{flex-shrink:0}
 /* 這一行是必要的：hidden 屬性靠的是瀏覽器預設樣式的 display:none，而作者
    樣式優先於瀏覽器預設樣式，上面的 display:inline-flex 會把它蓋掉——結果
    是「隱藏」的按鈕照樣顯示出來，而且按了沒反應。 */
-.sb[hidden]{display:none}
+.sb[hidden],.sb svg[hidden]{display:none}
 /* 各平台用自己的識別色只上在邊框與文字，不填滿——填滿會讓文末變成廣告帶 */
 .sb.line:hover{border-color:#06c755;color:#06c755}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}
@@ -329,77 +333,66 @@ letter-spacing:.4px;line-height:1.5}
 <h1>血脂代謝：腎臟健康重點整理</h1>
 <p class="lede">血脂異常對腎臟的影響常被忽略，但它同時牽動心血管與腎臟的長期風險。這一頁整理血脂與腎臟保護的重點。</p>
 <p class="meta">作者：<a href="/about.html">吳政哲</a>（腎臟科醫師）　·　更新於 2026-09-01　·　共 16 則</p>
+<div class="share top"><div class="sbtns"><button class="sb native" type="button" hidden aria-label="分享" title="分享" data-title="血脂代謝：腎臟健康重點整理" data-url="https://kidneygod.net/articles/lipids.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg></button><a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Flipids.html" target="_blank" rel="noopener" aria-label="分享到 LINE" title="分享到 LINE"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Flipids.html" target="_blank" rel="noopener" aria-label="分享到 Facebook" title="分享到 Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a class="sb th" href="https://www.threads.com/intent/post?text=%E8%A1%80%E8%84%82%E4%BB%A3%E8%AC%9D%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Flipids.html" target="_blank" rel="noopener" aria-label="分享到 Threads" title="分享到 Threads"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg></a><button class="sb copy" type="button" aria-label="複製連結" title="複製連結" data-url="https://kidneygod.net/articles/lipids.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-off fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-on hidden fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></button></div></div>
 <h2 class="backlink">深入閱讀</h2><div class="sd">這個主題的完整長文</div><a class="feat" href="/articles/cholesterol-report-ckd.html"><div class="t">膽固醇報告怎麼看：LDL、非 HDL 與 Lp(a)，腎臟病人該注意什麼</div><div class="d">血脂報告上一堆數字，多數人只看 LDL 那一項。這篇說明每個數字代表什麼、為什麼光看 LDL 會低估風險，以及慢性腎臟病人的血脂處理和一般人哪裡不一樣。…</div></a>
 <div class="toc"><h2>本頁內容</h2><ol><li><a href="#lp-ldl">LDL 沒有統一的「正常值」，只有你的目標值</a></li><li><a href="#lp-statin">血脂已經正常了，為什麼醫師還要我吃 statin</a></li><li><a href="#lp-muscle">吃 statin 肌肉痠痛，是不是要停藥</a></li><li><a href="#lp-tg">三酸甘油酯太高：先擔心的其實是胰臟</a></li><li><a href="#lp-hdl">HDL 是「好膽固醇」，那越高越好嗎</a></li><li><a href="#ms-def">代謝症候群：五項中了三項就算</a></li><li><a href="#ms-waist">腰圍比體重更能預測你的腎臟未來</a></li><li><a href="#ms-unaware">四到七成的人，不知道自己已經有三高</a></li><li><a href="#ms-cluster">三高很少單獨出現，它們是一組的</a></li><li><a href="#ms-kidney">為什麼三高最後都會走到腎臟</a></li><li><a href="#lp-lpa">Lp(a)：一輩子驗一次，卻很少人聽過</a></li><li><a href="#lp-nonhdl">non-HDL 膽固醇：一個減法就算得出的重要數字</a></li><li><a href="#lp-fh">LDL 天生就很高：可能是遺傳，不是你吃太油</a></li><li><a href="#lp-add">statin 用到最大量還不夠，還有別的選擇</a></li><li><a href="#lp-fasting">驗血脂還要空腹嗎？多數情況下不用了</a></li><li><a href="#lp-fat">不是所有脂肪都該避開，該避的是這兩類</a></li></ol></div>
 <article class="card"><h2 id="lp-ldl">LDL 沒有統一的「正常值」，只有你的目標值</h2><p>很多人拿到健檢報告，看到低密度脂蛋白膽固醇（LDL-C）沒有紅字就放心了——但參考範圍是給一般人看的，真正該用的是依心血管風險設定的目標值。依 2022 台灣高風險病人血脂異常臨床治療指引：極高風險族群（例如急性冠心症合併糖尿病、一年內心肌梗塞、多支血管病變）目標為 LDL-C &lt; 55 mg/dL；已有冠心病或急性冠心症等高風險族群 &lt; 70；風險較低者才用 100 或更寬鬆的標準。慢性腎臟病本身就是心血管高風險族群。所以正確問法不是「我的膽固醇正常嗎」，而是「以我的風險，該降到多少」。</p></article><article class="card"><h2 id="lp-statin">血脂已經正常了，為什麼醫師還要我吃 statin</h2><p>因為對高風險族群而言，statin 的價值不只是把數字壓低，還在於穩定血管內的粥狀斑塊、減少發炎，降低斑塊破裂造成心肌梗塞或中風的機會。這也是為什麼有心血管病史的人，即使 LDL 看起來「正常」，仍建議持續使用並降到更低的目標。停藥後 LDL 通常在數週內回到原點，斑塊也失去保護。如果擔心副作用，正確做法是回診討論——換藥、減量、或合併使用其他機轉的降脂藥都是選項，自行停藥則是把風險完全留給自己。</p></article><article class="card"><h2 id="lp-muscle">吃 statin 肌肉痠痛，是不是要停藥</h2><p>肌肉症狀是 statin 最常被提到的副作用，但程度差很多。輕微痠痛相對常見，通常換藥、減量或改成隔天服用就能改善；真正的肌肉發炎（CK 明顯上升）少見；而橫紋肌溶解症非常罕見，但一旦發生，崩解的肌肉產物會阻塞腎小管造成急性腎損傷。要立刻就醫的警訊是：肌肉劇烈疼痛無力，加上尿液呈現可樂色或濃茶色。風險較高的情況包括高劑量、腎功能不佳、甲狀腺功能低下，以及與某些藥物（例如部分抗生素、抗黴菌藥）併用。所以有肌肉症狀請回診評估，而不是自己停掉或自己加量。</p></article><article class="card"><h2 id="lp-tg">三酸甘油酯太高：先擔心的其實是胰臟</h2><p>三酸甘油酯（TG）超過 150 mg/dL 是代謝症候群的判定項目之一，與胰島素阻抗、脂肪肝關係密切。當數值飆到 500 甚至 1000 以上時，急性胰臟炎的風險大幅上升，這是會致命的急症。TG 對生活型態的反應非常敏感，最有效的三件事是：戒酒或大幅減量、減少精緻糖與含糖飲料（果糖是推高 TG 的主力）、減重與規律運動。抽血前需空腹 8–12 小時，前一晚大餐或飲酒會讓數值失真，複檢時記得配合。</p></article><article class="card"><h2 id="lp-hdl">HDL 是「好膽固醇」，那越高越好嗎</h2><p>高密度脂蛋白膽固醇（HDL-C）負責把周邊組織的膽固醇運回肝臟，數值偏低（男性 &lt; 40、女性 &lt; 50 mg/dL）是代謝症候群的判定項目之一，也與心血管風險上升有關。但「越高越好」是誤解——研究顯示極高的 HDL 並未帶來額外好處，某些情況下反而與較差的預後有關，而且多年來針對「提高 HDL」開發的藥物幾乎都沒能降低心血管事件。實務上，HDL 比較像是整體代謝健康的指標而非治療標的。提升它的可靠方法仍是老三樣：規律有氧運動、戒菸、減重。</p></article><article class="card"><h2 id="ms-def">代謝症候群：五項中了三項就算</h2><p>依國健署（2007 台灣標準），下列五項符合三項以上即判定為代謝症候群：腰圍男性 ≥ 90 公分、女性 ≥ 80 公分；收縮壓 ≥ 130 或舒張壓 ≥ 85 mmHg；空腹血糖 ≥ 100 mg/dL；三酸甘油酯 ≥ 150 mg/dL；高密度脂蛋白膽固醇男性 &lt; 40、女性 &lt; 50 mg/dL。國健署調查顯示，20 至 64 歲國人每四人就有一人符合。它本身不是疾病，而是一個警訊——代表你正走在糖尿病、高血壓、心血管疾病與慢性腎臟病的上游。好消息是這五項都對減重、減鹽、運動有反應，是最值得投資的階段。</p></article><article class="card"><h2 id="ms-waist">腰圍比體重更能預測你的腎臟未來</h2><p>體重機上的數字分不出肌肉與脂肪，也分不出脂肪長在哪裡。真正危險的是「內臟脂肪」——它會分泌發炎物質、造成胰島素阻抗，直接推動三高。所以判定標準用的是腰圍：男性 ≥ 90 公分、女性 ≥ 80 公分即為腹部肥胖。正確量法是脫掉外衣、雙腳與肩同寬，皮尺繞過肚臍上緣、與地面平行，在呼氣結束時讀數，不要縮小腹也不要勒緊。同樣體重的兩個人，腰圍差 10 公分，未來罹患糖尿病與腎臟病的風險可以差很多。</p></article><article class="card"><h2 id="ms-unaware">四到七成的人，不知道自己已經有三高</h2><p>依國健署 2017–2020 年國民營養健康狀況變遷調查，20 歲以上國人的三高自知率分別是：高血壓約 68%、高血糖約 66%、高血脂僅約 23%。也就是說，高血脂患者中有將近八成不知情。原因很單純——三高早期幾乎沒有任何症狀，不抽血、不量血壓就不會知道。而這三項正是慢性腎臟病最主要的上游因子。國健署提供成人預防保健服務（含血壓、血糖、血脂與腎功能項目），符合資格就去用；有家族史或已經有其中一高的人，更該把定期抽血當成固定行程。</p></article><article class="card"><h2 id="ms-cluster">三高很少單獨出現，它們是一組的</h2><p>高血壓、高血糖、高血脂共享同一批根源：腹部肥胖、胰島素阻抗、慢性發炎、久坐與高熱量飲食。所以臨床上很少看到只有一高的人——確診其中一項時，另外兩項往往已在路上，這也是「代謝症候群」這個概念存在的理由。好處是對策也是同一組：減重（減 5–10% 體重效果就很明顯）、減鹽、減糖、每週 150 分鐘中等強度運動、戒菸。與其把三高當成三個要分別對付的敵人，不如把它們當成同一個生活型態問題的三種表現形式。</p></article><article class="card"><h2 id="ms-kidney">為什麼三高最後都會走到腎臟</h2><p>腎臟本質上是一團高度精密的微血管球，每天過濾約 180 公升的血液——這代表它對血流、血壓與血液成分的變化極度敏感。高血壓讓腎絲球長期承受高壓過濾；高血糖使微血管基底膜增厚、破壞過濾屏障；高血脂加速血管硬化並放大發炎反應。三者合力，腎絲球就成為共同的終點站。這也解釋了為什麼護腎的第一順位不是吃什麼補品，而是把血壓、血糖、血脂控制好，並且每年驗尿驗腎功能。真正有效的護腎藥，藥袋上寫的多半是降壓藥與降糖藥。</p></article><article class="card"><h2 id="lp-lpa">Lp(a)：一輩子驗一次，卻很少人聽過</h2><p>脂蛋白(a) 是由基因決定的血脂指標，幾乎不受飲食與運動影響，一生數值相當穩定，因此一輩子驗一次就夠。它偏高會獨立增加心血管疾病與主動脈瓣狹窄的風險，而常規血脂檢查通常不包含這一項，所以很多人從來不知道自己偏高。值得驗的族群：有早發心血管疾病家族史、自己年輕就發病、或 LDL 已控制良好卻仍反覆出事的人。降低的方式上，statin 對 Lp(a) 幫助有限，PCSK9 抑制劑可降低約兩到三成；更專一針對 Lp(a) 的藥物則仍在臨床試驗階段。</p></article><article class="card"><h2 id="lp-nonhdl">non-HDL 膽固醇：一個減法就算得出的重要數字</h2><p>non-HDL 膽固醇等於總膽固醇減去 HDL，代表血液中所有「會致動脈粥狀硬化」的脂蛋白總量。對糖尿病、代謝症候群、或三酸甘油酯偏高的人，它比單看 LDL 更能反映真實風險——因為這些人身上有一部分壞膽固醇藏在 LDL 算式看不到的顆粒裡。目標值通常設在 LDL 目標再加 30 mg/dL。好處是不需要多抽一管血，你現在手上的報告就能自己算。</p></article><article class="card"><h2 id="lp-fh">LDL 天生就很高：可能是遺傳，不是你吃太油</h2><p>家族性高膽固醇血症是相當常見的遺傳疾病，盛行率約每 250 人有 1 人，但多數人終其一生沒被診斷。特徵是從小 LDL 就明顯偏高（成人常超過 190 mg/dL）、飲食控制效果有限、家族中有人年輕時就心肌梗塞或中風。重點在於它需要更早、更積極的治療，而且一旦確診，一等親（父母、兄弟姊妹、子女）都應該接受檢查——找到一個，往往救到一家人。</p></article><article class="card"><h2 id="lp-add">statin 用到最大量還不夠，還有別的選擇</h2><p>有些人即使用了最大耐受劑量的 statin，LDL 仍未達到目標；有些人則因肌肉症狀無法承受高劑量。這時不是只能放棄，常見的做法是加上 ezetimibe（抑制腸道吸收膽固醇），或使用 PCSK9 抑制劑等針劑類藥物，把 LDL 再往下推。重點是「達到你的目標值」比「用了哪一種藥」重要。如果你已經吃 statin 一段時間但 LDL 還在目標之上，回診時直接問：我的目標是多少？現在差多遠？還有什麼方法？</p></article><article class="card"><h2 id="lp-fasting">驗血脂還要空腹嗎？多數情況下不用了</h2><p>過去驗血脂一律要求空腹，主要是因為三酸甘油酯會受進食影響。近年的指引已放寬：一般篩檢與追蹤可以不空腹，因為非空腹的數值同樣能預測心血管風險，甚至更接近人一天中的真實狀態。仍建議空腹的情況包括：三酸甘油酯明顯偏高（例如超過 400 mg/dL）需要精確評估、或醫師另有指示。所以下次抽血前不必為了驗血脂餓一整晚——但如果同一次要驗空腹血糖，那還是得空腹。</p></article><article class="card"><h2 id="lp-fat">不是所有脂肪都該避開，該避的是這兩類</h2><p>台灣已於 2018 年禁止食品使用部分氫化油（人工反式脂肪的主要來源），但天然反式脂肪與高飽和脂肪仍然普遍。真正要控制的是飽和脂肪：肥肉、動物皮、奶油、椰子油與棕櫚油，以及大量使用它們的酥皮、糕點與油炸食品。相對地，橄欖油、堅果、深海魚裡的不飽和脂肪對心血管有益。實用的做法不是「不吃油」，而是換油：把煎炸改成蒸煮拌，把點心的酥脆感換成堅果的油脂。完全不吃油反而影響脂溶性維生素吸收。</p></article>
 
 <h2 class="backlink" id="refs">參考來源</h2><div class="refs"><p class="sd">本頁內容依據下列指引與官方資料整理，指引改版時本頁會一併更新。</p><ul><li><a href="https://kdigo.org/guidelines/lipids-in-ckd/" target="_blank" rel="nofollow noopener">KDIGO 慢性腎臟病血脂管理臨床指引</a><span class="org">KDIGO</span></li><li><a href="https://professional.heart.org/en/science-news/2026-guideline-on-the-management-of-dyslipidemia" target="_blank" rel="nofollow noopener">2026 ACC/AHA 血脂異常處置指引</a><span class="org">American Heart Association</span></li><li><a href="https://www.tsoc.org.tw/" target="_blank" rel="nofollow noopener">中華民國心臟學會</a></li></ul></div>
-
-<h2 class="backlink" id="share">分享這篇</h2>
-<div class="share">
-<p class="sd">覺得有幫助的話，轉給需要的人。</p>
-<div class="sbtns">
-<button class="sb native" type="button" hidden
-        data-title="血脂代謝：腎臟健康重點整理" data-url="https://kidneygod.net/articles/lipids.html"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg>分享</button>
-<a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Flipids.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>LINE</a>
-<a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Flipids.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>Facebook</a>
-<a class="sb th" href="https://www.threads.com/intent/post?text=%E8%A1%80%E8%84%82%E4%BB%A3%E8%AC%9D%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Flipids.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg>Threads</a>
-<button class="sb copy" type="button" data-url="https://kidneygod.net/articles/lipids.html"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><span>複製連結</span></button>
-</div></div>
+<h2 class="backlink" id="share">分享這篇</h2><div class="share"><p class="sd">覺得有幫助的話，轉給需要的人。</p><div class="sbtns"><button class="sb native" type="button" hidden aria-label="分享" title="分享" data-title="血脂代謝：腎臟健康重點整理" data-url="https://kidneygod.net/articles/lipids.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg></button><a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Flipids.html" target="_blank" rel="noopener" aria-label="分享到 LINE" title="分享到 LINE"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Flipids.html" target="_blank" rel="noopener" aria-label="分享到 Facebook" title="分享到 Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a class="sb th" href="https://www.threads.com/intent/post?text=%E8%A1%80%E8%84%82%E4%BB%A3%E8%AC%9D%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Flipids.html" target="_blank" rel="noopener" aria-label="分享到 Threads" title="分享到 Threads"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg></a><button class="sb copy" type="button" aria-label="複製連結" title="複製連結" data-url="https://kidneygod.net/articles/lipids.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-off fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-on hidden fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></button></div></div>
 <script>
 (function(){
-  var box = document.querySelector('.share');
-  if (!box) return;
-  var copy = box.querySelector('.copy'), native = box.querySelector('.native');
-  // 各平台的分享頁本來就是設計成用彈出視窗開啟的。當成整頁跳轉時，
-  // Facebook 常常把人丟到動態牆而不是發文框——這是回報過的實際症狀。
-  // 開不出彈窗（被瀏覽器擋、或手機不支援）就讓 <a> 原本的行為繼續。
-  box.addEventListener('click', function(e){
-    var a = e.target.closest && e.target.closest('a.sb');
-    if (!a) return;
-    var w = window.open(a.href, 'kgshare', 'width=600,height=540');
-    if (!w) return;
-    try { w.opener = null; } catch (err) {}   // window.open 不吃 rel=noopener
-    e.preventDefault();
-  });
-  // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕。
-  // 它排在第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App，
-  // 不會像網頁版分享頁那樣被 App 攔截後跳到動態牆。
-  if (navigator.share) {
-    native.hidden = false;
-    // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
-    // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
-    // 使用者會落在動態牆而不是發文框。這是 OS 層的決定，網頁端擋不掉。
-    // 上面那顆「分享」走系統面板，選 Facebook 會開它自己的原生發文框，
-    // 是行動裝置上正常運作的路徑。LINE 與 Threads 實測正常，保留。
-    var fbBtn = box.querySelector('a.fb');
-    if (fbBtn) fbBtn.hidden = true;
-    native.addEventListener('click', function(){
-      navigator.share({title: native.dataset.title, url: native.dataset.url})
-        .catch(function(){});   // 使用者取消分享會 reject，不是錯誤
+  var boxes = document.querySelectorAll('.share');
+  if (!boxes.length) return;
+  Array.prototype.forEach.call(boxes, function(box){
+    var copy = box.querySelector('.copy'), native = box.querySelector('.native');
+    // 各平台的分享頁本來就是設計成用彈出視窗開啟的。當成整頁跳轉時，
+    // Facebook 常常把人丟到動態牆而不是發文框——這是回報過的實際症狀。
+    // 開不出彈窗（被瀏覽器擋、或手機不支援）就讓 <a> 原本的行為繼續。
+    box.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a.sb');
+      if (!a) return;
+      var w = window.open(a.href, 'kgshare', 'width=600,height=540');
+      if (!w) return;
+      try { w.opener = null; } catch (err) {}   // window.open 不吃 rel=noopener
+      e.preventDefault();
     });
-  }
-  copy.addEventListener('click', function(){
-    // 只換 span 裡的字：按鈕內還有一個 SVG 圖示，動 button.textContent
-    // 會把圖示一起清掉，而且清掉之後不會再回來
-    var label = copy.querySelector('span') || copy;
-    var url = copy.dataset.url, done = function(){
-      var old = label.textContent;
-      label.textContent = '已複製';
-      setTimeout(function(){ label.textContent = old; }, 1600);
-    };
-    // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(done, fallback);
-    } else { fallback(); }
-    function fallback(){
-      var ta = document.createElement('textarea');
-      ta.value = url; ta.setAttribute('readonly', '');
-      ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); done(); } catch (e) {}
-      document.body.removeChild(ta);
+    // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕。
+    // 它排第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App。
+    if (navigator.share) {
+      native.hidden = false;
+      // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
+      // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
+      // 使用者會落在動態牆。這是 OS 層的決定，網頁端擋不掉。LINE 與 Threads
+      // 實測正常，保留。
+      var fbBtn = box.querySelector('a.fb');
+      if (fbBtn) fbBtn.hidden = true;
+      native.addEventListener('click', function(){
+        navigator.share({title: native.dataset.title, url: native.dataset.url})
+          .catch(function(){});   // 使用者取消分享會 reject，不是錯誤
+      });
     }
+    copy.addEventListener('click', function(){
+      // 純圖示按鈕沒有文字可以換，改成把鏈結圖示換成打勾。不要動
+      // button.textContent——那會把裡面的 SVG 一起清掉且不會回來。
+      var off = copy.querySelector('.i-off'), on = copy.querySelector('.i-on');
+      var url = copy.dataset.url, done = function(){
+        off.hidden = true; on.hidden = false;
+        setTimeout(function(){ off.hidden = false; on.hidden = true; }, 1600);
+      };
+      // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(done, fallback);
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = url; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
   });
 })();
 </script>
