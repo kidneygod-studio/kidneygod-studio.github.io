@@ -262,6 +262,7 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "painkiller-nsaid-kidney": ["kdigo_ckd", "tsn", "niddk"],
     "diabetes-kidney-disease": ["kdigo_dm", "ada_soc", "endo_dm"],
     "kidney-function-recovery": ["kdigo_ckd", "tsn", "hpa_kidney"],
+    "home-blood-pressure-measurement": ["kdigo_bp", "aha_bp", "tsoc"],
 }
 
 
