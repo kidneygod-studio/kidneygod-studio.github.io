@@ -121,6 +121,16 @@
         background:var(--card2);border:2px solid var(--edge);border-radius:99px;
         padding:7px 14px;transition:.15s;white-space:nowrap;}
   .hbtn:hover{border-color:var(--brand);color:var(--brand);}
+  /* 頁首的社群分享圖示。用商城自己的色票（--ink／--card2／--edge／--brand），
+     不能沿用衛教站的 --fg 那套——混用會靜默失效，深色模式才爆掉。
+     尺寸配合 .hbtn 的高度，同一列看起來才齊。 */
+  .hshare{display:inline-flex;gap:6px;flex-shrink:0;}
+  .hshb{display:inline-flex;align-items:center;justify-content:center;
+        width:36px;height:36px;padding:0;flex-shrink:0;color:var(--ink);
+        background:var(--card2);border:2px solid var(--edge);border-radius:99px;
+        transition:.15s;cursor:pointer;}
+  .hshb:hover{border-color:var(--brand);color:var(--brand);}
+  .hshb[hidden],.hshb svg[hidden]{display:none;}
   /* 腎元貨幣圖示（擷取自實拍照片，圓形硬幣感） */
   .ki{width:1.15em;height:1.15em;border-radius:50%;vertical-align:-.24em;
       margin-right:.18em;object-fit:cover;
@@ -452,10 +462,10 @@
     <button class="hbtn coin" onclick="scrollGame()"><img class="ki" id="coinIco" alt=""><span id="coinBal">200</span> 腎元</button>
     <button class="hbtn" id="fsBtn" onclick="cycleFontScale()">🔠 標準</button>
     <a class="hbtn" href="./">🏠 回主頁</a>
-    <button class="hbtn" id="shareBtn" title="分享這個網站">🔗 分享</button>
     <a class="hbtn" href="library.html">📚 收藏冊<span class="badge" id="libBadge">0</span></a>
     <button class="hbtn" onclick="openCart()">🛒<span class="badge" id="badge">0</span></button>
     <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
+    <span class="hshare"><button class="hshb native" type="button" hidden aria-label="分享" title="分享" data-title="護腎知識卡片收集遊戲｜護腎教室" data-url="https://kidneygod.net/shop.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg></button><a class="hshb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Fshop.html" target="_blank" rel="noopener" aria-label="分享到 LINE" title="分享到 LINE"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a class="hshb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Fshop.html" target="_blank" rel="noopener" aria-label="分享到 Facebook" title="分享到 Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a class="hshb th" href="https://www.threads.com/intent/post?text=%E8%AD%B7%E8%85%8E%E7%9F%A5%E8%AD%98%E5%8D%A1%E7%89%87%E6%94%B6%E9%9B%86%E9%81%8A%E6%88%B2%EF%BD%9C%E8%AD%B7%E8%85%8E%E6%95%99%E5%AE%A4%20https%3A%2F%2Fkidneygod.net%2Fshop.html" target="_blank" rel="noopener" aria-label="分享到 Threads" title="分享到 Threads"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg></a><button class="hshb copy" type="button" aria-label="複製連結" title="複製連結" data-url="https://kidneygod.net/shop.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-off fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-on hidden fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></button></span>
   </div>
   <nav class="cats" id="tabs"></nav>
 </header>
@@ -707,35 +717,53 @@ function stickerHTML(k){
     </article>`;
 }
 
-/* ═══════════ 分享 ═══════════
-   手機優先用系統分享面板（能直接叫出 LINE 等已安裝的 App）；桌機沒有這個
-   API，退回複製連結。兩條路都要給回饋，不然使用者會以為按了沒反應。
-   按鈕文字含 emoji，但整顆就是純文字節點，直接換 textContent 不會弄丟東西。 */
-(function shareBtn(){
-  const btn = $("shareBtn");
-  if(!btn) return;
-  const url = location.origin + "/", title = "護腎教室 — 護腎知識卡片收集遊戲";
-  const flash = t => {
-    const old = btn.textContent;
-    btn.textContent = t;
-    setTimeout(() => { btn.textContent = old; }, 1600);
-  };
-  btn.addEventListener("click", async () => {
-    if(navigator.share){
-      /* 使用者取消分享會 reject，那不是錯誤，不要跳提示 */
-      try{ await navigator.share({title, url}); }catch(e){}
-      return;
-    }
+/* ═══════════ 頁首分享 ═══════════
+   手機優先用系統分享面板；facebook.com 是 FB App 宣告的網域，手機上點網頁版
+   分享連結會被 App 攔走並落在動態牆，所以偵測到系統分享面板時就把 Facebook
+   那顆收起來（衛教站也是同樣處理）。LINE 與 Threads 實測正常，保留。 */
+(function headerShare(){
+  const box = document.querySelector(".hshare");
+  if(!box) return;
+  const copy = box.querySelector(".copy"), native = box.querySelector(".native");
+
+  /* 這些分享頁本來就是設計成用彈出視窗開啟的；開不出來就讓 <a> 原本的行為繼續 */
+  box.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest("a.hshb");
+    if(!a) return;
+    const w = window.open(a.href, "kgshare", "width=600,height=540");
+    if(!w) return;
+    try{ w.opener = null; }catch(err){}
+    e.preventDefault();
+  });
+
+  if(navigator.share){
+    native.hidden = false;
+    const fb = box.querySelector("a.fb");
+    if(fb) fb.hidden = true;
+    native.addEventListener("click", async () => {
+      /* 使用者取消分享會 reject，那不是錯誤 */
+      try{ await navigator.share({title: native.dataset.title, url: native.dataset.url}); }
+      catch(e){}
+    });
+  }
+
+  copy.addEventListener("click", async () => {
+    /* 純圖示沒有文字可換，改成把鏈結圖示換成打勾 */
+    const off = copy.querySelector(".i-off"), on = copy.querySelector(".i-on");
+    const done = () => {
+      off.hidden = true; on.hidden = false;
+      setTimeout(() => { off.hidden = false; on.hidden = true; }, 1600);
+    };
     try{
-      await navigator.clipboard.writeText(url);
-      flash("✅ 已複製");
+      await navigator.clipboard.writeText(copy.dataset.url);
+      done();
     }catch(e){
-      /* clipboard 需要安全連線；不支援時退回舊做法 */
+      /* clipboard 需要安全連線；不支援時退回舊做法，不要讓按鈕沒反應 */
       const ta = document.createElement("textarea");
-      ta.value = url; ta.setAttribute("readonly", "");
+      ta.value = copy.dataset.url; ta.setAttribute("readonly", "");
       ta.style.position = "fixed"; ta.style.opacity = "0";
       document.body.appendChild(ta); ta.select();
-      try{ document.execCommand("copy"); flash("✅ 已複製"); }catch(err){}
+      try{ document.execCommand("copy"); done(); }catch(err){}
       document.body.removeChild(ta);
     }
   });
