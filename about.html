@@ -145,6 +145,19 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 .itv .q{margin:0 0 6px;font-weight:700}
 .itv .q::before{content:"Q　";color:var(--accent)}
 .itv .qa p+p{margin-top:8px}
+/* 轉發按鈕：外框樣式而非填色，文末已經有參考來源與延伸閱讀，
+   再加一排實心色塊會太吵。手指目標維持 44px 高。 */
+.share .sbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.sb{display:inline-flex;align-items:center;justify-content:center;
+min-height:44px;padding:0 18px;border-radius:999px;font-size:14.5px;
+font-weight:700;text-decoration:none;cursor:pointer;
+border:1.5px solid var(--line);background:var(--card);color:var(--fg);
+font-family:inherit;transition:border-color .15s,color .15s}
+.sb:hover{border-color:var(--accent);color:var(--accent)}
+/* 各平台用自己的識別色只上在邊框與文字，不填滿——填滿會讓文末變成廣告帶 */
+.sb.line:hover{border-color:#06c755;color:#06c755}
+.sb.fb:hover{border-color:#0866ff;color:#0866ff}
+.sb.th:hover{border-color:var(--fg);color:var(--fg)}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
 font-size:13.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}

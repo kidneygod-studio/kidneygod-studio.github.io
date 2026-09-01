@@ -26,6 +26,7 @@ import argparse
 import html
 import json
 import re
+import urllib.parse
 from datetime import date
 from pathlib import Path
 
@@ -352,6 +353,72 @@ def interviewee_ld(item: dict | None) -> dict | None:
 ITV = load_interviews()
 
 
+def share_html(path: str, title: str) -> str:
+    """文末的轉發按鈕。
+
+    用純連結的分享網址，不掛 Facebook／LINE 的官方外掛。理由是功能面：那些
+    外掛能多做的只有顯示分享次數，卻要多載入數十 KB 的第三方腳本、拖慢頁面。
+    連結版的功能一樣完整，而手機上的原生分享面板涵蓋得比它們更廣。
+
+    LINE 放第一個：受眾是民眾與病患，在台灣把衛教轉給家人最常用的就是 LINE。
+
+    手機上另外提供系統原生的分享面板（navigator.share），它能叫出所有已安裝的
+    App，涵蓋範圍比固定幾顆按鈕大得多；不支援的瀏覽器就看不到那顆，其餘照常。
+    """
+    url = f"{BASE_URL}/{re.sub(r'(^|/)index[.]html$', r'\1', path)}"
+    u, t = urllib.parse.quote(url, safe=""), urllib.parse.quote(title, safe="")
+    line = f"https://social-plugins.line.me/lineit/share?url={u}"
+    fb = f"https://www.facebook.com/sharer/sharer.php?u={u}"
+    th = f"https://www.threads.com/intent/post?text={t}%20{u}"
+    return f"""
+<h2 class="backlink" id="share">分享這篇</h2>
+<div class="share">
+<p class="sd">覺得有幫助的話，轉給需要的人。</p>
+<div class="sbtns">
+<a class="sb line" href="{line}" target="_blank" rel="noopener">LINE</a>
+<a class="sb fb" href="{fb}" target="_blank" rel="noopener">Facebook</a>
+<a class="sb th" href="{th}" target="_blank" rel="noopener">Threads</a>
+<button class="sb copy" type="button" data-url="{esc(url)}">複製連結</button>
+<button class="sb native" type="button" hidden
+        data-title="{esc(title)}" data-url="{esc(url)}">其他…</button>
+</div></div>
+<script>
+(function(){{
+  var box = document.querySelector('.share');
+  if (!box) return;
+  var copy = box.querySelector('.copy'), native = box.querySelector('.native');
+  // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕
+  if (navigator.share) {{
+    native.hidden = false;
+    native.addEventListener('click', function(){{
+      navigator.share({{title: native.dataset.title, url: native.dataset.url}})
+        .catch(function(){{}});   // 使用者取消分享會 reject，不是錯誤
+    }});
+  }}
+  copy.addEventListener('click', function(){{
+    var url = copy.dataset.url, done = function(){{
+      var old = copy.textContent;
+      copy.textContent = '已複製';
+      setTimeout(function(){{ copy.textContent = old; }}, 1600);
+    }};
+    // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
+    if (navigator.clipboard) {{
+      navigator.clipboard.writeText(url).then(done, fallback);
+    }} else {{ fallback(); }}
+    function fallback(){{
+      var ta = document.createElement('textarea');
+      ta.value = url; ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try {{ document.execCommand('copy'); done(); }} catch (e) {{}}
+      document.body.removeChild(ta);
+    }}
+  }});
+}})();
+</script>
+"""
+
+
 def citation_ld(keys: list[str]) -> list[dict]:
     """schema.org 的 citation 欄位，讓搜尋引擎讀得到這頁引用了哪些來源。"""
     return [{"@type": "CreativeWork", "name": SOURCES[k][0], "url": SOURCES[k][1],
@@ -521,6 +588,19 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 .itv .q{margin:0 0 6px;font-weight:700}
 .itv .q::before{content:"Q　";color:var(--accent)}
 .itv .qa p+p{margin-top:8px}
+/* 轉發按鈕：外框樣式而非填色，文末已經有參考來源與延伸閱讀，
+   再加一排實心色塊會太吵。手指目標維持 44px 高。 */
+.share .sbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.sb{display:inline-flex;align-items:center;justify-content:center;
+min-height:44px;padding:0 18px;border-radius:999px;font-size:14.5px;
+font-weight:700;text-decoration:none;cursor:pointer;
+border:1.5px solid var(--line);background:var(--card);color:var(--fg);
+font-family:inherit;transition:border-color .15s,color .15s}
+.sb:hover{border-color:var(--accent);color:var(--accent)}
+/* 各平台用自己的識別色只上在邊框與文字，不填滿——填滿會讓文末變成廣告帶 */
+.sb.line:hover{border-color:#06c755;color:#06c755}
+.sb.fb:hover{border-color:#0866ff;color:#0866ff}
+.sb.th:hover{border-color:var(--fg);color:var(--fg)}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
 font-size:13.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}
@@ -847,6 +927,7 @@ def build_category(cat: str, items: list[dict],
 {''.join(secs)}
 {interview_html(ITV.get(cat))}
 {sources_html(PAGE_SOURCES.get(cat, []))}
+{share_html(path, f"{cat}：腎臟健康重點整理")}
 <h2 class="backlink">其他主題</h2>
 <div class="cats">{others}</div>
 """
@@ -1098,7 +1179,8 @@ def build_markdown_articles() -> list[dict]:
         itv = ITV.get(a["slug"])
         body += (f"<p class='meta'>作者：<a href='/about.html'>{esc(AUTHOR_NAME)}</a>"
                  f"（{esc(AUTHOR_TITLE)}）　·　{datestr}</p>{toc}"
-                 + "".join(paras) + interview_html(itv) + sources_html(refs) + related)
+                 + "".join(paras) + interview_html(itv) + sources_html(refs)
+                 + share_html(path, a["title"]) + related)
 
         jsonld = {
             "@context": "https://schema.org", "@type": "MedicalWebPage",

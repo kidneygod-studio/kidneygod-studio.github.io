@@ -145,6 +145,19 @@ padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 .itv .q{margin:0 0 6px;font-weight:700}
 .itv .q::before{content:"Q　";color:var(--accent)}
 .itv .qa p+p{margin-top:8px}
+/* 轉發按鈕：外框樣式而非填色，文末已經有參考來源與延伸閱讀，
+   再加一排實心色塊會太吵。手指目標維持 44px 高。 */
+.share .sbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.sb{display:inline-flex;align-items:center;justify-content:center;
+min-height:44px;padding:0 18px;border-radius:999px;font-size:14.5px;
+font-weight:700;text-decoration:none;cursor:pointer;
+border:1.5px solid var(--line);background:var(--card);color:var(--fg);
+font-family:inherit;transition:border-color .15s,color .15s}
+.sb:hover{border-color:var(--accent);color:var(--accent)}
+/* 各平台用自己的識別色只上在邊框與文字，不填滿——填滿會讓文末變成廣告帶 */
+.sb.line:hover{border-color:#06c755;color:#06c755}
+.sb.fb:hover{border-color:#0866ff;color:#0866ff}
+.sb.th:hover{border-color:var(--fg);color:var(--fg)}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
 font-size:13.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}
@@ -316,6 +329,53 @@ letter-spacing:.4px;line-height:1.5}
 <article class="card"><h2 id="nsaid">NSAID 止痛藥：腎臟的頭號黑名單</h2><p>布洛芬、雙氯芬酸等非類固醇消炎止痛藥（NSAID）會抑制前列腺素，讓腎臟血流減少。健康人偶爾短期使用通常沒事，但在脫水、年長、慢性腎臟病，或同時使用利尿劑與降壓藥（ACEI/ARB）時，急性腎損傷風險大幅上升——這個組合在醫界被稱為「三重打擊」。腎功能不好的人止痛請先與醫師或藥師討論，普拿疼（乙醯胺酚）在建議劑量內對腎臟相對安全。</p></article><article class="card"><h2 id="unknown-med">來路不明的止痛藥，成分永遠是驚喜</h2><p>地下電台、遊覽車團購、標示不清的「祖傳秘方」止痛粉，經常摻入高劑量 NSAID、類固醇，甚至已禁用成分。長期服用不明複方止痛藥與慢性間質性腎炎、止痛藥腎病變有明確關聯。買藥認明兩件事：包裝上的衛福部藥品許可證字號，以及願意回答你問題的藥師。便宜有效又神秘的藥，通常是腎臟在幫你付帳。</p></article><article class="card"><h2 id="aristo">馬兜鈴酸：一次傷害，終身有效</h2><p>含馬兜鈴酸的中草藥（關木通、廣防己等）會造成不可逆的腎間質纖維化，還會大幅提高泌尿道上皮癌風險——台灣曾是全球馬兜鈴酸腎病變最盛行的地區之一，因此已全面禁用。但地下管道與來源不明的草藥、藥粉仍可能含有。想用中藥調理沒問題，請找合格中醫師開立、在有 GMP 認證的藥廠產品範圍內使用，不要吃朋友送的、山上採的、夜市買的。</p></article><article class="card"><h2 id="contrast">打顯影劑前，先讓醫師知道你的腎</h2><p>電腦斷層與心導管使用的含碘顯影劑可能造成顯影劑腎病變，高風險族群是原本腎功能就差、糖尿病、脫水與年長者。要做檢查前：主動告知醫師自己的腎功能或直接出示抽血報告；檢查前後依醫囑補充水分；服用 metformin（二甲雙胍）的糖尿病患者，醫師可能會請你暫停幾天。多數人風險很低，不需要因噎廢食拒絕必要檢查——關鍵是讓團隊知道你的腎，事先準備。</p></article><article class="card"><h2 id="ppi">胃藥不是保養品：PPI 的腎臟冷知識</h2><p>氫離子幫浦阻斷劑（PPI，常見的「強效胃藥」）長期使用與急性間質性腎炎及慢性腎臟病風險上升有關。短期依醫囑治療胃食道逆流、胃潰瘍沒有問題，有明確適應症就該用；問題出在「吃了舒服就一直吃」、把胃藥當日常保養。任何藥要不要長期吃，答案都應該來自回診評估，而不是習慣。</p></article><article class="card"><h2 id="abx">抗生素：該吃就吃好吃滿，不該吃別碰</h2><p>部分抗生素（如胺基糖苷類）本身有腎毒性，醫師開立時會依腎功能調整劑量並監測——這是專業判斷，請照醫囑完成療程，自行停藥反而養出抗藥菌。真正傷腎的常見情境是：自行到藥房買抗生素、吃別人剩下的藥、感冒（多為病毒）卻硬要吃抗生素。抗生素不是消炎藥，也不是退燒藥。</p></article><article class="card"><h2 id="cold-med">感冒藥裡也有止痛藥，很多人重複吃了不知道</h2><p>市售綜合感冒藥多半是複方，裡面常含有解熱鎮痛成分。如果同時再吃一顆止痛藥，等於重複用藥——含 NSAID 的情況下會增加腎臟負擔，含乙醯胺酚的情況下則要注意肝臟的總劑量。更麻煩的是不同品牌的成分不同，光看包裝名稱看不出來。做法很簡單：拿藥時直接問藥師「這裡面有沒有止痛成分」，或看包裝背面的成分表。腎功能不好的人，感冒藥不是可以隨便疊加的東西。</p></article><article class="card"><h2 id="phosphate-enema">清腸用的瀉劑，腎功能不好的人要換一種</h2><p>含磷酸鈉的口服瀉劑與灌腸劑（常用於大腸鏡前清腸或嚴重便秘）可能造成急性磷酸鹽腎病變，導致不可逆的腎功能惡化。高風險族群是原本腎功能就不好、年長、脫水，或正在服用 ACEI／ARB、利尿劑、NSAID 的人。這不表示不能做大腸鏡——而是要讓醫師知道你的腎功能，他們可以改用聚乙二醇（PEG）等其他清腸配方。自己去藥局買浣腸劑之前，也先問過藥師。</p></article><article class="card"><h2 id="dose-adjust">很多藥不是不能吃，是要換一個劑量</h2><p>大量藥物經由腎臟排除，腎功能下降時排得慢、血中濃度上升，同樣的劑量就可能變成過量。所以臨床上常見的處理不是停藥，而是依 eGFR 調整劑量或給藥間隔——抗生素、部分降糖藥、抗凝血劑、某些止痛藥都屬於這一類。你要做的只有一件事：每次看新的醫師、拿新的藥、或到藥局買成藥時，主動說「我腎功能不好，eGFR 大約多少」。這句話比任何保健品都護腎。</p></article><article class="card"><h2 id="herb-interact">中藥、保健品和西藥一起吃，要讓兩邊都知道</h2><p>問題通常不是「中藥或西藥比較傷腎」，而是交互作用沒有人在看。例如某些草藥會影響抗凝血劑的效果、含甘草的方劑可能造成低血鉀與血壓上升、高劑量魚油會增加出血風險。當西醫不知道你在吃中藥、中醫也不知道你在吃西藥時，風險就落在你身上。做法是把所有正在吃的東西（含保健食品）列一張清單，兩邊看診都出示。合格中醫師開立的處方與有 GMP 認證的產品，資訊透明時安全性高得多。</p></article>
 
 <h2 class="backlink" id="refs">參考來源</h2><div class="refs"><p class="sd">本頁內容依據下列指引與官方資料整理，指引改版時本頁會一併更新。</p><ul><li><a href="https://kdigo.org/guidelines/ckd-evaluation-and-management/" target="_blank" rel="nofollow noopener">KDIGO 2024 慢性腎臟病評估與處置臨床指引</a><span class="org">KDIGO</span></li><li><a href="https://www.tsn.org.tw/" target="_blank" rel="nofollow noopener">台灣腎臟醫學會</a></li><li><a href="https://www.niddk.nih.gov/health-information/kidney-disease/chronic-kidney-disease-ckd" target="_blank" rel="nofollow noopener">NIDDK 慢性腎臟病專區</a><span class="org">National Institute of Diabetes and Digestive and Kidney Diseases</span></li></ul></div>
+
+<h2 class="backlink" id="share">分享這篇</h2>
+<div class="share">
+<p class="sd">覺得有幫助的話，轉給需要的人。</p>
+<div class="sbtns">
+<a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener">LINE</a>
+<a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener">Facebook</a>
+<a class="sb th" href="https://www.threads.com/intent/post?text=%E7%94%A8%E8%97%A5%E5%AE%89%E5%85%A8%EF%BC%9A%E8%85%8E%E8%87%9F%E5%81%A5%E5%BA%B7%E9%87%8D%E9%BB%9E%E6%95%B4%E7%90%86%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fmedication-safety.html" target="_blank" rel="noopener">Threads</a>
+<button class="sb copy" type="button" data-url="https://kidneygod.net/articles/medication-safety.html">複製連結</button>
+<button class="sb native" type="button" hidden
+        data-title="用藥安全：腎臟健康重點整理" data-url="https://kidneygod.net/articles/medication-safety.html">其他…</button>
+</div></div>
+<script>
+(function(){
+  var box = document.querySelector('.share');
+  if (!box) return;
+  var copy = box.querySelector('.copy'), native = box.querySelector('.native');
+  // 原生分享面板只在支援的瀏覽器（主要是手機）出現，桌機維持既有按鈕
+  if (navigator.share) {
+    native.hidden = false;
+    native.addEventListener('click', function(){
+      navigator.share({title: native.dataset.title, url: native.dataset.url})
+        .catch(function(){});   // 使用者取消分享會 reject，不是錯誤
+    });
+  }
+  copy.addEventListener('click', function(){
+    var url = copy.dataset.url, done = function(){
+      var old = copy.textContent;
+      copy.textContent = '已複製';
+      setTimeout(function(){ copy.textContent = old; }, 1600);
+    };
+    // clipboard API 需要安全連線；不支援時退回舊做法，不要讓按鈕沒有反應
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(done, fallback);
+    } else { fallback(); }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = url; ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
+
 <h2 class="backlink">其他主題</h2>
 <div class="cats"><a href="/articles/blood-pressure.html"><div class="t">血壓管理</div><div class="d">血壓與腎臟是雙向的關係：高血壓會傷腎，腎功能變差又會讓血壓更難控制。這一頁整理血壓與腎臟之間…</div></a><a href="/articles/blood-sugar.html"><div class="t">血糖管理</div><div class="d">糖尿病是台灣洗腎最主要的原因。血糖控制得好不好，直接決定腎臟能撐多久。這一頁整理血糖與腎臟的…</div></a><a href="/articles/lipids.html"><div class="t">血脂代謝</div><div class="d">血脂異常對腎臟的影響常被忽略，但它同時牽動心血管與腎臟的長期風險。這一頁整理血脂與腎臟保護的…</div></a><a href="/articles/diet.html"><div class="t">飲食護腎</div><div class="d">「腎不好要吃什麼」是最常見的問題，答案卻會隨腎功能階段而改變。這一頁整理飲食上真正有證據的原…</div></a><a href="/articles/lifestyle.html"><div class="t">生活習慣</div><div class="d">腎臟的保養沒有捷徑，但有幾個生活習慣的影響比多數人想的大。這一頁整理實際有幫助的部分。…</div></a><a href="/articles/lab-values.html"><div class="t">檢查數值</div><div class="d">肌酸酐、eGFR、蛋白尿——健檢報告上的腎功能數字到底代表什麼。這一頁教你看懂自己的報告。…</div></a><a href="/articles/myths.html"><div class="t">警訊與迷思</div><div class="d">哪些症狀該就醫、哪些流傳很廣的說法其實沒有根據。這一頁整理腎臟相關的警訊與常見迷思。…</div></a></div>
 
