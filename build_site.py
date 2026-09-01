@@ -261,6 +261,7 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "taiwan-eating-out-sodium": ["kdigo_ckd", "fda_tfnd", "hpa_kidney"],
     "painkiller-nsaid-kidney": ["kdigo_ckd", "tsn", "niddk"],
     "diabetes-kidney-disease": ["kdigo_dm", "ada_soc", "endo_dm"],
+    "kidney-function-recovery": ["kdigo_ckd", "tsn", "hpa_kidney"],
 }
 
 
