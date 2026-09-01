@@ -121,6 +121,15 @@
         background:var(--card2);border:2px solid var(--edge);border-radius:99px;
         padding:7px 14px;transition:.15s;white-space:nowrap;}
   .hbtn:hover{border-color:var(--brand);color:var(--brand);}
+  /* 手機橫放時強制在「標準」之前斷行。橫放的寬度足以讓整列擠在同一排，
+     反而變得又長又難按；直式本來就會自然換行，所以只在橫放時啟用。
+     條件用 max-height 而不是只看 orientation：桌機視窗拉寬也是 landscape，
+     但它的高度遠大於 500px，不該被這條規則影響。
+     作法是塞一個寬度 100% 的零高度 flex 項目，後面的按鈕就被推到下一排。 */
+  .hbreak{display:none;}
+  @media (orientation:landscape) and (max-height:500px){
+    .hbreak{display:block;width:100%;height:0;}
+  }
   /* 頁首的社群分享圖示。用商城自己的色票（--ink／--card2／--edge／--brand），
      不能沿用衛教站的 --fg 那套——混用會靜默失效，深色模式才爆掉。
      尺寸配合 .hbtn 的高度，同一列看起來才齊。 */
@@ -462,6 +471,7 @@
       <button onclick="renderGrid()">🔍</button>
     </div>
     <button class="hbtn coin" onclick="scrollGame()"><img class="ki" id="coinIco" alt=""><span id="coinBal">200</span> 腎元</button>
+    <span class="hbreak" aria-hidden="true"></span>
     <button class="hbtn" id="fsBtn" onclick="cycleFontScale()">🔠 標準</button>
     <a class="hbtn" href="./">回主頁</a>
     <a class="hbtn" href="library.html">收藏冊<span class="badge" id="libBadge">0</span></a>
