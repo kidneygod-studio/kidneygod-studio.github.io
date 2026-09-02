@@ -906,13 +906,13 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
         suf = f'<span class="np">{suffix}</span>' if suffix else ""
         return f'<a href="{href}"{c}{mark}>{pre}{label}{suf}</a>'
 
-    # 手機上顯示：文章／圖卡／食物／計算／作者／商城
+    # 手機上顯示：文章／圖卡／食物／計算／作者／卡片
     nav = (navlink("/articles/", "衛教", "文章", "articles")
            + navlink("/articles/gallery.html", "衛教", "圖卡", "gallery")
            + navlink("/food.html", "", "食物", "food", suffix="查詢")
            + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
            + navlink("/about.html", "關於", "作者", "about")
-           + navlink("/shop.html", "知識", "商城", "shop", "shoplink"))
+           + navlink("/shop.html", "知識", "卡片", "shop", "shoplink"))
     # 每一頁都掛：要的是全站瀏覽數，只算首頁會漏掉從搜尋直接進到某篇文章
     # 就離開的人——而那正是這個站大部分的流量。
     views_block = ('<p class="views" id="siteViews" style="display:none">'
@@ -1466,7 +1466,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
   <a class="htile" href="#gallery"><span class="hq">只想快速看重點</span>
     <span class="hgo">衛教圖卡</span></a>
   <a class="htile" href="/shop.html"><span class="hq">不知道從哪開始</span>
-    <span class="hgo">遊戲商城</span></a>
+    <span class="hgo">遊戲場</span></a>
 </div>
 </div>
 {share_buttons("", HOME_SHARE_TITLE, top=True)}
@@ -1483,11 +1483,11 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 
 <!-- 商城放最後：衛教是主體，遊戲是其中一種學習方式。
      順序與上方「這個網站怎麼用」的方塊一致，避免導航與陳列互相矛盾。 -->
-<h2 class="sect" id="play">從免費遊戲商城學習</h2>
+<h2 class="sect" id="play">從免費遊戲學習</h2>
 <div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
 <a class="gamebtn" href="/shop.html">
   <img src="/logo.png" alt="" aria-hidden="true"{logo_dims}>
-  <span class="cap">護腎知識卡片收集商城</span>
+  <span class="cap">護腎知識卡片收集</span>
 </a>
 """
     jsonld = {
