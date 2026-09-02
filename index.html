@@ -434,12 +434,18 @@ letter-spacing:.4px;line-height:1.5}
     // 它排第一顆：手機上這是最可靠的路徑，能直接叫出已安裝的 App。
     if (navigator.share) {
       native.hidden = false;
-      // 手機上把 Facebook 那顆收起來：facebook.com 是 FB App 宣告的網域，
-      // 系統在載入網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，
-      // 使用者會落在動態牆。這是 OS 層的決定，網頁端擋不掉。LINE 與 Threads
-      // 實測正常，保留。
+      // 收起 Facebook 的條件是「觸控裝置」，不是「有沒有 navigator.share」。
+      // Windows 的 Chrome／Edge 桌機版也有 Web Share API，用它判斷會把桌機
+      // 誤認成手機、連桌機的 Facebook 一起藏掉（實際發生過）。
+      //
+      // 真正的原因只在手機：facebook.com 是 FB App 宣告的網域，系統在載入
+      // 網頁之前就把連結交給 App，而 App 不認得 sharer.php 的路徑，使用者
+      // 會落在動態牆。這是 OS 層的決定，網頁端擋不掉。
+      //
+      // 而且要同時有 navigator.share 才收——否則等於把 Facebook 這條路
+      // 完全拿掉，使用者連替代方案都沒有。
       var fbBtn = box.querySelector('a.fb');
-      if (fbBtn) fbBtn.hidden = true;
+      if (fbBtn && matchMedia('(pointer: coarse)').matches) fbBtn.hidden = true;
       native.addEventListener('click', function(){
         navigator.share({title: native.dataset.title, url: native.dataset.url})
           .catch(function(){});   // 使用者取消分享會 reject，不是錯誤

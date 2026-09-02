@@ -38,6 +38,24 @@ python check_site.py      # 推之前對帳
 
 ## 2026-09-02
 
+### 修正桌機的 Facebook 分享鈕被誤藏
+
+作者回報桌機看不到 Facebook。原因是我當初**拿 `navigator.share` 當「是不是
+手機」的判準**——但 Windows 的桌機 Chrome／Edge 也有 Web Share API，於是桌機
+被判成手機、Facebook 一起被藏掉。
+
+判斷條件改成 `matchMedia('(pointer: coarse)')`（觸控裝置）。真正的原因本來就
+只發生在手機：facebook.com 是 FB App 宣告的網域，OS 在載入網頁之前就把連結
+交給 App。那是觸控裝置的行為，跟有沒有 Web Share API 無關。
+
+另外加一個條件——**要同時有 `navigator.share` 才收起 Facebook**。否則在沒有
+系統分享面板的觸控裝置上，等於把 Facebook 這條路完全拿掉、連替代方案都沒有。
+
+`build_site.py`（18 個文章頁 + 首頁兩組）與 `shop.html`（頁尾那組）都改了。
+
+DOM stub 補上 `matchMedia` 與三個新情境，其中 **B1「桌機有 navigator.share
+但不是觸控」就是這次出錯的那一種**，現在有測試守著。兩支測試共 27 項全過。
+
 ### 全站移除使用者看得到的「商城」字樣
 
 依作者指定：**知識商城 → 知識卡片**、**回商城 → 回卡片區**。其餘出現處沿用

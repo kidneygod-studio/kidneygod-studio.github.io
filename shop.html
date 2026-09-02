@@ -751,8 +751,11 @@ function stickerHTML(k){
 
   if(navigator.share){
     native.hidden = false;
+    /* 收起 Facebook 的條件是「觸控裝置」，不是「有沒有 navigator.share」——
+       Windows 的桌機 Chrome／Edge 也有 Web Share API，用它判斷會把桌機誤認成
+       手機、連桌機的 Facebook 一起藏掉。真正被 App 攔走只發生在手機。 */
     const fb = box.querySelector("a.fb");
-    if(fb) fb.hidden = true;
+    if(fb && matchMedia("(pointer: coarse)").matches) fb.hidden = true;
     native.addEventListener("click", async () => {
       /* 使用者取消分享會 reject，那不是錯誤 */
       try{ await navigator.share({title: native.dataset.title, url: native.dataset.url}); }
