@@ -277,6 +277,28 @@ font-size:1.02rem;line-height:1.55}
 /* 原本是五行散文，在手機上佔掉 355px、將近半個第一屏，而且要讀完一句話
    才找得到連結。改成方塊：同樣的資訊約 180px，而且整格可點。
    順序刻意把商城放最後——衛教是主體，商城是其中一種學習方式。 */
+/* 全站搜尋。索引在第一次點搜尋框時才載入，不拖慢首頁初次開啟。 */
+.ssearch{position:relative;margin:18px 0 4px}
+.svisually{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+white-space:nowrap}
+.ssearch input{width:100%;box-sizing:border-box;font:16px/1.5 inherit;
+padding:13px 16px;border-radius:12px;color:var(--fg);background:var(--card);
+border:1.5px solid var(--line);outline:none}
+.ssearch input:focus{border-color:var(--accent)}
+/* 結果浮在內容之上，不把下面的版面推開——邊打字邊跳動很難用 */
+.sres{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;
+max-height:60vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);
+border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.sres a{display:block;padding:11px 14px;text-decoration:none;color:var(--fg);
+border-top:1px solid var(--line)}
+.sres a:first-child{border-top:0}
+.sres a:hover,.sres a:focus{background:var(--card)}
+.sres .st{font-weight:700;font-size:15px;line-height:1.5}
+.sres .sc{font-size:12px;color:var(--mut);margin-left:8px;font-weight:400;
+white-space:nowrap}
+.sres .sx{font-size:13px;color:var(--mut);line-height:1.6;margin-top:3px}
+.sres mark{background:transparent;color:var(--accent);font-weight:700}
+.sres .snone{padding:14px;font-size:14px;color:var(--mut)}
 .howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
 padding:13px 14px;margin:20px 0 6px;color:var(--mut)}
 .howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:9px}
@@ -337,42 +359,42 @@ letter-spacing:.4px;line-height:1.5}
 　·　共 6 張（Day 1–7）　·　更新於 2026-09-02</p>
 <div class="galnav"><a href="/articles/gallery.html">← 全部系列</a>
 <a href="/articles/">依主題閱讀 →</a></div>
-<div class="galcard"><a class="shot" href="/gallery/17855926698678571_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17855926698678571_0.jpg" alt="家人喝水量的簡單護腎提醒" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 1</span>家人喝水量的簡單護腎提醒</h3><p class="post">【護腎陪伴日常 第1天】
+<div class="galcard" id="g-17855926698678571_0"><a class="shot" href="/gallery/17855926698678571_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17855926698678571_0.jpg" alt="家人喝水量的簡單護腎提醒" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 1</span>家人喝水量的簡單護腎提醒</h3><p class="post">【護腎陪伴日常 第1天】
 多喝水，腎才有力氣排毒
 
 爸、媽，腎臟就像身體的濾水器，水喝夠了，廢物才排得出去喲。
 一般人一天喝6到8杯白開水就好（大概1500~2000毫升），少量多次慢慢喝。
 如果有心臟、腎臟疾病要限水的，記得照醫生交代的量喝，別自己加減喝。
 
-#護腎陪伴日常 #腎臟健康 #顧腎從生活開始</p><span class="src">2026-06-21　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ3b5GAk7z0" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17944391979036856_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17944391979036856_0.jpg" alt="少鹽多提味，清淡飲食才是護腎之道" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 2</span>少鹽多提味，清淡飲食才是護腎之道</h3><p class="post">【護腎陪伴日常 第2天】
+#護腎陪伴日常 #腎臟健康 #顧腎從生活開始</p><span class="src">2026-06-21　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ3b5GAk7z0" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17944391979036856_0"><a class="shot" href="/gallery/17944391979036856_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17944391979036856_0.jpg" alt="少鹽多提味，清淡飲食才是護腎之道" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 2</span>少鹽多提味，清淡飲食才是護腎之道</h3><p class="post">【護腎陪伴日常 第2天】
 鹹一點不是孝順，清淡才是愛
 
 很多人覺得菜要夠味才好吃，其實鹽吃多了，血壓會升高，腎臟也跟著受累。
 建議每天鹽不要超過一茶匙（大約6克），煮菜可以用蔥薑蒜、檸檬、香菇提味，少加味精跟醬料。
 外食、加工食品（罐頭、醃漬物、泡麵）的鈉含量都偏高，要多注意。
 
-#護腎陪伴日常 #腎臟健康 #顧腎從生活開始</p><span class="src">2026-06-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ6kx_JkT4C" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18134257702520543_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18134257702520543_0.jpg" alt="止痛藥恐傷腎，服藥請遵醫囑劑量" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 3</span>止痛藥恐傷腎，服藥請遵醫囑劑量</h3><p class="post">【護腎陪伴日常 第3天】
+#護腎陪伴日常 #腎臟健康 #顧腎從生活開始</p><span class="src">2026-06-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ6kx_JkT4C" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18134257702520543_0"><a class="shot" href="/gallery/18134257702520543_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18134257702520543_0.jpg" alt="止痛藥恐傷腎，服藥請遵醫囑劑量" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 3</span>止痛藥恐傷腎，服藥請遵醫囑劑量</h3><p class="post">【護腎陪伴日常 第3天】
 止痛藥不要自己隨便吃
 
 爸、媽，腰痠背痛很辛苦，但止痛藥（特別是消炎止痛藥NSAID）吃太久或太多，會傷腎喲。
 身體不舒服盡量先看醫生，照醫師指示的劑量跟天數吃藥，不要自己加重藥量或長期吃。
 藥房買的成藥也要看清楚成分，不確定就問藥師。
 
-#護腎陪伴日常 #腎臟健康 #顧腎從生活開始</p><span class="src">2026-06-24　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ9eAdYEfTA" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18123607741672585_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18123607741672585_0.jpg" alt="血壓穩定，腎臟小血管才不受累" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 4</span>血壓穩定，腎臟小血管才不受累</h3><p class="post">【護腎陪伴日常 第4天】
+#護腎陪伴日常 #腎臟健康 #顧腎從生活開始</p><span class="src">2026-06-24　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ9eAdYEfTA" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18123607741672585_0"><a class="shot" href="/gallery/18123607741672585_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18123607741672585_0.jpg" alt="血壓穩定，腎臟小血管才不受累" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 4</span>血壓穩定，腎臟小血管才不受累</h3><p class="post">【護腎陪伴日常 第4天】
 血壓控制好，腎臟才不會累
 
 高血壓是傷腎的頭號殺手之一，血壓長期太高，腎臟裡的小血管會慢慢壞掉。
 建議在家也能量血壓，正常範圍大約在130/80毫米汞柱以下（依醫師個別建議），有吃血壓藥要按時吃，不要自己停藥。
 少鹽、多運動、體重控制，都能幫助血壓穩定。
 
-#護腎陪伴日常 #腎臟健康 #顧腎從生活開始</p><span class="src">2026-07-01　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaP0c5SEXRe" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17909754819426531_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17909754819426531_0.jpg" alt="驗血驗尿及早揪出腎臟警訊" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 6</span>驗血驗尿及早揪出腎臟警訊</h3><p class="post">【護腎陪伴日常 第6天】
+#護腎陪伴日常 #腎臟健康 #顧腎從生活開始</p><span class="src">2026-07-01　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaP0c5SEXRe" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17909754819426531_0"><a class="shot" href="/gallery/17909754819426531_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17909754819426531_0.jpg" alt="驗血驗尿及早揪出腎臟警訊" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 6</span>驗血驗尿及早揪出腎臟警訊</h3><p class="post">【護腎陪伴日常 第6天】
 驗血驗尿，腎臟好不好一檢查就知道
 
 腎臟很「沉默」，壞了七八成可能都還沒什麼感覺，所以定期健檢很重要。
 簡單一次抽血看「腎絲球過濾率（eGFR）」，加上驗尿看有沒有蛋白尿，就能早期發現問題。
 65歲以上、有三高的長輩,建議至少一年檢查一次腎功能。
 
-#護腎陪伴日常 #腎臟健康 #顧腎從生活開始</p><span class="src">2026-07-04　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaXhu73kfG2" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18048345362626048_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18048345362626048_0.jpg" alt="來路不明的草藥偏方最傷腎臟" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 7</span>來路不明的草藥偏方最傷腎臟</h3><p class="post">【護腎陪伴日常 第7天】
+#護腎陪伴日常 #腎臟健康 #顧腎從生活開始</p><span class="src">2026-07-04　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaXhu73kfG2" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18048345362626048_0"><a class="shot" href="/gallery/18048345362626048_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18048345362626048_0.jpg" alt="來路不明的草藥偏方最傷腎臟" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 7</span>來路不明的草藥偏方最傷腎臟</h3><p class="post">【護腎陪伴日常 第7天】
 來路不明的草藥偏方，腎臟最怕
 
 爸、媽，知道身體不舒服會想試試偏方,但很多不明成分的草藥、轉骨方、補腎丸,裡面可能混了重金屬或損腎成分。

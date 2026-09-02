@@ -277,6 +277,28 @@ font-size:1.02rem;line-height:1.55}
 /* 原本是五行散文，在手機上佔掉 355px、將近半個第一屏，而且要讀完一句話
    才找得到連結。改成方塊：同樣的資訊約 180px，而且整格可點。
    順序刻意把商城放最後——衛教是主體，商城是其中一種學習方式。 */
+/* 全站搜尋。索引在第一次點搜尋框時才載入，不拖慢首頁初次開啟。 */
+.ssearch{position:relative;margin:18px 0 4px}
+.svisually{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+white-space:nowrap}
+.ssearch input{width:100%;box-sizing:border-box;font:16px/1.5 inherit;
+padding:13px 16px;border-radius:12px;color:var(--fg);background:var(--card);
+border:1.5px solid var(--line);outline:none}
+.ssearch input:focus{border-color:var(--accent)}
+/* 結果浮在內容之上，不把下面的版面推開——邊打字邊跳動很難用 */
+.sres{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;
+max-height:60vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);
+border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.sres a{display:block;padding:11px 14px;text-decoration:none;color:var(--fg);
+border-top:1px solid var(--line)}
+.sres a:first-child{border-top:0}
+.sres a:hover,.sres a:focus{background:var(--card)}
+.sres .st{font-weight:700;font-size:15px;line-height:1.5}
+.sres .sc{font-size:12px;color:var(--mut);margin-left:8px;font-weight:400;
+white-space:nowrap}
+.sres .sx{font-size:13px;color:var(--mut);line-height:1.6;margin-top:3px}
+.sres mark{background:transparent;color:var(--accent);font-weight:700}
+.sres .snone{padding:14px;font-size:14px;color:var(--mut)}
 .howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
 padding:13px 14px;margin:20px 0 6px;color:var(--mut)}
 .howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:9px}
@@ -337,7 +359,7 @@ letter-spacing:.4px;line-height:1.5}
 　·　共 30 張（Day 1–30）　·　更新於 2026-09-02</p>
 <div class="galnav"><a href="/articles/gallery.html">← 全部系列</a>
 <a href="/articles/">依主題閱讀 →</a></div>
-<div class="galcard"><a class="shot" href="/gallery/18125058058661336_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18125058058661336_0.jpg" alt="新版eGFR公式納入胱抑素C更精準" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 1</span>新版eGFR公式納入胱抑素C更精準</h3><p class="post">【護腎健康教室pro—Day 1】
+<div class="galcard" id="g-18125058058661336_0"><a class="shot" href="/gallery/18125058058661336_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18125058058661336_0.jpg" alt="新版eGFR公式納入胱抑素C更精準" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 1</span>新版eGFR公式納入胱抑素C更精準</h3><p class="post">【護腎健康教室pro—Day 1】
 用對公式：eGFR 該加驗 cystatin C
 
 KDIGO 2024 的重大更新之一，是建議在「臨床決策會受影響」時，採用同時納入肌酸酐與胱抑素 C（cystatin C）的 eGFRcr-cys 方程式，其準確度優於僅用肌酸酐的舊公式。
@@ -348,7 +370,7 @@ KDIGO 2024 的重大更新之一，是建議在「臨床決策會受影響」時
 
 📚 出處：
 ・KDIGO 2024 CKD Guideline. Kidney Int. 2024;105(4S):S117–S314
-・Inker LA, et al. New Creatinine- and Cystatin C–Based Equations. N Engl J Med. 2021;385:1737–1749</p><span class="src">2026-07-20　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbCDZ7Nk13r" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17935935036335013_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17935935036335013_0.jpg" alt="白蛋白尿UACR是評估腎臟風險關鍵指標" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 2</span>白蛋白尿UACR是評估腎臟風險關鍵指標</h3><p class="post">【護腎健康教室Day 2】白蛋白尿：與 GFR 同等重要的第二軸
+・Inker LA, et al. New Creatinine- and Cystatin C–Based Equations. N Engl J Med. 2021;385:1737–1749</p><span class="src">2026-07-20　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbCDZ7Nk13r" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17935935036335013_0"><a class="shot" href="/gallery/17935935036335013_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17935935036335013_0.jpg" alt="白蛋白尿UACR是評估腎臟風險關鍵指標" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 2</span>白蛋白尿UACR是評估腎臟風險關鍵指標</h3><p class="post">【護腎健康教室Day 2】白蛋白尿：與 GFR 同等重要的第二軸
 
 CKD 的診斷與分期是「二維」的——不是只看 GFR，還要看白蛋白尿。KDIGO 用「G 分期（GFR）」與「A 分期（Albuminuria）」共同定義風險。
 
@@ -361,7 +383,7 @@ A 分期（以 UACR，尿液白蛋白／肌酸酐比值）：
 
 📚 出處：
 ・KDIGO 2024 CKD Guideline. Kidney Int. 2024;105(4S):S117–S314
-・KDIGO CKD 分期採 GFR + Albuminuria 二維熱圖（heat map）風險分層</p><span class="src">2026-07-21　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbErqplE019" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18119073296505819_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18119073296505819_0.jpg" alt="KFRE公式預測腎衰竭進展風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 3</span>KFRE公式預測腎衰竭進展風險</h3><p class="post">【護腎健康教室 Day 3】KFRE：用公式算出「幾年內可能腎衰竭」
+・KDIGO CKD 分期採 GFR + Albuminuria 二維熱圖（heat map）風險分層</p><span class="src">2026-07-21　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbErqplE019" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18119073296505819_0"><a class="shot" href="/gallery/18119073296505819_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18119073296505819_0.jpg" alt="KFRE公式預測腎衰竭進展風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 3</span>KFRE公式預測腎衰竭進展風險</h3><p class="post">【護腎健康教室 Day 3】KFRE：用公式算出「幾年內可能腎衰竭」
 
 Kidney Failure Risk Equation（KFRE，腎衰竭風險方程式）是經全球多國世代驗證的工具，可估算 CKD 第 3–5 期患者未來 2 年與 5 年進展至腎衰竭（需透析或移植）的機率。
 
@@ -375,7 +397,7 @@ Kidney Failure Risk Equation（KFRE，腎衰竭風險方程式）是經全球多
 比起單看 eGFR，KFRE 更能個人化地回答「我的腎還能撐多久」。
 📚 出處：
 ・ KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease
-・Tangri N, et al. Multinational Assessment of the KFRE. JAMA. 2016;315(2):164– 174</p><span class="src">2026-07-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbHW584Ey4P" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18101098583245627_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18101098583245627_0.jpg" alt="追蹤eGFR下降斜率比單次數值更重要" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 4</span>追蹤eGFR下降斜率比單次數值更重要</h3><p class="post">【護腎健康教室Pro Day 4】
+・Tangri N, et al. Multinational Assessment of the KFRE. JAMA. 2016;315(2):164– 174</p><span class="src">2026-07-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbHW584Ey4P" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18101098583245627_0"><a class="shot" href="/gallery/18101098583245627_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18101098583245627_0.jpg" alt="追蹤eGFR下降斜率比單次數值更重要" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 4</span>追蹤eGFR下降斜率比單次數值更重要</h3><p class="post">【護腎健康教室Pro Day 4】
 eGFR 斜率：追「趨勢」勝過追「單點」
 
 單次 eGFR 會受脫水、感染、藥物、採血當下狀態影響。真正決定預後的是「eGFR 斜率（slope）」——每年下降的速率。
@@ -389,7 +411,7 @@ eGFR 斜率：追「趨勢」勝過追「單點」
 
 📚 出處：
 ・KDIGO 2024 CKD Guideline. Kidney Int. 2024;105(4S):S117–S314
-・Grams ME, et al. Estimated GFR Slope as a Surrogate Endpoint. J Am Soc Nephrol. 2019；相關 CKD-EPI 分析</p><span class="src">2026-07-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbJ1x9BkxOF" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17997053457002490_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17997053457002490_0.jpg" alt="血壓量測標準化才能準確反映數值" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 5</span>血壓量測標準化才能準確反映數值</h3><p class="post">【護腎健康教室Pro Day 5】
+・Grams ME, et al. Estimated GFR Slope as a Surrogate Endpoint. J Am Soc Nephrol. 2019；相關 CKD-EPI 分析</p><span class="src">2026-07-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbJ1x9BkxOF" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17997053457002490_0"><a class="shot" href="/gallery/17997053457002490_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17997053457002490_0.jpg" alt="血壓量測標準化才能準確反映數值" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 5</span>血壓量測標準化才能準確反映數值</h3><p class="post">【護腎健康教室Pro Day 5】
 血壓要「量對」才算數：標準化診間測量
 
 KDIGO 2021 血壓指引最容易被忽略、卻最關鍵的一點：慢性腎臟病患者把收縮壓目標訂在 &lt; 120 mmHg，前提是必須用「標準化診間血壓測量」。
@@ -403,7 +425,7 @@ KDIGO 2021 血壓指引最容易被忽略、卻最關鍵的一點：慢性腎臟
 
 📚 出處：
 ・KDIGO 2021 BP Guideline. Kidney Int. 2021;99(3S):S1–S87
-・Cheung AK, et al. Executive Summary of KDIGO 2021 BP Guideline. Kidney Int. 2021</p><span class="src">2026-07-25　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbMwR97kdRo" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18188367850386243_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18188367850386243_0.jpg" alt="SPRINT研究證實積極控壓保護心腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 6</span>SPRINT研究證實積極控壓保護心腎</h3><p class="post">【護腎健康教室Pro Day 6】
+・Cheung AK, et al. Executive Summary of KDIGO 2021 BP Guideline. Kidney Int. 2021</p><span class="src">2026-07-25　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbMwR97kdRo" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18188367850386243_0"><a class="shot" href="/gallery/18188367850386243_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18188367850386243_0.jpg" alt="SPRINT研究證實積極控壓保護心腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 6</span>SPRINT研究證實積極控壓保護心腎</h3><p class="post">【護腎健康教室Pro Day 6】
 血壓目標 &lt;120 的證據：來自 SPRINT
 
 為什麼 KDIGO 把 CKD 患者的收縮壓目標從 2012 年的 &lt;130/80 下修到 &lt;120？主要證據來自 SPRINT 試驗。
@@ -419,7 +441,7 @@ SPRINT 納入高心血管風險族群（含 CKD 亞組），比較「積極控�
 
 📚 出處：
 ・SPRINT Research Group. N Engl J Med. 2015;373:2103–2116
-・KDIGO 2021 BP Guideline. Kidney Int. 2021;99(3S):S1–S87</p><span class="src">2026-07-25　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbPCwPYkwCX" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18617778619056405_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18617778619056405_0.jpg" alt="整合六項指標建立個人腎臟儀表板" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 7</span>整合六項指標建立個人腎臟儀表板</h3><p class="post">【護腎健康教室Pro Day 7】
+・KDIGO 2021 BP Guideline. Kidney Int. 2021;99(3S):S1–S87</p><span class="src">2026-07-25　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbPCwPYkwCX" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18617778619056405_0"><a class="shot" href="/gallery/18617778619056405_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18617778619056405_0.jpg" alt="整合六項指標建立個人腎臟儀表板" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 7</span>整合六項指標建立個人腎臟儀表板</h3><p class="post">【護腎健康教室Pro Day 7】
 第一週總結：建立你的『腎臟儀表板』
 
 把第一週的評估工具整合成一份可長期追蹤的個人儀表板，每 3–6 個月更新：
@@ -435,7 +457,7 @@ SPRINT 納入高心血管風險族群（含 CKD 亞組），比較「積極控�
 其他科醫師轉介腎臟科的時機（KDIGO）：eGFR &lt; 30、UACR 持續 &gt; 300、eGFR 快速下降、頑固性高血壓、不明原因血尿等。有數字，才有行動依據。
 
 📚 出處：
-・KDIGO 2024 CKD Guideline. Kidney Int. 2024;105(4S):S117–S314（轉介標準見指引 Chapter 5）</p><span class="src">2026-07-26　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbRkUCMk22O" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18106561082146246_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18106561082146246_0.jpg" alt="ACEi與ARB為蛋白尿型腎病護腎基石" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 8</span>ACEi與ARB為蛋白尿型腎病護腎基石</h3><p class="post">【護腎健康教室Pro Day 8】
+・KDIGO 2024 CKD Guideline. Kidney Int. 2024;105(4S):S117–S314（轉介標準見指引 Chapter 5）</p><span class="src">2026-07-26　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbRkUCMk22O" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18106561082146246_0"><a class="shot" href="/gallery/18106561082146246_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18106561082146246_0.jpg" alt="ACEi與ARB為蛋白尿型腎病護腎基石" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 8</span>ACEi與ARB為蛋白尿型腎病護腎基石</h3><p class="post">【護腎健康教室Pro Day 8】
 第一支柱：RAAS 抑制劑（ACEi／ARB）
 
 ACE 抑制劑（ACEi）與血管張力素受體阻斷劑（ARB）是蛋白尿型 CKD 的傳統基石，透過降低腎絲球內壓、減少蛋白尿而護腎。
@@ -448,7 +470,7 @@ KDIGO 建議：
 
 📚 出處：
 ・KDIGO 2024 CKD Guideline. Kidney Int. 2024;105(4S):S117–S314
-・KDIGO 2021 BP Guideline. Kidney Int. 2021;99(3S):S1–S87</p><span class="src">2026-07-28　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbUPARvExiG" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18474918652111754_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18474918652111754_0.jpg" alt="SGLT2抑制劑成為護腎治療新典範" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 9</span>SGLT2抑制劑成為護腎治療新典範</h3><p class="post">【護腎健康教室Pro Day 9】
+・KDIGO 2021 BP Guideline. Kidney Int. 2021;99(3S):S1–S87</p><span class="src">2026-07-28　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbUPARvExiG" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18474918652111754_0"><a class="shot" href="/gallery/18474918652111754_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18474918652111754_0.jpg" alt="SGLT2抑制劑成為護腎治療新典範" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 9</span>SGLT2抑制劑成為護腎治療新典範</h3><p class="post">【護腎健康教室Pro Day 9】
 第二支柱：SGLT2 抑制劑（護腎的典範轉移）
 
 SGLT2 抑制劑（如 dapagliflozin、empagliflozin）已從降血糖藥躍升為護腎核心用藥，作用機轉是恢復管球回饋、降低腎絲球高過濾壓。
@@ -462,7 +484,7 @@ KDIGO 2024 建議：蛋白尿型 CKD（有無糖尿病）在 RAASi 基礎上加�
 📚 出處：
 ・CREDENCE. N Engl J Med. 2019;380:2295–2306
 ・DAPA-CKD
-・ EMPA-KIDNEY N Engl J Med. 2023;388:117–127</p><span class="src">2026-07-28　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbWwa1ekwjG" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17977824105098620_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17977824105098620_0.jpg" alt="非類固醇礦物皮質素拮抗劑護腎新進展" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 10</span>非類固醇礦物皮質素拮抗劑護腎新進展</h3><p class="post">【護腎健康教室Pro Day 10】
+・ EMPA-KIDNEY N Engl J Med. 2023;388:117–127</p><span class="src">2026-07-28　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbWwa1ekwjG" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17977824105098620_0"><a class="shot" href="/gallery/17977824105098620_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17977824105098620_0.jpg" alt="非類固醇礦物皮質素拮抗劑護腎新進展" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 10</span>非類固醇礦物皮質素拮抗劑護腎新進展</h3><p class="post">【護腎健康教室Pro Day 10】
 第三支柱：非類固醇 MRA（finerenone）
 
 Finerenone 是新一代「非類固醇」礦物皮質素受體拮抗劑（MRA），抗發炎與抗纖維化，且相較 spironolactone 較少造成男性女乳症，但仍須留意高血鉀。
@@ -475,7 +497,7 @@ Finerenone 是新一代「非類固醇」礦物皮質素受體拮抗劑（MRA）
 
 📚 出處：
 ・Bakris GL, et al. FIDELIO-DKD. N Engl J Med. 2020;383:2219–2229
-・Pitt B, et al. FIGARO-DKD. N Engl J Med. 2021;385:2252–2263</p><span class="src">2026-07-29　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbZWYtrE7zM" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18104382089141026_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18104382089141026_0.jpg" alt="GLP-1受體促效劑降低糖尿病腎病變風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 11</span>GLP-1受體促效劑降低糖尿病腎病變風險</h3><p class="post">【護腎健康教室Pro Day 11】
+・Pitt B, et al. FIGARO-DKD. N Engl J Med. 2021;385:2252–2263</p><span class="src">2026-07-29　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbZWYtrE7zM" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18104382089141026_0"><a class="shot" href="/gallery/18104382089141026_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18104382089141026_0.jpg" alt="GLP-1受體促效劑降低糖尿病腎病變風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 11</span>GLP-1受體促效劑降低糖尿病腎病變風險</h3><p class="post">【護腎健康教室Pro Day 11】
 第四支柱：GLP-1 受體促效劑（FLOW 試驗)
 
 GLP-1 受體促效劑 semaglutide 過去以降血糖、減重、心血管保護聞名，2024 年 FLOW 試驗首次證實其對腎臟的直接保護。
@@ -488,7 +510,7 @@ FLOW 試驗（第 2 型糖尿病合併 CKD）：
 
 📚 出處：
 ・Perkovic V, et al. FLOW Trial. N Engl J Med. 2024;391:109–121
-・KDIGO 2024 CKD Guideline</p><span class="src">2026-07-30　·　<a href="https://www.threads.com/@kidney.godreborn/post/Dbb3uJVkxHY" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17913210171440904_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17913210171440904_0.jpg" alt="他汀類藥物如何在護腎同時保護心血管" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 12</span>他汀類藥物如何在護腎同時保護心血管</h3><p class="post">【護腎健康教室Pro Day 12】
+・KDIGO 2024 CKD Guideline</p><span class="src">2026-07-30　·　<a href="https://www.threads.com/@kidney.godreborn/post/Dbb3uJVkxHY" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17913210171440904_0"><a class="shot" href="/gallery/17913210171440904_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17913210171440904_0.jpg" alt="他汀類藥物如何在護腎同時保護心血管" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 12</span>他汀類藥物如何在護腎同時保護心血管</h3><p class="post">【護腎健康教室Pro Day 12】
 Statin：護腎路上別忘了保護心血管
 
 CKD 患者最常見的死因不是腎衰竭，而是心血管疾病。KDIGO 脂質指引建議依年齡與風險使用 statin（他汀類）降低動脈粥狀硬化風險。
@@ -500,7 +522,7 @@ CKD 患者最常見的死因不是腎衰竭，而是心血管疾病。KDIGO 脂�
 
 CKD 患者需注意 statin 劑量調整與藥物交互作用。護腎與護心是同一套策略。
 
-📚 出處：KDIGO 2024 CKD Guideline</p><span class="src">2026-08-01　·　<a href="https://www.threads.com/@kidney.godreborn/post/Dbe7122kc8j" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18189157645384191_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18189157645384191_0.jpg" alt="認識腎毒性藥物與生病日暫停用藥原則" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 13</span>認識腎毒性藥物與生病日暫停用藥原則</h3><p class="post">【護腎健康教室Pro Day 13】
+📚 出處：KDIGO 2024 CKD Guideline</p><span class="src">2026-08-01　·　<a href="https://www.threads.com/@kidney.godreborn/post/Dbe7122kc8j" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18189157645384191_0"><a class="shot" href="/gallery/18189157645384191_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18189157645384191_0.jpg" alt="認識腎毒性藥物與生病日暫停用藥原則" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 13</span>認識腎毒性藥物與生病日暫停用藥原則</h3><p class="post">【護腎健康教室Pro Day 13】
 腎毒性藥物管理（Nephrotoxin Stewardship）
 
 KDIGO 2024 特別強調「腎毒性藥物管理」是護腎的主動工作，而非被動避免。
@@ -514,7 +536,7 @@ KDIGO 2024 特別強調「腎毒性藥物管理」是護腎的主動工作，而
 「生病日（sick day）用藥指引」：在急性腹瀉、嘔吐、發燒脫水時，暫停 RAASi、SGLT2i、利尿劑、NSAIDs、metformin 等（俗稱 SADMANS 原則），可預防急性腎損傷（AKI）。務必先與醫師確認個人化的暫停清單。
 
 📚 出處：
-・KDIGO 2024 CKD Guideline</p><span class="src">2026-08-02　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbhX-KYkdUW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18112940143749234_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18112940143749234_0.jpg" alt="糖尿病腎病四大護腎藥物疊加治療策略" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 14</span>糖尿病腎病四大護腎藥物疊加治療策略</h3><p class="post">【護腎健康教室Pro Day 14】
+・KDIGO 2024 CKD Guideline</p><span class="src">2026-08-02　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbhX-KYkdUW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18112940143749234_0"><a class="shot" href="/gallery/18112940143749234_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18112940143749234_0.jpg" alt="糖尿病腎病四大護腎藥物疊加治療策略" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 14</span>糖尿病腎病四大護腎藥物疊加治療策略</h3><p class="post">【護腎健康教室Pro Day 14】
 第二週總結：四大支柱的疊加策略
 
 現代 CKD 藥物治療已從「單打」走向「疊加（pillar therapy）」，尤其第 2 型糖尿病合併 CKD：
@@ -528,7 +550,7 @@ KDIGO 2024 特別強調「腎毒性藥物管理」是護腎的主動工作，而
 疊加原則：不是一次全上，而是依 eGFR、血鉀、有無糖尿病、蛋白尿殘留與耐受度，由醫師逐步加藥並監測。每一支柱的效益在試驗中多為「相加」而非重疊。這是近十年腎臟醫學最大的進展。
 
 📚 出處：
-・KDIGO 2024 CKD Guideline.</p><span class="src">2026-08-03　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbjrMMHkxDQ" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18141878395490701_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18141878395490701_0.jpg" alt="每日鈉攝取如何影響血壓與蛋白尿" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 15</span>每日鈉攝取如何影響血壓與蛋白尿</h3><p class="post">【護腎健康教室Pro Day 15】
+・KDIGO 2024 CKD Guideline.</p><span class="src">2026-08-03　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbjrMMHkxDQ" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18141878395490701_0"><a class="shot" href="/gallery/18141878395490701_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18141878395490701_0.jpg" alt="每日鈉攝取如何影響血壓與蛋白尿" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 15</span>每日鈉攝取如何影響血壓與蛋白尿</h3><p class="post">【護腎健康教室Pro Day 15】
 鈉：目標 &lt; 2 克鈉／日（約 5 克鹽）
 
 KDIGO 建議 CKD 患者每日鈉攝取 &lt; 2 克（相當於&lt; 5 克食鹽），除非有低血鈉或鹽分流失等禁忌。
@@ -543,7 +565,7 @@ KDIGO 建議 CKD 患者每日鈉攝取 &lt; 2 克（相當於&lt; 5 克食鹽）
 
 📚 出處：
 ・KDIGO 2021 BP Guideline.
-・KDIGO 2024 CKD Guideline.</p><span class="src">2026-08-04　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbmOxMfk8Tw" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18117728266926710_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18117728266926710_0.jpg" alt="慢性腎臟病蛋白質攝取如何拿捏分寸" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 16</span>慢性腎臟病蛋白質攝取如何拿捏分寸</h3><p class="post">【護腎進階計畫 Day 16】
+・KDIGO 2024 CKD Guideline.</p><span class="src">2026-08-04　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbmOxMfk8Tw" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18117728266926710_0"><a class="shot" href="/gallery/18117728266926710_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18117728266926710_0.jpg" alt="慢性腎臟病蛋白質攝取如何拿捏分寸" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 16</span>慢性腎臟病蛋白質攝取如何拿捏分寸</h3><p class="post">【護腎進階計畫 Day 16】
 蛋白質：適度限制，但別走向營養不良
 
 蛋白質代謝產生含氮廢物，過量會增加腎絲球負擔。但過度限制又會導致肌少症與營養不良，必須拿捏。
@@ -559,7 +581,7 @@ KDOQI 2020 營養指引（未透析、代謝穩定）：
 
 📚 出處：
 ・KDOQI Nutrition in CKD: 2020 Update
-・KDIGO Diabetes in CKD Guideline</p><span class="src">2026-08-04　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbowimcE_42" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18121778686764262_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18121778686764262_0.jpg" alt="植物為主飲食如何降低飲食酸負荷護腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 17</span>植物為主飲食如何降低飲食酸負荷護腎</h3><p class="post">【護腎健康教室Pro Day 17】
+・KDIGO Diabetes in CKD Guideline</p><span class="src">2026-08-04　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbowimcE_42" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18121778686764262_0"><a class="shot" href="/gallery/18121778686764262_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18121778686764262_0.jpg" alt="植物為主飲食如何降低飲食酸負荷護腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 17</span>植物為主飲食如何降低飲食酸負荷護腎</h3><p class="post">【護腎健康教室Pro Day 17】
 以植物為主的飲食與『飲食酸負荷』
 
 愈來愈多證據支持以植物為主（plant-dominant）的飲食型態對 CKD 有利，關鍵之一是降低「飲食酸負荷（dietary acid load）」。
@@ -573,7 +595,7 @@ KDOQI 2020 營養指引（未透析、代謝穩定）：
 注意：進階 CKD 患者採高蔬果飲食須監測血鉀。個人化調整、與營養師合作是關鍵。
 
 📚 出處：
-・KDOQI Nutrition in CKD: 2020 Update</p><span class="src">2026-08-05　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbrX_ZsE273" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18119300767848669_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18119300767848669_0.jpg" alt="高鉀飲食限制從一律禁止到個人化管理" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 18</span>高鉀飲食限制從一律禁止到個人化管理</h3><p class="post">【護腎健康教室Pro Day 18】
+・KDOQI Nutrition in CKD: 2020 Update</p><span class="src">2026-08-05　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbrX_ZsE273" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18119300767848669_0"><a class="shot" href="/gallery/18119300767848669_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18119300767848669_0.jpg" alt="高鉀飲食限制從一律禁止到個人化管理" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 18</span>高鉀飲食限制從一律禁止到個人化管理</h3><p class="post">【護腎健康教室Pro Day 18】
 鉀：從『一律限制』到『個人化管理』
 
 過去 CKD 衛教常一律叫人少吃高鉀蔬果，但新觀念更強調個人化——因為蔬果同時帶來纖維、鹼前驅物與心血管益處。
@@ -587,7 +609,7 @@ KDOQI 2020 營養指引（未透析、代謝穩定）：
 
 📚 出處：
 ・KDIGO 2024 CKD Guideline
-・KDOQI Nutrition in CKD: 2020 Update</p><span class="src">2026-08-06　·　<a href="https://www.threads.com/@kidney.godreborn/post/Dbt8YmPE_uh" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17896756110578567_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17896756110578567_0.jpg" alt="控制血磷關鍵在加工食品而非天然蛋白" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 19</span>控制血磷關鍵在加工食品而非天然蛋白</h3><p class="post">【護腎健康教室ProDay 19】
+・KDOQI Nutrition in CKD: 2020 Update</p><span class="src">2026-08-06　·　<a href="https://www.threads.com/@kidney.godreborn/post/Dbt8YmPE_uh" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17896756110578567_0"><a class="shot" href="/gallery/17896756110578567_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17896756110578567_0.jpg" alt="控制血磷關鍵在加工食品而非天然蛋白" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 19</span>控制血磷關鍵在加工食品而非天然蛋白</h3><p class="post">【護腎健康教室ProDay 19】
 磷：真正的敵人是『加工食品添加磷』
 
 高血磷與 CKD 患者的血管鈣化、心血管死亡、骨病變（CKD-MBD）密切相關。但控磷的重點不在天然食物，而在加工食品。
@@ -602,7 +624,7 @@ KDOQI 2020 營養指引（未透析、代謝穩定）：
 
 📚 出處：
 ・KDIGO CKD-MBD Guideline Update. 
-・KDOQI Nutrition in CKD: 2020 Update.</p><span class="src">2026-08-08　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbwnpAJk2AG" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18127337272677466_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18127337272677466_0.jpg" alt="運動體重管理與戒菸的護腎實證效益" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 20</span>運動體重管理與戒菸的護腎實證效益</h3><p class="post">【護腎健康教室Pro Day 20】
+・KDOQI Nutrition in CKD: 2020 Update.</p><span class="src">2026-08-08　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbwnpAJk2AG" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18127337272677466_0"><a class="shot" href="/gallery/18127337272677466_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18127337272677466_0.jpg" alt="運動體重管理與戒菸的護腎實證效益" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 20</span>運動體重管理與戒菸的護腎實證效益</h3><p class="post">【護腎健康教室Pro Day 20】
 運動、體重與戒菸的實證護腎效益
 
 生活型態不是配角，而是有證據的護腎介入。
@@ -617,7 +639,7 @@ KDOQI 2020 營養指引（未透析、代謝穩定）：
 
 📚 出處：
 ・KDIGO 2024 CKD Guideline
-・KDIGO 2021 BP Guideline</p><span class="src">2026-08-09　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbzeUWIEVzO" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18001785650976552_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18001785650976552_0.jpg" alt="腎臟飲食與生活習慣的個人化調整原則" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 21</span>腎臟飲食與生活習慣的個人化調整原則</h3><p class="post">【護腎健康教室Pro Day 21】
+・KDIGO 2021 BP Guideline</p><span class="src">2026-08-09　·　<a href="https://www.threads.com/@kidney.godreborn/post/DbzeUWIEVzO" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18001785650976552_0"><a class="shot" href="/gallery/18001785650976552_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18001785650976552_0.jpg" alt="腎臟飲食與生活習慣的個人化調整原則" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 21</span>腎臟飲食與生活習慣的個人化調整原則</h3><p class="post">【護腎健康教室Pro Day 21】
 第三週總結：飲食生活的『個人化』精神
 
 第三週的核心訊息：實證飲食不是一份僵化的禁食清單，而是依你的分期、血液數值與生活型態量身打造。
@@ -633,7 +655,7 @@ KDOQI 2020 營養指引（未透析、代謝穩定）：
 
 📚 出處：
 ・KDIGO 2024 CKD Guideline
-・KDOQI Nutrition in CKD: 2020 Update</p><span class="src">2026-08-09　·　<a href="https://www.threads.com/@kidney.godreborn/post/Db1mp9bE9L2" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18019887326877138_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18019887326877138_0.jpg" alt="腎性貧血成因與鐵劑ESA治療重點" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 22</span>腎性貧血成因與鐵劑ESA治療重點</h3><p class="post">【護腎健康教室Pro Day 22】
+・KDOQI Nutrition in CKD: 2020 Update</p><span class="src">2026-08-09　·　<a href="https://www.threads.com/@kidney.godreborn/post/Db1mp9bE9L2" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18019887326877138_0"><a class="shot" href="/gallery/18019887326877138_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18019887326877138_0.jpg" alt="腎性貧血成因與鐵劑ESA治療重點" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 22</span>腎性貧血成因與鐵劑ESA治療重點</h3><p class="post">【護腎健康教室Pro Day 22】
 腎性貧血：EPO 不足與鐵的雙重問題
 
 腎臟分泌促紅血球生成素（EPO），腎功能下降時 EPO 不足，加上鐵利用障礙與尿毒環境，造成腎性貧血。
@@ -648,7 +670,7 @@ KDOQI 2020 營養指引（未透析、代謝穩定）：
 
 📚 出處：
 ・KDIGO Anemia in CKD Guideline
-・KDIGO 2024 CKD Guideline</p><span class="src">2026-08-11　·　<a href="https://www.threads.com/@kidney.godreborn/post/Db4hiztk3T4" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18185378272401435_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18185378272401435_0.jpg" alt="認識鈣磷副甲狀腺失衡與血管鈣化風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 23</span>認識鈣磷副甲狀腺失衡與血管鈣化風險</h3><p class="post">【護腎健康教室Pro Day 23】
+・KDIGO 2024 CKD Guideline</p><span class="src">2026-08-11　·　<a href="https://www.threads.com/@kidney.godreborn/post/Db4hiztk3T4" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18185378272401435_0"><a class="shot" href="/gallery/18185378272401435_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18185378272401435_0.jpg" alt="認識鈣磷副甲狀腺失衡與血管鈣化風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 23</span>認識鈣磷副甲狀腺失衡與血管鈣化風險</h3><p class="post">【護腎健康教室Pro Day 23】
 CKD-MBD：鈣、磷、副甲狀腺與血管鈣化
 
 CKD 礦物質與骨病變（CKD-MBD）是一組相互牽動的失衡：高血磷、低活性維生素 D、續發性副甲狀腺亢進、血管鈣化。
@@ -662,7 +684,7 @@ CKD 礦物質與骨病變（CKD-MBD）是一組相互牽動的失衡：高血磷
 臨床提醒：盲目大量補鈣對 CKD 患者可能有害，務必依血鈣、血磷、PTH 數值調整。
 
 📚 出處：
-・KDIGO CKD-MBD Guideline Update</p><span class="src">2026-08-11　·　<a href="https://www.threads.com/@kidney.godreborn/post/Db6wsEbE5t0" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18018094959068012_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18018094959068012_0.jpg" alt="代謝性酸中毒是常被忽略的護腎關鍵指標" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 24</span>代謝性酸中毒是常被忽略的護腎關鍵指標</h3><p class="post">【護腎健康教室Pro Day 24】
+・KDIGO CKD-MBD Guideline Update</p><span class="src">2026-08-11　·　<a href="https://www.threads.com/@kidney.godreborn/post/Db6wsEbE5t0" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18018094959068012_0"><a class="shot" href="/gallery/18018094959068012_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18018094959068012_0.jpg" alt="代謝性酸中毒是常被忽略的護腎關鍵指標" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 24</span>代謝性酸中毒是常被忽略的護腎關鍵指標</h3><p class="post">【護腎健康教室Pro Day 24】
 代謝性酸中毒：便宜卻常被忽略的護腎點
 
 CKD 患者常有慢性代謝性酸中毒，長期會加速腎功能惡化、造成肌肉流失與骨質問題。
@@ -673,7 +695,7 @@ CKD 患者常有慢性代謝性酸中毒，長期會加速腎功能惡化、造�
 
 一般將血清碳酸氫鹽維持在正常低標以上（多數指引參考 ≥ 22 mmol/L）。這是一個低成本、常被忽略卻有實證的介入點，值得在追蹤時主動檢查。
 
-📚 出處：KDIGO 2024 CKD Guideline</p><span class="src">2026-08-12　·　<a href="https://www.threads.com/@kidney.godreborn/post/Db9V-NAkw7f" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17958405762192675_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17958405762192675_0.jpg" alt="高血鉀時勿輕易停用護腎藥物的新策略" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 25</span>高血鉀時勿輕易停用護腎藥物的新策略</h3><p class="post">【護腎健康教室Pro Day 25】高血鉀：別因怕血鉀而放棄護腎藥
+📚 出處：KDIGO 2024 CKD Guideline</p><span class="src">2026-08-12　·　<a href="https://www.threads.com/@kidney.godreborn/post/Db9V-NAkw7f" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17958405762192675_0"><a class="shot" href="/gallery/17958405762192675_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17958405762192675_0.jpg" alt="高血鉀時勿輕易停用護腎藥物的新策略" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 25</span>高血鉀時勿輕易停用護腎藥物的新策略</h3><p class="post">【護腎健康教室Pro Day 25】高血鉀：別因怕血鉀而放棄護腎藥
 
 RAASi、MRA 等護腎藥可能升高血鉀，過去常因此被減量或停用——但這等於放棄了保護腎臟的機會。
 
@@ -685,7 +707,7 @@ RAASi、MRA 等護腎藥可能升高血鉀，過去常因此被減量或停用�
 急性高血鉀仍是急症（心律不整風險），需立即處理。但慢性管理的思維已從「停藥避險」轉為「控鉀續用」。
 
 📚 出處：
-・KDIGO 2024 CKD Guideline</p><span class="src">2026-08-13　·　<a href="https://www.threads.com/@kidney.godreborn/post/Db_6t4TE4zN" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17888126973438355_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17888126973438355_0.jpg" alt="認識急性腎損傷如何演變成慢性腎臟病" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 26</span>認識急性腎損傷如何演變成慢性腎臟病</h3><p class="post">【護腎健康教室Pro Day 26】
+・KDIGO 2024 CKD Guideline</p><span class="src">2026-08-13　·　<a href="https://www.threads.com/@kidney.godreborn/post/Db_6t4TE4zN" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17888126973438355_0"><a class="shot" href="/gallery/17888126973438355_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17888126973438355_0.jpg" alt="認識急性腎損傷如何演變成慢性腎臟病" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 26</span>認識急性腎損傷如何演變成慢性腎臟病</h3><p class="post">【護腎健康教室Pro Day 26】
 AKI 預防：急性傷害會留下慢性疤痕
 
 急性腎損傷（AKI）與慢性腎臟病是雙向道——一次嚴重 AKI 可能讓腎功能永久下一個台階（AKI-to-CKD transition）。
@@ -704,7 +726,7 @@ AKI 預防：急性傷害會留下慢性疤痕
 
 📚 出處：
 ・KDIGO AKI Guideline
-・KDIGO 2024 CKD Guideline</p><span class="src">2026-08-15　·　<a href="https://www.threads.com/@kidney.godreborn/post/DcCw9FUEzZp" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17959590687190802_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17959590687190802_0.jpg" alt="來路不明中草藥暗藏的腎臟致癌風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 27</span>來路不明中草藥暗藏的腎臟致癌風險</h3><p class="post">【護腎健康教室Pro Day 27】
+・KDIGO 2024 CKD Guideline</p><span class="src">2026-08-15　·　<a href="https://www.threads.com/@kidney.godreborn/post/DcCw9FUEzZp" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17959590687190802_0"><a class="shot" href="/gallery/17959590687190802_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17959590687190802_0.jpg" alt="來路不明中草藥暗藏的腎臟致癌風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 27</span>來路不明中草藥暗藏的腎臟致癌風險</h3><p class="post">【護腎健康教室Pro Day 27】
 馬兜鈴酸腎病：來路不明草藥的真實危害
 
 馬兜鈴酸（aristolochic acid）是明確的腎毒性與致癌物質，可造成不可逆的間質性腎病變，並與泌尿道上皮癌相關。
@@ -720,7 +742,7 @@ AKI 預防：急性傷害會留下慢性疤痕
 📚 出處：
 ・IARC Monographs：Aristolochic acid
 ・Chen CH, et al. Proc Natl Acad Sci USA. 2012;109:8241–8246
-・KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of CKD</p><span class="src">2026-08-16　·　<a href="https://www.threads.com/@kidney.godreborn/post/DcFgXyLkTqj" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18029970308839940_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18029970308839940_0.jpg" alt="及早規劃透析與腎臟移植的時機選擇" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 28</span>及早規劃透析與腎臟移植的時機選擇</h3><p class="post">【護腎健康教室Pro Day 28】
+・KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of CKD</p><span class="src">2026-08-16　·　<a href="https://www.threads.com/@kidney.godreborn/post/DcFgXyLkTqj" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18029970308839940_0"><a class="shot" href="/gallery/18029970308839940_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18029970308839940_0.jpg" alt="及早規劃透析與腎臟移植的時機選擇" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 28</span>及早規劃透析與腎臟移植的時機選擇</h3><p class="post">【護腎健康教室Pro Day 28】
 腎臟替代治療的『提前規劃』
 
 當 eGFR 逐步逼近腎衰竭，提前規劃（做好準備而非緊急上陣）能大幅改善預後與生活品質。
@@ -734,7 +756,7 @@ AKI 預防：急性傷害會留下慢性疤痕
 
 📚 出處：
 ・KDIGO 2024 CKD Guideline
-・KDOQI kdoqi vascular access guidelines</p><span class="src">2026-08-16　·　<a href="https://www.threads.com/@kidney.godreborn/post/DcHpmemE5rW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18067941875737506_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18067941875737506_0.jpg" alt="多專科團隊照護與病患共同決策的重要性" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 29</span>多專科團隊照護與病患共同決策的重要性</h3><p class="post">【護腎健康教室Pro Day 29】
+・KDOQI kdoqi vascular access guidelines</p><span class="src">2026-08-16　·　<a href="https://www.threads.com/@kidney.godreborn/post/DcHpmemE5rW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18067941875737506_0"><a class="shot" href="/gallery/18067941875737506_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18067941875737506_0.jpg" alt="多專科團隊照護與病患共同決策的重要性" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 29</span>多專科團隊照護與病患共同決策的重要性</h3><p class="post">【護腎健康教室Pro Day 29】
 照護的整合：多專科團隊與共同決策
 
 進階 CKD 照護不是單靠一位醫師，而是一整個團隊，且患者本人是決策核心。
@@ -749,7 +771,7 @@ AKI 預防：急性傷害會留下慢性疤痕
 護腎的終點不是數字，而是「活得久」與「活得好」之間，由患者自己定義的平衡。
 
 📚 出處：
-・KDIGO 2024 CKD Guideline</p><span class="src">2026-08-17　·　<a href="https://www.threads.com/@kidney.godreborn/post/DcKLob8E_ea" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18103657958615155_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18103657958615155_0.jpg" alt="三十天護腎實證策略總整理與行動綱領" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 30</span>三十天護腎實證策略總整理與行動綱領</h3><p class="post">【護腎健康教室Pro Day 30】
+・KDIGO 2024 CKD Guideline</p><span class="src">2026-08-17　·　<a href="https://www.threads.com/@kidney.godreborn/post/DcKLob8E_ea" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18103657958615155_0"><a class="shot" href="/gallery/18103657958615155_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18103657958615155_0.jpg" alt="三十天護腎實證策略總整理與行動綱領" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 30</span>三十天護腎實證策略總整理與行動綱領</h3><p class="post">【護腎健康教室Pro Day 30】
 第 30 天：一份實證護腎的行動總綱
 
 走完 30 天，把整套實證策略濃縮成可執行的總綱：

@@ -277,6 +277,28 @@ font-size:1.02rem;line-height:1.55}
 /* 原本是五行散文，在手機上佔掉 355px、將近半個第一屏，而且要讀完一句話
    才找得到連結。改成方塊：同樣的資訊約 180px，而且整格可點。
    順序刻意把商城放最後——衛教是主體，商城是其中一種學習方式。 */
+/* 全站搜尋。索引在第一次點搜尋框時才載入，不拖慢首頁初次開啟。 */
+.ssearch{position:relative;margin:18px 0 4px}
+.svisually{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+white-space:nowrap}
+.ssearch input{width:100%;box-sizing:border-box;font:16px/1.5 inherit;
+padding:13px 16px;border-radius:12px;color:var(--fg);background:var(--card);
+border:1.5px solid var(--line);outline:none}
+.ssearch input:focus{border-color:var(--accent)}
+/* 結果浮在內容之上，不把下面的版面推開——邊打字邊跳動很難用 */
+.sres{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;
+max-height:60vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);
+border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.sres a{display:block;padding:11px 14px;text-decoration:none;color:var(--fg);
+border-top:1px solid var(--line)}
+.sres a:first-child{border-top:0}
+.sres a:hover,.sres a:focus{background:var(--card)}
+.sres .st{font-weight:700;font-size:15px;line-height:1.5}
+.sres .sc{font-size:12px;color:var(--mut);margin-left:8px;font-weight:400;
+white-space:nowrap}
+.sres .sx{font-size:13px;color:var(--mut);line-height:1.6;margin-top:3px}
+.sres mark{background:transparent;color:var(--accent);font-weight:700}
+.sres .snone{padding:14px;font-size:14px;color:var(--mut)}
 .howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
 padding:13px 14px;margin:20px 0 6px;color:var(--mut)}
 .howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:9px}
@@ -494,7 +516,7 @@ if(document.readyState === "loading") document.addEventListener("DOMContentLoade
 else calcInit();
 </script>
 
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "name": "腎功能計算：eGFR 與腎衰竭風險｜護腎教室", "description": "以 CKD-EPI 2021 公式計算 eGFR（可加入胱抑素 C），並依 KFRE 估算慢性腎臟病進展到腎衰竭的風險。輸入你報告上已有的數值即可。", "inLanguage": "zh-Hant", "url": "https://kidneygod.net/calc.html", "dateModified": "2026-09-01", "author": {"@type": "Physician", "@id": "https://kidneygod.net/about.html#author", "name": "吳政哲", "jobTitle": "腎臟科醫師", "url": "https://kidneygod.net/about.html", "medicalSpecialty": ["Nephrologic", "InternalMedicine"], "hasCredential": [{"@type": "EducationalOccupationalCredential", "credentialCategory": "專科醫師證書", "name": "腎臟科專科醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "專科醫師證書", "name": "內科專科醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "認證", "name": "戒菸治療醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "認證", "name": "糖尿病共同照護網醫師"}], "worksFor": {"@type": "Hospital", "name": "郭綜合醫院", "department": {"@type": "MedicalOrganization", "name": "腎臟內科"}}, "alumniOf": {"@type": "CollegeOrUniversity", "name": "國立成功大學醫學系"}, "memberOf": [{"@type": "Organization", "name": "台灣慢性腎臟病臨床診療指引編撰委員會"}, {"@type": "MedicalOrganization", "name": "台灣腎臟醫學會"}, {"@type": "MedicalOrganization", "name": "美國腎臟醫學會", "alternateName": "American Society of Nephrology"}], "sameAs": ["https://www.threads.com/@kidney.godreborn", "https://www.instagram.com/kidney.god/", "https://www.instagram.com/kidney.godreborn/", "https://www.facebook.com/kidneygod"]}, "lastReviewed": "2026-09-01", "reviewedBy": {"@id": "https://kidneygod.net/about.html#author"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MedicalWebPage", "name": "腎功能計算：eGFR 與腎衰竭風險｜護腎教室", "description": "以 CKD-EPI 2021 公式計算 eGFR（可加入胱抑素 C），並依 KFRE 估算慢性腎臟病進展到腎衰竭的風險。輸入你報告上已有的數值即可。", "inLanguage": "zh-Hant", "url": "https://kidneygod.net/calc.html", "dateModified": "2026-09-02", "author": {"@type": "Physician", "@id": "https://kidneygod.net/about.html#author", "name": "吳政哲", "jobTitle": "腎臟科醫師", "url": "https://kidneygod.net/about.html", "medicalSpecialty": ["Nephrologic", "InternalMedicine"], "hasCredential": [{"@type": "EducationalOccupationalCredential", "credentialCategory": "專科醫師證書", "name": "腎臟科專科醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "專科醫師證書", "name": "內科專科醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "認證", "name": "戒菸治療醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "認證", "name": "糖尿病共同照護網醫師"}], "worksFor": {"@type": "Hospital", "name": "郭綜合醫院", "department": {"@type": "MedicalOrganization", "name": "腎臟內科"}}, "alumniOf": {"@type": "CollegeOrUniversity", "name": "國立成功大學醫學系"}, "memberOf": [{"@type": "Organization", "name": "台灣慢性腎臟病臨床診療指引編撰委員會"}, {"@type": "MedicalOrganization", "name": "台灣腎臟醫學會"}, {"@type": "MedicalOrganization", "name": "美國腎臟醫學會", "alternateName": "American Society of Nephrology"}], "sameAs": ["https://www.threads.com/@kidney.godreborn", "https://www.instagram.com/kidney.god/", "https://www.instagram.com/kidney.godreborn/", "https://www.facebook.com/kidneygod"]}, "lastReviewed": "2026-09-02", "reviewedBy": {"@id": "https://kidneygod.net/about.html#author"}}</script>
 </head>
 <body>
 <header class="site"><div class="wrap">
@@ -615,14 +637,14 @@ else calcInit();
   <div>
     <div class="n"><a href="/about.html">吳政哲</a>　<span class="r">腎臟科醫師</span></div>
     <div>腎臟科專科醫師，臨床工作以三高、慢性腎臟病與血液透析／腹膜透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
-    <div class="rev">本頁內容最後由吳政哲醫師審閱於 2026-09-01　·　<a href="/about.html">完整資歷與撰寫原則</a></div>
+    <div class="rev">本頁內容最後由吳政哲醫師審閱於 2026-09-02　·　<a href="/about.html">完整資歷與撰寫原則</a></div>
   </div>
 </div>
 <div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
 
 </main>
 <footer class="site"><div class="wrap">
-<p>護腎教室　·　最後更新 2026-09-01　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<p>護腎教室　·　最後更新 2026-09-02　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
 <!-- 用途說明跟著信箱一起出現。信箱會出現在每一頁，但完整的界線說明只在
      簡介頁，所以這裡帶一句最關鍵的，並連到完整版。 -->
 <p class="fcontact"><a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a>

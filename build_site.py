@@ -786,6 +786,28 @@ font-size:1.02rem;line-height:1.55}
 /* 原本是五行散文，在手機上佔掉 355px、將近半個第一屏，而且要讀完一句話
    才找得到連結。改成方塊：同樣的資訊約 180px，而且整格可點。
    順序刻意把商城放最後——衛教是主體，商城是其中一種學習方式。 */
+/* 全站搜尋。索引在第一次點搜尋框時才載入，不拖慢首頁初次開啟。 */
+.ssearch{position:relative;margin:18px 0 4px}
+.svisually{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+white-space:nowrap}
+.ssearch input{width:100%;box-sizing:border-box;font:16px/1.5 inherit;
+padding:13px 16px;border-radius:12px;color:var(--fg);background:var(--card);
+border:1.5px solid var(--line);outline:none}
+.ssearch input:focus{border-color:var(--accent)}
+/* 結果浮在內容之上，不把下面的版面推開——邊打字邊跳動很難用 */
+.sres{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;
+max-height:60vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);
+border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.sres a{display:block;padding:11px 14px;text-decoration:none;color:var(--fg);
+border-top:1px solid var(--line)}
+.sres a:first-child{border-top:0}
+.sres a:hover,.sres a:focus{background:var(--card)}
+.sres .st{font-weight:700;font-size:15px;line-height:1.5}
+.sres .sc{font-size:12px;color:var(--mut);margin-left:8px;font-weight:400;
+white-space:nowrap}
+.sres .sx{font-size:13px;color:var(--mut);line-height:1.6;margin-top:3px}
+.sres mark{background:transparent;color:var(--accent);font-weight:700}
+.sres .snone{padding:14px;font-size:14px;color:var(--mut)}
 .howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
 padding:13px 14px;margin:20px 0 6px;color:var(--mut)}
 .howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:9px}
@@ -1296,6 +1318,74 @@ def build_markdown_articles() -> list[dict]:
     return out
 
 
+SEARCH_INDEX = ROOT / "search_index.json"
+
+
+def _plain(md: str) -> str:
+    """把 markdown 壓成純文字，只供比對用，不會顯示原樣。"""
+    md = re.sub(r"(?m)^\s*\|.*$", " ", md)          # 表格列
+    md = re.sub(r"!?\[([^\]]*)\]\([^)]*\)", r"\1", md)   # 連結與圖片留文字
+    md = re.sub(r"[#>*`_~\-]+", " ", md)
+    return re.sub(r"\s+", " ", md).strip()
+
+
+def build_search_index(data: list[dict], md_pages: list[dict],
+                       gallery_items: list[dict]) -> int:
+    """產生全站搜尋索引。**不含遊戲商城**——那是另一套內容與網址結構。
+
+    為什麼用「建置時產生 JSON、前端比對」：GitHub Pages 是純靜態，沒有後端可以
+    查詢。索引在首頁「使用者第一次點搜尋框時」才載入，不影響首頁初次開啟速度。
+
+    中文沒有詞界，斷詞函式庫在這個資料量上帶來的準確度提升有限，卻要多載入
+    數十 KB 並增加一個相依。直接做子字串比對對中文反而穩定，也不會有斷錯詞
+    導致搜不到的情況。
+
+    欄位刻意用單字母：這份檔案有數萬字，鍵名重複出現的成本不能忽略。
+      t 標題　u 網址　c 分類　b 內文（比對與截取摘要用）
+    """
+    idx: list[dict] = []
+
+    for it in data:                                   # 知識卡 → 分類頁的錨點
+        cat = it["cat"]
+        if cat not in CAT_SLUG:
+            continue
+        idx.append({"t": it["title"], "c": cat, "b": it["body"],
+                    "u": f"/articles/{CAT_SLUG[cat]}.html#{slugify(it['id'])}"})
+
+    for a in md_pages:                                # 長文
+        idx.append({"t": a["title"], "c": a.get("cat") or "深入文章",
+                    "b": (a.get("summary") or "") + " " + _plain(a["body"]),
+                    "u": f"/articles/{a['slug']}.html"})
+
+    for g in gallery_items:                           # 圖卡 → 該系列頁的錨點
+        slug = g.get("series_slug")
+        if not slug:
+            continue
+        # g:1 標記為圖卡。排序時稍微往後放——圖卡是配圖，同樣命中的情況下
+        # 文字內容才是完整的答案。不標記的話，圖卡標題短、命中位置靠前，
+        # 會把專門講那個主題的長文壓到後面。
+        idx.append({"t": g.get("cap", ""), "c": g.get("cat") or "衛教圖卡",
+                    "b": g.get("text", ""), "g": 1,
+                    "u": f"/articles/gallery-{slug}.html#g-{g['id']}"})
+
+    # 工具與導覽頁：使用者常直接搜「計算」「食物」而不是搜內容
+    for t, u, c, b in [
+        ("腎功能計算：eGFR 與腎衰竭風險", "/calc.html", "工具",
+         "用 CKD-EPI 2021 公式計算 eGFR 與慢性腎臟病分期，並以 KFRE 估算腎衰竭風險。胱抑素 C"),
+        ("食物營養查詢", "/food.html", "工具",
+         "查 1,728 種食物的鈉、鉀、磷、蛋白質含量，資料來自衛福部食藥署食品營養成分資料庫。"),
+        ("關於吳政哲醫師", "/about.html", "關於",
+         "腎臟科專科醫師的資歷、撰寫原則與聯絡方式。"),
+        ("全部衛教文章", "/articles/", "導覽", "依主題瀏覽所有衛教內容。"),
+        ("衛教圖卡總覽", "/articles/gallery.html", "導覽", "社群上發表過的圖解，依主題整理。"),
+    ]:
+        idx.append({"t": t, "u": u, "c": c, "b": b})
+
+    SEARCH_INDEX.write_text(
+        json.dumps(idx, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    return len(idx)
+
+
 def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int = 0) -> str:
     """網站首頁：以衛教內容為主，商城與遊戲收在一個明顯的大按鈕後面。"""
     title = f"護腎教室｜腎臟與三高衛教．{AUTHOR_NAME}{AUTHOR_TITLE}"
@@ -1355,6 +1445,13 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 <p class="cred">內容依據國際指引與期刊文獻撰寫，持續更新。
 <a href="/about.html">關於{esc(AUTHOR_NAME)}醫師 →</a></p>
 
+<div class="ssearch">
+  <label class="svisually" for="sq">搜尋站內衛教內容</label>
+  <input id="sq" type="search" autocomplete="off" spellcheck="false"
+         placeholder="搜尋衛教內容，例如：蛋白尿、止痛藥、香蕉">
+  <div id="sres" class="sres" hidden></div>
+</div>
+
 <div class="howto">
 <b>這個網站怎麼用</b>
 <div class="hgrid">
@@ -1406,7 +1503,101 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     # 腳本只輸出一次，掛在後者——它在文件的後面，執行時兩組都已經存在。
     return page(title, desc, "", body, jsonld,
                 after_disclaimer=share_buttons("", HOME_SHARE_TITLE, top=True)
-                + share_script())
+                + share_script() + search_script())
+
+
+def search_script() -> str:
+    """首頁全站搜尋。只在首頁輸出。
+
+    索引在「第一次聚焦搜尋框」時才 fetch，首頁初次開啟不會為了搜尋多下載東西。
+    中文用子字串比對而不是斷詞：資料量不大，子字串在中文上反而不會有斷錯詞
+    搜不到的問題，也省掉一個第三方相依。
+    """
+    return """
+<script>
+(function(){
+  var box = document.getElementById('sq'), out = document.getElementById('sres');
+  if (!box || !out) return;
+  var idx = null, loading = null;
+
+  function load(){
+    if (idx) return Promise.resolve(idx);
+    if (!loading) loading = fetch('/search_index.json')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ idx = d; return d; })
+      .catch(function(){ idx = []; return idx; });
+    return loading;
+  }
+  box.addEventListener('focus', load, {once: true});
+
+  function esc(s){ return s.replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  /* 摘要從命中的位置往前後各取一段，讓使用者看得到關鍵字的上下文，
+     而不是永遠顯示開頭那句 */
+  function snippet(text, q){
+    var i = text.toLowerCase().indexOf(q);
+    if (i < 0) return esc(text.slice(0, 70));
+    var from = Math.max(0, i - 24), to = Math.min(text.length, i + q.length + 46);
+    return (from ? '…' : '') + esc(text.slice(from, i))
+         + '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>'
+         + esc(text.slice(i + q.length, to)) + (to < text.length ? '…' : '');
+  }
+
+  function run(){
+    var q = box.value.trim().toLowerCase();
+    if (q.length < 1) { out.hidden = true; out.innerHTML = ''; return; }
+    load().then(function(list){
+      var hits = [];
+      for (var i = 0; i < list.length && hits.length < 400; i++){
+        var e = list[i];
+        var ti = e.t.toLowerCase().indexOf(q);
+        var bi = ti >= 0 ? -1 : (e.b || '').toLowerCase().indexOf(q);
+        if (ti < 0 && bi < 0) continue;
+        /* 標題命中排前面：標題就是主題，內文命中可能只是順帶提到。
+           圖卡再往後 40：它是配圖，同樣命中時文字內容才是完整的答案。 */
+        var rank = (ti >= 0 ? ti : 1000 + bi) + (e.g ? 40 : 0);
+        hits.push({e: e, rank: rank});
+      }
+      hits.sort(function(a, b){ return a.rank - b.rank; });
+      if (!hits.length){
+        out.innerHTML = '<div class="snone">找不到「' + esc(box.value.trim())
+                      + '」。可以試試更短的關鍵字，例如「蛋白尿」而不是整句話。</div>';
+        out.hidden = false; return;
+      }
+      var html = '';
+      for (var j = 0; j < hits.length && j < 12; j++){
+        var e = hits[j].e;
+        html += '<a href="' + e.u + '"><div class="st">' + esc(e.t)
+              + '<span class="sc">' + esc(e.c) + '</span></div>'
+              + '<div class="sx">' + snippet(e.b || '', q) + '</div></a>';
+      }
+      if (hits.length > 12){
+        html += '<div class="snone">另有 ' + (hits.length - 12)
+              + ' 筆，輸入更完整的關鍵字可以縮小範圍。</div>';
+      }
+      out.innerHTML = html; out.hidden = false;
+    });
+  }
+
+  var timer = null;
+  box.addEventListener('input', function(){
+    clearTimeout(timer); timer = setTimeout(run, 120);   // 逐字比對會卡，稍等一下再跑
+  });
+  box.addEventListener('keydown', function(e){
+    if (e.key === 'Escape'){ box.value = ''; out.hidden = true; }
+    if (e.key === 'Enter'){
+      var first = out.querySelector('a');
+      if (first) location.href = first.getAttribute('href');
+    }
+  });
+  /* 點到結果以外的地方就收起來，但不要在點結果連結時收掉 */
+  document.addEventListener('click', function(e){
+    if (!out.contains(e.target) && e.target !== box) out.hidden = true;
+  });
+})();
+</script>
+"""
 
 
 # 醫師介紹要條列的資歷。第一項是最強的權威訊號，刻意排在最前面。
@@ -1486,7 +1677,9 @@ def _gal_card(it: dict) -> str:
            f'<a href="{esc(it["permalink"])}" target="_blank" rel="noopener">原始貼文 →</a>'
            f"</span>" if it.get("permalink") else f'<span class="src">{it["date"]}</span>')
     day = f'<span class="day">Day {it["day"]}</span>' if it.get("day") else ""
-    return (f'<div class="galcard">'
+    # 每張給一個錨點，全站搜尋才能直接跳到那一張而不是只到整頁。
+    # 用 manifest 的 id（含底線與數字），前面加 g- 以免以數字開頭。
+    return (f'<div class="galcard" id="g-{esc(it["id"])}">'
             f'<a class="shot" href="/{it["full"]}" target="_blank" rel="noopener">'
             f'<img src="/{it["thumb"]}" alt="{esc(it["cap"])}" loading="lazy" '
             f'width="360" height="360"></a>'
@@ -2452,6 +2645,10 @@ def main() -> int:
     (ROOT / "robots.txt").write_text(
         f"User-agent: *\nAllow: /\n\nSitemap: {BASE_URL}/sitemap.xml\n", encoding="utf-8")
     print("  robots.txt")
+
+    n_idx = build_search_index(data, md_pages, gallery_items)
+    kb = SEARCH_INDEX.stat().st_size / 1024
+    print(f"  search_index.json　({n_idx} 筆，{kb:,.0f} KB，首頁搜尋用)")
 
     total = sum(len(i["body"]) for i in data)
     print(f"\n完成：{len(written)} 頁，內容共 {total:,} 字")

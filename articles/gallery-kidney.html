@@ -277,6 +277,28 @@ font-size:1.02rem;line-height:1.55}
 /* 原本是五行散文，在手機上佔掉 355px、將近半個第一屏，而且要讀完一句話
    才找得到連結。改成方塊：同樣的資訊約 180px，而且整格可點。
    順序刻意把商城放最後——衛教是主體，商城是其中一種學習方式。 */
+/* 全站搜尋。索引在第一次點搜尋框時才載入，不拖慢首頁初次開啟。 */
+.ssearch{position:relative;margin:18px 0 4px}
+.svisually{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+white-space:nowrap}
+.ssearch input{width:100%;box-sizing:border-box;font:16px/1.5 inherit;
+padding:13px 16px;border-radius:12px;color:var(--fg);background:var(--card);
+border:1.5px solid var(--line);outline:none}
+.ssearch input:focus{border-color:var(--accent)}
+/* 結果浮在內容之上，不把下面的版面推開——邊打字邊跳動很難用 */
+.sres{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;
+max-height:60vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);
+border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.sres a{display:block;padding:11px 14px;text-decoration:none;color:var(--fg);
+border-top:1px solid var(--line)}
+.sres a:first-child{border-top:0}
+.sres a:hover,.sres a:focus{background:var(--card)}
+.sres .st{font-weight:700;font-size:15px;line-height:1.5}
+.sres .sc{font-size:12px;color:var(--mut);margin-left:8px;font-weight:400;
+white-space:nowrap}
+.sres .sx{font-size:13px;color:var(--mut);line-height:1.6;margin-top:3px}
+.sres mark{background:transparent;color:var(--accent);font-weight:700}
+.sres .snone{padding:14px;font-size:14px;color:var(--mut)}
 .howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
 padding:13px 14px;margin:20px 0 6px;color:var(--mut)}
 .howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:9px}
@@ -337,35 +359,35 @@ letter-spacing:.4px;line-height:1.5}
 　·　共 30 張（Day 1–30）　·　更新於 2026-09-02</p>
 <div class="galnav"><a href="/articles/gallery.html">← 全部系列</a>
 <a href="/articles/">依主題閱讀 →</a></div>
-<div class="galcard"><a class="shot" href="/gallery/17955075309132469_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17955075309132469_0.jpg" alt="認識代謝症候群五項指標與腎臟風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 1</span>認識代謝症候群五項指標與腎臟風險</h3><p class="post">代謝症候群是三高、心血管疾病、慢性腎臟病的主要原因之一。
+<div class="galcard" id="g-17955075309132469_0"><a class="shot" href="/gallery/17955075309132469_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17955075309132469_0.jpg" alt="認識代謝症候群五項指標與腎臟風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 1</span>認識代謝症候群五項指標與腎臟風險</h3><p class="post">代謝症候群是三高、心血管疾病、慢性腎臟病的主要原因之一。
 改善代謝症候群就可以大幅降低心血管疾病與慢性腎臟病的風險。
 快來看看這5個指標你中了幾項？
-#代謝症候群 #慢性腎臟病 #心血管疾病</p><span class="src">2026-05-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DYqdLrrASJI" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18075115397279817_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18075115397279817_0.jpg" alt="控制血壓是延緩腎臟病惡化的關鍵" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 2</span>控制血壓是延緩腎臟病惡化的關鍵</h3><p class="post">控好血壓，就是最有效的護腎藥！
+#代謝症候群 #慢性腎臟病 #心血管疾病</p><span class="src">2026-05-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DYqdLrrASJI" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18075115397279817_0"><a class="shot" href="/gallery/18075115397279817_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18075115397279817_0.jpg" alt="控制血壓是延緩腎臟病惡化的關鍵" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 2</span>控制血壓是延緩腎臟病惡化的關鍵</h3><p class="post">控好血壓，就是最有效的護腎藥！
 常有病友說：「我血壓 135 沒感覺啊，不用吃藥吧？」錯！高血壓就像洪水，天天撞擊腎臟微血管，會導致血管硬化與蛋白尿。
 
 最新 ACC/AHA 臨床指引 建議：
 • 一般成人理想血壓：&lt;120/80mmHg。
 • 合併慢性腎臟病（CKD）或糖尿病（DM）：應嚴格控制在 &lt;130/80mmHg。
 • 【吳醫師小叮嚀】 請落實「722法則」量血壓：連續7天、每天早晚2遍、每次量2遍取平均。今天早晚，記得定時量血壓！
-• 【指引來源】 2024 ACC/AHA High Blood Pressure Guidelines / KDIGO BP in CKD</p><span class="src">2026-05-24　·　<a href="https://www.threads.com/@kidney.godreborn/post/DYtEjAlk4s9" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17987214089995936_m0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17987214089995936_m0.jpg" alt="血糖管理與腎病變：HbA1c 控制目標" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 3</span>血糖管理與腎病變：HbA1c 控制目標</h3><p class="post">糖友必看！ADA 指引：別讓高血糖把腎臟「糖漬」了！
+• 【指引來源】 2024 ACC/AHA High Blood Pressure Guidelines / KDIGO BP in CKD</p><span class="src">2026-05-24　·　<a href="https://www.threads.com/@kidney.godreborn/post/DYtEjAlk4s9" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17987214089995936_m0"><a class="shot" href="/gallery/17987214089995936_m0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17987214089995936_m0.jpg" alt="血糖管理與腎病變：HbA1c 控制目標" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 3</span>血糖管理與腎病變：HbA1c 控制目標</h3><p class="post">糖友必看！ADA 指引：別讓高血糖把腎臟「糖漬」了！
 
 大家好，我是護腎專家吳政哲醫師。台灣洗腎患者中，有將近一半是因為糖尿病引起的。高血糖會讓腎臟絲球長期處於「高過濾、高壓力」狀態。
 • 美國糖尿病學會（ADA）指引建議：成年糖尿病患的糖化血色素（HbA1c）控制目標為 &lt;7.0%。
 【吳醫師小叮嚀】 控糖不只是看空腹血糖，糖化血色素（HbA1c）才是關鍵。每降低 1% 的 HbA1c，就能降低高達 27% 的微血管併發症風險！
 • 【指引來源】 ADA Standards of Care in Diabetes
-#糖尿病 #慢性腎臟病 #腎臟健康</p><span class="src">2026-05-24　·　<a href="https://www.threads.com/@kidney.godreborn/post/DYvVpJAE3n5" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18123345187630690_m0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18123345187630690_m0.jpg" alt="微量白蛋白尿（UACR）的威力" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 4</span>微量白蛋白尿（UACR）的威力</h3><p class="post">📌 Day 4：微量白蛋白尿（UACR）的威力
+#糖尿病 #慢性腎臟病 #腎臟健康</p><span class="src">2026-05-24　·　<a href="https://www.threads.com/@kidney.godreborn/post/DYvVpJAE3n5" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18123345187630690_m0"><a class="shot" href="/gallery/18123345187630690_m0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18123345187630690_m0.jpg" alt="微量白蛋白尿（UACR）的威力" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 4</span>微量白蛋白尿（UACR）的威力</h3><p class="post">📌 Day 4：微量白蛋白尿（UACR）的威力
 • 健檢報告 eGFR 正常就沒事？漏了這項檢查，風險少算一半！
 • 大家好，我是護腎專家吳政哲醫師。很多人以為腎功能看抽血的 eGFR（腎絲球過濾率）變紅字才算有事。但 2024 KDIGO 最新風險熱圖顯示，UACR（尿白蛋白/肌酸酐比值）才是隱形殺手。即使 eGFR 還有 80 分（看似正常），一旦 UACR &gt;300mg/g}，你未來洗腎的風險其實跟 eGFR 只有 30 分的人一樣高！
 【吳醫師小叮嚀】 糖尿病與高血壓患者，每年至少要做一次「抽血驗肌酸酐 + 驗尿測 UACR」的完整組合！
 【指引來源】 2024 KDIGO CKD Guideline
-# 腎臟健康 #慢性腎臟病 #蛋白尿 #護腎</p><span class="src">2026-05-25　·　<a href="https://www.threads.com/@kidney.godreborn/post/DYx9njJEwLq" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17928309921324848_m0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17928309921324848_m0.jpg" alt="高血脂與腎血管硬化" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 5</span>高血脂與腎血管硬化</h3><p class="post">📌 Day 5：高血脂與腎血管硬化
+# 腎臟健康 #慢性腎臟病 #蛋白尿 #護腎</p><span class="src">2026-05-25　·　<a href="https://www.threads.com/@kidney.godreborn/post/DYx9njJEwLq" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17928309921324848_m0"><a class="shot" href="/gallery/17928309921324848_m0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17928309921324848_m0.jpg" alt="高血脂與腎血管硬化" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 5</span>高血脂與腎血管硬化</h3><p class="post">📌 Day 5：高血脂與腎血管硬化
 壞膽固醇過高，腎臟血管也會「中風」！
 我是吳政哲醫師。大家都知道壞膽固醇（LDL-C）太高會造成心臟血管阻塞，但你知道腎臟其實是由百萬個微血管球組成的嗎？血脂過高會加速腎動脈硬化，讓腎臟缺血萎縮。
 • 指引建議：一般慢性腎臟病患者，LDL-C 至少應控制在 &lt;100mg/dL以下。
 【吳醫師小叮嚀】
 控制血脂不能只靠清淡飲食，若飲食控制後仍超標，應遵醫囑規律使用史他汀（Statin）類藥物保護腎血管。
 【指引來源】 KDIGO Clinical Practice Guideline for Lipid Management in CKD / AHA
-#高血脂 #慢性腎臟病 #腎臟保健</p><span class="src">2026-05-27　·　<a href="https://www.threads.com/@kidney.godreborn/post/DY0msbHk_tW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17941818873035447_m0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17941818873035447_m0.jpg" alt="認識血尿與蛋白尿的差異" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 6</span>認識血尿與蛋白尿的差異</h3><p class="post">Day 6：認識血尿與蛋白尿的差異
+#高血脂 #慢性腎臟病 #腎臟保健</p><span class="src">2026-05-27　·　<a href="https://www.threads.com/@kidney.godreborn/post/DY0msbHk_tW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17941818873035447_m0"><a class="shot" href="/gallery/17941818873035447_m0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17941818873035447_m0.jpg" alt="認識血尿與蛋白尿的差異" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 6</span>認識血尿與蛋白尿的差異</h3><p class="post">Day 6：認識血尿與蛋白尿的差異
 尿裡有血跟有泡泡，哪個比較嚴重？
 
 我是吳政哲醫師。血尿通常會讓人緊張，但蛋白尿（泡泡尿）往往更傷腎。
@@ -374,7 +396,7 @@ letter-spacing:.4px;line-height:1.5}
 
 【吳醫師小叮嚀】 發現尿液異常別瞎猜，最精準的做法是到醫院做個「常規尿液檢查」，花費不多卻能救你雙腎。
 【指引來源】 KDIGO CKD Evaluation and Management Guidelines
-#血尿 #蛋白尿 #慢性腎臟病 #腎臟保健</p><span class="src">2026-05-28　·　<a href="https://www.threads.com/@kidney.godreborn/post/DY3prSDEeAg" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18199257958364548_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18199257958364548_0.jpg" alt="減少精緻糖攝取逆轉胰島素阻抗護腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 7</span>減少精緻糖攝取逆轉胰島素阻抗護腎</h3><p class="post">Day 7：代謝症候群的飲食逆轉勝
+#血尿 #蛋白尿 #慢性腎臟病 #腎臟保健</p><span class="src">2026-05-28　·　<a href="https://www.threads.com/@kidney.godreborn/post/DY3prSDEeAg" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18199257958364548_0"><a class="shot" href="/gallery/18199257958364548_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18199257958364548_0.jpg" alt="減少精緻糖攝取逆轉胰島素阻抗護腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 7</span>減少精緻糖攝取逆轉胰島素阻抗護腎</h3><p class="post">Day 7：代謝症候群的飲食逆轉勝
 逆轉代謝症候群！減少這類食物，胰島素阻抗退散！
 
 我是吳政哲醫師。要救腎，得先解決胰島素阻抗。國際營養期刊與醫學指引一致推薦：減少精緻糖（手搖飲、糕點）與飽和脂肪的攝取。
@@ -382,20 +404,20 @@ letter-spacing:.4px;line-height:1.5}
 【吳醫師小叮嚀】 嘗試將精緻白米部分替換為燕麥、糙米等高纖全穀類，能有效穩定血糖，減輕腎臟代謝負擔。
 【指引來源】 AHA/ACC Lifestyle Management Guidelines
 
-#三高 #慢性腎臟病 #胰島素阻抗 #護腎</p><span class="src">2026-05-29　·　<a href="https://www.threads.com/@kidney.godreborn/post/DY5wOILk75L" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18089299487617592_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18089299487617592_0.jpg" alt="體重過重如何加重腎絲球高過濾負擔" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 8</span>體重過重如何加重腎絲球高過濾負擔</h3><p class="post">Day 8：體重管理對腎臟減壓
+#三高 #慢性腎臟病 #胰島素阻抗 #護腎</p><span class="src">2026-05-29　·　<a href="https://www.threads.com/@kidney.godreborn/post/DY5wOILk75L" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18089299487617592_0"><a class="shot" href="/gallery/18089299487617592_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18089299487617592_0.jpg" alt="體重過重如何加重腎絲球高過濾負擔" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 8</span>體重過重如何加重腎絲球高過濾負擔</h3><p class="post">Day 8：體重管理對腎臟減壓
 肥胖是如何「累壞」腎臟的？認識腎絲球高過濾！
 
 我是吳政哲醫師。體重過重（BMI ≥ 24 或肥胖 ≥ 27）時，腎臟必須加倍工作來代謝龐大體積產生的廢物，這叫做「腎絲球高過濾（Hyperfiltration）」。長此以往，腎臟會提早「過勞死」。
 【吳醫師小叮嚀】 透過合理飲食與運動，只要減重 5- 10%，就能顯著調降尿蛋白，幫腎臟大幅減壓！
 
 【指引來源】 KDIGO Executive Summary on Obesity and CKD
-#肥胖症 #代謝症候群 #慢性腎臟病 #護腎</p><span class="src">2026-05-30　·　<a href="https://www.threads.com/@kidney.godreborn/post/DY9Ghr_EXbc" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18449969074115442_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18449969074115442_0.jpg" alt="每日鈉攝取上限與護腎的關係" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 9</span>每日鈉攝取上限與護腎的關係</h3><p class="post">Day 9：鹽分（鈉）與血壓的腎臟密碼
+#肥胖症 #代謝症候群 #慢性腎臟病 #護腎</p><span class="src">2026-05-30　·　<a href="https://www.threads.com/@kidney.godreborn/post/DY9Ghr_EXbc" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18449969074115442_0"><a class="shot" href="/gallery/18449969074115442_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18449969074115442_0.jpg" alt="每日鈉攝取上限與護腎的關係" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 9</span>每日鈉攝取上限與護腎的關係</h3><p class="post">Day 9：鹽分（鈉）與血壓的腎臟密碼
 國際指引：每天少吃這口鹽，腎臟血管多用十年！
  
 我是吳政哲醫師。高鈉飲食會鎖住體內水分，導致血壓飆升、腎臟負擔加劇。WHO 與 KDIGO 指引一致建議：成人每日鈉攝取量應 &lt; 2000 mg（相當於 5公克的食鹽）。
 吳醫師小叮嚀：外食族請特別小心火鍋湯底、加工肉品及調味醬料。今天起，吃東西少沾醬，就是最好的護腎行動。
 指引來源：WHO Sodium Intake Guidelines / KDIGO CKD Nutrition
-#鈉攝取 #高血壓 #慢性腎臟病 #護腎</p><span class="src">2026-05-31　·　<a href="https://www.threads.com/@kidney.godreborn/post/DY_pdQbEfir" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18193789870368536_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18193789870368536_0.jpg" alt="規律運動如何軟化血管保護心腎功能" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 10</span>規律運動如何軟化血管保護心腎功能</h3><p class="post">Day 10：規律運動與心腎相聯
+#鈉攝取 #高血壓 #慢性腎臟病 #護腎</p><span class="src">2026-05-31　·　<a href="https://www.threads.com/@kidney.godreborn/post/DY_pdQbEfir" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18193789870368536_0"><a class="shot" href="/gallery/18193789870368536_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18193789870368536_0.jpg" alt="規律運動如何軟化血管保護心腎功能" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 10</span>規律運動如何軟化血管保護心腎功能</h3><p class="post">Day 10：規律運動與心腎相聯
 運動也能護腎？AHA指引：每週「這個時間」最剛好！
 
 蕭煌奇說：做一個惜情軟心的人。對於護腎來說 ，軟化心血管也很重要。
@@ -403,7 +425,7 @@ letter-spacing:.4px;line-height:1.5}
 
 吳醫師小叮嚀：不用給自己太大壓力，每天晚餐後快走 20-30 分鐘，走到微喘流汗的程度，心腎功能同步提升！
  指引來源：AHA/ASA Physical Activity Guidelines
-#三高 #運動 #護腎 #軟心</p><span class="src">2026-06-01　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZBd4nUk7iN" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17982763943842904_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17982763943842904_0.jpg" alt="慢性腎臟病五期分期與eGFR對照" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 11</span>慢性腎臟病五期分期與eGFR對照</h3><p class="post">Day 11：什麼是慢性腎臟病（CKD）分期？
+#三高 #運動 #護腎 #軟心</p><span class="src">2026-06-01　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZBd4nUk7iN" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17982763943842904_0"><a class="shot" href="/gallery/17982763943842904_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17982763943842904_0.jpg" alt="慢性腎臟病五期分期與eGFR對照" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 11</span>慢性腎臟病五期分期與eGFR對照</h3><p class="post">Day 11：什麼是慢性腎臟病（CKD）分期？
 醫師說我腎臟病第3期！是不是馬上要洗腎了？
 
 大家好，我是吳政哲醫師。聽到腎臟病分期別慌張。CKD 一共分 1 到 5 期，它是根據你的 eGFR（腎絲球過濾率） 來切分：
@@ -413,33 +435,33 @@ letter-spacing:.4px;line-height:1.5}
  5期：分數 &lt;15，末期腎病變。
  吳醫師小叮嚀：第三期是阻斷病程惡化的最關鍵戰場，只要遵照醫囑穩定服藥、控制三高，很多人一輩子都不會走到洗腎。
  指引來源：KDIGO CKD Evaluation and Management Guidelines
-#慢性腎臟病 #腎絲球過濾率 #護腎</p><span class="src">2026-06-01　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZD8syLk-sB" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17928905751303056_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17928905751303056_0.jpg" alt="脫水腹瀉高燒恐引發急性腎損傷" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 12</span>脫水腹瀉高燒恐引發急性腎損傷</h3><p class="post">Day 12：防範急性腎損傷（AKI）
+#慢性腎臟病 #腎絲球過濾率 #護腎</p><span class="src">2026-06-01　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZD8syLk-sB" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17928905751303056_0"><a class="shot" href="/gallery/17928905751303056_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17928905751303056_0.jpg" alt="脫水腹瀉高燒恐引發急性腎損傷" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 12</span>脫水腹瀉高燒恐引發急性腎損傷</h3><p class="post">Day 12：防範急性腎損傷（AKI）
 上吐下瀉、嚴重脫水？小心急性腎損傷悄悄找上門！
 
 我是吳政哲醫師。除了慢性病，急性腎損傷（AKI）也是不可忽視的危機。當你因為重度腸胃炎嘔吐、腹瀉，或是高燒不退、中暑導致身體極度缺水時，血流量不足會讓腎細胞壞死。
 此外長期濫用止痛藥以及來路不明中草藥也會造成急性腎損傷喔。
 【吳醫師小叮嚀】 若遇到無法進食、極度脫水的情況，且發現尿量明顯減少（24小時小於400ml），請立即就醫！
 【指引來源】 KDIGO Clinical Practice Guideline for Acute Kidney Injury
-#急性腎損傷 #護腎 #腎臟健康</p><span class="src">2026-06-03　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZGnHnbE17I" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18121043896683442_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18121043896683442_0.jpg" alt="止痛藥NSAID恐傷腎用藥前應注意" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 13</span>止痛藥NSAID恐傷腎用藥前應注意</h3><p class="post">Day 13：小心別吃錯藥（NSAIDs非類固醇消炎止痛藥）
+#急性腎損傷 #護腎 #腎臟健康</p><span class="src">2026-06-03　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZGnHnbE17I" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18121043896683442_0"><a class="shot" href="/gallery/18121043896683442_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18121043896683442_0.jpg" alt="止痛藥NSAID恐傷腎用藥前應注意" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 13</span>止痛藥NSAID恐傷腎用藥前應注意</h3><p class="post">Day 13：小心別吃錯藥（NSAIDs非類固醇消炎止痛藥）
 止痛藥吃太多會洗腎？這款「非類固醇消炎藥」千萬要小心！
 我是吳政哲醫師。常有腰酸背痛、關節痛就自己去藥局買止痛藥吃嗎？如果是 NSAID 類別的消炎止痛藥，它會強烈收縮腎臟入球血管，讓腎臟瞬間缺血缺氧，造成急性腎損傷。
 【吳醫師小叮嚀】 有痛症請務必告知醫師你有腎臟病史，改用對乙醯氨基酚（普拿疼類）或其他較不傷腎的止痛方式。
 【指引來源】 KDIGO Clinical Practice Guideline for Acute Kidney Injury
-#止痛藥 #NSAID #急性腎損傷 #慢性腎臟病 #護腎</p><span class="src">2026-06-04　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZJLj_mk2Qf" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17989904915796562_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17989904915796562_0.jpg" alt="ACEI與ARB血壓藥的護腎機轉" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 14</span>ACEI與ARB血壓藥的護腎機轉</h3><p class="post">Day 14：血壓藥 RAS 阻斷劑（ACEI/ARB）
+#止痛藥 #NSAID #急性腎損傷 #慢性腎臟病 #護腎</p><span class="src">2026-06-04　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZJLj_mk2Qf" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17989904915796562_0"><a class="shot" href="/gallery/17989904915796562_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17989904915796562_0.jpg" alt="ACEI與ARB血壓藥的護腎機轉" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 14</span>ACEI與ARB血壓藥的護腎機轉</h3><p class="post">Day 14：血壓藥 RAS 阻斷劑（ACEI/ARB）
 這款高血壓藥，竟然也是保護腎臟的「特效藥」？
 
 我是吳政哲醫師。很多 CKD 患者看藥單會問：「醫師，我血壓不高，為什麼你要開高血壓藥給我？」其實，ACEI 或 ARB 類別的血壓藥，具備獨特的「擴張腎底出球小動脈」功能，能直接降低腎臟內部的壓力、大幅減少蛋白尿。
 【吳醫師小叮嚀】 這是國際指引中第一線的護腎藥物，千萬不要因為自己血壓正常就擅自停藥喔！
 
 【指引來源】 KDIGO Blood Pressure in CKD Guidelines
-#慢性腎臟病 #護腎 #高血壓</p><span class="src">2026-06-05　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZLx-48EzIu" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17893428576348635_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17893428576348635_0.jpg" alt="SGLT2抑制劑護腎效果獲NEJM實證" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 15</span>SGLT2抑制劑護腎效果獲NEJM實證</h3><p class="post">Day 15：護腎神藥 SGLT2 抑制劑
+#慢性腎臟病 #護腎 #高血壓</p><span class="src">2026-06-05　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZLx-48EzIu" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17893428576348635_0"><a class="shot" href="/gallery/17893428576348635_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17893428576348635_0.jpg" alt="SGLT2抑制劑護腎效果獲NEJM實證" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 15</span>SGLT2抑制劑護腎效果獲NEJM實證</h3><p class="post">Day 15：護腎神藥 SGLT2 抑制劑
 新世紀護腎排糖藥！權威期刊 NEJM 證實的護腎新武器
 
 我是吳政哲醫師。醫學界近年最大的突破之一就是 SGLT2 抑制劑（排糖藥）。
 發表於《新英格蘭醫學期刊 (NEJM)》的 DAPA-CKD 與 EMPA-KIDNEY 大型臨床試驗證實：這類藥物除了控糖，更能降低腎絲球壓力，減少高達 28% - 39% 的腎功能惡化或死亡風險。
 【吳醫師小叮嚀】 目前不論是否患有糖尿病，只要符合特定 CKD 條件，指引均強烈推薦使用。若有需求，請與您的腎臟科醫師討論。
 【指引來源】 2024 KDIGO Diabetes Management in CKD Guideline / NEJM
-#SGLT2 #慢性腎臟病 #護腎 #排糖藥</p><span class="src">2026-06-06　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZOcsOWk9G4" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17943755697032914_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17943755697032914_0.jpg" alt="腎友低鉀飲食蔬果怎麼吃才安全" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 16</span>腎友低鉀飲食蔬果怎麼吃才安全</h3><p class="post">Day 16：腎臟病患與高血鉀的距離
+#SGLT2 #慢性腎臟病 #護腎 #排糖藥</p><span class="src">2026-06-06　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZOcsOWk9G4" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17943755697032914_0"><a class="shot" href="/gallery/17943755697032914_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17943755697032914_0.jpg" alt="腎友低鉀飲食蔬果怎麼吃才安全" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 16</span>腎友低鉀飲食蔬果怎麼吃才安全</h3><p class="post">Day 16：腎臟病患與高血鉀的距離
 蔬菜水果吃太多，心臟竟然會突然停跳？談腎友的低鉀生活
 
 我是吳政哲醫師。多吃蔬果很健康，但對末期腎臟病患者來說，蔬果富含的「鉀離子」如果排不出去，會引發嚴重高血鉀，甚至導致心律不整。
@@ -447,13 +469,13 @@ letter-spacing:.4px;line-height:1.5}
 【吳醫師小叮嚀】 蔬菜請切小塊、用水燙過 3-5 分鐘，撈起肉渣再炒，不要喝湯汁；少吃小蕃茄、釋迦、香蕉等高鉀水果。避免低鈉鹽，薄鹽醬油等等調味料。
 
 【指引來源】 KDIGO CKD Evaluation and Management Guidelines
-#慢性腎臟病 #高鉀食物 #高鉀血症 #護腎</p><span class="src">2026-06-07　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZTatURkwnO" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18083025575561437_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18083025575561437_0.jpg" alt="高血磷恐致皮膚搔癢與血管鈣化" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 17</span>高血磷恐致皮膚搔癢與血管鈣化</h3><p class="post">Day 17：隱形殺手「高血磷」
+#慢性腎臟病 #高鉀食物 #高鉀血症 #護腎</p><span class="src">2026-06-07　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZTatURkwnO" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18083025575561437_0"><a class="shot" href="/gallery/18083025575561437_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18083025575561437_0.jpg" alt="高血磷恐致皮膚搔癢與血管鈣化" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 17</span>高血磷恐致皮膚搔癢與血管鈣化</h3><p class="post">Day 17：隱形殺手「高血磷」
 東西吃著吃著皮膚開始癢？小心血管硬化的元兇：高血磷！
 我是吳政哲醫師。當腎臟功能下降，身體無法順利排出「磷」，會引發高血磷症，導致骨質疏鬆、皮膚劇癢、甚至血管鈣化。
 【吳醫師小叮嚀】 請遠離高磷加工食品：如火鍋料、碳酸飲料（可樂）、泡麵、起司。多選擇天然新鮮食材！
 
 【指引來源】 KDIGO CKD-Mineral and Bone Disorder (CKD-MBD) Guideline
-#護腎 #高磷食物 #慢性腎臟病</p><span class="src">2026-06-07　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZRUFq0EWeP" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18202095397315318_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18202095397315318_0.jpg" alt="腎臟病患蛋白質攝取的正確觀念" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 18</span>腎臟病患蛋白質攝取的正確觀念</h3><p class="post">Day 18：腎臟病患的蛋白質攝取陷阱
+#護腎 #高磷食物 #慢性腎臟病</p><span class="src">2026-06-07　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZRUFq0EWeP" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18202095397315318_0"><a class="shot" href="/gallery/18202095397315318_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18202095397315318_0.jpg" alt="腎臟病患蛋白質攝取的正確觀念" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 18</span>腎臟病患蛋白質攝取的正確觀念</h3><p class="post">Day 18：腎臟病患的蛋白質攝取陷阱
 腎功能不好，聽說要實施「低蛋白飲食」？指引教你怎麼吃！
 我是吳政哲醫師。當腎功能進入第 3-5 期（未洗腎），高蛋白質飲食會產生過多尿毒素，增加腎臟負擔。
 KDIGO 指引建議：中重度 CKD 患者，蛋白質攝取量應調整為每日每公斤體重 0.6-0.8g。
@@ -461,7 +483,7 @@ KDIGO 指引建議：中重度 CKD 患者，蛋白質攝取量應調整為每日
 
 【吳醫師小叮嚀】 限蛋白不等於不吃肉，而是要「吃好肉」！應優先選擇豆製品、魚肉、蛋、禽肉等優質蛋白質，並補充足夠熱量避免肌肉流失。
 【指引來源】 KDOQI Clinical practice  Guideline for Nutrition in CKD/ KDIGO CKD
-#慢性腎臟病 #低蛋白飲食 #酮基氨基酸 #護腎</p><span class="src">2026-06-10　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZYn95Yk8rV" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17949145905189970_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17949145905189970_0.jpg" alt="腎因性貧血與EPO分泌不足的關聯" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 19</span>腎因性貧血與EPO分泌不足的關聯</h3><p class="post">Day 19：腎臟與貧血的關聯
+#慢性腎臟病 #低蛋白飲食 #酮基氨基酸 #護腎</p><span class="src">2026-06-10　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZYn95Yk8rV" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17949145905189970_0"><a class="shot" href="/gallery/17949145905189970_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17949145905189970_0.jpg" alt="腎因性貧血與EPO分泌不足的關聯" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 19</span>腎因性貧血與EPO分泌不足的關聯</h3><p class="post">Day 19：腎臟與貧血的關聯
 常常頭暈、體力變差？原來是腎臟罷工沒造血！
 
 我是吳政哲醫師。你知道腎臟也是造血器官嗎？它負責分泌「紅血球生成素（EPO）」。當腎功能退化，EPO 分泌不足，就會引發「腎因性貧血」。
@@ -469,12 +491,12 @@ KDIGO 指引建議：中重度 CKD 患者，蛋白質攝取量應調整為每日
 【吳醫師小叮嚀】 當 CKD 患者血紅素（Hb）&lt;10 g/dL 時，遵照指引可在醫師評估下定期施打針劑（紅血球生成素）及口服鐵劑，能有效改善體力與生活品質。
 
 【指引來源】 KDIGO Clinical Practice Guideline for Anemia in CKD
-#腎因性貧血 #慢性腎臟病 #護腎</p><span class="src">2026-06-10　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZbLeoaE0Iu" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17940439548249805_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17940439548249805_0.jpg" alt="不明中草藥恐含馬兜鈴酸傷腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 20</span>不明中草藥恐含馬兜鈴酸傷腎</h3><p class="post">Day 20：避免不明中草藥與偏方
+#腎因性貧血 #慢性腎臟病 #護腎</p><span class="src">2026-06-10　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZbLeoaE0Iu" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17940439548249805_0"><a class="shot" href="/gallery/17940439548249805_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17940439548249805_0.jpg" alt="不明中草藥恐含馬兜鈴酸傷腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 20</span>不明中草藥恐含馬兜鈴酸傷腎</h3><p class="post">Day 20：避免不明中草藥與偏方
 吃偏方「顧腎」？Lancet權威期刊揭露的馬兜鈴酸毒性！
 我是吳政哲醫師。很多長輩深信「吃西藥傷腎，吃中藥溫補」。但過去醫學界（如權威期刊《Lancet》）就證實，含有**馬兜鈴酸（Aristolochic acid）**的不明偏方，會對腎小管造成不可逆的纖維化壞死，甚至引發尿路上皮癌。
 【吳醫師小叮嚀】 有病請看專科醫師。如果要看中醫，請找合格合法的中醫師，絕對不買成分不明的黑市草藥或偏方！
 【指引來源】 The Lancet / WHO Monographs on Selected Medicinal Plants
-#馬兜鈴酸 #來路不明中草藥 #腎衰竭 #洗腎 #慢性腎臟病 #用藥安全</p><span class="src">2026-06-11　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZdsBSukyFV" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18042829631631731_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18042829631631731_0.jpg" alt="地中海飲食法的護腎實踐要點" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 21</span>地中海飲食法的護腎實踐要點</h3><p class="post">Day 21：地中海飲食的護腎實踐
+#馬兜鈴酸 #來路不明中草藥 #腎衰竭 #洗腎 #慢性腎臟病 #用藥安全</p><span class="src">2026-06-11　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZdsBSukyFV" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18042829631631731_0"><a class="shot" href="/gallery/18042829631631731_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18042829631631731_0.jpg" alt="地中海飲食法的護腎實踐要點" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 21</span>地中海飲食法的護腎實踐要點</h3><p class="post">Day 21：地中海飲食的護腎實踐
 國際期刊公認最強護腎飲食：一分鐘學會「地中海飲食法」
 大家好，我是吳政哲醫師。各大醫學指引與《美國腎臟病雜誌 (AJKD)》研究指出，地中海飲食能顯著降低發炎反應、保護腎功能：
 多吃：繽紛的新鮮蔬菜、全穀類、深海魚類（富含 Omega-3）。
@@ -482,7 +504,7 @@ KDIGO 指引建議：中重度 CKD 患者，蛋白質攝取量應調整為每日
 少吃：紅肉與加工食品。
 
 【吳醫師小叮嚀】 今天晚餐，就把精緻白麵條換成地中海風味的烹調吧！用天然香料代替鹽巴，更好吃、更護腎。
-【指引來源】 AHA/ACC and KDOQI Nutrition Guidelines</p><span class="src">2026-06-08　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZV_nOnk8_v" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18177154660404976_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18177154660404976_0.jpg" alt="每日建議飲水量與限水族群提醒" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 22</span>每日建議飲水量與限水族群提醒</h3><p class="post">Day 22：水分補充的科學標準
+【指引來源】 AHA/ACC and KDOQI Nutrition Guidelines</p><span class="src">2026-06-08　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZV_nOnk8_v" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18177154660404976_0"><a class="shot" href="/gallery/18177154660404976_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18177154660404976_0.jpg" alt="每日建議飲水量與限水族群提醒" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 22</span>每日建議飲水量與限水族群提醒</h3><p class="post">Day 22：水分補充的科學標準
 每天該喝多少水？不是「多喝水」就一定對！
 
 我是吳政哲醫師。正常成人每天的建議飲水量為 體重(kg) *30 - 35mL。足夠的水分能幫助腎臟代謝尿毒素、預防結石。
@@ -491,7 +513,7 @@ KDIGO 指引建議：中重度 CKD 患者，蛋白質攝取量應調整為每日
 
 【吳醫師小叮嚀】 觀察尿液顏色是最好的指標，淡黃色代表適中；如果是深黃色，表示你該去喝杯水了！
 【指引來源】 European Food Safety Authority (EFSA) Hydration Guidelines
-#水分攝取量 #護腎 #腎臟健康 #慢性腎臟病</p><span class="src">2026-06-13　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZgZkSok7Uk" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18084052739147032_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18084052739147032_0.jpg" alt="睡眠不足如何加速腎功能惡化" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 23</span>睡眠不足如何加速腎功能惡化</h3><p class="post">Day 23：睡眠質量與心腎健康
+#水分攝取量 #護腎 #腎臟健康 #慢性腎臟病</p><span class="src">2026-06-13　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZgZkSok7Uk" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18084052739147032_0"><a class="shot" href="/gallery/18084052739147032_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18084052739147032_0.jpg" alt="睡眠不足如何加速腎功能惡化" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 23</span>睡眠不足如何加速腎功能惡化</h3><p class="post">Day 23：睡眠質量與心腎健康
 天天熬夜不只傷肝，更直接摧毀腎功能！
 
 我是吳政哲醫師。臨床研究指出，睡眠長期小於 5 小時的人，腎功能快速惡化的風險（OR）高達 1.79 倍。
@@ -500,7 +522,7 @@ KDIGO 指引建議：中重度 CKD 患者，蛋白質攝取量應調整為每日
 每天盡量睡滿 7-8 小時。睡前一小時放下手機，給心臟與腎臟一個安穩休息的夜晚。
 【指引來源】
 AHA (Life’s Essential 8) / JASN
-#睡眠不足 #腎臟退化 #高血壓 #充足睡眠 #腎絲球過濾率</p><span class="src">2026-06-14　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZjDzCqkx_g" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18119474758703195_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18119474758703195_0.jpg" alt="戒菸如何保護腎臟微血管健康" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 24</span>戒菸如何保護腎臟微血管健康</h3><p class="post">Day 24：戒菸對腎臟微血管的救贖
+#睡眠不足 #腎臟退化 #高血壓 #充足睡眠 #腎絲球過濾率</p><span class="src">2026-06-14　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZjDzCqkx_g" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18119474758703195_0"><a class="shot" href="/gallery/18119474758703195_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18119474758703195_0.jpg" alt="戒菸如何保護腎臟微血管健康" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 24</span>戒菸如何保護腎臟微血管健康</h3><p class="post">Day 24：戒菸對腎臟微血管的救贖
 吸菸也傷腎！吸菸是在給腎臟「斷血流」！
 
 我是吳政哲醫師。每吸一口菸，尼古丁和焦油就會讓全身微血管劇烈收縮。腎臟是血管密集的器官，長期抽菸等於把腎臟掐住、慢性缺血，更會大幅提高蛋白尿以及腎臟功能惡化的發生率。
@@ -509,33 +531,33 @@ AHA (Life’s Essential 8) / JASN
 【吳醫師小叮嚀】 為了心血管與腎臟，戒菸永遠不嫌晚。今天就撥打戒菸專線，尋求專業醫療資源協助！
 
 【指引來源】2024 KDIGO CKD Guidelines / AHA
-#戒菸 #慢性腎臟病 #尼古丁 #菸焦油 #心血管疾病</p><span class="src">2026-06-14　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZlcjLDE8Qz" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18105911180067659_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18105911180067659_0.jpg" alt="高尿酸不只痛風更會傷腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 25</span>高尿酸不只痛風更會傷腎</h3><p class="post">Day 25：認識高尿酸與痛風腎
+#戒菸 #慢性腎臟病 #尼古丁 #菸焦油 #心血管疾病</p><span class="src">2026-06-14　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZlcjLDE8Qz" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18105911180067659_0"><a class="shot" href="/gallery/18105911180067659_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18105911180067659_0.jpg" alt="高尿酸不只痛風更會傷腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 25</span>高尿酸不只痛風更會傷腎</h3><p class="post">Day 25：認識高尿酸與痛風腎
 尿酸高不只關節痛，更是直接傷害腎臟！
 
 我是吳政哲醫師。血液中尿酸過高，除了引發痛風外，尿酸結晶會沉積在腎髓質，造成「痛風性腎病變」，甚至形成尿酸結石阻塞尿路。
 尿酸高的人，腎絲球過濾率下降的速度也會更快喔。
 【吳醫師小叮嚀】 沒發作不代表沒事，腎臟功能惡化速度加快很可怕。應該要並避免大量飲酒與暴食高普林食物（如動物內臟、海鮮濃湯）。如果合併有痛風症狀，應遵照醫囑使用降尿酸藥物，
 【指引來源】 Gout and Kidney Disease Joint Management Consensus
-#尿酸腎病變 #痛風 #慢性腎臟病 #護腎</p><span class="src">2026-06-15　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZoAsmHE_Ey" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18561087073071162_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18561087073071162_0.jpg" alt="GLP-1藥物新指引：控糖兼顧護腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 26</span>GLP-1藥物新指引：控糖兼顧護腎</h3><p class="post">Day 26：控糖藥物新觀念 GLP-1 受體促效劑
+#尿酸腎病變 #痛風 #慢性腎臟病 #護腎</p><span class="src">2026-06-15　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZoAsmHE_Ey" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18561087073071162_0"><a class="shot" href="/gallery/18561087073071162_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18561087073071162_0.jpg" alt="GLP-1藥物新指引：控糖兼顧護腎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 26</span>GLP-1藥物新指引：控糖兼顧護腎</h3><p class="post">Day 26：控糖藥物新觀念 GLP-1 受體促效劑
 減重兼護腎？認識最新糖尿病指引推薦的 GLP-1 藥物
 
 我是吳政哲醫師。在 2024 年 ADA 與 KDIGO 最新聯合指引中，GLP-1 受體促效劑（如瘦瘦針等同類藥物） 獲得了高度推薦。研究證實它除了能優異控糖、減重，還具有顯著的抗發炎和內皮保護作用，能延緩心腎併發症。
 【吳醫師小叮嚀】 對於糖尿病合併高度心血管風險的慢性腎臟病患者，這是一項非常卓越的治療選項，請諮詢您的新陳代謝科或腎臟科醫師。
 【指引來源】 2024 ADA / KDIGO Consensus Report on Diabetes Management in CKD
-#糖尿病 #減重 #慢性腎臟病 #糖心腎 #代謝症候群</p><span class="src">2026-06-16　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZqj7dXkxGg" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17880813843664847_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17880813843664847_0.jpg" alt="手搖飲高果糖糖漿誘發腎臟發炎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 27</span>手搖飲高果糖糖漿誘發腎臟發炎</h3><p class="post">Day 27：小心含糖飲料中的「果糖」
+#糖尿病 #減重 #慢性腎臟病 #糖心腎 #代謝症候群</p><span class="src">2026-06-16　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZqj7dXkxGg" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17880813843664847_0"><a class="shot" href="/gallery/17880813843664847_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17880813843664847_0.jpg" alt="手搖飲高果糖糖漿誘發腎臟發炎" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 27</span>手搖飲高果糖糖漿誘發腎臟發炎</h3><p class="post">Day 27：小心含糖飲料中的「果糖」
 每天一杯手搖飲？高果糖糖漿是誘發發脂肪肝與腎發炎的隱形地雷！
 
 我是吳政哲醫師。現代手搖飲多半添加「高果糖糖漿（High-fructose corn syrup）」。果糖在人體肝臟代謝時，會大量消耗 ATP 產生尿酸，進而引發胰島素阻抗，活化腎臟系統發炎基因。
 【吳醫師小叮嚀】 遠離精緻果糖，多喝白開水或無糖茶。今天試著把飲料改成「微糖」或「無糖」，給腎臟一個喘息的機會。
 【指引來源】ADA(Standards of Care in Diabetes)/ AHA
-#高果糖糖漿 #手搖飲 #含糖飲料 #糖尿病 #代謝症候群 #痛風 #高尿酸血症</p><span class="src">2026-06-17　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZtJWxvEyWA" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18131593369525203_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18131593369525203_0.jpg" alt="飲酒過量對腎臟與血壓的傷害" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 28</span>飲酒過量對腎臟與血壓的傷害</h3><p class="post">Day 28：限酒護血管
+#高果糖糖漿 #手搖飲 #含糖飲料 #糖尿病 #代謝症候群 #痛風 #高尿酸血症</p><span class="src">2026-06-17　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZtJWxvEyWA" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18131593369525203_0"><a class="shot" href="/gallery/18131593369525203_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18131593369525203_0.jpg" alt="飲酒過量對腎臟與血壓的傷害" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 28</span>飲酒過量對腎臟與血壓的傷害</h3><p class="post">Day 28：限酒護血管
 小酌怡情？過量飲酒會讓腎臟瞬間乾涸！
 
 我是吳政哲醫師。過量飲酒會造成酒精性脫水，使血壓出現劇烈波動。酒精本身更會直接傷害腎臟細胞。
 此外，酒精常搭配高熱量與高普林食物，對代謝症候群患者是雪上加霜。
 【吳醫師小叮嚀】 建議男性每日飲酒不超過 2 個酒精當量（約2罐啤酒），女性不超過 1 個當量。能不喝，當然是最好的護腎良方！
 【指引來源】 2024 KDIGO CKD Guidelines / AHA/ACC Hypertension Guidelines
-#飲酒 #護腎 #適度飲酒 #慢性腎臟病 #代謝症候群</p><span class="src">2026-06-19　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZv1piFE9Sc" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18224729275316291_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18224729275316291_0.jpg" alt="護腎三大關鍵指標：血壓、eGFR、UACR" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 29</span>護腎三大關鍵指標：血壓、eGFR、UACR</h3><p class="post">Day 29：健康檢查項目的正確認知
+#飲酒 #護腎 #適度飲酒 #慢性腎臟病 #代謝症候群</p><span class="src">2026-06-19　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZv1piFE9Sc" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18224729275316291_0"><a class="shot" href="/gallery/18224729275316291_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18224729275316291_0.jpg" alt="護腎三大關鍵指標：血壓、eGFR、UACR" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 29</span>護腎三大關鍵指標：血壓、eGFR、UACR</h3><p class="post">Day 29：健康檢查項目的正確認知
 護腎三大檢查項目：記住這串通關密碼，守護你的腎健康！
 
 我是吳政哲醫師。30天計畫即將進入尾聲，吳醫師再次幫大家複習最強的護腎通關密碼：
@@ -544,7 +566,7 @@ AHA (Life’s Essential 8) / JASN
 3.	驗尿白蛋白（UACR）：抓出隱形蛋白尿。
 【吳醫師小叮嚀】 請翻開你最近的健檢報告，如果發現這幾項有異常，請立即安排到腎臟內科門診進一步諮詢。
 【指引來源】 KDIGO CKD guideline
-#護腎 #慢性腎臟病 #腎臟保健</p><span class="src">2026-06-20　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZylkOSk7xW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18095997265977575_m0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18095997265977575_m0.jpg" alt="30 天成果與長期實踐：總複習" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 30</span>30 天成果與長期實踐：總複習</h3><p class="post">Day 30：30天成果與長期實踐
+#護腎 #慢性腎臟病 #腎臟保健</p><span class="src">2026-06-20　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZylkOSk7xW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18095997265977575_m0"><a class="shot" href="/gallery/18095997265977575_m0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18095997265977575_m0.jpg" alt="30 天成果與長期實踐：總複習" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 30</span>30 天成果與長期實踐：總複習</h3><p class="post">Day 30：30天成果與長期實踐
 恭喜完成30天護腎行動！健康人生，與「腎」共舞！
 
 大家好！我是護腎專家吳政哲醫師。恭喜你完成了 30 天的護腎知識洗禮！從認識代謝症候群、控三高、到調整飲食與作息，你已經掌握了最權威的護腎心法。

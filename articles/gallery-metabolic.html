@@ -277,6 +277,28 @@ font-size:1.02rem;line-height:1.55}
 /* 原本是五行散文，在手機上佔掉 355px、將近半個第一屏，而且要讀完一句話
    才找得到連結。改成方塊：同樣的資訊約 180px，而且整格可點。
    順序刻意把商城放最後——衛教是主體，商城是其中一種學習方式。 */
+/* 全站搜尋。索引在第一次點搜尋框時才載入，不拖慢首頁初次開啟。 */
+.ssearch{position:relative;margin:18px 0 4px}
+.svisually{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+white-space:nowrap}
+.ssearch input{width:100%;box-sizing:border-box;font:16px/1.5 inherit;
+padding:13px 16px;border-radius:12px;color:var(--fg);background:var(--card);
+border:1.5px solid var(--line);outline:none}
+.ssearch input:focus{border-color:var(--accent)}
+/* 結果浮在內容之上，不把下面的版面推開——邊打字邊跳動很難用 */
+.sres{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;
+max-height:60vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);
+border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.sres a{display:block;padding:11px 14px;text-decoration:none;color:var(--fg);
+border-top:1px solid var(--line)}
+.sres a:first-child{border-top:0}
+.sres a:hover,.sres a:focus{background:var(--card)}
+.sres .st{font-weight:700;font-size:15px;line-height:1.5}
+.sres .sc{font-size:12px;color:var(--mut);margin-left:8px;font-weight:400;
+white-space:nowrap}
+.sres .sx{font-size:13px;color:var(--mut);line-height:1.6;margin-top:3px}
+.sres mark{background:transparent;color:var(--accent);font-weight:700}
+.sres .snone{padding:14px;font-size:14px;color:var(--mut)}
 .howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
 padding:13px 14px;margin:20px 0 6px;color:var(--mut)}
 .howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:9px}
@@ -337,7 +359,7 @@ letter-spacing:.4px;line-height:1.5}
 　·　共 28 張（Day 1–30）　·　更新於 2026-09-02</p>
 <div class="galnav"><a href="/articles/gallery.html">← 全部系列</a>
 <a href="/articles/">依主題閱讀 →</a></div>
-<div class="galcard"><a class="shot" href="/gallery/17858862927659211_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17858862927659211_0.jpg" alt="三高齊發，腎臟心血管首當其衝" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 1</span>三高齊發，腎臟心血管首當其衝</h3><p class="post">三高知識小教室開課啦！🩺
+<div class="galcard" id="g-17858862927659211_0"><a class="shot" href="/gallery/17858862927659211_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17858862927659211_0.jpg" alt="三高齊發，腎臟心血管首當其衝" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 1</span>三高齊發，腎臟心血管首當其衝</h3><p class="post">三高知識小教室開課啦！🩺
 
 常聽到「三高」，但你知道是哪三高嗎？
 
@@ -349,7 +371,7 @@ letter-spacing:.4px;line-height:1.5}
 
 從今天開始，我們用30天，把三高一次說清楚！
 
-#三高 #護腎知識 #吳政哲醫師</p><span class="src">2026-06-21　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ3eWmKk1en" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18125303062729479_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18125303062729479_0.jpg" alt="微血管密布，三高如何三面夾擊腎臟" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 2</span>微血管密布，三高如何三面夾擊腎臟</h3><p class="post">三高健康教室—day 2
+#三高 #護腎知識 #吳政哲醫師</p><span class="src">2026-06-21　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ3eWmKk1en" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18125303062729479_0"><a class="shot" href="/gallery/18125303062729479_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18125303062729479_0.jpg" alt="微血管密布，三高如何三面夾擊腎臟" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 2</span>微血管密布，三高如何三面夾擊腎臟</h3><p class="post">三高健康教室—day 2
 三高為什麼特別傷腎？
 
 為什麼醫生一直叮嚀三高要控制好？
@@ -362,7 +384,7 @@ letter-spacing:.4px;line-height:1.5}
 
 三個加起來，腎臟根本是「三面包抄」。
 
-#護腎 #三高 #吳政哲醫師</p><span class="src">2026-06-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ6Fu5yk_BM" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18085076438638214_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18085076438638214_0.jpg" alt="血壓超標紅線：收縮130、舒張80" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 3</span>血壓超標紅線：收縮130、舒張80</h3><p class="post">三高健康教室—day 3
+#護腎 #三高 #吳政哲醫師</p><span class="src">2026-06-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ6Fu5yk_BM" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18085076438638214_0"><a class="shot" href="/gallery/18085076438638214_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18085076438638214_0.jpg" alt="血壓超標紅線：收縮130、舒張80" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 3</span>血壓超標紅線：收縮130、舒張80</h3><p class="post">三高健康教室—day 3
 高血壓是什麼程度才算超標？
 
 依照最新指引，一般成人血壓建議控制在：
@@ -374,7 +396,7 @@ letter-spacing:.4px;line-height:1.5}
 
 高血壓最麻煩的地方是「無聲無息」，很多人完全沒感覺，卻早已在傷害血管。
 
-#高血壓 #護腎知識 #吳政哲醫師</p><span class="src">2026-06-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ8jUM2Exw9" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18101468603148491_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18101468603148491_0.jpg" alt="控制血壓先從減少每日鈉攝取做起" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 4</span>控制血壓先從減少每日鈉攝取做起</h3><p class="post">三高健康教室—day 4
+#高血壓 #護腎知識 #吳政哲醫師</p><span class="src">2026-06-23　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ8jUM2Exw9" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18101468603148491_0"><a class="shot" href="/gallery/18101468603148491_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18101468603148491_0.jpg" alt="控制血壓先從減少每日鈉攝取做起" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 4</span>控制血壓先從減少每日鈉攝取做起</h3><p class="post">三高健康教室—day 4
 控制血壓，飲食上第一個要注意的就是「鈉」攝取量。
 
 🧂 成人每日鈉攝取建議不超過 2400mg（約一茶匙鹽）
@@ -385,7 +407,7 @@ letter-spacing:.4px;line-height:1.5}
 ✅ 選擇新鮮食材取代加工食品
 ✅ 湯底盡量少喝、少加調味料
 
-#護腎 #低鈉飲食 #血壓控制</p><span class="src">2026-06-24　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ_KXOWkzQj" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17959915277960837_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17959915277960837_0.jpg" alt="醬油醋醬也含鈉，換湯不換藥的迷思" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 5</span>醬油醋醬也含鈉，換湯不換藥的迷思</h3><p class="post">三高健康教室—day 5
+#護腎 #低鈉飲食 #血壓控制</p><span class="src">2026-06-24　·　<a href="https://www.threads.com/@kidney.godreborn/post/DZ_KXOWkzQj" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17959915277960837_0"><a class="shot" href="/gallery/17959915277960837_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17959915277960837_0.jpg" alt="醬油醋醬也含鈉，換湯不換藥的迷思" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 5</span>醬油醋醬也含鈉，換湯不換藥的迷思</h3><p class="post">三高健康教室—day 5
 「我都用醬油調味，沒有直接加鹽，應該比較健康吧？」
 
 這是門診常被問到的迷思❗
@@ -394,7 +416,7 @@ letter-spacing:.4px;line-height:1.5}
 
 真正關鍵是「鈉的總攝取量」，不是看你用的調味料叫什麼名字。
 
-#高血壓迷思 #護腎知識 # 鈉攝取量 #健康飲食</p><span class="src">2026-06-26　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaCvNTgkU5p" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18109036637062280_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18109036637062280_0.jpg" alt="血壓正常別自行停藥，恐反彈飆升" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 6</span>血壓正常別自行停藥，恐反彈飆升</h3><p class="post">三高健康教室—day 6
+#高血壓迷思 #護腎知識 # 鈉攝取量 #健康飲食</p><span class="src">2026-06-26　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaCvNTgkU5p" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18109036637062280_0"><a class="shot" href="/gallery/18109036637062280_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18109036637062280_0.jpg" alt="血壓正常別自行停藥，恐反彈飆升" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 6</span>血壓正常別自行停藥，恐反彈飆升</h3><p class="post">三高健康教室—day 6
 「血壓量起來正常了，是不是可以不吃藥了？」
 
 千萬不要自己停藥❗
@@ -405,7 +427,7 @@ letter-spacing:.4px;line-height:1.5}
 
 調整用藥這件事，請務必跟醫生討論，不要自己當醫生。
 
-#高血壓用藥 #護腎知識 #身體保健</p><span class="src">2026-06-27　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaEm8pUkwQS" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17996491082957230_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17996491082957230_0.jpg" alt="居家血壓怎麼量才準？正確步驟公開" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 7</span>居家血壓怎麼量才準？正確步驟公開</h3><p class="post">三高健康教室—day 7
+#高血壓用藥 #護腎知識 #身體保健</p><span class="src">2026-06-27　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaEm8pUkwQS" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17996491082957230_0"><a class="shot" href="/gallery/17996491082957230_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17996491082957230_0.jpg" alt="居家血壓怎麼量才準？正確步驟公開" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 7</span>居家血壓怎麼量才準？正確步驟公開</h3><p class="post">三高健康教室—day 7
 在家量血壓，你量對了嗎？📏
 
 正確量測小技巧：
@@ -417,7 +439,7 @@ letter-spacing:.4px;line-height:1.5}
 
 單一次數字其實參考價值有限，「趨勢」及「平均」才是重點。
 
-#居家血壓 #護腎知識 #吳政哲醫師</p><span class="src">2026-06-28　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaHOWKxk_XV" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18464256346106396_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18464256346106396_0.jpg" alt="認識糖尿病：空腹血糖與糖化血色素標準" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 8</span>認識糖尿病：空腹血糖與糖化血色素標準</h3><p class="post">三高健康教室—day 8
+#居家血壓 #護腎知識 #吳政哲醫師</p><span class="src">2026-06-28　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaHOWKxk_XV" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18464256346106396_0"><a class="shot" href="/gallery/18464256346106396_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18464256346106396_0.jpg" alt="認識糖尿病：空腹血糖與糖化血色素標準" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 8</span>認識糖尿病：空腹血糖與糖化血色素標準</h3><p class="post">三高健康教室—day 8
 糖尿病不是「吃太多糖」這麼簡單。
 
 它其實是身體調節血糖能力出問題，跟胰島素阻抗以及胰臟功能退化有關。
@@ -429,7 +451,7 @@ letter-spacing:.4px;line-height:1.5}
 糖尿病初期常常完全沒有症狀，很多人是健檢才發現。
 最重要的是，糖尿病跟心血管疾病、中風、慢性腎臟病、視網膜病變等等都有關係。
 
-#糖尿病 #高血糖 #護腎</p><span class="src">2026-06-28　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaJgS1Wk-M7" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18109717010315391_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18109717010315391_0.jpg" alt="糖尿病前期是警訊，把握逆轉黃金期" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 9</span>糖尿病前期是警訊，把握逆轉黃金期</h3><p class="post">三高健康教室—day 9
+#糖尿病 #高血糖 #護腎</p><span class="src">2026-06-28　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaJgS1Wk-M7" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18109717010315391_0"><a class="shot" href="/gallery/18109717010315391_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18109717010315391_0.jpg" alt="糖尿病前期是警訊，把握逆轉黃金期" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 9</span>糖尿病前期是警訊，把握逆轉黃金期</h3><p class="post">三高健康教室—day 9
 你聽過「糖尿病前期」嗎？
 
 這是血糖已經偏高，但還沒達到糖尿病標準的「灰色地帶」：
@@ -439,7 +461,7 @@ letter-spacing:.4px;line-height:1.5}
 
 這是身體給你的黃牌警告⚠️，這個階段透過飲食運動調整，有機會逆轉回正常範圍！
 
-#糖尿病前期 #護腎知識 #身體保健</p><span class="src">2026-06-29　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaME_Kpjnve" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18096685979191981_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18096685979191981_0.jpg" alt="血糖該何時量？監測時機這樣安排" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 10</span>血糖該何時量？監測時機這樣安排</h3><p class="post">三高健康教室—day 10
+#糖尿病前期 #護腎知識 #身體保健</p><span class="src">2026-06-29　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaME_Kpjnve" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18096685979191981_0"><a class="shot" href="/gallery/18096685979191981_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18096685979191981_0.jpg" alt="血糖該何時量？監測時機這樣安排" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 10</span>血糖該何時量？監測時機這樣安排</h3><p class="post">三高健康教室—day 10
 血糖該什麼時候量？量多少次才夠？
 
 常見監測時機：
@@ -451,7 +473,7 @@ letter-spacing:.4px;line-height:1.5}
 
 監測頻率依個人狀況不同，建議跟醫生或衛教師討論專屬計畫，不是量越多次越好，而是「量在對的時間點」。
 
-#血糖監測 #護腎知識 #糖尿病</p><span class="src">2026-07-01　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaOubGMk4in" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17859387045662647_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17859387045662647_0.jpg" alt="改變吃飯順序，飯後血糖更平穩" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 11</span>改變吃飯順序，飯後血糖更平穩</h3><p class="post">三高衛教教室—day 11
+#血糖監測 #護腎知識 #糖尿病</p><span class="src">2026-07-01　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaOubGMk4in" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17859387045662647_0"><a class="shot" href="/gallery/17859387045662647_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17859387045662647_0.jpg" alt="改變吃飯順序，飯後血糖更平穩" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 11</span>改變吃飯順序，飯後血糖更平穩</h3><p class="post">三高衛教教室—day 11
 同樣的食物，換個吃的順序，血糖反應大不同！
 
 建議用餐順序：
@@ -462,7 +484,7 @@ letter-spacing:.4px;line-height:1.5}
 
 這個小技巧能讓飯後血糖上升得比較平緩，不用大改菜單就能做到！
 
-#控糖技巧 #護腎知識 #健康生活</p><span class="src">2026-07-02　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaRSQKIk-DT" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18056012618769543_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18056012618769543_0.jpg" alt="一杯手搖飲的含糖量,可能超過每日建議上限" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 12</span>一杯手搖飲的含糖量,可能超過每日建議上限</h3><p class="post">三高健康教室—day 12
+#控糖技巧 #護腎知識 #健康生活</p><span class="src">2026-07-02　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaRSQKIk-DT" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18056012618769543_0"><a class="shot" href="/gallery/18056012618769543_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18056012618769543_0.jpg" alt="一杯手搖飲的含糖量,可能超過每日建議上限" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 12</span>一杯手搖飲的含糖量,可能超過每日建議上限</h3><p class="post">三高健康教室—day 12
 一杯全糖手搖飲，含糖量可能超過你一整天的建議攝取量！
 
 WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
@@ -473,7 +495,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 ⚠️ 血糖快速飆升又快速下降
 ⚠️ 長期飲用增加糖尿病、三高風險
 
-#含糖飲料 #護腎知識 #三高 #糖尿病</p><span class="src">2026-07-03　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaT1yxyEy5G" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18123737131676749_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18123737131676749_0.jpg" alt="打胰島素不代表病情惡化,破解用藥迷思" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 13</span>打胰島素不代表病情惡化,破解用藥迷思</h3><p class="post">三高健康教室—day 13
+#含糖飲料 #護腎知識 #三高 #糖尿病</p><span class="src">2026-07-03　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaT1yxyEy5G" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18123737131676749_0"><a class="shot" href="/gallery/18123737131676749_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18123737131676749_0.jpg" alt="打胰島素不代表病情惡化,破解用藥迷思" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 13</span>打胰島素不代表病情惡化,破解用藥迷思</h3><p class="post">三高健康教室—day 13
 「打胰島素是不是代表病情已經很嚴重？」
 
 這是非常常見但需要澄清的迷思❗
@@ -483,7 +505,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 
 用藥方式應該根據個人血糖狀況調整，跟疾病嚴重度不是絕對相關。
 
-#糖尿病用藥 #護腎知識 #三高</p><span class="src">2026-07-04　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaWt7Qdk5Vc" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18407179876153675_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18407179876153675_0.jpg" alt="高血脂沒症狀,三個數字看懂血管硬化風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 14</span>高血脂沒症狀,三個數字看懂血管硬化風險</h3><p class="post">三高健康教室—day 14
+#糖尿病用藥 #護腎知識 #三高</p><span class="src">2026-07-04　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaWt7Qdk5Vc" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18407179876153675_0"><a class="shot" href="/gallery/18407179876153675_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18407179876153675_0.jpg" alt="高血脂沒症狀,三個數字看懂血管硬化風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 14</span>高血脂沒症狀,三個數字看懂血管硬化風險</h3><p class="post">三高健康教室—day 14
 高血脂常被忽略，但其實是血管硬化的關鍵推手。
 
 主要看三個數字：
@@ -494,14 +516,14 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 
 高血脂幾乎沒有症狀，往往是健檢報告上的數字，才讓人驚覺問題存在。
 
-#高血脂 #護腎知識 #心血管疾病 #三高</p><span class="src">2026-07-05　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaZWF4SEdEl" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18109682851759223_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18109682851759223_0.jpg" alt="認識好膽固醇HDL與壞膽固醇LDL的差異" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 15</span>認識好膽固醇HDL與壞膽固醇LDL的差異</h3><p class="post">三高衛教教室—day 15
+#高血脂 #護腎知識 #心血管疾病 #三高</p><span class="src">2026-07-05　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaZWF4SEdEl" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18109682851759223_0"><a class="shot" href="/gallery/18109682851759223_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18109682851759223_0.jpg" alt="認識好膽固醇HDL與壞膽固醇LDL的差異" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 15</span>認識好膽固醇HDL與壞膽固醇LDL的差異</h3><p class="post">三高衛教教室—day 15
 膽固醇也有好壞之分！
 
 🟢 HDL（高密度膽固醇）：好膽固醇，幫忙清除血管壁多餘脂肪，數值須高於標準值。男性應大於40，女性大於50。
 
 🔴 LDL（低密度膽固醇）：壞膽固醇，過高容易堆積在血管壁造成阻塞，數值越低越好，數值應小於100。
 
-#膽固醇 #護腎知識 #三高 #健康飲食</p><span class="src">2026-07-05　·　<a href="https://www.threads.com/@kidney.godreborn/post/DabghKXE2b7" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18126047602639197_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18126047602639197_0.jpg" alt="精緻澱粉與酒精是三酸甘油酯飆高元兇" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 16</span>精緻澱粉與酒精是三酸甘油酯飆高元兇</h3><p class="post">三高健康教室—day 16
+#膽固醇 #護腎知識 #三高 #健康飲食</p><span class="src">2026-07-05　·　<a href="https://www.threads.com/@kidney.godreborn/post/DabghKXE2b7" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18126047602639197_0"><a class="shot" href="/gallery/18126047602639197_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18126047602639197_0.jpg" alt="精緻澱粉與酒精是三酸甘油酯飆高元兇" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 16</span>精緻澱粉與酒精是三酸甘油酯飆高元兇</h3><p class="post">三高健康教室—day 16
 三酸甘油酯（TG）跟你吃的「精緻澱粉」和「酒精」關係超大！
 
 容易讓TG飆高的飲食習慣：
@@ -512,7 +534,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 
 減少這些攝取，TG數值往往比膽固醇更快看到改善！
 
-#三酸甘油酯 #護腎知識 #三高 #高血脂</p><span class="src">2026-07-07　·　<a href="https://www.threads.com/@kidney.godreborn/post/DagrodwE1Wf" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17895994896515101_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17895994896515101_0.jpg" alt="反式脂肪是血脂控制的頭號公敵" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 17</span>反式脂肪是血脂控制的頭號公敵</h3><p class="post">三高健康教室—day 17
+#三酸甘油酯 #護腎知識 #三高 #高血脂</p><span class="src">2026-07-07　·　<a href="https://www.threads.com/@kidney.godreborn/post/DagrodwE1Wf" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17895994896515101_0"><a class="shot" href="/gallery/17895994896515101_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17895994896515101_0.jpg" alt="反式脂肪是血脂控制的頭號公敵" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 17</span>反式脂肪是血脂控制的頭號公敵</h3><p class="post">三高健康教室—day 17
 反式脂肪是血脂控制的頭號公敵！
 
 常見來源：
@@ -527,7 +549,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 ✅ 注意成分標示「氫化植物油」字樣
 ✅ 減少酥脆口感的點心
 
-#反式脂肪 #護腎知識 #高血脂 #健康飲食</p><span class="src">2026-07-06　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaeD3nGE4GW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18135756298592800_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18135756298592800_0.jpg" alt="三高控制不良如何一步步傷害腎臟" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 18</span>三高控制不良如何一步步傷害腎臟</h3><p class="post">三高健康教室—day 18
+#反式脂肪 #護腎知識 #高血脂 #健康飲食</p><span class="src">2026-07-06　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaeD3nGE4GW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18135756298592800_0"><a class="shot" href="/gallery/18135756298592800_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18135756298592800_0.jpg" alt="三高控制不良如何一步步傷害腎臟" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 18</span>三高控制不良如何一步步傷害腎臟</h3><p class="post">三高健康教室—day 18
 腎臟科門診裡，三高病友佔了相當高的比例。
 
 三高長期控制不良，會讓腎臟出現：
@@ -538,7 +560,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 
 好消息是：三高控制好，是預防腎臟病惡化最有效的方法之一。
 
-#三高 #護腎 #慢性腎臟病 #腎絲球過濾率</p><span class="src">2026-07-09　·　<a href="https://www.threads.com/@kidney.godreborn/post/DajS_0zk2i6" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17905751622449588_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17905751622449588_0.jpg" alt="三高同時威脅心臟腦血管與腎臟健康" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 19</span>三高同時威脅心臟腦血管與腎臟健康</h3><p class="post">三高健康教室—day 19
+#三高 #護腎 #慢性腎臟病 #腎絲球過濾率</p><span class="src">2026-07-09　·　<a href="https://www.threads.com/@kidney.godreborn/post/DajS_0zk2i6" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17905751622449588_0"><a class="shot" href="/gallery/17905751622449588_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17905751622449588_0.jpg" alt="三高同時威脅心臟腦血管與腎臟健康" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 19</span>三高同時威脅心臟腦血管與腎臟健康</h3><p class="post">三高健康教室—day 19
 三高不只傷腎，更是心臟病、中風的主要危險因子。
 
 血管長期被三高「攻擊」，會逐漸形成：
@@ -549,7 +571,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 
 控制三高，等於同時在保護心、腎、腦三個重要器官。
 
-#三高 #心血管疾病 #護腎 #高血壓 #高血糖 #高血脂</p><span class="src">2026-07-09　·　<a href="https://www.threads.com/@kidney.godreborn/post/DalyNaiExUa" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18038588057803172_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18038588057803172_0.jpg" alt="規律運動如何幫助控制三高" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 20</span>規律運動如何幫助控制三高</h3><p class="post">三高健康教室—day 20
+#三高 #心血管疾病 #護腎 #高血壓 #高血糖 #高血脂</p><span class="src">2026-07-09　·　<a href="https://www.threads.com/@kidney.godreborn/post/DalyNaiExUa" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18038588057803172_0"><a class="shot" href="/gallery/18038588057803172_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18038588057803172_0.jpg" alt="規律運動如何幫助控制三高" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 20</span>規律運動如何幫助控制三高</h3><p class="post">三高健康教室—day 20
 運動對三高的好處，真的不是說說而已！
 
 規律運動可以：
@@ -560,7 +582,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 
 建議每週累積150分鐘中等強度有氧運動（快走、游泳、騎自行車都可以）。
 
-#運動護腎 #三高控制 #健康生活</p><span class="src">2026-07-12　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaruYc3EfIY" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18091085921527882_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18091085921527882_0.jpg" alt="體重減少5-10%大幅改善三高數值" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 21</span>體重減少5-10%大幅改善三高數值</h3><p class="post">三高健康教室—day 21
+#運動護腎 #三高控制 #健康生活</p><span class="src">2026-07-12　·　<a href="https://www.threads.com/@kidney.godreborn/post/DaruYc3EfIY" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18091085921527882_0"><a class="shot" href="/gallery/18091085921527882_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18091085921527882_0.jpg" alt="體重減少5-10%大幅改善三高數值" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 21</span>體重減少5-10%大幅改善三高數值</h3><p class="post">三高健康教室—day 21
 體重每減少5-10%，對三高的改善幅度常常超乎想像。
 
 體重管理的核心，不是追求快速減重，而是建立可長期維持的習慣：
@@ -569,7 +591,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 ✅ 增加蛋白質與膳食纖維比例
 ✅ 搭配規律運動維持肌肉量
 
-#體重管理 #三高控制 #減重 #代謝症候群</p><span class="src">2026-07-12　·　<a href="https://www.threads.com/@kidney.godreborn/post/Datfvs9kyn4" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18080702369296943_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18080702369296943_0.jpg" alt="外食族掌握幾個原則穩定控制三高" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 22</span>外食族掌握幾個原則穩定控制三高</h3><p class="post">三高健康教室—day 22
+#體重管理 #三高控制 #減重 #代謝症候群</p><span class="src">2026-07-12　·　<a href="https://www.threads.com/@kidney.godreborn/post/Datfvs9kyn4" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18080702369296943_0"><a class="shot" href="/gallery/18080702369296943_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18080702369296943_0.jpg" alt="外食族掌握幾個原則穩定控制三高" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 22</span>外食族掌握幾個原則穩定控制三高</h3><p class="post">三高健康教室—day 22
 外食族也能把三高控制好，掌握幾個原則就好！
 
 ✅ 湯麵類儘量少喝湯，醬料少加，減少鈉攝取
@@ -581,7 +603,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 
 小調整累積起來，效果超乎想像！
 
-#外食族 #三高控制 #健康飲食</p><span class="src">2026-07-13　·　<a href="https://www.threads.com/@kidney.godreborn/post/DawGiBsk6Fh" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/17893505493566023_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17893505493566023_0.jpg" alt="睡眠品質不佳也會讓三高更難控制" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 23</span>睡眠品質不佳也會讓三高更難控制</h3><p class="post">三高健康教室—day 23
+#外食族 #三高控制 #健康飲食</p><span class="src">2026-07-13　·　<a href="https://www.threads.com/@kidney.godreborn/post/DawGiBsk6Fh" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-17893505493566023_0"><a class="shot" href="/gallery/17893505493566023_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17893505493566023_0.jpg" alt="睡眠品質不佳也會讓三高更難控制" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 23</span>睡眠品質不佳也會讓三高更難控制</h3><p class="post">三高健康教室—day 23
 你知道嗎？睡眠品質差，也會讓三高更難控制！
 
 睡眠不足或睡眠呼吸中止症，會：
@@ -592,7 +614,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 
 睡眠，其實也是三高管理的一部分。
 
-#睡眠健康 #三高控制 #睡眠呼吸中止症</p><span class="src">2026-07-14　·　<a href="https://www.threads.com/@kidney.godreborn/post/DayqIOpEwuw" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18050180885789326_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18050180885789326_0.jpg" alt="壓力如何推升血壓與血糖形成惡性循環" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 24</span>壓力如何推升血壓與血糖形成惡性循環</h3><p class="post">三高健康教室—day 24
+#睡眠健康 #三高控制 #睡眠呼吸中止症</p><span class="src">2026-07-14　·　<a href="https://www.threads.com/@kidney.godreborn/post/DayqIOpEwuw" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18050180885789326_0"><a class="shot" href="/gallery/18050180885789326_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18050180885789326_0.jpg" alt="壓力如何推升血壓與血糖形成惡性循環" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 24</span>壓力如何推升血壓與血糖形成惡性循環</h3><p class="post">三高健康教室—day 24
 長期壓力，會讓身體分泌壓力荷爾蒙（如皮質醇），間接推升血壓和血糖。
 
 壓力大時的身體反應：
@@ -603,7 +625,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 
 適度的壓力釋放，跟吃藥、運動一樣重要。
 
-#壓力管理 #三高控制 #護腎 #睡眠品質</p><span class="src">2026-07-15　·　<a href="https://www.threads.com/@kidney.godreborn/post/Da1TN52k-PW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18218182597332255_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18218182597332255_0.jpg" alt="三高家族史不是宿命更要提早篩檢" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 26</span>三高家族史不是宿命更要提早篩檢</h3><p class="post">三高健康教室—day 26
+#壓力管理 #三高控制 #護腎 #睡眠品質</p><span class="src">2026-07-15　·　<a href="https://www.threads.com/@kidney.godreborn/post/Da1TN52k-PW" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18218182597332255_0"><a class="shot" href="/gallery/18218182597332255_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18218182597332255_0.jpg" alt="三高家族史不是宿命更要提早篩檢" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 26</span>三高家族史不是宿命更要提早篩檢</h3><p class="post">三高健康教室—day 26
 「我爸媽都有三高，我是不是躲不掉？」
 
 家族史確實會增加風險，但不是「躲不掉」的命運判決。
@@ -615,7 +637,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 ✅ 提早開始定期篩檢
 ✅ 更早建立健康飲食運動習慣
 
-#三高家族史 #高血壓 #糖尿病 #高血脂</p><span class="src">2026-07-16　·　<a href="https://www.threads.com/@kidney.godreborn/post/Da3zt6xE1ZG" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18170646034430363_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18170646034430363_0.jpg" alt="三高患者每年必做的健檢項目清單" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 28</span>三高患者每年必做的健檢項目清單</h3><p class="post">三高健康教室—day 28
+#三高家族史 #高血壓 #糖尿病 #高血脂</p><span class="src">2026-07-16　·　<a href="https://www.threads.com/@kidney.godreborn/post/Da3zt6xE1ZG" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18170646034430363_0"><a class="shot" href="/gallery/18170646034430363_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18170646034430363_0.jpg" alt="三高患者每年必做的健檢項目清單" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 28</span>三高患者每年必做的健檢項目清單</h3><p class="post">三高健康教室—day 28
 三高朋友的健檢清單，你都做了嗎？✅
 
 建議至少每年檢查：
@@ -627,7 +649,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 📍 尿液微量白蛋白（UACR）
 📍 眼底檢查（糖尿病患者）
 
-#三高 #護腎知識 #健康檢查</p><span class="src">2026-07-18　·　<a href="https://www.threads.com/@kidney.godreborn/post/Da6jQCLk_5i" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18171792823382326_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18171792823382326_0.jpg" alt="三高年輕化不再是長輩專屬疾病" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 29</span>三高年輕化不再是長輩專屬疾病</h3><p class="post">三高健康教室—day 29
+#三高 #護腎知識 #健康檢查</p><span class="src">2026-07-18　·　<a href="https://www.threads.com/@kidney.godreborn/post/Da6jQCLk_5i" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18171792823382326_0"><a class="shot" href="/gallery/18171792823382326_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18171792823382326_0.jpg" alt="三高年輕化不再是長輩專屬疾病" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 29</span>三高年輕化不再是長輩專屬疾病</h3><p class="post">三高健康教室—day 29
 三高不再是長輩專屬的疾病。
 
 近年來，三高在30-40歲族群的發生率明顯上升，原因包括：
@@ -638,7 +660,7 @@ WHO建議每日添加糖攝取不超過總熱量的10%，理想是5%以下。
 
 年輕不是護身符，提早預防才是真正的保護。
 
-#三高年輕化 #護腎知識 #健康生活</p><span class="src">2026-07-19　·　<a href="https://www.threads.com/@kidney.godreborn/post/Da9NPVBkwrQ" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard"><a class="shot" href="/gallery/18105065312123406_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18105065312123406_0.jpg" alt="三高控制三大關鍵飲食運動與監測" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 30</span>三高控制三大關鍵飲食運動與監測</h3><p class="post">三高健康教室—day 30
+#三高年輕化 #護腎知識 #健康生活</p><span class="src">2026-07-19　·　<a href="https://www.threads.com/@kidney.godreborn/post/Da9NPVBkwrQ" target="_blank" rel="noopener">原始貼文 →</a></span></div></div><div class="galcard" id="g-18105065312123406_0"><a class="shot" href="/gallery/18105065312123406_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/18105065312123406_0.jpg" alt="三高控制三大關鍵飲食運動與監測" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 30</span>三高控制三大關鍵飲食運動與監測</h3><p class="post">三高健康教室—day 30
 30天三高衛教之旅，我們一起complete啦！🎉
 
 簡單複習三大行動方向：

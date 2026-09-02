@@ -277,6 +277,28 @@ font-size:1.02rem;line-height:1.55}
 /* 原本是五行散文，在手機上佔掉 355px、將近半個第一屏，而且要讀完一句話
    才找得到連結。改成方塊：同樣的資訊約 180px，而且整格可點。
    順序刻意把商城放最後——衛教是主體，商城是其中一種學習方式。 */
+/* 全站搜尋。索引在第一次點搜尋框時才載入，不拖慢首頁初次開啟。 */
+.ssearch{position:relative;margin:18px 0 4px}
+.svisually{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+white-space:nowrap}
+.ssearch input{width:100%;box-sizing:border-box;font:16px/1.5 inherit;
+padding:13px 16px;border-radius:12px;color:var(--fg);background:var(--card);
+border:1.5px solid var(--line);outline:none}
+.ssearch input:focus{border-color:var(--accent)}
+/* 結果浮在內容之上，不把下面的版面推開——邊打字邊跳動很難用 */
+.sres{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;
+max-height:60vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);
+border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.sres a{display:block;padding:11px 14px;text-decoration:none;color:var(--fg);
+border-top:1px solid var(--line)}
+.sres a:first-child{border-top:0}
+.sres a:hover,.sres a:focus{background:var(--card)}
+.sres .st{font-weight:700;font-size:15px;line-height:1.5}
+.sres .sc{font-size:12px;color:var(--mut);margin-left:8px;font-weight:400;
+white-space:nowrap}
+.sres .sx{font-size:13px;color:var(--mut);line-height:1.6;margin-top:3px}
+.sres mark{background:transparent;color:var(--accent);font-weight:700}
+.sres .snone{padding:14px;font-size:14px;color:var(--mut)}
 .howto{background:var(--card);border:1px solid var(--line);border-radius:12px;
 padding:13px 14px;margin:20px 0 6px;color:var(--mut)}
 .howto b{display:block;color:var(--fg);font-size:15.2px;margin-bottom:9px}
@@ -336,6 +358,13 @@ letter-spacing:.4px;line-height:1.5}
 這裡用一般人看得懂的方式，說明檢查數字代表什麼、哪些習慣真的有影響、哪些說法沒有根據。</p>
 <p class="cred">內容依據國際指引與期刊文獻撰寫，持續更新。
 <a href="/about.html">關於吳政哲醫師 →</a></p>
+
+<div class="ssearch">
+  <label class="svisually" for="sq">搜尋站內衛教內容</label>
+  <input id="sq" type="search" autocomplete="off" spellcheck="false"
+         placeholder="搜尋衛教內容，例如：蛋白尿、止痛藥、香蕉">
+  <div id="sres" class="sres" hidden></div>
+</div>
 
 <div class="howto">
 <b>這個網站怎麼用</b>
@@ -437,6 +466,90 @@ letter-spacing:.4px;line-height:1.5}
         document.body.removeChild(ta);
       }
     });
+  });
+})();
+</script>
+
+<script>
+(function(){
+  var box = document.getElementById('sq'), out = document.getElementById('sres');
+  if (!box || !out) return;
+  var idx = null, loading = null;
+
+  function load(){
+    if (idx) return Promise.resolve(idx);
+    if (!loading) loading = fetch('/search_index.json')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ idx = d; return d; })
+      .catch(function(){ idx = []; return idx; });
+    return loading;
+  }
+  box.addEventListener('focus', load, {once: true});
+
+  function esc(s){ return s.replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  /* 摘要從命中的位置往前後各取一段，讓使用者看得到關鍵字的上下文，
+     而不是永遠顯示開頭那句 */
+  function snippet(text, q){
+    var i = text.toLowerCase().indexOf(q);
+    if (i < 0) return esc(text.slice(0, 70));
+    var from = Math.max(0, i - 24), to = Math.min(text.length, i + q.length + 46);
+    return (from ? '…' : '') + esc(text.slice(from, i))
+         + '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>'
+         + esc(text.slice(i + q.length, to)) + (to < text.length ? '…' : '');
+  }
+
+  function run(){
+    var q = box.value.trim().toLowerCase();
+    if (q.length < 1) { out.hidden = true; out.innerHTML = ''; return; }
+    load().then(function(list){
+      var hits = [];
+      for (var i = 0; i < list.length && hits.length < 400; i++){
+        var e = list[i];
+        var ti = e.t.toLowerCase().indexOf(q);
+        var bi = ti >= 0 ? -1 : (e.b || '').toLowerCase().indexOf(q);
+        if (ti < 0 && bi < 0) continue;
+        /* 標題命中排前面：標題就是主題，內文命中可能只是順帶提到。
+           圖卡再往後 40：它是配圖，同樣命中時文字內容才是完整的答案。 */
+        var rank = (ti >= 0 ? ti : 1000 + bi) + (e.g ? 40 : 0);
+        hits.push({e: e, rank: rank});
+      }
+      hits.sort(function(a, b){ return a.rank - b.rank; });
+      if (!hits.length){
+        out.innerHTML = '<div class="snone">找不到「' + esc(box.value.trim())
+                      + '」。可以試試更短的關鍵字，例如「蛋白尿」而不是整句話。</div>';
+        out.hidden = false; return;
+      }
+      var html = '';
+      for (var j = 0; j < hits.length && j < 12; j++){
+        var e = hits[j].e;
+        html += '<a href="' + e.u + '"><div class="st">' + esc(e.t)
+              + '<span class="sc">' + esc(e.c) + '</span></div>'
+              + '<div class="sx">' + snippet(e.b || '', q) + '</div></a>';
+      }
+      if (hits.length > 12){
+        html += '<div class="snone">另有 ' + (hits.length - 12)
+              + ' 筆，輸入更完整的關鍵字可以縮小範圍。</div>';
+      }
+      out.innerHTML = html; out.hidden = false;
+    });
+  }
+
+  var timer = null;
+  box.addEventListener('input', function(){
+    clearTimeout(timer); timer = setTimeout(run, 120);   // 逐字比對會卡，稍等一下再跑
+  });
+  box.addEventListener('keydown', function(e){
+    if (e.key === 'Escape'){ box.value = ''; out.hidden = true; }
+    if (e.key === 'Enter'){
+      var first = out.querySelector('a');
+      if (first) location.href = first.getAttribute('href');
+    }
+  });
+  /* 點到結果以外的地方就收起來，但不要在點結果連結時收掉 */
+  document.addEventListener('click', function(e){
+    if (!out.contains(e.target) && e.target !== box) out.hidden = true;
   });
 })();
 </script>
