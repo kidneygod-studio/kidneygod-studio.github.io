@@ -282,9 +282,14 @@ font-size:1.02rem;line-height:1.55}
 .svisually{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
 white-space:nowrap}
 .ssearch input{width:100%;box-sizing:border-box;font:16px/1.5 inherit;
-padding:13px 16px;border-radius:12px;color:var(--fg);background:var(--card);
+padding:13px 16px 13px 44px;border-radius:12px;color:var(--fg);background:var(--card);
 border:1.5px solid var(--line);outline:none}
 .ssearch input:focus{border-color:var(--accent)}
+/* 放大鏡：純裝飾，pointer-events:none 才不會擋住點輸入框。
+   左邊留 44px 的內距就是為了讓字不會壓到圖示。 */
+.ssearch .sicon{position:absolute;left:15px;top:50%;transform:translateY(-50%);
+width:18px;height:18px;color:var(--mut);pointer-events:none}
+.ssearch input:focus ~ .sicon{color:var(--accent)}
 /* 結果浮在內容之上，不把下面的版面推開——邊打字邊跳動很難用 */
 .sres{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;
 max-height:60vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);
@@ -363,6 +368,10 @@ letter-spacing:.4px;line-height:1.5}
   <label class="svisually" for="sq">搜尋站內衛教內容</label>
   <input id="sq" type="search" autocomplete="off" spellcheck="false"
          placeholder="搜尋衛教內容，例如：蛋白尿、止痛藥、香蕉">
+  <!-- 放在 input 後面才能用 input:focus ~ .sicon 換色；位置靠 absolute 拉到左邊 -->
+  <svg class="sicon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>
   <div id="sres" class="sres" hidden></div>
 </div>
 
