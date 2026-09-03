@@ -87,8 +87,10 @@
   .htext{flex:1;text-align:center;}
   /* 衛教站首頁連結，與誠實橫幅同一排。標誌用衛教站深色模式的主色
      #5eead4（在 #0f0c0a 上對比 13.18），文字沿用橫幅本來的米色。
-     窄螢幕只留標誌：header 的 sticky top 寫死 34px，橫幅一換行就會對不齊，
-     所以這裡要盡量不增加寬度。 */
+     2026-09-03：這裡本來在窄螢幕只留圖示不顯示「護腎教室」四個字，是為了
+     省寬度（header 的 sticky top 寫死 34px，橫幅一換行就會對不齊）。同一天
+     把 header 的「回主頁」按鈕拿掉了，回衛教站首頁就只剩這一個入口——只留
+     一個看不出是什麼的圖示不合理，所以改成一律顯示文字，窄螢幕縮字級補回寬度。 */
   .hbrand{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;
           text-decoration:none;color:#e6d9c2;font-weight:700;}
   /* 光學補償：SVG 的腎臟圖形在 24 的畫布裡從 x=4.4 才開始，換算成顯示尺寸
@@ -96,7 +98,7 @@
      所以把標誌往左推 3px 讓「看得見的邊」對齊。 */
   .hbrand svg{color:#5eead4;flex-shrink:0;margin-left:-3px;}
   .hbrand:hover span{text-decoration:underline;}
-  @media(max-width:640px){ .hbrand span{display:none;} }
+  @media(max-width:640px){ .hbrand{font-size:12px;gap:4px;} }
 
   header{position:sticky;top:34px;z-index:50;background:rgba(23,18,16,.92);
          backdrop-filter:blur(8px);border-bottom:1px solid var(--edge);}
@@ -473,7 +475,6 @@
     <button class="hbtn coin" onclick="scrollGame()"><img class="ki" id="coinIco" alt=""><span id="coinBal">200</span> 腎元</button>
     <span class="hbreak" aria-hidden="true"></span>
     <button class="hbtn" id="fsBtn" onclick="cycleFontScale()">🔠 標準</button>
-    <a class="hbtn" href="./">回主頁</a>
     <a class="hbtn" href="library.html">收藏冊<span class="badge" id="libBadge">0</span></a>
     <button class="hbtn" onclick="openCart()">🛒<span class="badge" id="badge">0</span></button>
     <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()"><span id="loginLabel">登入</span></button>
