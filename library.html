@@ -103,6 +103,16 @@
             align-self:center;white-space:nowrap;}
   @media(max-width:860px){ .homehint{display:none;} }
   .spacer{flex:1;}
+  /* 在「標準」之前強制斷行：腎元靠右留在第一排，其餘按鈕整排排在第二排。
+     作法與卡片區、遊戲場同一套——塞一個寬度 100%、零高度的 flex 項目，
+     後面的東西就被推到下一排。窄螢幕直式也要斷，不然「標準」會孤零零
+     留在第一排。桌機寬度夠、整列本來就排得下，所以桌機不啟用。
+     橫放那條用 max-height 而不是只看 orientation：桌機視窗拉寬也是 landscape，
+     但高度遠大於 500px，不該被這條規則影響。 */
+  .hbreak{display:none;}
+  @media (max-width:640px), (orientation:landscape) and (max-height:500px){
+    .hbreak{display:block;width:100%;height:0;}
+  }
   .hbtn{font-size:13.5px;font-weight:700;background:var(--card2);color:var(--ink);
         border:2px solid var(--edge);border-radius:99px;padding:7px 14px;
         white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;}
@@ -244,10 +254,11 @@
     <span class="homehint">← 點標誌回首頁</span>
     <div class="spacer"></div>
     <span class="hbtn coin"><img class="ki" id="coinIco" alt=""><span id="coinBal">200</span> 腎元</span>
+    <span class="hbreak" aria-hidden="true"></span>
     <button class="hbtn" id="fsBtn" onclick="cycleFontScale()">🔠 標準</button>
-    <a class="hbtn" href="shop.html">🛒 回卡片區</a>
-    <a class="hbtn" href="game.html">🎮 遊戲場</a>
-    <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()">☁️ <span id="loginLabel">登入</span></button>
+    <a class="hbtn" href="shop.html">回卡片區</a>
+    <a class="hbtn" href="game.html">遊戲場</a>
+    <button class="hbtn" id="loginBtn" style="display:none" onclick="openAccount()"><span id="loginLabel">登入</span></button>
   </div>
 </header>
 
