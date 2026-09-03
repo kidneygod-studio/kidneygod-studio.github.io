@@ -267,6 +267,7 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "cholesterol-report-ckd": ["kdigo_lipid", "aha_lipid", "tsoc"],
     "kidney-lifestyle-evidence": ["kdigo_ckd", "hpa_kidney", "niddk"],
     "kidney-replacement-therapy": ["kdigo_ckd", "tsn", "niddk"],
+    "dialysis-access-preparation": ["kdigo_ckd", "tsn", "niddk"],
 }
 
 
