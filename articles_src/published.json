@@ -10,5 +10,6 @@
   "cholesterol-report-ckd": "2026-09-01",
   "kidney-lifestyle-evidence": "2026-09-01",
   "kidney-replacement-therapy": "2026-09-03",
-  "dialysis-access-preparation": "2026-09-03"
+  "dialysis-access-preparation": "2026-09-03",
+  "no-dialysis-therapy-claims": "2026-09-03"
 }

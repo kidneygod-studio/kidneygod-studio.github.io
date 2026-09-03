@@ -268,6 +268,7 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "kidney-lifestyle-evidence": ["kdigo_ckd", "hpa_kidney", "niddk"],
     "kidney-replacement-therapy": ["kdigo_ckd", "tsn", "niddk"],
     "dialysis-access-preparation": ["kdigo_ckd", "tsn", "niddk"],
+    "no-dialysis-therapy-claims": ["kdigo_ckd", "tsn", "hpa_kidney"],
 }
 
 
