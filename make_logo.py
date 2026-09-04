@@ -1,5 +1,16 @@
 # -*- coding: utf-8 -*-
-"""把 logo 原圖去背，輸出網頁用的 PNG。
+"""把 logo 原圖去背輸出 logo.png，另外輸出保留白底的 logo-white.png。
+
+兩個輸出的用途不同：
+  logo.png        去背，給深色頁首與深色卡片用（浮在背景上）
+  logo-white.png  保留原圖白底，給首頁的遊戲入口用（作者指定要原始那張）
+
+⚠ 預設「只」輸出 logo-white.png，要覆寫 logo.png 必須明確加 --logo。
+   原因：倉庫裡的 logo.png 是 2026-08-27 手動放進去的，和這支腳本現在算出來的
+   結果不一樣（684×370 vs 684×375，平均像素差 41/255）。2026-09-04 為了產白底版
+   跑了一次這支，全站頁首的標誌就被悄悄換掉了，而且不會有任何錯誤訊息——
+   正是本檔開頭一直在警告的那類事故。要重產 logo.png 請先確認你真的想換。
+
 
 不能用「夠白就設成透明」那種門檻法 —— 護腎教室這四個字本身就是白色的，
 會被整個挖空。改成從畫布邊緣做 flood fill：只有「與邊緣連通的白」才算
@@ -23,6 +34,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 # 頁首的標誌就會被悄悄換回不存在的舊網域，而且不會有任何錯誤訊息。
 SRC = r"C:\Users\user\Downloads\kidneygod.png"
 OUT = "logo.png"
+OUT_WHITE = "logo-white.png"     # 保留白底的版本，首頁遊戲入口用
 FLOOD_T = 215      # 這個亮度以上、且與邊緣連通者視為背景
 FADE_LO = 215      # alpha 漸變的下限（比這暗就是完全不透明）
 MAX_W = 684        # 與倉庫現有的 logo.png 同寬。頁首顯示約 100–160px，
@@ -62,13 +74,27 @@ def main():
     if rgba.width > MAX_W:
         rgba = rgba.resize((MAX_W, round(rgba.height * MAX_W / rgba.width)),
                            Image.LANCZOS)
-    # 光暈是平滑漸層，量化到 200 色看不出色階，但體積差一個量級（169→25 KB）
-    rgba.quantize(colors=200, method=Image.FASTOCTREE).save(OUT, optimize=True)
+    write_logo = "--logo" in sys.argv
+    if write_logo:
+        # 光暈是平滑漸層，量化到 200 色看不出色階，但體積差一個量級（169→25 KB）
+        rgba.quantize(colors=200, method=Image.FASTOCTREE).save(OUT, optimize=True)
+    else:
+        print(f"（略過 {OUT}：倉庫裡那份是手動放的，要覆寫請加 --logo）")
+
+    # 白底版：用同一個裁切框裁原圖，不去背。裁切框是從 alpha 算出來的內容範圍，
+    # 所以兩份的構圖一致——換成白底版時位置不會偏掉。
+    white = im.crop(box)
+    if white.width > MAX_W:
+        white = white.resize((MAX_W, round(white.height * MAX_W / white.width)),
+                             Image.LANCZOS)
+    white.quantize(colors=200, method=Image.FASTOCTREE).save(OUT_WHITE, optimize=True)
 
     # 把實際尺寸同步進 <img> 的 width/height，否則裁切一改就對不上，
     # 這兩個屬性是用來預留版面、避免載入時跳動的，寫錯等於沒寫。
+    # 只有真的重產了 logo.png 才需要同步——沒重產卻改 HTML 的話，
+    # 會把尺寸改成「這支腳本算出來的」而不是「檔案實際的」，反而弄錯。
     import re
-    for page in ("index.html", "game.html"):
+    for page in ("index.html", "game.html") if write_logo else ():
         if not os.path.exists(page):
             continue
         s = open(page, encoding="utf-8").read()
@@ -78,8 +104,12 @@ def main():
             open(page, "w", encoding="utf-8").write(s2)
             print(f"  已同步 {page} 的 width/height")
 
-    print(f"{OUT}  {rgba.size}  {os.path.getsize(OUT)//1024} KB"
-          f"  比例 {rgba.width/rgba.height:.2f}")
+    if write_logo:
+        print(f"{OUT}        {rgba.size}  {os.path.getsize(OUT)//1024} KB"
+              f"  比例 {rgba.width/rgba.height:.2f}")
+    print(f"{OUT_WHITE}  {white.size}  {os.path.getsize(OUT_WHITE)//1024} KB"
+          f"  比例 {white.width/white.height:.2f}")
+    print("改圖後記得跑 bump_assets.py（圖片走快取優先，網址不帶 ?v=）")
 
 
 if __name__ == "__main__":

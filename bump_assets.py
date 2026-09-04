@@ -27,8 +27,8 @@ PAGES = ("shop.html", "game.html", "library.html", "dash.html")
 #
 # food_db.json 同理：它是 .json，在 sw.js 裡也走快取優先，而且網址沒有 ?v=。
 # 更新營養資料卻不換 VERSION 的話，造訪過的人會一直拿到舊的成分數值。
-HASH_ONLY = ("index.html", "logo.png", "doctor.jpg", "apple-touch-icon.png",
-             "food_db.json", "search_index.json")
+HASH_ONLY = ("index.html", "logo.png", "logo-white.png", "doctor.jpg",
+             "apple-touch-icon.png", "food_db.json", "search_index.json")
 
 # 整個目錄都要計入雜湊的。知識卡圖片是 sw.js 快取優先、網址又不帶 ?v=，
 # 換了圖卻沒換 VERSION 的話，看過那張卡的人會永遠停在舊圖上而且毫無錯誤訊息。

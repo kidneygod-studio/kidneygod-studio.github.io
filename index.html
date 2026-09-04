@@ -382,8 +382,10 @@ background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent)
 animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
-/* 標誌是橫幅比例，固定高度、寬度自動才不會被壓扁。 */
-.gamebtn img{height:132px;width:auto;max-width:100%}
+/* 標誌是橫幅比例，固定高度、寬度自動才不會被壓扁。
+   這裡放的是白底原圖，直角白方塊貼在深色卡片上會像貼紙，
+   加圓角讓它看起來是刻意擺上去的一張圖。 */
+.gamebtn img{height:132px;width:auto;max-width:100%;border-radius:10px}
 .gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
 letter-spacing:.4px;line-height:1.5}
 @media(max-width:560px){
@@ -455,7 +457,7 @@ letter-spacing:.4px;line-height:1.5}
 <h2 class="sect" id="play">從免費遊戲學習</h2>
 <div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
 <a class="gamebtn" href="/shop.html">
-  <img src="/logo.png" alt="" aria-hidden="true" width="684" height="370">
+  <img src="/logo-white.png" alt="" aria-hidden="true" width="684" height="375">
   <span class="cap">護腎知識卡片收集遊戲</span>
 </a>
 

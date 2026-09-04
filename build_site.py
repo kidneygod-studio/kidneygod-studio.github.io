@@ -900,8 +900,10 @@ background:linear-gradient(100deg,transparent,rgba(255,240,200,.16),transparent)
 animation:sheen 4.5s ease-in-out infinite}
 @keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.gamebtn::after{animation:none}}
-/* 標誌是橫幅比例，固定高度、寬度自動才不會被壓扁。 */
-.gamebtn img{height:132px;width:auto;max-width:100%}
+/* 標誌是橫幅比例，固定高度、寬度自動才不會被壓扁。
+   這裡放的是白底原圖，直角白方塊貼在深色卡片上會像貼紙，
+   加圓角讓它看起來是刻意擺上去的一張圖。 */
+.gamebtn img{height:132px;width:auto;max-width:100%;border-radius:10px}
 .gamebtn .cap{font-size:1.16rem;font-weight:800;color:#e8c65a;
 letter-spacing:.4px;line-height:1.5}
 @media(max-width:560px){
@@ -1485,8 +1487,9 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
                  f'<div class="mag">{feats}</div>'
                  if feats else "")
 
-    # 直接讀 logo 實際尺寸，換圖時不必再手改寫死的數字（換過一次比例就變了）
-    lw = img_size(ROOT / "logo.png")
+    # 遊戲入口用白底原圖（作者指定），不是頁首那張去背的 logo.png。
+    # 直接讀實際尺寸，換圖時不必再手改寫死的數字（換過一次比例就變了）
+    lw = img_size(ROOT / "logo-white.png")
     logo_dims = f' width="{lw[0]}" height="{lw[1]}"' if lw else ""
 
     # 食物查詢：唯一的工具型內容，值得一個獨立入口。沒有 food_db.json 時整段消失。
@@ -1570,7 +1573,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 <h2 class="sect" id="play">從免費遊戲學習</h2>
 <div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
 <a class="gamebtn" href="/shop.html">
-  <img src="/logo.png" alt="" aria-hidden="true"{logo_dims}>
+  <img src="/logo-white.png" alt="" aria-hidden="true"{logo_dims}>
   <span class="cap">護腎知識卡片收集遊戲</span>
 </a>
 """
