@@ -331,7 +331,12 @@ margin-top:14px}
 border:1px solid var(--line);border-radius:14px;overflow:hidden;
 transition:border-color .15s,transform .15s}
 .mcard:hover{border-color:var(--accent);transform:translateY(-2px)}
-.mcard img,.mcard .mph{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+/* height:auto 不能省。<img> 的 width/height 屬性會變成 CSS 呈現屬性
+   （這裡是 height:900px），只覆寫 width 的話 aspect-ratio 會被那個高度壓過去，
+   封面就變成 679x900 的巨大方塊。而且佔位塊是 <div>、沒有 height 屬性，
+   所以「還沒放圖」的階段完全看不出來——2026-09-04 放圖上線才發現。 */
+.mcard img,.mcard .mph{width:100%;height:auto;aspect-ratio:16/9;
+object-fit:cover;display:block}
 .mcard .mph{background:linear-gradient(135deg,var(--card) 0%,var(--line) 100%);
 display:flex;align-items:center;justify-content:center}
 .mcard .mph span{font-size:13px;font-weight:700;color:var(--mut);letter-spacing:2px}
