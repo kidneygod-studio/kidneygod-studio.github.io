@@ -537,12 +537,12 @@ KIDNEY_SVG = (
 
 CSS = """
 :root{--bg:#fdfcfa;--fg:#22201d;--mut:#5a544b;--line:#e6e1d8;--card:#f6f3ed;
---accent:#0f766e;--accent2:#0d5f59;--warn:#8a5a00;--maxw:720px}
+--accent:#0f766e;--accent2:#0d5f59;--link:#0d5f59;--warn:#8a5a00;--maxw:720px}
 /* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
---line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--warn:#fbbf24}}
+--line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--link:#5eead4;--warn:#fbbf24}}
 :root[data-theme="dark"]{--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
---line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--warn:#fbbf24}
+--line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--link:#5eead4;--warn:#fbbf24}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
@@ -686,10 +686,13 @@ p{margin:0 0 18px}
    7.32 / 6.78。連結是要讀的文字，對中高齡讀者該往 AAA 的 7 靠。
    按鈕、邊框、h2 錨點那些不是拿來讀的，維持原本的品牌青，外觀不變。
    深色模式的連結本來就有 12.4，不需要動，所以把它還原成 --accent。 */
-a{color:var(--accent2)}
-/* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) a{color:var(--accent)}}
-:root[data-theme="dark"] a{color:var(--accent)}
+/* 連結色走 --link 這個變數，不要用 :root[data-theme=dark] a{} 去覆蓋。
+   那種寫法的特異度是 (0,1,1)，會壓過所有「元件自己設定文字色」的 .xxx 規則
+   ——2026-09-05 深色模式下的分享按鈕就是這樣被染成主色青的：
+   .sb{color:var(--fg)} 只有 (0,1,0)，是 <a> 的那幾顆全被蓋掉，
+   是 <button> 的沒事，於是四顆變成兩種顏色。
+   換成變數之後 a 規則維持 (0,0,1)，切主題靠色票本身，不再影響任何元件。 */
+a{color:var(--link)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:15px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 /* 衛教文章頁的「常見問題」：只有問句與連結，答案在點進去的那篇長文裡。

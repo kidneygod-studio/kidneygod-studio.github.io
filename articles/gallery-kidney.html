@@ -19,12 +19,12 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
 :root{--bg:#fdfcfa;--fg:#22201d;--mut:#5a544b;--line:#e6e1d8;--card:#f6f3ed;
---accent:#0f766e;--accent2:#0d5f59;--warn:#8a5a00;--maxw:720px}
+--accent:#0f766e;--accent2:#0d5f59;--link:#0d5f59;--warn:#8a5a00;--maxw:720px}
 /* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
---line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--warn:#fbbf24}}
+--line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--link:#5eead4;--warn:#fbbf24}}
 :root[data-theme="dark"]{--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
---line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--warn:#fbbf24}
+--line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--link:#5eead4;--warn:#fbbf24}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
@@ -168,10 +168,13 @@ p{margin:0 0 18px}
    7.32 / 6.78。連結是要讀的文字，對中高齡讀者該往 AAA 的 7 靠。
    按鈕、邊框、h2 錨點那些不是拿來讀的，維持原本的品牌青，外觀不變。
    深色模式的連結本來就有 12.4，不需要動，所以把它還原成 --accent。 */
-a{color:var(--accent2)}
-/* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) a{color:var(--accent)}}
-:root[data-theme="dark"] a{color:var(--accent)}
+/* 連結色走 --link 這個變數，不要用 :root[data-theme=dark] a{} 去覆蓋。
+   那種寫法的特異度是 (0,1,1)，會壓過所有「元件自己設定文字色」的 .xxx 規則
+   ——2026-09-05 深色模式下的分享按鈕就是這樣被染成主色青的：
+   .sb{color:var(--fg)} 只有 (0,1,0)，是 <a> 的那幾顆全被蓋掉，
+   是 <button> 的沒事，於是四顆變成兩種顏色。
+   換成變數之後 a 規則維持 (0,0,1)，切主題靠色票本身，不再影響任何元件。 */
+a{color:var(--link)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:15px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 /* 衛教文章頁的「常見問題」：只有問句與連結，答案在點進去的那篇長文裡。
@@ -523,7 +526,7 @@ letter-spacing:.4px;line-height:1.5}
   .gamebtn .cap{font-size:1.06rem}
 }
 </style><script>try{var _S=[1,1.2,1.45],_i=Math.min(2,Math.max(0,+localStorage.msd_fs||0)),_d=document.documentElement;_d.style.setProperty('--fs',_S[_i]);_d.style.setProperty('--fsi',1/_S[_i]);var _t=localStorage.kg_theme;if(_t==='light'||_t==='dark')_d.setAttribute('data-theme',_t)}catch(e){}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ImageGallery", "name": "腎臟健康教室", "description": "吳政哲醫師的「腎臟健康教室」系列（Day 1–30）共 30 張衛教圖解，內容包含：認識代謝症候群五項指標與腎臟風險、控制血壓是延緩腎臟病惡化的關鍵、血糖管理與腎病變：HbA1c 控制目標 等。", "inLanguage": "zh-Hant", "url": "https://kidneygod.net/articles/gallery-kidney.html", "dateModified": "2026-09-04", "numberOfItems": 30, "author": {"@type": "Physician", "@id": "https://kidneygod.net/about.html#author", "name": "吳政哲", "jobTitle": "腎臟科醫師", "url": "https://kidneygod.net/about.html", "medicalSpecialty": ["Nephrologic", "InternalMedicine"], "hasCredential": [{"@type": "EducationalOccupationalCredential", "credentialCategory": "專科醫師證書", "name": "腎臟科專科醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "專科醫師證書", "name": "內科專科醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "認證", "name": "戒菸治療醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "認證", "name": "糖尿病共同照護網醫師"}], "worksFor": {"@type": "Hospital", "name": "郭綜合醫院", "department": {"@type": "MedicalOrganization", "name": "腎臟內科"}}, "alumniOf": {"@type": "CollegeOrUniversity", "name": "國立成功大學醫學系"}, "memberOf": [{"@type": "Organization", "name": "台灣慢性腎臟病臨床診療指引編撰委員會"}, {"@type": "MedicalOrganization", "name": "台灣腎臟醫學會"}, {"@type": "MedicalOrganization", "name": "美國腎臟醫學會", "alternateName": "American Society of Nephrology"}], "sameAs": ["https://www.threads.com/@kidney.godreborn", "https://www.instagram.com/kidney.god/", "https://www.instagram.com/kidney.godreborn/", "https://www.facebook.com/kidneygod"]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ImageGallery", "name": "腎臟健康教室", "description": "吳政哲醫師的「腎臟健康教室」系列（Day 1–30）共 30 張衛教圖解，內容包含：認識代謝症候群五項指標與腎臟風險、控制血壓是延緩腎臟病惡化的關鍵、血糖管理與腎病變：HbA1c 控制目標 等。", "inLanguage": "zh-Hant", "url": "https://kidneygod.net/articles/gallery-kidney.html", "dateModified": "2026-09-05", "numberOfItems": 30, "author": {"@type": "Physician", "@id": "https://kidneygod.net/about.html#author", "name": "吳政哲", "jobTitle": "腎臟科醫師", "url": "https://kidneygod.net/about.html", "medicalSpecialty": ["Nephrologic", "InternalMedicine"], "hasCredential": [{"@type": "EducationalOccupationalCredential", "credentialCategory": "專科醫師證書", "name": "腎臟科專科醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "專科醫師證書", "name": "內科專科醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "認證", "name": "戒菸治療醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "認證", "name": "糖尿病共同照護網醫師"}], "worksFor": {"@type": "Hospital", "name": "郭綜合醫院", "department": {"@type": "MedicalOrganization", "name": "腎臟內科"}}, "alumniOf": {"@type": "CollegeOrUniversity", "name": "國立成功大學醫學系"}, "memberOf": [{"@type": "Organization", "name": "台灣慢性腎臟病臨床診療指引編撰委員會"}, {"@type": "MedicalOrganization", "name": "台灣腎臟醫學會"}, {"@type": "MedicalOrganization", "name": "美國腎臟醫學會", "alternateName": "American Society of Nephrology"}], "sameAs": ["https://www.threads.com/@kidney.godreborn", "https://www.instagram.com/kidney.god/", "https://www.instagram.com/kidney.godreborn/", "https://www.facebook.com/kidneygod"]}}</script>
 </head>
 <body>
 <header class="site"><div class="wrap">
@@ -538,7 +541,7 @@ letter-spacing:.4px;line-height:1.5}
 <p class="lede">最早的一輪護腎衛教，從最基本的觀念開始，一天一個主題。以下 30 張圖卡原本發表在社群上，
 依 Day 順序整理，並附上每張圖當初的完整說明文字。點圖片可看大圖。</p>
 <p class="meta">作者：<a href="/about.html">吳政哲</a>（腎臟科醫師）
-　·　共 30 張（Day 1–30）　·　更新於 2026-09-04</p>
+　·　共 30 張（Day 1–30）　·　更新於 2026-09-05</p>
 <div class="galnav"><a href="/articles/gallery.html">← 全部系列</a>
 <a href="/articles/">依主題閱讀 →</a></div>
 <div class="galcard" id="g-17955075309132469_0"><a class="shot" href="/gallery/17955075309132469_0.jpg" target="_blank" rel="noopener"><img src="/gallery/thumb/17955075309132469_0.jpg" alt="認識代謝症候群五項指標與腎臟風險" loading="lazy" width="360" height="360"></a><div><h3><span class="day">Day 1</span>認識代謝症候群五項指標與腎臟風險</h3><p class="post">代謝症候群是三高、心血管疾病、慢性腎臟病的主要原因之一。
@@ -762,7 +765,7 @@ AHA (Life’s Essential 8) / JASN
   <div>
     <div class="n"><a href="/about.html">吳政哲</a>　<span class="r">腎臟科醫師</span></div>
     <div>腎臟科專科醫師，臨床工作以三高、慢性腎臟病與血液透析／腹膜透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
-    <div class="rev">本頁內容最後由吳政哲醫師審閱於 2026-09-04　·　<a href="/about.html">完整資歷與撰寫原則</a></div>
+    <div class="rev">本頁內容最後由吳政哲醫師審閱於 2026-09-05　·　<a href="/about.html">完整資歷與撰寫原則</a></div>
   </div>
 </div>
 <div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
@@ -837,7 +840,7 @@ AHA (Life’s Essential 8) / JASN
 </script>
 </main>
 <footer class="site"><div class="wrap">
-<p>護腎教室　·　最後更新 2026-09-04　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<p>護腎教室　·　最後更新 2026-09-05　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
 <!-- 用途說明跟著信箱一起出現。信箱會出現在每一頁，但完整的界線說明只在
      簡介頁，所以這裡帶一句最關鍵的，並連到完整版。 -->
 <p class="fcontact"><a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a>

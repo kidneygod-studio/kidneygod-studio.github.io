@@ -19,12 +19,12 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
 :root{--bg:#fdfcfa;--fg:#22201d;--mut:#5a544b;--line:#e6e1d8;--card:#f6f3ed;
---accent:#0f766e;--accent2:#0d5f59;--warn:#8a5a00;--maxw:720px}
+--accent:#0f766e;--accent2:#0d5f59;--link:#0d5f59;--warn:#8a5a00;--maxw:720px}
 /* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
---line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--warn:#fbbf24}}
+--line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--link:#5eead4;--warn:#fbbf24}}
 :root[data-theme="dark"]{--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
---line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--warn:#fbbf24}
+--line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--link:#5eead4;--warn:#fbbf24}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
@@ -168,10 +168,13 @@ p{margin:0 0 18px}
    7.32 / 6.78。連結是要讀的文字，對中高齡讀者該往 AAA 的 7 靠。
    按鈕、邊框、h2 錨點那些不是拿來讀的，維持原本的品牌青，外觀不變。
    深色模式的連結本來就有 12.4，不需要動，所以把它還原成 --accent。 */
-a{color:var(--accent2)}
-/* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) a{color:var(--accent)}}
-:root[data-theme="dark"] a{color:var(--accent)}
+/* 連結色走 --link 這個變數，不要用 :root[data-theme=dark] a{} 去覆蓋。
+   那種寫法的特異度是 (0,1,1)，會壓過所有「元件自己設定文字色」的 .xxx 規則
+   ——2026-09-05 深色模式下的分享按鈕就是這樣被染成主色青的：
+   .sb{color:var(--fg)} 只有 (0,1,0)，是 <a> 的那幾顆全被蓋掉，
+   是 <button> 的沒事，於是四顆變成兩種顏色。
+   換成變數之後 a 規則維持 (0,0,1)，切主題靠色票本身，不再影響任何元件。 */
+a{color:var(--link)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:15px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 /* 衛教文章頁的「常見問題」：只有問句與連結，答案在點進去的那篇長文裡。
@@ -595,7 +598,7 @@ letter-spacing:.4px;line-height:1.5}
   <div>
     <div class="n"><a href="/about.html">吳政哲</a>　<span class="r">腎臟科醫師</span></div>
     <div>腎臟科專科醫師，臨床工作以三高、慢性腎臟病與血液透析／腹膜透析為主。在這裡整理腎臟與三高相關的衛教內容，內容依據國際指引與期刊文獻，並持續更新。</div>
-    <div class="rev">本頁內容最後由吳政哲醫師審閱於 2026-09-04　·　<a href="/about.html">完整資歷與撰寫原則</a></div>
+    <div class="rev">本頁內容最後由吳政哲醫師審閱於 2026-09-05　·　<a href="/about.html">完整資歷與撰寫原則</a></div>
   </div>
 </div>
 <div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
@@ -817,7 +820,7 @@ letter-spacing:.4px;line-height:1.5}
 </script>
 </main>
 <footer class="site"><div class="wrap wide">
-<p>護腎教室　·　最後更新 2026-09-04　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<p>護腎教室　·　最後更新 2026-09-05　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
 <!-- 用途說明跟著信箱一起出現。信箱會出現在每一頁，但完整的界線說明只在
      簡介頁，所以這裡帶一句最關鍵的，並連到完整版。 -->
 <p class="fcontact"><a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a>
