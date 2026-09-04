@@ -545,6 +545,17 @@ body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
 -webkit-text-size-adjust:100%}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+/* 寬螢幕：卡片格線為主的匯總頁放寬，段落文字仍鎖在易讀寬度。
+   門檻 1140 = 1060 內容 + 左右各 40 的呼吸空間；不到這個寬度放寬沒有意義。
+   .hero 的說明、.lede、.sd、搜尋框都是「一行一行讀的東西」，維持 --maxw；
+   只有 .cats／.mag／.hgrid／.galgroup 這些格線吃得到多出來的寬度。 */
+@media(min-width:1140px){
+  .wrap.wide{max-width:1060px}
+  .wrap.wide .lede,.wrap.wide .sd,.wrap.wide .hero .sub,
+  .wrap.wide .hero .cred,.wrap.wide .ssearch,.wrap.wide .meta,
+  .wrap.wide .disclaimer,.wrap.wide .author{max-width:var(--maxw)}
+  .wrap.wide .hgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
 /* 錨點跳轉時要扣掉固定頁首的高度，否則標題會被壓在頁首下面。
    頁首約 60px，再加一點餘裕才不會貼著邊。 */
 html{scroll-padding-top:78px}
@@ -761,7 +772,11 @@ gap:12px;margin-bottom:12px}
 .galcard .day{display:inline-block;font-size:12px;font-weight:700;color:var(--accent2);
 background:var(--card);border:1px solid var(--line);border-radius:6px;
 padding:1px 7px;margin-right:8px;vertical-align:2px}
-.gg-prev{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+/* minmax(0,1fr) 不能寫成 1fr：1fr 的最小值是 auto，而圖片的最小內容寬度
+   就是它的原始寬度，格線因此縮不到比圖還窄——整頁在手機上被撐開，
+   320px 時實測橫向溢出 883px。把最小值鎖成 0 才會真的等分。
+   2026-09-04 用逐頁逐寬度掃描才發現，肉眼在桌機上完全看不出來。 */
+.gg-prev{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .gg-prev img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;
 border-radius:7px;display:block;border:1px solid var(--line)}
 @media(max-width:640px){
@@ -965,6 +980,17 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     og_slug = re.sub(r"[^a-z0-9]+", "-",
                      path.replace(".html", "").replace("/", "-")).strip("-") or "index"
 
+    # 以格線為主的匯總頁在寬螢幕放寬到 1060px；長文與分類頁維持 720px。
+    #
+    # 不是全站一起放寬：720px 在 17px 字級下一行約 40 個中文字，正好落在
+    # 易讀的區間；放寬到 1060 會變成一行約 60 字，眼睛回到行首時容易跳行。
+    # 但匯總頁的主體是卡片格線，格線在寬螢幕上多排幾欄純粹是賺到——
+    # 1440px 螢幕上內容原本只佔 50%，其餘都是空白。
+    # 首頁的 path 是空字串（canonical 要 https://kidneygod.net/ 而不是 /index.html），
+    # 所以兩種寫法都要列，只寫 index.html 首頁會漏掉。
+    WIDE_PAGES = {"", "index.html", "articles/index.html", "articles/gallery.html"}
+    wide_cls = " wide" if path in WIDE_PAGES else ""
+
     # 目前所在區塊要標示出來，讀者才知道自己在哪一層
     in_gallery = "gallery" in path
     in_articles = path.startswith("articles/") and not in_gallery
@@ -1030,7 +1056,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <a class="brand" href="/">{KIDNEY_SVG}<span>{SITE_NAME}</span></a>
 <nav>{nav}</nav>
 </div></header>
-<main class="wrap">
+<main class="wrap{wide_cls}">
 {body}
 <div class="author">
   <div>

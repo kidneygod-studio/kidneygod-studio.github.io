@@ -27,6 +27,17 @@ body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
 -webkit-text-size-adjust:100%}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+/* 寬螢幕：卡片格線為主的匯總頁放寬，段落文字仍鎖在易讀寬度。
+   門檻 1140 = 1060 內容 + 左右各 40 的呼吸空間；不到這個寬度放寬沒有意義。
+   .hero 的說明、.lede、.sd、搜尋框都是「一行一行讀的東西」，維持 --maxw；
+   只有 .cats／.mag／.hgrid／.galgroup 這些格線吃得到多出來的寬度。 */
+@media(min-width:1140px){
+  .wrap.wide{max-width:1060px}
+  .wrap.wide .lede,.wrap.wide .sd,.wrap.wide .hero .sub,
+  .wrap.wide .hero .cred,.wrap.wide .ssearch,.wrap.wide .meta,
+  .wrap.wide .disclaimer,.wrap.wide .author{max-width:var(--maxw)}
+  .wrap.wide .hgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
 /* 錨點跳轉時要扣掉固定頁首的高度，否則標題會被壓在頁首下面。
    頁首約 60px，再加一點餘裕才不會貼著邊。 */
 html{scroll-padding-top:78px}
@@ -243,7 +254,11 @@ gap:12px;margin-bottom:12px}
 .galcard .day{display:inline-block;font-size:12px;font-weight:700;color:var(--accent2);
 background:var(--card);border:1px solid var(--line);border-radius:6px;
 padding:1px 7px;margin-right:8px;vertical-align:2px}
-.gg-prev{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+/* minmax(0,1fr) 不能寫成 1fr：1fr 的最小值是 auto，而圖片的最小內容寬度
+   就是它的原始寬度，格線因此縮不到比圖還窄——整頁在手機上被撐開，
+   320px 時實測橫向溢出 883px。把最小值鎖成 0 才會真的等分。
+   2026-09-04 用逐頁逐寬度掃描才發現，肉眼在桌機上完全看不出來。 */
+.gg-prev{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .gg-prev img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;
 border-radius:7px;display:block;border:1px solid var(--line)}
 @media(max-width:640px){
@@ -418,7 +433,7 @@ letter-spacing:.4px;line-height:1.5}
 <a class="brand" href="/"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true"><path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 4.6 13.6 4.6Z"/></svg><span>護腎教室</span></a>
 <nav><a href="/articles/" aria-current="page"><span class="np">衛教</span>文章</a><a href="/articles/gallery.html"><span class="np">衛教</span>圖卡</a><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
 </div></header>
-<main class="wrap">
+<main class="wrap wide">
 
 <h1>腎臟與三高衛教文章</h1>
 <p class="lede">這裡整理慢性腎臟病、高血壓、糖尿病與高血脂相關的衛教內容，
