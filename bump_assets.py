@@ -33,7 +33,9 @@ HASH_ONLY = ("index.html", "logo.png", "doctor.jpg", "apple-touch-icon.png",
 # 整個目錄都要計入雜湊的。知識卡圖片是 sw.js 快取優先、網址又不帶 ?v=，
 # 換了圖卻沒換 VERSION 的話，看過那張卡的人會永遠停在舊圖上而且毫無錯誤訊息。
 # 2026-08-31 換上 40 張新插圖時發現這裡漏了 cards/gi。
-HASH_DIRS = ("cards/gi",)
+# hero/ 是首頁「深入文章」的雜誌式大圖，同樣是快取優先、網址不帶 ?v=。
+# 2026-09-04 新增這一層時就一併列入，不要等踩到才補。
+HASH_DIRS = ("cards/gi", "hero")
 
 
 def main():

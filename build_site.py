@@ -770,9 +770,14 @@ border-radius:14px;display:block;box-shadow:0 10px 30px rgba(0,0,0,.16)}
 color:var(--accent2)}
 .docname small{display:block;font-size:.95rem;font-weight:600;color:var(--mut);
 letter-spacing:0;margin-bottom:4px}
+/* 資歷分組：組名用小字級的全寬標籤，不搶項目本身的視線 */
+.credgrp + .credgrp{margin-top:18px}
+.credgrp h3{font-size:.82rem;font-weight:700;letter-spacing:1.5px;color:var(--mut);
+margin:0 0 9px;padding-bottom:6px;border-bottom:1px solid var(--line)}
 .doccred{list-style:none;padding:0;margin:0}
-.doccred li{display:flex;align-items:flex-start;gap:11px;margin:0 0 13px;
+.doccred li{display:flex;align-items:flex-start;gap:11px;margin:0 0 9px;
 font-size:1.02rem;line-height:1.55}
+.doccred li:last-child{margin-bottom:0}
 .doccred svg{flex-shrink:0;margin-top:2px}
 .doccred li.key{font-weight:700}
 @media(max-width:720px){
@@ -834,6 +839,35 @@ border:1px solid var(--line);border-left:3px solid var(--accent)}
 .htile .hgo{font-size:15px;font-weight:700;color:var(--fg);line-height:1.45}
 /* 六格剛好排滿三列，不需要讓最後一格獨佔整列。
    （若日後項目數變成奇數，再把 .htile:last-child{grid-column:1/-1} 加回來） */
+/* ── 深入文章的雜誌式陳列 ──
+   每篇一張大圖（hero/<slug>.jpg），第一篇佔滿整排當封面。
+   圖片是人工放進來的，缺圖時用同尺寸的漸層佔位塊，格線才不會塌。
+   aspect-ratio 固定＋img 有 width/height，載入時不會位移（CLS）。 */
+.mag{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));
+margin-top:14px}
+.mcard{display:block;text-decoration:none;color:inherit;background:var(--card);
+border:1px solid var(--line);border-radius:14px;overflow:hidden;
+transition:border-color .15s,transform .15s}
+.mcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+.mcard img,.mcard .mph{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.mcard .mph{background:linear-gradient(135deg,var(--card) 0%,var(--line) 100%);
+display:flex;align-items:center;justify-content:center}
+.mcard .mph span{font-size:13px;font-weight:700;color:var(--mut);letter-spacing:2px}
+.mcard .b{padding:13px 15px 16px}
+.mcard .k{font-size:11.5px;font-weight:700;color:var(--accent);letter-spacing:1.2px;
+margin-bottom:6px}
+.mcard .t{font-weight:700;font-size:1.02rem;line-height:1.5;margin-bottom:5px}
+.mcard .d{font-size:13.5px;color:var(--mut);line-height:1.65}
+.mag .mcard.cover{grid-column:1/-1}
+.mag .mcard.cover img,.mag .mcard.cover .mph{aspect-ratio:2.5/1}
+.mag .mcard.cover .t{font-size:1.32rem}
+.mag .mcard.cover .d{font-size:14.5px}
+@media(max-width:640px){
+  .mag{grid-template-columns:1fr;gap:12px}
+  .mag .mcard.cover img,.mag .mcard.cover .mph{aspect-ratio:16/9}
+  .mag .mcard.cover .t{font-size:1.12rem}
+}
+
 .feat{display:block;border:1px solid var(--line);border-radius:12px;padding:18px 20px;
 text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat:hover{border-color:var(--accent)}
@@ -1269,6 +1303,7 @@ def build_markdown_articles() -> list[dict]:
             pub[a["slug"]] = TODAY
             changed = True
         published = pub[a["slug"]]
+        a["published"] = published      # 首頁的雜誌式陳列要靠它排序（新的在前）
 
         datestr = (f"發布於 {published}" if published == TODAY
                    else f"發布於 {published}　·　更新於 {TODAY}")
@@ -1412,12 +1447,15 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         f'<div class="d">{esc(CAT_INTRO.get(c, "")[:50])}…</div></a>'
         for c, v in by_cat.items())
 
-    feats = "".join(
-        f'<a class="feat" href="/{a["path"]}"><div class="t">{esc(a["title"])}</div>'
-        f'<div class="d">{esc(a["summary"][:88])}…</div></a>' for a in extra)
+    # 新的排前面，最新一篇當封面。原本沿用檔名排序（build_markdown_articles
+    # 是 sorted glob），雜誌式陳列用字母序沒有意義——讀者期待的是「最新的在最上面」。
+    # 只影響首頁的呈現順序，其他地方用到的 md_pages 不動。
+    feed = sorted(extra, key=lambda a: (a.get("published", ""), a["path"]), reverse=True)
+    feats = "".join(mag_card(a, i == 0) for i, a in enumerate(feed))
 
     feat_sect = (f'<h2 class="sect" id="deep">深入文章</h2>'
-                 f'<div class="sd">完整長文，適合想把一個主題徹底搞懂的人</div>{feats}'
+                 f'<div class="sd">完整長文，適合想把一個主題徹底搞懂的人</div>'
+                 f'<div class="mag">{feats}</div>'
                  if feats else "")
 
     # 直接讀 logo 實際尺寸，換圖時不必再手改寫死的數字（換過一次比例就變了）
@@ -1473,10 +1511,10 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 <div class="howto">
 <b>這個網站怎麼用</b>
 <div class="hgrid">
-  <a class="htile" href="#topics"><span class="hq">有明確想查的問題</span>
-    <span class="hgo">依主題閱讀</span></a>
   <a class="htile" href="#deep"><span class="hq">想徹底弄懂一件事</span>
     <span class="hgo">深入文章</span></a>
+  <a class="htile" href="#topics"><span class="hq">有明確想查的問題</span>
+    <span class="hgo">依主題閱讀</span></a>
   <a class="htile" href="/calc.html"><span class="hq">拿到報告想換算</span>
     <span class="hgo">腎功能計算</span></a>
   <a class="htile" href="/food.html"><span class="hq">想查某個食物</span>
@@ -1490,11 +1528,12 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 {share_buttons("", HOME_SHARE_TITLE, top=True)}
 </div>
 
+{feat_sect}
+
 <h2 class="sect" id="topics">依主題閱讀</h2>
 <div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>
 <div class="cats">{cards}</div>
 
-{feat_sect}
 {calc_sect}
 {food_sect}
 {gal_sect}
@@ -1619,17 +1658,31 @@ def search_script() -> str:
 
 
 # 醫師介紹要條列的資歷。第一項是最強的權威訊號，刻意排在最前面。
-CREDENTIALS = [
-    ("台灣慢性腎臟病臨床診療指引編撰委員", True),
-    ("國立成功大學醫學系畢業", False),
-    ("前成大醫院主治醫師", False),
-    ("郭綜合醫院腎臟內科主治醫師", True),
-    ("腎臟科專科醫師", True),
-    ("內科專科醫師", False),
-    ("台灣腎臟醫學會會員", False),
-    ("美國腎臟醫學會會員", False),
-    ("戒菸治療醫師", False),
-    ("糖尿病共照網醫師", False),
+# 資歷分組陳列。原本是十項平鋪的清單，讀者要自己分辨哪一項是現職、哪一項是
+# 執照。分成「現職／學歷與經歷／專科執照與認證／學會與委員會」四組之後，
+# 一眼就看得出資歷的組成——這是醫師個人網站的通行寫法，對 YMYL 的
+# E-E-A-T 判定也比一長串未分類的字串清楚。
+#
+# 內容完全沿用原本那十項，沒有新增任何宣稱；True 代表加粗顯示的重點項目。
+CREDENTIAL_GROUPS = [
+    ("現職", [
+        ("郭綜合醫院腎臟內科主治醫師", True),
+        ("台灣慢性腎臟病臨床診療指引編撰委員", True),
+    ]),
+    ("學歷與經歷", [
+        ("國立成功大學醫學系畢業", False),
+        ("前成大醫院主治醫師", False),
+    ]),
+    ("專科執照與認證", [
+        ("腎臟科專科醫師", True),
+        ("內科專科醫師", False),
+        ("戒菸治療醫師", False),
+        ("糖尿病共照網醫師", False),
+    ]),
+    ("學會與委員會", [
+        ("台灣腎臟醫學會會員", False),
+        ("美國腎臟醫學會會員", False),
+    ]),
 ]
 
 CHECK_SVG = ('<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
@@ -1811,6 +1864,45 @@ def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
     return out
 
 
+HERO_DIR = ROOT / "hero"
+
+
+def hero_for(path: str):
+    """長文的首頁大圖。檔名規則：hero/<slug>.jpg（slug 就是文章的檔名）。
+
+    圖片是人工產生後放進來的，不是這支程式產生的——所以這裡只認檔案在不在，
+    沒有就退回佔位塊，不會出現破圖。放一張就換一張，不必等全部到齊。
+    加圖之後記得跑 bump_assets.py，hero/ 已列入雜湊來源，Service Worker
+    的版本號才會跟著變，舊訪客才看得到新圖。
+    """
+    slug = Path(path).stem
+    for ext in (".jpg", ".jpeg", ".png", ".webp"):
+        p = HERO_DIR / (slug + ext)
+        if p.exists():
+            return f"hero/{slug}{ext}", img_size(p)
+    return None, None
+
+
+def mag_card(a: dict, cover: bool = False) -> str:
+    """雜誌式的長文卡片：上圖下文。第一篇佔滿整排當封面。
+
+    沒有圖的時候用同尺寸的漸層佔位塊，維持格線整齊——混排「有圖卡片」與
+    「純文字卡片」會讓整區看起來像壞掉，寧可先放一致的佔位。
+    """
+    src, dims = hero_for(a["path"])
+    if src:
+        wh = f' width="{dims[0]}" height="{dims[1]}"' if dims else ""
+        media = (f'<img src="/{src}"{wh} alt="" aria-hidden="true" '
+                 f'loading="{"eager" if cover else "lazy"}" decoding="async">')
+    else:
+        media = f'<div class="mph" aria-hidden="true"><span>{esc(a.get("cat") or "深入文章")}</span></div>'
+    kicker = esc(a.get("cat") or "深入文章")
+    return (f'<a class="mcard{" cover" if cover else ""}" href="/{a["path"]}">'
+            f'{media}<div class="b"><div class="k">{kicker}</div>'
+            f'<div class="t">{esc(a["title"])}</div>'
+            f'<div class="d">{esc(a["summary"][:88])}…</div></div></a>')
+
+
 def build_about() -> str:
     """關於作者頁。
 
@@ -1835,9 +1927,13 @@ def build_about() -> str:
         grid_cls = "docintro nophoto"
 
     creds = "".join(
-        f'<li class="key">{CHECK_SVG}<span>{esc(t)}</span></li>' if key
-        else f'<li>{CHECK_SVG}<span>{esc(t)}</span></li>'
-        for t, key in CREDENTIALS)
+        f'<div class="credgrp"><h3>{esc(label)}</h3><ul class="doccred">'
+        + "".join(
+            f'<li class="key">{CHECK_SVG}<span>{esc(t)}</span></li>' if key
+            else f'<li>{CHECK_SVG}<span>{esc(t)}</span></li>'
+            for t, key in rows)
+        + "</ul></div>"
+        for label, rows in CREDENTIAL_GROUPS)
 
     body = f"""
 <h1>關於{esc(AUTHOR_NAME)}醫師與本站</h1>
@@ -1846,7 +1942,7 @@ def build_about() -> str:
 {photo_html}
 <div>
   <div class="docname"><small>腎臟科</small>{esc(AUTHOR_NAME)}醫師</div>
-  <ul class="doccred">{creds}</ul>
+  {creds}
 </div>
 </div>
 
