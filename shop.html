@@ -184,8 +184,14 @@
   /* 間隔做在項目的 padding 裡，不能用 flex gap ——
      動畫是 translateX(-50%)，用 gap 的話總寬不是兩份內容的整數倍，
      每輪會跳掉半個 gap（實測 24px），看起來就像跑到一半被裁掉。 */
+  /* 動畫預設暫停，等內容確定（冠軍資料回來或逾時）才加 .go 開跑。
+     原本是一載入就跑，冠軍資料晚個一兩秒回來時會重寫 innerHTML，
+     內容變寬（實測 5008→5656px）但 CSS 動畫不會重來，
+     translateX(-50%) 的換算基準一換，畫面就當場跳掉（實測 145px，最壞 324px）。 */
   .marq-in{display:flex;white-space:nowrap;font-size:13px;color:var(--gold2);
-           font-weight:700;animation:marq 22s linear infinite;width:max-content;}
+           font-weight:700;animation:marq 22s linear infinite;width:max-content;
+           animation-play-state:paused;}
+  .marq-in.go{animation-play-state:running;}
   .marq-in span{padding-right:48px;}
   @keyframes marq{to{transform:translateX(-50%)}}
 
@@ -483,6 +489,42 @@
 </header>
 
 <div class="marquee"><div class="marq-in" id="marq"></div></div>
+<script>
+/* 跑馬燈的文案與第一次填字刻意放在這裡、緊貼著標記後面。
+   下面的 shared.js / data.js 是阻塞載入的，實測要等到 ~690ms 才輪到頁尾的腳本；
+   在那之前跑馬燈就是空的一條——第一次進站沒有 Service Worker 快取時更久，
+   使用者看到的就是「一進來沒有跑馬燈」。文案只有這一份，頁尾不再重複定義。 */
+const MARQ = ["🫘 小腎臟大冒險:躲過 NSAID 大隊,每個 +3 腎元","📚 知識到貨率 100%,本站唯一會出貨的東西","🫘 腎元賺不了真錢,但賺得了腎","🧂 今日特賣:少吃一口鹽,免費","🚰 白開水永久 0 元,全站最強護腎商品其實是它","⚕️ 衛教內容不取代就醫,有症狀請看腎臟科","🔬 冷知識:每顆腎臟約有一百萬個腎元(Nephron),這也是本站貨幣的由來","🐱 貓咪貼圖 152 張,買前模糊鎖定,買後可下載原圖"];
+let marqOn = false;
+/* CHAMP 宣告在頁尾的腳本裡，這支先跑時那個繫結還不存在，
+   所以要用 typeof 判斷，直接讀會 ReferenceError。 */
+function marqItems(){
+  const c = (typeof CHAMP !== "undefined") ? CHAMP : null;
+  return c ? [`🏆 小學堂目前第一名：${c.name}　${c.score}/100 題`, ...MARQ] : [...MARQ];
+}
+/* restart：內容在動畫已經開跑之後才變動時，把動畫歸零重來一次。
+   歸零會看到一次回到開頭，但那比中途無預警平移自然，而且只有慢速連線才會遇到。 */
+function renderMarq(restart){
+  const el = document.getElementById("marq");
+  const items = marqItems();
+  el.innerHTML = [...items, ...items].map(m => `<span>${m}</span>`).join("");
+  if(restart && marqOn){
+    el.classList.remove("go");
+    void el.offsetWidth;            // 強制重排，動畫才會真的從頭開始
+    el.classList.add("go");
+  }
+}
+function startMarq(){
+  if(marqOn) return;
+  marqOn = true;
+  document.getElementById("marq").classList.add("go");
+}
+renderMarq();
+/* 保險絲刻意放在這裡，不放頁尾：這支腳本不依賴 shared.js / data.js / sync.js，
+   就算後面整段 boot 因為某個外部檔案沒載到而中斷，跑馬燈還是會動。
+   1.8 秒內冠軍資料回得來就由 initSiteBits 提早開跑，這條只是兜底。 */
+setTimeout(startMarq, 1800);
+</script>
 
 <section class="hub">
   <a class="hubcard" href="game.html">
@@ -601,7 +643,7 @@
 const CATS = ["全部","血壓管理","血糖管理","血脂代謝","用藥安全","飲食護腎","生活習慣","檢查數值","警訊與迷思","🐱 貓咪貼圖"];
 const STICKER_CAT = "🐱 貓咪貼圖";
 const FLASH = ["nsaid","starfruit","five-signs","egfr","water","dialysis-myth"];
-const MARQ = ["🫘 小腎臟大冒險:躲過 NSAID 大隊,每個 +3 腎元","📚 知識到貨率 100%,本站唯一會出貨的東西","🫘 腎元賺不了真錢,但賺得了腎","🧂 今日特賣:少吃一口鹽,免費","🚰 白開水永久 0 元,全站最強護腎商品其實是它","⚕️ 衛教內容不取代就醫,有症狀請看腎臟科","🔬 冷知識:每顆腎臟約有一百萬個腎元(Nephron),這也是本站貨幣的由來","🐱 貓咪貼圖 152 張,買前模糊鎖定,買後可下載原圖"];
+/* MARQ 已移到跑馬燈標記旁邊的那支腳本，見 <div class="marquee"> 下方 */
 const GIFTS = [
   {id:0,t:"新手禮包",d:"開站禮,人人有份",s:"限領一次",amt:300,daily:false},
   {id:1,t:"每日簽到",d:"每天回來看一篇知識",s:"每日可領",amt:200,daily:true},
@@ -880,12 +922,8 @@ function renderGrid(){
   $("cnt").textContent = `護腎知識持續上架中 — 全部買得起，腎元不夠就去玩遊戲`;
 }
 let CHAMP = null;                       // 小學堂目前第一名
-function renderMarq(){
-  const items = CHAMP
-    ? [`🏆 小學堂目前第一名：${CHAMP.name}　${CHAMP.score}/100 題`, ...MARQ]
-    : [...MARQ];
-  $("marq").innerHTML = [...items, ...items].map(m=>`<span>${m}</span>`).join("");
-}
+/* renderMarq / startMarq / MARQ 都定義在跑馬燈標記旁邊那支腳本裡，
+   為的是在 shared.js、data.js 載入完成之前就先把字填上去。 */
 function esc(s){
   return String(s).replace(/[&<>"']/g, c =>
     ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -904,9 +942,9 @@ function initSiteBits(tries = 0){
   window.site.getTop(1).then(top => {
     if(top && top.length){
       CHAMP = {name: esc(top[0].name || "匿名者"), score: top[0].score};
-      renderMarq();
+      renderMarq(true);
     }
-  });
+  }).finally(startMarq);   // 查不到冠軍也要讓跑馬燈動起來
 }
 function renderGifts(){
   const g = store.gifts;
@@ -1100,8 +1138,8 @@ function downloadAll(){
 
 window.onStateApplied = () => { syncCoins(); renderGrid(); renderGifts(); };
 fillCoinIcons(); applyFontScale();
-renderTabs(); renderGrid(); renderMarq(); renderGifts(); renderCart();
-initSiteBits();
+renderTabs(); renderGrid(); renderGifts(); renderCart();
+initSiteBits();   // 跑馬燈的保險絲在頁面上方那支腳本裡，不放這裡
 syncBadge(); syncCoins();
 </script>
 
