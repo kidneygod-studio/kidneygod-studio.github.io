@@ -1126,6 +1126,12 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
     # 以及首頁的同一個區塊，用的都是 .feat 卡片。長文是站上最有價值的內容，
     # 不該得到最陽春的呈現。（.toc 本來是分類頁「本頁內容」的頁內目錄樣式，
     # 拿來當文章列表在語意上也不對。）
+    #
+    # 2026-09-04：改成排在分類卡片之前，與首頁一致。順序一換，分類卡片就必須
+    # 補一個「依主題閱讀」標題——原本它緊接在導言下面、沒有標題也讀得通，
+    # 但被長文區隔開之後，沒有標題的一堆卡片會不知道自己是什麼。
+    # 長文順序沿用 extra_pages（檔名序）：這頁是總覽，穩定的順序比「最新在前」
+    # 更適合回頭查找；首頁才是要凸顯新內容的地方。
     extra = ""
     if extra_pages:
         cs = "".join(
@@ -1146,8 +1152,11 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
 <h1>腎臟與三高衛教文章</h1>
 <p class="lede">這裡整理慢性腎臟病、高血壓、糖尿病與高血脂相關的衛教內容，
 依據國際指引與期刊文獻撰寫，目的是讓一般人也能看懂自己的身體與檢查報告。</p>
-<div class="cats">{cards}</div>
 {extra}
+
+<h2>依主題閱讀</h2>
+<div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>
+<div class="cats">{cards}</div>
 {gal}
 """
     jsonld = {
