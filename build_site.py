@@ -839,6 +839,12 @@ border:1px solid var(--line);border-left:3px solid var(--accent)}
 .htile .hgo{font-size:15px;font-weight:700;color:var(--fg);line-height:1.45}
 /* 六格剛好排滿三列，不需要讓最後一格獨佔整列。
    （若日後項目數變成奇數，再把 .htile:last-child{grid-column:1/-1} 加回來） */
+/* 長文頁最上方的大圖，與首頁同一張。height:auto 同樣不能省——
+   img 的 height 屬性會變成呈現屬性，把 aspect-ratio 壓掉（見下方註解）。 */
+.ahero{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;
+border-radius:14px;margin:18px 0 22px;background:var(--card)}
+@media(max-width:700px){.ahero{border-radius:10px;margin:14px 0 18px}}
+
 /* ── 深入文章的雜誌式陳列 ──
    每篇一張大圖（hero/<slug>.jpg），第一篇佔滿整排當封面。
    圖片是人工放進來的，缺圖時用同尺寸的漸層佔位塊，格線才不會塌。
@@ -1326,6 +1332,13 @@ def build_markdown_articles() -> list[dict]:
                        f"</div>")
 
         body = f"<h1>{esc(a['title'])}</h1>"
+        # 標題之後、導言之前放大圖，和首頁用同一張。純裝飾（alt 留空）——
+        # 圖片本身沒有資訊量，標題與導言已經說完了，讀螢幕的人不需要再聽一次。
+        hsrc, hdim = hero_for(path)
+        if hsrc:
+            hwh = f' width="{hdim[0]}" height="{hdim[1]}"' if hdim else ""
+            body += (f'<img class="ahero" src="/{hsrc}"{hwh} alt="" aria-hidden="true" '
+                     f'fetchpriority="high" decoding="async">')
         if a["summary"]:
             body += f"<p class='lede'>{esc(a['summary'])}</p>"
         refs = PAGE_SOURCES.get(a["slug"], [])
