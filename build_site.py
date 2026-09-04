@@ -555,7 +555,13 @@ font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
   .wrap.wide .hero .cred,.wrap.wide .ssearch,.wrap.wide .meta,
   .wrap.wide .disclaimer,.wrap.wide .author{max-width:var(--maxw)}
   .wrap.wide .hgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  /* 長文清單改兩欄：單欄時卡片 1020px 寬，摘要一行會到 70 個中文字。
+     minmax(0,1fr) 不能寫 1fr，理由同 .gg-prev。 */
+  .wrap.wide .featgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+/* 容器本身用 grid，卡片的 margin-bottom 要收掉，否則間距會多一截 */
+.featgrid{display:grid;gap:12px}
+.featgrid .feat{margin-bottom:0}
 /* 錨點跳轉時要扣掉固定頁首的高度，否則標題會被壓在頁首下面。
    頁首約 60px，再加一點餘裕才不會貼著邊。 */
 html{scroll-padding-top:78px}
@@ -1188,7 +1194,11 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
             f'<div class="t">{esc(a["title"])}</div>'
             f'<div class="d">{esc(a["summary"][:88])}…</div></a>'
             for a in extra_pages)
-        extra = f"<h2>深入文章</h2><div class='sd'>完整長文，適合想把一個主題徹底搞懂的人</div>{cs}"
+        # 卡片包一層容器：寬螢幕上要排成兩欄。單欄時 1020px 寬的卡片，
+        # 摘要一行會到 70 個中文字，比長文內文還長。
+        extra = (f"<h2>深入文章</h2>"
+                 f"<div class='sd'>完整長文，適合想把一個主題徹底搞懂的人</div>"
+                 f"<div class='featgrid'>{cs}</div>")
 
     # 常見問題：只放問句與連結，不放答案。
     #

@@ -37,7 +37,13 @@ font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
   .wrap.wide .hero .cred,.wrap.wide .ssearch,.wrap.wide .meta,
   .wrap.wide .disclaimer,.wrap.wide .author{max-width:var(--maxw)}
   .wrap.wide .hgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  /* 長文清單改兩欄：單欄時卡片 1020px 寬，摘要一行會到 70 個中文字。
+     minmax(0,1fr) 不能寫 1fr，理由同 .gg-prev。 */
+  .wrap.wide .featgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+/* 容器本身用 grid，卡片的 margin-bottom 要收掉，否則間距會多一截 */
+.featgrid{display:grid;gap:12px}
+.featgrid .feat{margin-bottom:0}
 /* 錨點跳轉時要扣掉固定頁首的高度，否則標題會被壓在頁首下面。
    頁首約 60px，再加一點餘裕才不會貼著邊。 */
 html{scroll-padding-top:78px}
