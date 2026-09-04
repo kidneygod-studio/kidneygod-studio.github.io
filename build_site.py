@@ -559,44 +559,42 @@ color:var(--fg);font-weight:800;font-size:1.04rem;letter-spacing:.3px;white-spac
 .brand svg{color:var(--accent);flex-shrink:0}
 .brand:hover{color:var(--accent2)}
 header.site nav{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:flex-end}
-/* 內距 11px → 9px：頁首的可用寬度是 .wrap 的 720px 扣掉左右內距＝680px，
-   和視窗多寬無關。七個四字標籤在 11px 內距下正好需要 680px，剛剛好卡住而換行
-   （實測 960px 視窗一樣是兩排）。收到 9px 之後多出約 28px 餘裕。 */
 header.site nav a{font-size:14px;color:var(--mut);text-decoration:none;font-weight:500;
-padding:6px 9px;border-radius:8px;white-space:nowrap;
+padding:6px 11px;border-radius:8px;white-space:nowrap;
 transition:color .15s,background .15s}
 header.site nav a:hover{color:var(--fg);background:var(--card)}
 header.site nav a[aria-current="page"]{color:var(--accent2);background:var(--card);font-weight:700}
 /* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
 header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
 header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
-/* 斷點 719 不是 700：七個四字標籤加上品牌需要 .wrap 撐到滿寬（720px、
-   內容 680px）才排得下，而視窗 701–719 時 .wrap 只有視窗那麼寬，
-   內容不足 680 就會換行（實測 701px 頁首從 59px 變 102px）。
-   720 以上 .wrap 到頂，桌機再寬也不會更寬——所以這個門檻要跟著 --maxw 走，
-   不是跟著「手機／桌機」的直覺走。項目數增加時要重新量一次。 */
-@media(max-width:719px){
+/* 斷點是 700 不是 600：六個四字標籤加上品牌需要約 600px，
+   在 640px 的視窗就會擠成兩行、頁首從 60px 變 101px。
+   **六項是這個頁首的上限**：2026-09-04 加到七項時，這裡與下面兩個斷點
+   全部得收緊才排得下，而收緊之後手機看起來就是一排擠滿字。
+   要再加項目，得先想清楚拿掉哪一項，不是繼續縮間距。 */
+@media(max-width:700px){
   header.site .wrap{padding-top:8px;padding-bottom:8px;gap:8px}
   .brand{font-size:.95rem;gap:7px}
   .brand svg{width:22px;height:22px}
   header.site nav{gap:2px}
   /* 隱藏「衛教／關於／知識」前綴，只留兩個字，才排得下一行 */
   header.site nav .np{display:none}
-  /* 2026-09-04 加入「常見問答」變成七個項目後，8px 內距在 360–430px 全部
-     換行（實測 393px 頁首從 57px 變 105px）。收到 5px、字級 13px 才排得下。
-     垂直內距一律不動，點擊區高度維持 41px。 */
-  header.site nav a{padding:9px 5px;font-size:13px}
-  .brand{font-size:.9rem}
+  /* 五個項目時，10px 的水平內距會讓總寬超出約 1px 而換行，頁首從 66px 變 105px。
+     縮到 8px 就排得下。垂直內距不動，點擊區高度不受影響。 */
+  header.site nav a{padding:9px 8px;font-size:13.5px}
 }
-/* 再收一階。門檻原本是 380px，七個項目之後 381–430 這段（iPhone 14/15 Pro
-   的 393、Plus 的 430 都在裡面）餘裕只剩 8px 而換行，所以提高到 430px。 */
-@media(max-width:430px){
-  .brand{font-size:.85rem;gap:5px}
+/* 門檻 410 不是 380：380 只顧到 iPhone SE，381–410 這段（iPhone 13/14 的 390、
+   14/15 Pro 的 393）落回上一階的寬鬆間距就會換行。
+   2026-09-04 逐寬度掃描才發現這是既有問題，與當天加減導覽項目無關——
+   斷點是「一階一階往下收」的設計，只在幾個測試過的寬度正確，
+   兩階之間的區段沒人量過就會漏掉。改斷點後一定要整段掃，不能只看幾個點。 */
+@media(max-width:410px){
+  .brand{font-size:.88rem;gap:5px}
   .brand svg{width:20px;height:20px}
-  header.site nav a{padding:9px 3px;font-size:12.5px}
+  header.site nav a{padding:9px 6px;font-size:12.5px}
 }
-/* 最小的一批。門檻原本是 340px（只顧到 iPhone SE 第一代），七個項目之後
-   341–365 這段（Galaxy A 系列的 360、部分 344）會換行，所以提高到 365px。
+/* 最小的一批。門檻 365 不是 340：341–365 這段（多數 Android 的 360、
+   部分 344）同樣是兩階之間的漏網區。
    收水平內距與品牌字級即可，不必隱藏任何項目。
    垂直內距一律不動，點擊區高度維持 41px。 */
 @media(max-width:365px){
@@ -618,17 +616,15 @@ p{margin:0 0 18px}
 a{color:var(--accent)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:13.5px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
-/* 常見問題頁的一問一答。全站的 h3 是灰色細字（在長文裡當次級標題剛好），
-   但在這一頁問句才是主角，掃視時要先看到問題再決定要不要讀答案，
-   所以覆寫成主文色的粗體，並用細線把每一題分開。 */
-.qa{margin:0 0 24px;padding-bottom:20px;border-bottom:1px solid var(--line)}
-.qa:last-child{border-bottom:0;padding-bottom:0}
-.qa h3{font-size:1.13rem;font-weight:700;color:var(--fg);margin:0 0 10px;
-line-height:1.55;scroll-margin-top:76px}
-.qa p{margin:0 0 12px}
-.qmore{margin:0}
-.qmore a{font-size:14px;font-weight:600;text-decoration:none}
-.qmore a:hover{text-decoration:underline}
+/* 衛教文章頁的「常見問題」：只有問句與連結，答案在點進去的那篇長文裡。
+   問句比一般列表長，所以用單欄、每項獨立一行的排法，不用多欄擠在一起。 */
+.qlist{list-style:none;padding:0;margin:18px 0 32px;
+border-top:1px solid var(--line)}
+.qlist li{border-bottom:1px solid var(--line)}
+.qlist a{display:block;padding:13px 4px;text-decoration:none;color:var(--fg);
+font-size:1rem;line-height:1.6}
+.qlist a::after{content:" →";color:var(--accent);white-space:nowrap}
+.qlist a:hover{color:var(--accent);background:var(--card)}
 .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:26px 0}
 /* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
    色票要能跟著深色模式走，不能寫死。 */
@@ -974,7 +970,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     in_articles = path.startswith("articles/") and not in_gallery
     cur = {"articles": in_articles, "gallery": in_gallery,
            "about": path == "about.html", "food": path == "food.html",
-           "calc": path == "calc.html", "faq": path == "faq.html"}
+           "calc": path == "calc.html"}
 
     # 四字標籤在手機上會擠成兩行、頁首變高，所以其中兩個字包進 .np 於手機隱藏。
     # 多數項目是「前綴＋主詞」（衛教文章 → 文章），但「食物查詢」相反：
@@ -987,10 +983,11 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
         suf = f'<span class="np">{suffix}</span>' if suffix else ""
         return f'<a href="{href}"{c}{mark}>{pre}{label}{suf}</a>'
 
-    # 手機上顯示：問答／文章／圖卡／食物／計算／作者／遊戲
-    # 「常見問答」排第一：多數人來的時候腦子裡是一個問句，不是一個主題。
-    nav = (navlink("/faq.html", "常見", "問答", "faq")
-           + navlink("/articles/", "衛教", "文章", "articles")
+    # 手機上顯示：文章／圖卡／食物／計算／作者／遊戲
+    # 2026-09-04 一度加入第七項「常見問答」，手機上必須把三個斷點全部收緊
+    # 才排得下，作者反映太擠——六項是這個頁首的實際上限。常見問題改成
+    # 衛教文章頁裡的一個區塊（/articles/#faq）。
+    nav = (navlink("/articles/", "衛教", "文章", "articles")
            + navlink("/articles/gallery.html", "衛教", "圖卡", "gallery")
            + navlink("/food.html", "", "食物", "food", suffix="查詢")
            + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
@@ -1165,6 +1162,31 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
             for a in extra_pages)
         extra = f"<h2>深入文章</h2><div class='sd'>完整長文，適合想把一個主題徹底搞懂的人</div>{cs}"
 
+    # 常見問題：只放問句與連結，不放答案。
+    #
+    # 2026-09-04 一度做成獨立分頁 faq.html，每題附 80–150 字的答案。作者反映
+    # 兩件事：頁首七個項目在手機上太擠（那是把三個斷點都收緊硬塞的結果），
+    # 以及答案會和長文重複。後者是真的——每則答案講的都是對應長文裡的重點，
+    # 兩個網址搶同一組關鍵字（泡泡尿、eGFR 60…），而長文答得更完整，
+    # 被摘要版壓過去反而是損失。
+    #
+    # 改成純導覽：問句是病人腦子裡的說法，點下去直接到回答它的那篇長文。
+    # 沒有任何重複內容，頁面也只長了一點。FAQPage 結構化資料不補在這裡——
+    # 每篇長文自己的「常見問題」段落已經有了，那才是答案真正所在的位置。
+    faq_html = ""
+    if extra_pages:
+        have = {a["slug"] for a in extra_pages}
+        lis = "".join(
+            f'<li><a href="/articles/{slug}.html">{esc(q)}</a></li>'
+            for _label, _gid, items in FAQ_GROUPS
+            for q, _ans, slug in items if slug in have)
+        n_q = lis.count("<li>")
+        if lis:
+            faq_html = (f'<h2 id="faq">常見問題</h2>'
+                        f'<div class="sd">門診最常被問到的 {n_q} 個問題，'
+                        f'每一題直接連到回答它的那篇文章</div>'
+                        f'<ul class="qlist">{lis}</ul>')
+
     gal = ""
     if n_gallery:
         gal = (f'<h2>衛教圖卡</h2>'
@@ -1181,6 +1203,7 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
 <h2>依主題閱讀</h2>
 <div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>
 <div class="cats">{cards}</div>
+{faq_html}
 {gal}
 """
     jsonld = {
@@ -1476,9 +1499,9 @@ def build_search_index(data: list[dict], md_pages: list[dict],
          "查 1,728 種食物的鈉、鉀、磷、蛋白質含量，資料來自衛福部食藥署食品營養成分資料庫。"),
         ("關於吳政哲醫師", "/about.html", "關於",
          "腎臟科專科醫師的資歷、撰寫原則與聯絡方式。"),
-        ("常見問題", "/faq.html", "問答",
+        ("常見問題", "/articles/#faq", "問答",
          "肌酸酐紅字、eGFR 60、泡泡尿、止痛藥傷腎、要不要提前做廔管——"
-         "門診最常被問到的問題，逐題回答。"),
+         "門診最常被問到的問題，每題直接連到回答它的那篇文章。"),
         ("全部衛教文章", "/articles/", "導覽", "依主題瀏覽所有衛教內容。"),
         ("衛教圖卡總覽", "/articles/gallery.html", "導覽", "社群上發表過的圖解，依主題整理。"),
     ]:
@@ -2020,62 +2043,6 @@ FAQ_GROUPS = [
          "no-dialysis-therapy-claims"),
     ]),
 ]
-
-
-def build_faq(md_pages: list[dict]) -> str:
-    """常見問題頁。獨立一個分頁，不動現有的首頁結構。"""
-    titles = {a["slug"]: a["title"] for a in md_pages}
-    n = sum(len(v) for _, _, v in FAQ_GROUPS)
-
-    title = f"腎臟病常見問題：{n} 個門診最常被問到的問題｜{SITE_NAME}"
-    desc = ("肌酸酐紅字、eGFR 60、泡泡尿、止痛藥傷腎、要不要提前做廔管——"
-            f"腎臟科醫師逐題回答 {n} 個最常被問到的問題，每題附完整說明。")
-
-    blocks, qa = [], []
-    for label, gid, items in FAQ_GROUPS:
-        rows = []
-        for q, ans, slug in items:
-            qid = slugify(q)
-            link = ""
-            if slug in titles:
-                link = (f'<p class="qmore"><a href="/articles/{slug}.html">'
-                        f'完整說明：{esc(titles[slug])} →</a></p>')
-            rows.append(f'<div class="qa"><h3 id="{qid}">{esc(q)}</h3>'
-                        f"<p>{ans}</p>{link}</div>")
-            # 結構化資料要純文字，把答案裡的 <b> 去掉
-            qa.append((q, re.sub(r"<[^>]+>", "", ans)))
-        blocks.append(f'<h2 id="{gid}">{esc(label)}</h2>' + "".join(rows))
-
-    toc = "".join(f'<li><a href="#{gid}">{esc(label)}</a></li>'
-                  for label, gid, _ in FAQ_GROUPS)
-
-    body = f"""
-<h1>常見問題</h1>
-<p class="lede">門診裡最常被問到的 {n} 個問題，先給你一段能直接用的答案，
-想深入的再往下看完整文章。看完仍然建議與你的主治醫師討論——
-你的狀況只有看得到完整病歷的人才判斷得準。</p>
-<div class="toc"><h2>本頁內容</h2><ol>{toc}</ol></div>
-{"".join(blocks)}
-{share_buttons("faq.html", f"腎臟病常見問題｜{SITE_NAME}")}
-{share_script()}
-<h2 class="backlink">還想看什麼</h2>
-<div class="cats">
-  <a href="/articles/"><div class="t">全部衛教文章</div>
-    <div class="d">依主題瀏覽，或直接看完整長文。</div></a>
-  <a href="/calc.html"><div class="t">腎功能計算</div>
-    <div class="d">把報告上的數值換算成 eGFR 與分期。</div></a>
-</div>
-"""
-    jsonld = {
-        "@context": "https://schema.org", "@type": "FAQPage",
-        "name": "腎臟病常見問題", "inLanguage": "zh-Hant",
-        "url": f"{BASE_URL}/faq.html",
-        "author": author_ld(), **reviewed_ld(),
-        "mainEntity": [{"@type": "Question", "name": q,
-                        "acceptedAnswer": {"@type": "Answer", "text": ans}}
-                       for q, ans in qa],
-    }
-    return page(title, desc, "faq.html", body, jsonld)
 
 
 HERO_DIR = ROOT / "hero"
@@ -2942,9 +2909,6 @@ def main() -> int:
     (ROOT / "about.html").write_text(build_about(), encoding="utf-8")
     print("  about.html　(關於作者，E-E-A-T 權威訊號)")
 
-    n_faq = sum(len(v) for _, _, v in FAQ_GROUPS)
-    (ROOT / "faq.html").write_text(build_faq(md_pages), encoding="utf-8")
-    print(f"  faq.html　(常見問題 {n_faq} 題，問題導向入口)")
 
     (ROOT / "index.html").write_text(
         build_home(by_cat, md_pages, len(gallery_items)), encoding="utf-8")
@@ -2959,7 +2923,7 @@ def main() -> int:
     print(f"  calc.html　(腎功能計算工具{'' if CALC_PUBLISHED else '，未發布'})")
 
     # sitemap：讓搜尋引擎一次拿到所有網址
-    urls = ["", "faq.html", "articles/", "about.html", "shop.html"] + (
+    urls = ["", "articles/", "about.html", "shop.html"] + (
         ["food.html"] if food_html else []) + (
         ["calc.html"] if CALC_PUBLISHED else []) + [
         p for p in written if not p.endswith("index.html")]

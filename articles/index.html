@@ -41,44 +41,42 @@ color:var(--fg);font-weight:800;font-size:1.04rem;letter-spacing:.3px;white-spac
 .brand svg{color:var(--accent);flex-shrink:0}
 .brand:hover{color:var(--accent2)}
 header.site nav{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:flex-end}
-/* 內距 11px → 9px：頁首的可用寬度是 .wrap 的 720px 扣掉左右內距＝680px，
-   和視窗多寬無關。七個四字標籤在 11px 內距下正好需要 680px，剛剛好卡住而換行
-   （實測 960px 視窗一樣是兩排）。收到 9px 之後多出約 28px 餘裕。 */
 header.site nav a{font-size:14px;color:var(--mut);text-decoration:none;font-weight:500;
-padding:6px 9px;border-radius:8px;white-space:nowrap;
+padding:6px 11px;border-radius:8px;white-space:nowrap;
 transition:color .15s,background .15s}
 header.site nav a:hover{color:var(--fg);background:var(--card)}
 header.site nav a[aria-current="page"]{color:var(--accent2);background:var(--card);font-weight:700}
 /* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
 header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
 header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
-/* 斷點 719 不是 700：七個四字標籤加上品牌需要 .wrap 撐到滿寬（720px、
-   內容 680px）才排得下，而視窗 701–719 時 .wrap 只有視窗那麼寬，
-   內容不足 680 就會換行（實測 701px 頁首從 59px 變 102px）。
-   720 以上 .wrap 到頂，桌機再寬也不會更寬——所以這個門檻要跟著 --maxw 走，
-   不是跟著「手機／桌機」的直覺走。項目數增加時要重新量一次。 */
-@media(max-width:719px){
+/* 斷點是 700 不是 600：六個四字標籤加上品牌需要約 600px，
+   在 640px 的視窗就會擠成兩行、頁首從 60px 變 101px。
+   **六項是這個頁首的上限**：2026-09-04 加到七項時，這裡與下面兩個斷點
+   全部得收緊才排得下，而收緊之後手機看起來就是一排擠滿字。
+   要再加項目，得先想清楚拿掉哪一項，不是繼續縮間距。 */
+@media(max-width:700px){
   header.site .wrap{padding-top:8px;padding-bottom:8px;gap:8px}
   .brand{font-size:.95rem;gap:7px}
   .brand svg{width:22px;height:22px}
   header.site nav{gap:2px}
   /* 隱藏「衛教／關於／知識」前綴，只留兩個字，才排得下一行 */
   header.site nav .np{display:none}
-  /* 2026-09-04 加入「常見問答」變成七個項目後，8px 內距在 360–430px 全部
-     換行（實測 393px 頁首從 57px 變 105px）。收到 5px、字級 13px 才排得下。
-     垂直內距一律不動，點擊區高度維持 41px。 */
-  header.site nav a{padding:9px 5px;font-size:13px}
-  .brand{font-size:.9rem}
+  /* 五個項目時，10px 的水平內距會讓總寬超出約 1px 而換行，頁首從 66px 變 105px。
+     縮到 8px 就排得下。垂直內距不動，點擊區高度不受影響。 */
+  header.site nav a{padding:9px 8px;font-size:13.5px}
 }
-/* 再收一階。門檻原本是 380px，七個項目之後 381–430 這段（iPhone 14/15 Pro
-   的 393、Plus 的 430 都在裡面）餘裕只剩 8px 而換行，所以提高到 430px。 */
-@media(max-width:430px){
-  .brand{font-size:.85rem;gap:5px}
+/* 門檻 410 不是 380：380 只顧到 iPhone SE，381–410 這段（iPhone 13/14 的 390、
+   14/15 Pro 的 393）落回上一階的寬鬆間距就會換行。
+   2026-09-04 逐寬度掃描才發現這是既有問題，與當天加減導覽項目無關——
+   斷點是「一階一階往下收」的設計，只在幾個測試過的寬度正確，
+   兩階之間的區段沒人量過就會漏掉。改斷點後一定要整段掃，不能只看幾個點。 */
+@media(max-width:410px){
+  .brand{font-size:.88rem;gap:5px}
   .brand svg{width:20px;height:20px}
-  header.site nav a{padding:9px 3px;font-size:12.5px}
+  header.site nav a{padding:9px 6px;font-size:12.5px}
 }
-/* 最小的一批。門檻原本是 340px（只顧到 iPhone SE 第一代），七個項目之後
-   341–365 這段（Galaxy A 系列的 360、部分 344）會換行，所以提高到 365px。
+/* 最小的一批。門檻 365 不是 340：341–365 這段（多數 Android 的 360、
+   部分 344）同樣是兩階之間的漏網區。
    收水平內距與品牌字級即可，不必隱藏任何項目。
    垂直內距一律不動，點擊區高度維持 41px。 */
 @media(max-width:365px){
@@ -100,17 +98,15 @@ p{margin:0 0 18px}
 a{color:var(--accent)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:13.5px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
-/* 常見問題頁的一問一答。全站的 h3 是灰色細字（在長文裡當次級標題剛好），
-   但在這一頁問句才是主角，掃視時要先看到問題再決定要不要讀答案，
-   所以覆寫成主文色的粗體，並用細線把每一題分開。 */
-.qa{margin:0 0 24px;padding-bottom:20px;border-bottom:1px solid var(--line)}
-.qa:last-child{border-bottom:0;padding-bottom:0}
-.qa h3{font-size:1.13rem;font-weight:700;color:var(--fg);margin:0 0 10px;
-line-height:1.55;scroll-margin-top:76px}
-.qa p{margin:0 0 12px}
-.qmore{margin:0}
-.qmore a{font-size:14px;font-weight:600;text-decoration:none}
-.qmore a:hover{text-decoration:underline}
+/* 衛教文章頁的「常見問題」：只有問句與連結，答案在點進去的那篇長文裡。
+   問句比一般列表長，所以用單欄、每項獨立一行的排法，不用多欄擠在一起。 */
+.qlist{list-style:none;padding:0;margin:18px 0 32px;
+border-top:1px solid var(--line)}
+.qlist li{border-bottom:1px solid var(--line)}
+.qlist a{display:block;padding:13px 4px;text-decoration:none;color:var(--fg);
+font-size:1rem;line-height:1.6}
+.qlist a::after{content:" →";color:var(--accent);white-space:nowrap}
+.qlist a:hover{color:var(--accent);background:var(--card)}
 .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:26px 0}
 /* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
    色票要能跟著深色模式走，不能寫死。 */
@@ -420,7 +416,7 @@ letter-spacing:.4px;line-height:1.5}
 <body>
 <header class="site"><div class="wrap">
 <a class="brand" href="/"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true"><path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 4.6 13.6 4.6Z"/></svg><span>護腎教室</span></a>
-<nav><a href="/faq.html"><span class="np">常見</span>問答</a><a href="/articles/" aria-current="page"><span class="np">衛教</span>文章</a><a href="/articles/gallery.html"><span class="np">衛教</span>圖卡</a><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
+<nav><a href="/articles/" aria-current="page"><span class="np">衛教</span>文章</a><a href="/articles/gallery.html"><span class="np">衛教</span>圖卡</a><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
 </div></header>
 <main class="wrap">
 
@@ -432,6 +428,7 @@ letter-spacing:.4px;line-height:1.5}
 <h2>依主題閱讀</h2>
 <div class="sd">100 則衛教內容，分成 8 個主題，適合想直接找答案的人</div>
 <div class="cats"><a href="/articles/blood-pressure.html"><div class="t">血壓管理（17 則）</div><div class="d">血壓與腎臟是雙向的關係：高血壓會傷腎，腎功能變差又會讓血壓更難控制。這一頁整理血壓與腎臟之間最常被問到的…</div></a><a href="/articles/blood-sugar.html"><div class="t">血糖管理（17 則）</div><div class="d">糖尿病是台灣洗腎最主要的原因。血糖控制得好不好，直接決定腎臟能撐多久。這一頁整理血糖與腎臟的關聯與實際做…</div></a><a href="/articles/lipids.html"><div class="t">血脂代謝（16 則）</div><div class="d">血脂異常對腎臟的影響常被忽略，但它同時牽動心血管與腎臟的長期風險。這一頁整理血脂與腎臟保護的重點。…</div></a><a href="/articles/diet.html"><div class="t">飲食護腎（13 則）</div><div class="d">「腎不好要吃什麼」是最常見的問題，答案卻會隨腎功能階段而改變。這一頁整理飲食上真正有證據的原則與常見誤解…</div></a><a href="/articles/medication-safety.html"><div class="t">用藥安全（10 則）</div><div class="d">很多腎損傷來自可以避免的用藥。這一頁整理常見的傷腎藥物、危險組合，以及什麼情況下該先問過醫師。…</div></a><a href="/articles/lifestyle.html"><div class="t">生活習慣（10 則）</div><div class="d">腎臟的保養沒有捷徑，但有幾個生活習慣的影響比多數人想的大。這一頁整理實際有幫助的部分。…</div></a><a href="/articles/lab-values.html"><div class="t">檢查數值（9 則）</div><div class="d">肌酸酐、eGFR、蛋白尿——健檢報告上的腎功能數字到底代表什麼。這一頁教你看懂自己的報告。…</div></a><a href="/articles/myths.html"><div class="t">警訊與迷思（8 則）</div><div class="d">哪些症狀該就醫、哪些流傳很廣的說法其實沒有根據。這一頁整理腎臟相關的警訊與常見迷思。…</div></a></div>
+<h2 id="faq">常見問題</h2><div class="sd">門診最常被問到的 14 個問題，每一題直接連到回答它的那篇文章</div><ul class="qlist"><li><a href="/articles/creatinine-high-what-to-do.html">健檢報告的肌酸酐紅字，是腎臟壞掉了嗎？</a></li><li><a href="/articles/egfr-meaning-ckd-stages.html">eGFR 60 是什麼意思？算不算腎臟病？</a></li><li><a href="/articles/foamy-urine-proteinuria.html">尿裡有泡泡，是蛋白尿嗎？</a></li><li><a href="/articles/cholesterol-report-ckd.html">膽固醇報告紅字，跟腎臟有關係嗎？</a></li><li><a href="/articles/kidney-lifestyle-evidence.html">多喝水可以顧腎嗎？要喝多少才夠？</a></li><li><a href="/articles/taiwan-eating-out-sodium.html">外食很鹹，一天可以吃多少鹽？</a></li><li><a href="/articles/home-blood-pressure-measurement.html">血壓要量幾次才算數？</a></li><li><a href="/articles/diabetes-kidney-disease.html">有糖尿病，怎麼知道腎臟開始受影響？</a></li><li><a href="/articles/painkiller-nsaid-kidney.html">止痛藥吃了會傷腎嗎？</a></li><li><a href="/articles/no-dialysis-therapy-claims.html">保健食品和中藥可以吃嗎？</a></li><li><a href="/articles/kidney-function-recovery.html">腎功能掉下來，還有機會恢復嗎？</a></li><li><a href="/articles/kidney-replacement-therapy.html">醫師說要準備洗腎了，我還有多久時間？</a></li><li><a href="/articles/dialysis-access-preparation.html">洗腎的管路一定要提前準備嗎？</a></li><li><a href="/articles/no-dialysis-therapy-claims.html">網路上說吃某某東西就不用洗腎，是真的嗎？</a></li></ul>
 <h2>衛教圖卡</h2><a class="feat" href="/articles/gallery.html"><div class="t">107 張圖解，依主題分類</div><div class="d">原本發表在社群上的衛教圖，整理後收在這裡方便回頭查找。</div></a>
 
 <div class="author">
