@@ -560,9 +560,17 @@ overflow-wrap:break-word}
    而且四顆一排在 320px 螢幕的特大模式下會擠出畫面（實測整頁橫向溢出 19px）。
    用 --fsi（--fs 的倒數）抵銷外層的 zoom。 */
 .zoomable .share{zoom:var(--fsi,1)}
-/* 兩組控制放同一排；窄螢幕才各佔一排（兩組共八顆按鈕，硬擠一排會太小） */
-.prefbar{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 16px;
-margin:12px 0 -4px}
+/* 字級與配色，緊接在頁首下方、靠右。
+   桌機用文字按鈕列（三個選項一眼看完、直接點），手機用兩顆圖示鈕（省寬度）。
+   斷點沿用頁首那條 700px，「手機」在這個站上一直是同一個定義。 */
+.prefbar{display:flex;justify-content:flex-end;gap:8px;margin:12px 0 -2px}
+.preficons{display:none;gap:8px}
+.preffull{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 16px}
+@media(max-width:700px){
+  .preficons{display:flex}
+  .preffull{display:none}
+}
+/* 桌機的文字按鈕列 */
 .fsbar{display:flex;align-items:center;justify-content:flex-end;gap:6px;
 font-size:13.5px;color:var(--mut)}
 .fsbar span{margin-right:2px}
@@ -573,10 +581,21 @@ color:var(--mut);cursor:pointer;line-height:1.2}
 .fsbar button:hover{border-color:var(--accent);color:var(--accent)}
 .fsbar button[aria-pressed="true"]{background:var(--card);color:var(--fg);
 border-color:var(--accent);font-weight:700}
-@media(max-width:430px){
-  .fsbar{gap:5px;font-size:13px}
-  .fsbar button{padding:8px 11px;font-size:13.5px}
-}
+/* 44px 是觸控目標的下限，這兩顆是給老花讀者按的，不能再小 */
+.prefbtn{width:44px;height:44px;display:inline-flex;align-items:center;
+justify-content:center;border-radius:50%;border:1px solid var(--line);
+background:var(--bg);color:var(--mut);cursor:pointer;padding:0;
+transition:border-color .15s,color .15s}
+.prefbtn:hover{border-color:var(--accent);color:var(--accent)}
+.prefbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* 這一行是必要的：hidden 靠的是瀏覽器預設樣式，作者樣式的 display 會蓋掉它，
+   結果是三個配色圖示同時顯示。分享鈕踩過同一個坑。 */
+.prefbtn svg[hidden]{display:none}
+/* 「A」的大小就是目前的字級階數——一顆圖示也要看得出現在在哪一階 */
+.fsglyph{font-weight:700;line-height:1}
+.fsbtn.fs0 .fsglyph{font-size:14px}
+.fsbtn.fs1 .fsglyph{font-size:17px}
+.fsbtn.fs2 .fsglyph{font-size:20px}
 /* 寬螢幕：卡片格線為主的匯總頁放寬，段落文字仍鎖在易讀寬度。
    門檻 1140 = 1060 內容 + 左右各 40 的呼吸空間；不到這個寬度放寬沒有意義。
    .hero 的說明、.lede、.sd、搜尋框都是「一行一行讀的東西」，維持 --maxw；
@@ -1842,25 +1861,34 @@ def search_script() -> str:
 #
 # 內容完全沿用原本那十項，沒有新增任何宣稱；True 代表加粗顯示的重點項目。
 # ---------------------------------------------------------------------------
-# 字級控制
+# 字級與配色
 #
-# 讀者以中高齡為主，老花是實際存在的閱讀障礙。全站的 CSS 用 px，改根字級
-# 沒有效果，所以沿用卡片區已經驗證過的做法：用 zoom 放大「有內容的容器」
-# （.zoomable），頁首、導覽與字級按鈕本身維持原大小，觸控範圍不受影響。
+# 讀者以中高齡為主，老花是實際存在的閱讀障礙；而知道怎麼改手機系統配色的
+# 長輩不多。這兩個控制就是把那兩件事搬到頁面上。
 #
-# 與卡片區的差別有兩點：
-#   1. 三顆明確的按鈕，不是一顆循環切換的。循環鈕要按過才知道有幾階，
-#      對這個年齡層不友善；而且看不出「現在是哪一階」。
-#   2. localStorage 沿用同一個 key（msd_fs），設定一次全站通用——
-#      從衛教站點進卡片區不會突然變回標準。
+# 全站 CSS 用 px，改根字級沒有效果，所以字級是用 zoom 放大「有內容的容器」
+# （.zoomable）——頁首、導覽與控制本身不跟著放大，觸控範圍不受影響。
 #
-# FS_BOOT 放在 <head>：先套用再渲染，否則會先畫出標準字級再跳大。
+# 兩種呈現，作者指定：
+#   手機（<=700px）兩顆圖示鈕，點一下換下一階，省寬度
+#   桌機（>700px）維持原本的文字按鈕列，三個選項一眼看完、直接點
+# 兩套都輸出到 HTML，用媒體查詢切換顯示；JS 讓兩邊狀態同步，
+# 在桌機按了之後縮小視窗，圖示鈕顯示的也是同一個狀態。
+#
+# 圖示鈕仍然要看得出目前狀態（按下去才知道是第幾階對這個年齡層不友善）：
+#   字級：A 這個字隨階數變大（14 / 17 / 20px）
+#   配色：自動＝半明半暗的圓、淺色＝太陽、深色＝月亮
+# aria-label 與 title 也會隨狀態更新。
+#
+# 兩個設定都在 <head> 就套用：先渲染再套會看到跳一次，配色尤其明顯——
+# 深色偏好的人會先被閃一下白底。
 # ---------------------------------------------------------------------------
 FS_STEPS = [1, 1.2, 1.45]
 FS_NAMES = ["標準", "大字", "特大"]
+THEME_KEYS = ["auto", "light", "dark"]
+THEME_NAMES = ["自動", "淺色", "深色"]
+THEME_FULL = ["跟隨系統", "淺色", "深色"]      # 圖示鈕的說明用完整講法
 
-# 兩個設定都要在 <head> 就套用：先渲染再套的話，會看到字級或配色跳一次。
-# 配色尤其明顯——深色偏好的人會先被閃一下白底。
 FS_BOOT = (
     "<script>try{var _S=[" + ",".join(str(s) for s in FS_STEPS) + "],"
     "_i=Math.min(2,Math.max(0,+localStorage.msd_fs||0)),_d=document.documentElement;"
@@ -1869,78 +1897,121 @@ FS_BOOT = (
     "var _t=localStorage.kg_theme;"
     "if(_t==='light'||_t==='dark')_d.setAttribute('data-theme',_t)}catch(e){}</script>")
 
-# 主題：三個選項而不是兩個。只給「淺色／深色」的話，沒選過的人不知道
-# 現在是哪一種、也回不去「跟著手機走」。「自動」保留了原本的行為當預設。
-THEMES = [("auto", "自動"), ("light", "淺色"), ("dark", "深色")]
+# 三個配色圖示都放進按鈕，用 hidden 切換。
+# ⚠ hidden 靠的是瀏覽器預設樣式的 display:none，作者樣式會蓋掉它，
+#   所以 CSS 必須另外寫 .prefbtn svg[hidden]{display:none}（分享鈕踩過同一個坑）。
+_TH_ICONS = {
+    "auto": ('<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" '
+             'stroke-width="1.8"/>'
+             '<path d="M12 3.5a8.5 8.5 0 000 17z" fill="currentColor"/>'),
+    "light": ('<circle cx="12" cy="12" r="4.4" fill="currentColor"/>'
+              '<g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">'
+              '<path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4'
+              'M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></g>'),
+    "dark": ('<path d="M20 14.2A8.4 8.4 0 019.8 4 8.6 8.6 0 1020 14.2z" '
+             'fill="currentColor"/>'),
+}
 
-FSBAR = ('<div class="prefbar">'
-         '<div class="fsbar" role="group" aria-label="調整字級">'
-         '<span aria-hidden="true">字級</span>'
-         + "".join(f'<button type="button" data-fs="{i}">{esc(n)}</button>'
-                   for i, n in enumerate(FS_NAMES))
-         + '</div>'
-         '<div class="fsbar thbar" role="group" aria-label="切換配色">'
-         '<span aria-hidden="true">配色</span>'
-         + "".join(f'<button type="button" data-th="{k}">{esc(n)}</button>'
-                   for k, n in THEMES)
-         + "</div></div>")
+
+def _svg(key: str) -> str:
+    return (f'<svg viewBox="0 0 24 24" width="21" height="21" '
+            f'data-th-icon="{key}" aria-hidden="true" hidden>'
+            f"{_TH_ICONS[key]}</svg>")
+
+
+FSBAR = (
+    '<div class="prefbar">'
+    # 手機：兩顆圖示鈕
+    '<div class="preficons">'
+    '<button type="button" class="prefbtn fsbtn" id="fsBtn">'
+    '<span class="fsglyph" aria-hidden="true">A</span></button>'
+    '<button type="button" class="prefbtn thbtn" id="thBtn">'
+    + "".join(_svg(k) for k in THEME_KEYS) + "</button></div>"
+    # 桌機：原本的文字按鈕列
+    '<div class="preffull">'
+    '<div class="fsbar" role="group" aria-label="調整字級">'
+    '<span aria-hidden="true">字級</span>'
+    + "".join(f'<button type="button" data-fs="{i}">{esc(n)}</button>'
+              for i, n in enumerate(FS_NAMES))
+    + '</div>'
+    '<div class="fsbar thbar" role="group" aria-label="切換配色">'
+    '<span aria-hidden="true">配色</span>'
+    + "".join(f'<button type="button" data-th="{k}">{esc(n)}</button>'
+              for k, n in zip(THEME_KEYS, THEME_NAMES))
+    + "</div></div></div>")
 
 FS_SCRIPT = """<script>
 (function(){
-  var S=[%s], bar=document.querySelector('.fsbar');
-  if(!bar) return;
-  var btns=bar.querySelectorAll('button');
-  function cur(){ try{ return Math.min(2,Math.max(0,+localStorage.msd_fs||0)); }
-                  catch(e){ return 0; } }
-  function apply(i){
-    var d=document.documentElement;
+  var S=[%(steps)s], FN=%(fsnames)s, TK=%(thkeys)s, TF=%(thfull)s;
+  var d=document.documentElement;
+  var fb=document.getElementById('fsBtn'), tb=document.getElementById('thBtn');
+  var fRow=document.querySelector('.preffull .fsbar:not(.thbar)');
+  var tRow=document.querySelector('.preffull .thbar');
+  if(!fb||!tb||!fRow||!tRow) return;
+  var fBtns=fRow.querySelectorAll('button'), tBtns=tRow.querySelectorAll('button');
+
+  function fsCur(){ try{ return Math.min(2,Math.max(0,+localStorage.msd_fs||0)); }
+                    catch(e){ return 0; } }
+  function fsApply(i){
     d.style.setProperty('--fs',S[i]);
-    /* --fsi 是倒數，給「不該跟著放大」的控制項用來抵銷外層的 zoom */
+    /* --fsi 是倒數，給不該跟著放大的控制項抵銷 zoom */
     d.style.setProperty('--fsi',1/S[i]);
-    for(var k=0;k<btns.length;k++)
-      btns[k].setAttribute('aria-pressed', k===i ? 'true' : 'false');
+    fb.className='prefbtn fsbtn fs'+i;
+    fb.setAttribute('aria-label','字級：'+FN[i]+'（點一下改為'+FN[(i+1)%%FN.length]+'）');
+    fb.title=fb.getAttribute('aria-label');
+    /* 兩套 UI 同步：在桌機選過再縮小視窗，圖示鈕顯示的要是同一個狀態 */
+    for(var k=0;k<fBtns.length;k++)
+      fBtns[k].setAttribute('aria-pressed', k===i ? 'true' : 'false');
   }
-  apply(cur());
-  bar.addEventListener('click',function(e){
+  fsApply(fsCur());
+  function fsSet(i){ try{ localStorage.msd_fs=i; }catch(e){} fsApply(i); }
+  fb.addEventListener('click',function(){ fsSet((fsCur()+1)%%S.length); });
+  fRow.addEventListener('click',function(e){
     var b=e.target;
-    while(b && b!==bar && b.tagName!=='BUTTON') b=b.parentNode;
-    if(!b || b===bar) return;
-    var i=+b.getAttribute('data-fs');
-    /* 無痕視窗或封鎖網站資料時 localStorage 會丟例外，
-       但字級本身仍要生效，所以寫入失敗不能中斷後面的 apply。 */
-    try{ localStorage.msd_fs=i; }catch(err){}
-    apply(i);
+    while(b && b!==fRow && b.tagName!=='BUTTON') b=b.parentNode;
+    if(b && b!==fRow) fsSet(+b.getAttribute('data-fs'));
   });
 
-  /* ── 配色 ── */
-  var tb=document.querySelector('.thbar');
-  if(!tb) return;
-  var tbtns=tb.querySelectorAll('button'), d=document.documentElement;
-  function curTheme(){
+  function thCur(){
     try{ var v=localStorage.kg_theme;
-         return (v==='light'||v==='dark') ? v : 'auto'; }
-    catch(e){ return 'auto'; }
+         return v==='light'?1:(v==='dark'?2:0); }catch(e){ return 0; }
   }
-  function applyTheme(v){
-    /* auto 就是把屬性拿掉，讓 CSS 的 prefers-color-scheme media query 接手 */
-    if(v==='auto') d.removeAttribute('data-theme');
-    else d.setAttribute('data-theme',v);
-    for(var k=0;k<tbtns.length;k++)
-      tbtns[k].setAttribute('aria-pressed',
-        tbtns[k].getAttribute('data-th')===v ? 'true' : 'false');
+  function thApply(i){
+    /* 自動＝拿掉屬性，讓 CSS 的 prefers-color-scheme 接手 */
+    if(i===0) d.removeAttribute('data-theme');
+    else d.setAttribute('data-theme',TK[i]);
+    /* 必須用 setAttribute／removeAttribute，不能寫 svg.hidden = false：
+       hidden 是 HTMLElement 的屬性，<svg> 是 SVGElement，指派只會在 JS 物件上
+       多一個沒人看的屬性，HTML 屬性不動——結果三個圖示全部維持隱藏。 */
+    var svgs=tb.querySelectorAll('svg');
+    for(var k=0;k<svgs.length;k++){
+      if(k===i) svgs[k].removeAttribute('hidden');
+      else svgs[k].setAttribute('hidden','');
+    }
+    tb.setAttribute('aria-label','配色：'+TF[i]+'（點一下改為'+TF[(i+1)%%TF.length]+'）');
+    tb.title=tb.getAttribute('aria-label');
+    for(var j=0;j<tBtns.length;j++)
+      tBtns[j].setAttribute('aria-pressed', j===i ? 'true' : 'false');
   }
-  applyTheme(curTheme());
-  tb.addEventListener('click',function(e){
+  thApply(thCur());
+  function thSet(i){
+    try{ if(i===0) localStorage.removeItem('kg_theme');
+         else localStorage.kg_theme=TK[i]; }catch(e){}
+    thApply(i);
+  }
+  tb.addEventListener('click',function(){ thSet((thCur()+1)%%TK.length); });
+  tRow.addEventListener('click',function(e){
     var b=e.target;
-    while(b && b!==tb && b.tagName!=='BUTTON') b=b.parentNode;
-    if(!b || b===tb) return;
-    var v=b.getAttribute('data-th');
-    try{ if(v==='auto') localStorage.removeItem('kg_theme');
-         else localStorage.kg_theme=v; }catch(err){}
-    applyTheme(v);
+    while(b && b!==tRow && b.tagName!=='BUTTON') b=b.parentNode;
+    if(b && b!==tRow) thSet(TK.indexOf(b.getAttribute('data-th')));
   });
 })();
-</script>""" % ",".join(str(s) for s in FS_STEPS)
+</script>""" % {
+    "steps": ",".join(str(s) for s in FS_STEPS),
+    "fsnames": "[" + ",".join(f'"{n}"' for n in FS_NAMES) + "]",
+    "thkeys": "[" + ",".join(f'"{k}"' for k in THEME_KEYS) + "]",
+    "thfull": "[" + ",".join(f'"{n}"' for n in THEME_FULL) + "]",
+}
 
 
 CREDENTIAL_GROUPS = [

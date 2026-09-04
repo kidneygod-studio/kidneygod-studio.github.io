@@ -42,9 +42,17 @@ overflow-wrap:break-word}
    而且四顆一排在 320px 螢幕的特大模式下會擠出畫面（實測整頁橫向溢出 19px）。
    用 --fsi（--fs 的倒數）抵銷外層的 zoom。 */
 .zoomable .share{zoom:var(--fsi,1)}
-/* 兩組控制放同一排；窄螢幕才各佔一排（兩組共八顆按鈕，硬擠一排會太小） */
-.prefbar{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 16px;
-margin:12px 0 -4px}
+/* 字級與配色，緊接在頁首下方、靠右。
+   桌機用文字按鈕列（三個選項一眼看完、直接點），手機用兩顆圖示鈕（省寬度）。
+   斷點沿用頁首那條 700px，「手機」在這個站上一直是同一個定義。 */
+.prefbar{display:flex;justify-content:flex-end;gap:8px;margin:12px 0 -2px}
+.preficons{display:none;gap:8px}
+.preffull{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 16px}
+@media(max-width:700px){
+  .preficons{display:flex}
+  .preffull{display:none}
+}
+/* 桌機的文字按鈕列 */
 .fsbar{display:flex;align-items:center;justify-content:flex-end;gap:6px;
 font-size:13.5px;color:var(--mut)}
 .fsbar span{margin-right:2px}
@@ -55,10 +63,21 @@ color:var(--mut);cursor:pointer;line-height:1.2}
 .fsbar button:hover{border-color:var(--accent);color:var(--accent)}
 .fsbar button[aria-pressed="true"]{background:var(--card);color:var(--fg);
 border-color:var(--accent);font-weight:700}
-@media(max-width:430px){
-  .fsbar{gap:5px;font-size:13px}
-  .fsbar button{padding:8px 11px;font-size:13.5px}
-}
+/* 44px 是觸控目標的下限，這兩顆是給老花讀者按的，不能再小 */
+.prefbtn{width:44px;height:44px;display:inline-flex;align-items:center;
+justify-content:center;border-radius:50%;border:1px solid var(--line);
+background:var(--bg);color:var(--mut);cursor:pointer;padding:0;
+transition:border-color .15s,color .15s}
+.prefbtn:hover{border-color:var(--accent);color:var(--accent)}
+.prefbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* 這一行是必要的：hidden 靠的是瀏覽器預設樣式，作者樣式的 display 會蓋掉它，
+   結果是三個配色圖示同時顯示。分享鈕踩過同一個坑。 */
+.prefbtn svg[hidden]{display:none}
+/* 「A」的大小就是目前的字級階數——一顆圖示也要看得出現在在哪一階 */
+.fsglyph{font-weight:700;line-height:1}
+.fsbtn.fs0 .fsglyph{font-size:14px}
+.fsbtn.fs1 .fsglyph{font-size:17px}
+.fsbtn.fs2 .fsglyph{font-size:20px}
 /* 寬螢幕：卡片格線為主的匯總頁放寬，段落文字仍鎖在易讀寬度。
    門檻 1140 = 1060 內容 + 左右各 40 的呼吸空間；不到這個寬度放寬沒有意義。
    .hero 的說明、.lede、.sd、搜尋框都是「一行一行讀的東西」，維持 --maxw；
@@ -494,7 +513,7 @@ letter-spacing:.4px;line-height:1.5}
 <nav><a href="/articles/"><span class="np">衛教</span>文章</a><a href="/articles/gallery.html"><span class="np">衛教</span>圖卡</a><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html"><span class="np">腎功能</span>計算</a><a href="/about.html" aria-current="page"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
 </div></header>
 <main class="wrap">
-<div class="prefbar"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div>
+<div class="prefbar"><div class="preficons"><button type="button" class="prefbtn fsbtn" id="fsBtn"><span class="fsglyph" aria-hidden="true">A</span></button><button type="button" class="prefbtn thbtn" id="thBtn"><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="auto" aria-hidden="true" hidden><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 000 17z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="light" aria-hidden="true" hidden><circle cx="12" cy="12" r="4.4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></g></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="dark" aria-hidden="true" hidden><path d="M20 14.2A8.4 8.4 0 019.8 4 8.6 8.6 0 1020 14.2z" fill="currentColor"/></svg></button></div><div class="preffull"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div></div>
 <div class="zoomable">
 
 <h1>關於吳政哲醫師與本站</h1>
@@ -585,57 +604,68 @@ letter-spacing:.4px;line-height:1.5}
 </div>
 <script>
 (function(){
-  var S=[1,1.2,1.45], bar=document.querySelector('.fsbar');
-  if(!bar) return;
-  var btns=bar.querySelectorAll('button');
-  function cur(){ try{ return Math.min(2,Math.max(0,+localStorage.msd_fs||0)); }
-                  catch(e){ return 0; } }
-  function apply(i){
-    var d=document.documentElement;
+  var S=[1,1.2,1.45], FN=["標準","大字","特大"], TK=["auto","light","dark"], TF=["跟隨系統","淺色","深色"];
+  var d=document.documentElement;
+  var fb=document.getElementById('fsBtn'), tb=document.getElementById('thBtn');
+  var fRow=document.querySelector('.preffull .fsbar:not(.thbar)');
+  var tRow=document.querySelector('.preffull .thbar');
+  if(!fb||!tb||!fRow||!tRow) return;
+  var fBtns=fRow.querySelectorAll('button'), tBtns=tRow.querySelectorAll('button');
+
+  function fsCur(){ try{ return Math.min(2,Math.max(0,+localStorage.msd_fs||0)); }
+                    catch(e){ return 0; } }
+  function fsApply(i){
     d.style.setProperty('--fs',S[i]);
-    /* --fsi 是倒數，給「不該跟著放大」的控制項用來抵銷外層的 zoom */
+    /* --fsi 是倒數，給不該跟著放大的控制項抵銷 zoom */
     d.style.setProperty('--fsi',1/S[i]);
-    for(var k=0;k<btns.length;k++)
-      btns[k].setAttribute('aria-pressed', k===i ? 'true' : 'false');
+    fb.className='prefbtn fsbtn fs'+i;
+    fb.setAttribute('aria-label','字級：'+FN[i]+'（點一下改為'+FN[(i+1)%FN.length]+'）');
+    fb.title=fb.getAttribute('aria-label');
+    /* 兩套 UI 同步：在桌機選過再縮小視窗，圖示鈕顯示的要是同一個狀態 */
+    for(var k=0;k<fBtns.length;k++)
+      fBtns[k].setAttribute('aria-pressed', k===i ? 'true' : 'false');
   }
-  apply(cur());
-  bar.addEventListener('click',function(e){
+  fsApply(fsCur());
+  function fsSet(i){ try{ localStorage.msd_fs=i; }catch(e){} fsApply(i); }
+  fb.addEventListener('click',function(){ fsSet((fsCur()+1)%S.length); });
+  fRow.addEventListener('click',function(e){
     var b=e.target;
-    while(b && b!==bar && b.tagName!=='BUTTON') b=b.parentNode;
-    if(!b || b===bar) return;
-    var i=+b.getAttribute('data-fs');
-    /* 無痕視窗或封鎖網站資料時 localStorage 會丟例外，
-       但字級本身仍要生效，所以寫入失敗不能中斷後面的 apply。 */
-    try{ localStorage.msd_fs=i; }catch(err){}
-    apply(i);
+    while(b && b!==fRow && b.tagName!=='BUTTON') b=b.parentNode;
+    if(b && b!==fRow) fsSet(+b.getAttribute('data-fs'));
   });
 
-  /* ── 配色 ── */
-  var tb=document.querySelector('.thbar');
-  if(!tb) return;
-  var tbtns=tb.querySelectorAll('button'), d=document.documentElement;
-  function curTheme(){
+  function thCur(){
     try{ var v=localStorage.kg_theme;
-         return (v==='light'||v==='dark') ? v : 'auto'; }
-    catch(e){ return 'auto'; }
+         return v==='light'?1:(v==='dark'?2:0); }catch(e){ return 0; }
   }
-  function applyTheme(v){
-    /* auto 就是把屬性拿掉，讓 CSS 的 prefers-color-scheme media query 接手 */
-    if(v==='auto') d.removeAttribute('data-theme');
-    else d.setAttribute('data-theme',v);
-    for(var k=0;k<tbtns.length;k++)
-      tbtns[k].setAttribute('aria-pressed',
-        tbtns[k].getAttribute('data-th')===v ? 'true' : 'false');
+  function thApply(i){
+    /* 自動＝拿掉屬性，讓 CSS 的 prefers-color-scheme 接手 */
+    if(i===0) d.removeAttribute('data-theme');
+    else d.setAttribute('data-theme',TK[i]);
+    /* 必須用 setAttribute／removeAttribute，不能寫 svg.hidden = false：
+       hidden 是 HTMLElement 的屬性，<svg> 是 SVGElement，指派只會在 JS 物件上
+       多一個沒人看的屬性，HTML 屬性不動——結果三個圖示全部維持隱藏。 */
+    var svgs=tb.querySelectorAll('svg');
+    for(var k=0;k<svgs.length;k++){
+      if(k===i) svgs[k].removeAttribute('hidden');
+      else svgs[k].setAttribute('hidden','');
+    }
+    tb.setAttribute('aria-label','配色：'+TF[i]+'（點一下改為'+TF[(i+1)%TF.length]+'）');
+    tb.title=tb.getAttribute('aria-label');
+    for(var j=0;j<tBtns.length;j++)
+      tBtns[j].setAttribute('aria-pressed', j===i ? 'true' : 'false');
   }
-  applyTheme(curTheme());
-  tb.addEventListener('click',function(e){
+  thApply(thCur());
+  function thSet(i){
+    try{ if(i===0) localStorage.removeItem('kg_theme');
+         else localStorage.kg_theme=TK[i]; }catch(e){}
+    thApply(i);
+  }
+  tb.addEventListener('click',function(){ thSet((thCur()+1)%TK.length); });
+  tRow.addEventListener('click',function(e){
     var b=e.target;
-    while(b && b!==tb && b.tagName!=='BUTTON') b=b.parentNode;
-    if(!b || b===tb) return;
-    var v=b.getAttribute('data-th');
-    try{ if(v==='auto') localStorage.removeItem('kg_theme');
-         else localStorage.kg_theme=v; }catch(err){}
-    applyTheme(v);
+    while(b && b!==tRow && b.tagName!=='BUTTON') b=b.parentNode;
+    if(b && b!==tRow) thSet(TK.indexOf(b.getAttribute('data-th')));
   });
 })();
 </script>

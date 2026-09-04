@@ -42,9 +42,17 @@ overflow-wrap:break-word}
    而且四顆一排在 320px 螢幕的特大模式下會擠出畫面（實測整頁橫向溢出 19px）。
    用 --fsi（--fs 的倒數）抵銷外層的 zoom。 */
 .zoomable .share{zoom:var(--fsi,1)}
-/* 兩組控制放同一排；窄螢幕才各佔一排（兩組共八顆按鈕，硬擠一排會太小） */
-.prefbar{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 16px;
-margin:12px 0 -4px}
+/* 字級與配色，緊接在頁首下方、靠右。
+   桌機用文字按鈕列（三個選項一眼看完、直接點），手機用兩顆圖示鈕（省寬度）。
+   斷點沿用頁首那條 700px，「手機」在這個站上一直是同一個定義。 */
+.prefbar{display:flex;justify-content:flex-end;gap:8px;margin:12px 0 -2px}
+.preficons{display:none;gap:8px}
+.preffull{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 16px}
+@media(max-width:700px){
+  .preficons{display:flex}
+  .preffull{display:none}
+}
+/* 桌機的文字按鈕列 */
 .fsbar{display:flex;align-items:center;justify-content:flex-end;gap:6px;
 font-size:13.5px;color:var(--mut)}
 .fsbar span{margin-right:2px}
@@ -55,10 +63,21 @@ color:var(--mut);cursor:pointer;line-height:1.2}
 .fsbar button:hover{border-color:var(--accent);color:var(--accent)}
 .fsbar button[aria-pressed="true"]{background:var(--card);color:var(--fg);
 border-color:var(--accent);font-weight:700}
-@media(max-width:430px){
-  .fsbar{gap:5px;font-size:13px}
-  .fsbar button{padding:8px 11px;font-size:13.5px}
-}
+/* 44px 是觸控目標的下限，這兩顆是給老花讀者按的，不能再小 */
+.prefbtn{width:44px;height:44px;display:inline-flex;align-items:center;
+justify-content:center;border-radius:50%;border:1px solid var(--line);
+background:var(--bg);color:var(--mut);cursor:pointer;padding:0;
+transition:border-color .15s,color .15s}
+.prefbtn:hover{border-color:var(--accent);color:var(--accent)}
+.prefbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* 這一行是必要的：hidden 靠的是瀏覽器預設樣式，作者樣式的 display 會蓋掉它，
+   結果是三個配色圖示同時顯示。分享鈕踩過同一個坑。 */
+.prefbtn svg[hidden]{display:none}
+/* 「A」的大小就是目前的字級階數——一顆圖示也要看得出現在在哪一階 */
+.fsglyph{font-weight:700;line-height:1}
+.fsbtn.fs0 .fsglyph{font-size:14px}
+.fsbtn.fs1 .fsglyph{font-size:17px}
+.fsbtn.fs2 .fsglyph{font-size:20px}
 /* 寬螢幕：卡片格線為主的匯總頁放寬，段落文字仍鎖在易讀寬度。
    門檻 1140 = 1060 內容 + 左右各 40 的呼吸空間；不到這個寬度放寬沒有意義。
    .hero 的說明、.lede、.sd、搜尋框都是「一行一行讀的東西」，維持 --maxw；
@@ -494,7 +513,7 @@ letter-spacing:.4px;line-height:1.5}
 <nav><a href="/articles/" aria-current="page"><span class="np">衛教</span>文章</a><a href="/articles/gallery.html"><span class="np">衛教</span>圖卡</a><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
 </div></header>
 <main class="wrap">
-<div class="prefbar"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div>
+<div class="prefbar"><div class="preficons"><button type="button" class="prefbtn fsbtn" id="fsBtn"><span class="fsglyph" aria-hidden="true">A</span></button><button type="button" class="prefbtn thbtn" id="thBtn"><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="auto" aria-hidden="true" hidden><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 000 17z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="light" aria-hidden="true" hidden><circle cx="12" cy="12" r="4.4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></g></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="dark" aria-hidden="true" hidden><path d="M20 14.2A8.4 8.4 0 019.8 4 8.6 8.6 0 1020 14.2z" fill="currentColor"/></svg></button></div><div class="preffull"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div></div>
 <div class="zoomable">
 <h1>護腎的生活習慣：真正有證據的，和只是聽起來很養生的</h1><img class="ahero" src="/hero/kidney-lifestyle-evidence.jpg" width="1600" height="900" alt="" aria-hidden="true" fetchpriority="high" decoding="async"><p class='lede'>網路上的護腎建議多到做不完，但它們的證據強度差很多。這篇把常見的做法排出優先順序，說明哪些值得花力氣、哪些只是聽起來很養生，以及被誤解最深的「多喝水」到底該怎麼看。</p><p class='meta'>作者：<a href='/about.html'>吳政哲</a>（腎臟科醫師）　·　發布於 2026-09-01　·　更新於 2026-09-04</p><div class="share top"><div class="sbtns"><button class="sb native" type="button" hidden aria-label="分享" title="分享" data-title="護腎的生活習慣：真正有證據的，和只是聽起來很養生的" data-url="https://kidneygod.net/articles/kidney-lifestyle-evidence.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg></button><a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fkidney-lifestyle-evidence.html" target="_blank" rel="noopener" aria-label="分享到 LINE" title="分享到 LINE"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fkidney-lifestyle-evidence.html" target="_blank" rel="noopener" aria-label="分享到 Facebook" title="分享到 Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a class="sb th" href="https://www.threads.com/intent/post?text=%E8%AD%B7%E8%85%8E%E7%9A%84%E7%94%9F%E6%B4%BB%E7%BF%92%E6%85%A3%EF%BC%9A%E7%9C%9F%E6%AD%A3%E6%9C%89%E8%AD%89%E6%93%9A%E7%9A%84%EF%BC%8C%E5%92%8C%E5%8F%AA%E6%98%AF%E8%81%BD%E8%B5%B7%E4%BE%86%E5%BE%88%E9%A4%8A%E7%94%9F%E7%9A%84%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fkidney-lifestyle-evidence.html" target="_blank" rel="noopener" aria-label="分享到 Threads" title="分享到 Threads"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg></a><button class="sb copy" type="button" aria-label="複製連結" title="複製連結" data-url="https://kidneygod.net/articles/kidney-lifestyle-evidence.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-off fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-on hidden fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></button></div></div><div class="toc"><h2>本頁內容</h2><ol><li><a href="#真正有證據的-由強到弱">真正有證據的，由強到弱</a></li><li><a href="#多喝水-被誤解得最深">「多喝水」被誤解得最深</a></li><li><a href="#這些沒有你以為的那麼有用">這些沒有你以為的那麼有用</a></li><li><a href="#幾個常被問到的">幾個常被問到的</a></li><li><a href="#一張表看完">一張表看完</a></li><li><a href="#怎麼安排你的優先順序">怎麼安排你的優先順序</a></li><li><a href="#常見問題">常見問題</a></li><li><a href="#今天就能開始的三件事">今天就能開始的三件事</a></li></ol></div><p>「醫師，我平常該注意什麼？」</p><p>這是門診裡最好的問題之一，也是最難回答的——因為網路上找得到的護腎建議，多到沒有人做得完。而更麻煩的是，<strong>它們的證據強度天差地遠，看起來卻長得一模一樣。</strong></p><p>自制力是有限的資源。<strong>與其樣樣都做一點，不如把力氣放在真正有用的地方。</strong> 這篇就是在排這個順序。</p><h2 id="真正有證據的-由強到弱">真正有證據的，由強到弱</h2><h3>1. 戒菸</h3><p><strong>這是最被低估的一項。</strong></p><p>抽菸多數人只想到肺和心血管，但它同時是慢性腎臟病進展的獨立危險因子，也會讓蛋白尿增加。對已經有腎臟病的人來說，戒菸的效益在所有生活型態改變裡名列前茅。</p><p><strong>而且它是唯一「完全戒除就能拿回大部分效益」的項目</strong>——不像血壓血糖需要長期維持某個水準，戒了就是戒了。</p><h3>2. 把血壓控制好</h3><p>血壓與腎臟是雙向的：高血壓傷腎，腎功能變差又讓血壓更難控制。這是所有生活型態項目裡，<strong>證據最扎實、效果最直接</strong>的一項。</p><p>它包含減鹽、規律服藥、以及正確地量血壓——<strong>量錯的血壓會讓整條治療路徑走偏</strong>。</p><h3>3. 把血糖控制好</h3><p>糖尿病是台灣洗腎最主要的原因。血糖控制能減少腎病變的發生與進展，這一點證據明確。</p><p>但要提醒：<strong>目標值因人而異</strong>，年長或容易低血糖的人過度嚴格反而有害。</p><h3>4. 減鹽</h3><p>減鹽的效果主要透過降血壓與減少蛋白尿。<strong>台灣人的鈉攝取普遍超標，而八成以上不是來自鹽罐，而是加工食品、醬料與外食湯汁。</strong></p><p>實務上最有效的三件事：<strong>少喝湯、少用醬料、看包裝上的鈉含量</strong>。</p><h3>5. 體重與規律運動</h3><p>減重能減少蛋白尿、改善血壓與血糖。運動則同時作用在血壓、血糖、體重與血脂上。</p><p>一般建議是每週累積約 150 分鐘的中等強度活動。<strong>重點是「規律」而不是「激烈」</strong>——突然的劇烈運動反而可能造成暫時性蛋白尿，甚至橫紋肌溶解。</p><h3>6. 避開傷腎的藥物</h3><p>止痛藥、來路不明的成藥、不明中草藥、以及不必要的顯影劑檢查。</p><p><strong>這一項的特別之處是：它不需要你養成新習慣，只需要你在買藥前問一句話。</strong> 投入報酬率非常高。</p><h3>7. 治療睡眠呼吸中止</h3><p>打鼾嚴重、白天嗜睡、睡醒仍疲倦的人值得評估。睡眠呼吸中止與難以控制的高血壓密切相關，也與腎功能惡化有關聯。</p><p><strong>這一項常常被漏掉</strong>，因為病人不會主動提，醫師也不一定會問。</p><h2 id="多喝水-被誤解得最深">「多喝水」被誤解得最深</h2><p>這大概是最常被講、也最常被講錯的一句。</p><p><strong>正確的部分</strong>：維持足夠的水分，可以減少結石、降低泌尿道感染機會，也能避免脫水造成的急性腎損傷——尤其在腹瀉、發燒、大量流汗的時候。</p><p><strong>被誇大的部分</strong>：「多喝水可以把腎臟洗乾淨」「喝愈多對腎臟愈好」。<strong>腎臟不是水管，沖不掉東西。</strong> 目前並沒有證據支持大量飲水能減緩慢性腎臟病的進展。</p><p><strong>而且喝過量在某些人身上是有害的：</strong></p><ul><li><strong>心臟衰竭、肝硬化、進展期慢性腎臟病</strong>的人，排水能力下降，過量飲水會造成水腫、喘、甚至低血鈉</li><li><strong>正在洗腎</strong>的人有嚴格的水分限制</li></ul><p><strong>所以正確的說法不是「多喝水」，而是「喝足夠的水」。</strong> 足夠是多少？健康成年人每日建議飲水量為<strong>體重（kg）乘以 30–35 ml</strong>，但實際上沒有一體適用的數字。如果有大量流汗或處於高熱環境，就需要攝取更多水分。一般人可以用尿液顏色當粗略指標（淡黃色即可），但<strong>如果你有心臟或腎臟疾病，請直接問你的醫師你的每日建議量。</strong></p><h2 id="這些沒有你以為的那麼有用">這些沒有你以為的那麼有用</h2><p><strong>「排毒」「清血」產品</strong>：腎臟本身就是身體的排毒系統。這類產品多數沒有臨床證據，有些還含利尿或瀉下成分，造成脫水反而傷腎。</p><p><strong>特定「顧腎」食材</strong>：沒有任何單一食物被證實能修復或強化腎功能。吃腰子補腰子更是誤解——內臟類普林與磷含量都高，對腎臟病人反而不利。</p><p><strong>大量蛋白粉或胺基酸補充品</strong>：健身族群常用，但對腎功能不佳的人會增加負擔。<strong>「吃蛋白質長肌肉」和「腎臟能不能處理這些蛋白質」是兩件事。</strong></p><p><strong>過度限制蛋白質</strong>：這是反方向的錯誤。蛋白質攝取量應依腎功能階段由醫師或營養師評估，自行大幅限制會造成營養不良與肌肉流失，對長者尤其危險。</p><p><strong>泡腳、按摩、貼布</strong>：放鬆有其價值，但與腎功能無關。</p><h2 id="幾個常被問到的">幾個常被問到的</h2><p><strong>咖啡</strong>：適量飲用目前並未顯示對腎臟有害。但要注意的是含糖的咖啡飲品，以及它對血壓的短期影響——<strong>量血壓前三十分鐘不要喝</strong>。</p><p><strong>酒</strong>：大量飲酒對肝、血壓、三酸甘油酯都不利，也會影響用藥。減量或戒除是合理的方向。</p><p><strong>憋尿</strong>：長時間憋尿會增加泌尿道感染機會，反覆感染對腎臟不是好事。<strong>有尿意就去，這是零成本的一項。</strong></p><p><strong>熬夜</strong>：睡眠不足與高血壓、代謝異常相關。它不像戒菸那樣有直接的腎臟證據，但透過血壓與代謝間接影響。</p><h2 id="一張表看完">一張表看完</h2><div class="tw"><table><thead><tr><th>做法</th><th>證據</th><th>值不值得花力氣</th></tr></thead><tbody><tr><td><strong>戒菸</strong></td><td>強</td><td><strong>最高</strong>，而且是一次性的決定</td></tr><tr><td><strong>控制血壓</strong></td><td>強</td><td>高</td></tr><tr><td><strong>控制血糖</strong></td><td>強</td><td>高</td></tr><tr><td><strong>減鹽</strong></td><td>中～強</td><td>高，從少喝湯開始</td></tr><tr><td><strong>避開傷腎藥物</strong></td><td>強</td><td>高，<strong>幾乎零成本</strong></td></tr><tr><td>規律運動、控制體重</td><td>中</td><td>中</td></tr><tr><td>治療睡眠呼吸中止</td><td>中</td><td>中，先評估有沒有</td></tr><tr><td>喝足夠的水</td><td>中（避免脫水、結石）</td><td>低～中，足夠即可</td></tr><tr><td>大量喝水「洗腎臟」</td><td>無</td><td>不需要，<strong>部分人有害</strong></td></tr><tr><td>排毒、清血產品</td><td>無</td><td>不需要，<strong>可能有害</strong></td></tr><tr><td>特定「顧腎」食材</td><td>無</td><td>不需要</td></tr><tr><td>大量蛋白粉</td><td>—</td><td>腎功能不佳者<strong>應避免</strong></td></tr><tr><td>過度限制蛋白質</td><td>—</td><td><strong>有害</strong>，需專業評估</td></tr></tbody></table></div><h2 id="怎麼安排你的優先順序">怎麼安排你的優先順序</h2><p>如果你覺得上面太多做不完，用這個順序：</p><p>1. <strong>有抽菸就先戒菸</strong>——效益最大，而且是一次性的決定2. <strong>把血壓和血糖顧好</strong>——包含規律服藥、正確量測、定期追蹤3. <strong>減鹽</strong>——從少喝湯、少用醬料開始4. <strong>買任何藥或保健品前先問藥師</strong>5. <strong>規律活動、控制體重</strong>6. <strong>有打鼾或白天嗜睡就去評估睡眠</strong>7. <strong>水分喝到足夠就好，不需要刻意大量</strong></p><p><strong>注意前四項幾乎都不需要新增時間，只需要改變決定的方式。</strong> 這是它們投入報酬率高的原因。</p><h2 id="常見問題">常見問題</h2><h3>每天到底該喝多少水？</h3><p>健康成年人每日建議飲水量約為<strong>體重（kg）乘以 30–35 ml</strong>，但沒有一體適用的數字，大量流汗或處於高熱環境時需要更多。一般健康成人也可以用尿液顏色作粗略指標，維持淡黃色即可。<strong>但心臟衰竭、肝硬化、進展期慢性腎臟病或正在透析的人有各自的限制，必須依醫師指示。</strong></p><h3>多喝水可以把腎臟「洗乾淨」嗎？</h3><p>不行。腎臟不是水管，沖不掉東西。足夠的水分有助於減少結石與感染、避免脫水傷腎，但沒有證據顯示大量飲水能減緩慢性腎臟病進展。</p><h3>腎臟不好還可以運動嗎？</h3><p>多數可以，而且有益。重點是規律的中等強度活動，避免突然的劇烈運動。若有心血管疾病或其他限制，運動處方請與醫師討論。</p><h3>保健食品完全不能吃嗎？</h3><p>不是完全不能，而是<strong>任何保健品都應該先告訴醫師或藥師</strong>。腎功能不佳時，某些成分會累積，也可能與現有藥物交互作用。宣稱能「顧腎」「排毒」的產品尤其要小心。</p><h3>戒菸真的對腎臟有差嗎？</h3><p>有，而且差別比多數人想像的大。抽菸是慢性腎臟病進展的獨立危險因子，也會增加蛋白尿。在所有生活型態改變裡，戒菸的效益名列前茅。</p><h3>這些做了，腎功能會變好嗎？</h3><p>慢性的損傷不會逆轉，但<strong>惡化的速度可以明顯放慢</strong>。如果能把下降速度壓回接近自然老化的程度，很多人終其一生不會走到需要透析。做這些事的意義不在於「治好」，而在於「爭取時間」。</p><h2 id="今天就能開始的三件事">今天就能開始的三件事</h2><ul><li><strong>如果你抽菸，把戒菸放進下次回診的討論。</strong> 有藥物與門診資源可以協助，不必只靠意志力。</li><li><strong>把「少喝湯」當成這週唯一的飲食目標。</strong> 一次改一件事的成功率，遠高於一次改十件。</li><li><strong>打開你的保健食品櫃，拍張照，下次看診給醫師看。</strong> 你可能會發現有些東西根本不需要吃。</li></ul><p>護腎沒有秘方，也不需要苦行。<strong>真正有效的那幾件事，多數人早就聽過——差別只在有沒有真的去做，以及有沒有把力氣花在對的地方。</strong></p><h2 class="backlink" id="refs">參考來源</h2><div class="refs"><p class="sd">本頁內容依據下列指引與官方資料整理，指引改版時本頁會一併更新。</p><ul><li><a href="https://kdigo.org/guidelines/ckd-evaluation-and-management/" target="_blank" rel="nofollow noopener">KDIGO 2024 慢性腎臟病評估與處置臨床指引</a><span class="org">KDIGO</span></li><li><a href="https://www.hpa.gov.tw/Pages/List.aspx?nodeid=217" target="_blank" rel="nofollow noopener">國民健康署 腎臟病主題專區</a><span class="org">衛生福利部國民健康署</span></li><li><a href="https://www.niddk.nih.gov/health-information/kidney-disease/chronic-kidney-disease-ckd" target="_blank" rel="nofollow noopener">NIDDK 慢性腎臟病專區</a><span class="org">National Institute of Diabetes and Digestive and Kidney Diseases</span></li></ul></div><h2 class="backlink" id="share">分享這篇</h2><div class="share"><p class="sd">覺得有幫助的話，轉給需要的人。</p><div class="sbtns"><button class="sb native" type="button" hidden aria-label="分享" title="分享" data-title="護腎的生活習慣：真正有證據的，和只是聽起來很養生的" data-url="https://kidneygod.net/articles/kidney-lifestyle-evidence.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M12 3v13M12 3l-4 4M12 3l4 4"/></svg></button><a class="sb line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fkidneygod.net%2Farticles%2Fkidney-lifestyle-evidence.html" target="_blank" rel="noopener" aria-label="分享到 LINE" title="分享到 LINE"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a><a class="sb fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkidneygod.net%2Farticles%2Fkidney-lifestyle-evidence.html" target="_blank" rel="noopener" aria-label="分享到 Facebook" title="分享到 Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a class="sb th" href="https://www.threads.com/intent/post?text=%E8%AD%B7%E8%85%8E%E7%9A%84%E7%94%9F%E6%B4%BB%E7%BF%92%E6%85%A3%EF%BC%9A%E7%9C%9F%E6%AD%A3%E6%9C%89%E8%AD%89%E6%93%9A%E7%9A%84%EF%BC%8C%E5%92%8C%E5%8F%AA%E6%98%AF%E8%81%BD%E8%B5%B7%E4%BE%86%E5%BE%88%E9%A4%8A%E7%94%9F%E7%9A%84%20https%3A%2F%2Fkidneygod.net%2Farticles%2Fkidney-lifestyle-evidence.html" target="_blank" rel="noopener" aria-label="分享到 Threads" title="分享到 Threads"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></svg></a><button class="sb copy" type="button" aria-label="複製連結" title="複製連結" data-url="https://kidneygod.net/articles/kidney-lifestyle-evidence.html"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-off fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 13.4a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.4 1.4M13.4 10.6a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.4-1.4"/></svg><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" class=i-on hidden fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></button></div></div>
 <script>
@@ -572,57 +591,68 @@ letter-spacing:.4px;line-height:1.5}
 </div>
 <script>
 (function(){
-  var S=[1,1.2,1.45], bar=document.querySelector('.fsbar');
-  if(!bar) return;
-  var btns=bar.querySelectorAll('button');
-  function cur(){ try{ return Math.min(2,Math.max(0,+localStorage.msd_fs||0)); }
-                  catch(e){ return 0; } }
-  function apply(i){
-    var d=document.documentElement;
+  var S=[1,1.2,1.45], FN=["標準","大字","特大"], TK=["auto","light","dark"], TF=["跟隨系統","淺色","深色"];
+  var d=document.documentElement;
+  var fb=document.getElementById('fsBtn'), tb=document.getElementById('thBtn');
+  var fRow=document.querySelector('.preffull .fsbar:not(.thbar)');
+  var tRow=document.querySelector('.preffull .thbar');
+  if(!fb||!tb||!fRow||!tRow) return;
+  var fBtns=fRow.querySelectorAll('button'), tBtns=tRow.querySelectorAll('button');
+
+  function fsCur(){ try{ return Math.min(2,Math.max(0,+localStorage.msd_fs||0)); }
+                    catch(e){ return 0; } }
+  function fsApply(i){
     d.style.setProperty('--fs',S[i]);
-    /* --fsi 是倒數，給「不該跟著放大」的控制項用來抵銷外層的 zoom */
+    /* --fsi 是倒數，給不該跟著放大的控制項抵銷 zoom */
     d.style.setProperty('--fsi',1/S[i]);
-    for(var k=0;k<btns.length;k++)
-      btns[k].setAttribute('aria-pressed', k===i ? 'true' : 'false');
+    fb.className='prefbtn fsbtn fs'+i;
+    fb.setAttribute('aria-label','字級：'+FN[i]+'（點一下改為'+FN[(i+1)%FN.length]+'）');
+    fb.title=fb.getAttribute('aria-label');
+    /* 兩套 UI 同步：在桌機選過再縮小視窗，圖示鈕顯示的要是同一個狀態 */
+    for(var k=0;k<fBtns.length;k++)
+      fBtns[k].setAttribute('aria-pressed', k===i ? 'true' : 'false');
   }
-  apply(cur());
-  bar.addEventListener('click',function(e){
+  fsApply(fsCur());
+  function fsSet(i){ try{ localStorage.msd_fs=i; }catch(e){} fsApply(i); }
+  fb.addEventListener('click',function(){ fsSet((fsCur()+1)%S.length); });
+  fRow.addEventListener('click',function(e){
     var b=e.target;
-    while(b && b!==bar && b.tagName!=='BUTTON') b=b.parentNode;
-    if(!b || b===bar) return;
-    var i=+b.getAttribute('data-fs');
-    /* 無痕視窗或封鎖網站資料時 localStorage 會丟例外，
-       但字級本身仍要生效，所以寫入失敗不能中斷後面的 apply。 */
-    try{ localStorage.msd_fs=i; }catch(err){}
-    apply(i);
+    while(b && b!==fRow && b.tagName!=='BUTTON') b=b.parentNode;
+    if(b && b!==fRow) fsSet(+b.getAttribute('data-fs'));
   });
 
-  /* ── 配色 ── */
-  var tb=document.querySelector('.thbar');
-  if(!tb) return;
-  var tbtns=tb.querySelectorAll('button'), d=document.documentElement;
-  function curTheme(){
+  function thCur(){
     try{ var v=localStorage.kg_theme;
-         return (v==='light'||v==='dark') ? v : 'auto'; }
-    catch(e){ return 'auto'; }
+         return v==='light'?1:(v==='dark'?2:0); }catch(e){ return 0; }
   }
-  function applyTheme(v){
-    /* auto 就是把屬性拿掉，讓 CSS 的 prefers-color-scheme media query 接手 */
-    if(v==='auto') d.removeAttribute('data-theme');
-    else d.setAttribute('data-theme',v);
-    for(var k=0;k<tbtns.length;k++)
-      tbtns[k].setAttribute('aria-pressed',
-        tbtns[k].getAttribute('data-th')===v ? 'true' : 'false');
+  function thApply(i){
+    /* 自動＝拿掉屬性，讓 CSS 的 prefers-color-scheme 接手 */
+    if(i===0) d.removeAttribute('data-theme');
+    else d.setAttribute('data-theme',TK[i]);
+    /* 必須用 setAttribute／removeAttribute，不能寫 svg.hidden = false：
+       hidden 是 HTMLElement 的屬性，<svg> 是 SVGElement，指派只會在 JS 物件上
+       多一個沒人看的屬性，HTML 屬性不動——結果三個圖示全部維持隱藏。 */
+    var svgs=tb.querySelectorAll('svg');
+    for(var k=0;k<svgs.length;k++){
+      if(k===i) svgs[k].removeAttribute('hidden');
+      else svgs[k].setAttribute('hidden','');
+    }
+    tb.setAttribute('aria-label','配色：'+TF[i]+'（點一下改為'+TF[(i+1)%TF.length]+'）');
+    tb.title=tb.getAttribute('aria-label');
+    for(var j=0;j<tBtns.length;j++)
+      tBtns[j].setAttribute('aria-pressed', j===i ? 'true' : 'false');
   }
-  applyTheme(curTheme());
-  tb.addEventListener('click',function(e){
+  thApply(thCur());
+  function thSet(i){
+    try{ if(i===0) localStorage.removeItem('kg_theme');
+         else localStorage.kg_theme=TK[i]; }catch(e){}
+    thApply(i);
+  }
+  tb.addEventListener('click',function(){ thSet((thCur()+1)%TK.length); });
+  tRow.addEventListener('click',function(e){
     var b=e.target;
-    while(b && b!==tb && b.tagName!=='BUTTON') b=b.parentNode;
-    if(!b || b===tb) return;
-    var v=b.getAttribute('data-th');
-    try{ if(v==='auto') localStorage.removeItem('kg_theme');
-         else localStorage.kg_theme=v; }catch(err){}
-    applyTheme(v);
+    while(b && b!==tRow && b.tagName!=='BUTTON') b=b.parentNode;
+    if(b && b!==tRow) thSet(TK.indexOf(b.getAttribute('data-th')));
   });
 })();
 </script>
