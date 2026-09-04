@@ -538,8 +538,11 @@ KIDNEY_SVG = (
 CSS = """
 :root{--bg:#fdfcfa;--fg:#22201d;--mut:#5a544b;--line:#e6e1d8;--card:#f6f3ed;
 --accent:#0f766e;--accent2:#0d5f59;--warn:#8a5a00;--maxw:720px}
-@media (prefers-color-scheme:dark){:root{--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
+/* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
 --line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--warn:#fbbf24}}
+:root[data-theme="dark"]{--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
+--line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--warn:#fbbf24}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
@@ -557,8 +560,11 @@ overflow-wrap:break-word}
    而且四顆一排在 320px 螢幕的特大模式下會擠出畫面（實測整頁橫向溢出 19px）。
    用 --fsi（--fs 的倒數）抵銷外層的 zoom。 */
 .zoomable .share{zoom:var(--fsi,1)}
+/* 兩組控制放同一排；窄螢幕才各佔一排（兩組共八顆按鈕，硬擠一排會太小） */
+.prefbar{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 16px;
+margin:12px 0 -4px}
 .fsbar{display:flex;align-items:center;justify-content:flex-end;gap:6px;
-margin:12px 0 -4px;font-size:13.5px;color:var(--mut)}
+font-size:13.5px;color:var(--mut)}
 .fsbar span{margin-right:2px}
 /* 內距給到 8px：按鈕高度約 36px，是給老花讀者按的，不能只做成小標籤 */
 .fsbar button{font-family:inherit;font-size:14px;padding:8px 13px;
@@ -662,7 +668,9 @@ p{margin:0 0 18px}
    按鈕、邊框、h2 錨點那些不是拿來讀的，維持原本的品牌青，外觀不變。
    深色模式的連結本來就有 12.4，不需要動，所以把它還原成 --accent。 */
 a{color:var(--accent2)}
-@media (prefers-color-scheme:dark){a{color:var(--accent)}}
+/* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) a{color:var(--accent)}}
+:root[data-theme="dark"] a{color:var(--accent)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:15px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 /* 衛教文章頁的「常見問題」：只有問句與連結，答案在點進去的那篇長文裡。
@@ -678,9 +686,11 @@ font-size:1rem;line-height:1.6}
 /* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
    色票要能跟著深色模式走，不能寫死。 */
 :root{--wbg:#fff6f0;--wline:#c05621;--wttl:#9c4221}
-@media (prefers-color-scheme:dark){
-  :root{--wbg:#2a1b13;--wline:#c96a34;--wttl:#e9a97e}
+/* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--wbg:#2a1b13;--wline:#c96a34;--wttl:#e9a97e}
 }
+:root[data-theme="dark"]{--wbg:#2a1b13;--wline:#c96a34;--wttl:#e9a97e}
+
 .warnbox{background:var(--wbg);border-left:4px solid var(--wline);padding:16px 18px;
 border-radius:0 8px 8px 0;margin:22px 0}
 .warnbox b{color:var(--wttl);display:block;margin-bottom:8px;font-size:1.05rem}
@@ -1849,17 +1859,31 @@ def search_script() -> str:
 FS_STEPS = [1, 1.2, 1.45]
 FS_NAMES = ["標準", "大字", "特大"]
 
+# 兩個設定都要在 <head> 就套用：先渲染再套的話，會看到字級或配色跳一次。
+# 配色尤其明顯——深色偏好的人會先被閃一下白底。
 FS_BOOT = (
     "<script>try{var _S=[" + ",".join(str(s) for s in FS_STEPS) + "],"
     "_i=Math.min(2,Math.max(0,+localStorage.msd_fs||0)),_d=document.documentElement;"
     "_d.style.setProperty('--fs',_S[_i]);"
-    "_d.style.setProperty('--fsi',1/_S[_i])}catch(e){}</script>")
+    "_d.style.setProperty('--fsi',1/_S[_i]);"
+    "var _t=localStorage.kg_theme;"
+    "if(_t==='light'||_t==='dark')_d.setAttribute('data-theme',_t)}catch(e){}</script>")
 
-FSBAR = ('<div class="fsbar" role="group" aria-label="調整字級">'
+# 主題：三個選項而不是兩個。只給「淺色／深色」的話，沒選過的人不知道
+# 現在是哪一種、也回不去「跟著手機走」。「自動」保留了原本的行為當預設。
+THEMES = [("auto", "自動"), ("light", "淺色"), ("dark", "深色")]
+
+FSBAR = ('<div class="prefbar">'
+         '<div class="fsbar" role="group" aria-label="調整字級">'
          '<span aria-hidden="true">字級</span>'
          + "".join(f'<button type="button" data-fs="{i}">{esc(n)}</button>'
                    for i, n in enumerate(FS_NAMES))
-         + "</div>")
+         + '</div>'
+         '<div class="fsbar thbar" role="group" aria-label="切換配色">'
+         '<span aria-hidden="true">配色</span>'
+         + "".join(f'<button type="button" data-th="{k}">{esc(n)}</button>'
+                   for k, n in THEMES)
+         + "</div></div>")
 
 FS_SCRIPT = """<script>
 (function(){
@@ -1886,6 +1910,34 @@ FS_SCRIPT = """<script>
        但字級本身仍要生效，所以寫入失敗不能中斷後面的 apply。 */
     try{ localStorage.msd_fs=i; }catch(err){}
     apply(i);
+  });
+
+  /* ── 配色 ── */
+  var tb=document.querySelector('.thbar');
+  if(!tb) return;
+  var tbtns=tb.querySelectorAll('button'), d=document.documentElement;
+  function curTheme(){
+    try{ var v=localStorage.kg_theme;
+         return (v==='light'||v==='dark') ? v : 'auto'; }
+    catch(e){ return 'auto'; }
+  }
+  function applyTheme(v){
+    /* auto 就是把屬性拿掉，讓 CSS 的 prefers-color-scheme media query 接手 */
+    if(v==='auto') d.removeAttribute('data-theme');
+    else d.setAttribute('data-theme',v);
+    for(var k=0;k<tbtns.length;k++)
+      tbtns[k].setAttribute('aria-pressed',
+        tbtns[k].getAttribute('data-th')===v ? 'true' : 'false');
+  }
+  applyTheme(curTheme());
+  tb.addEventListener('click',function(e){
+    var b=e.target;
+    while(b && b!==tb && b.tagName!=='BUTTON') b=b.parentNode;
+    if(!b || b===tb) return;
+    var v=b.getAttribute('data-th');
+    try{ if(v==='auto') localStorage.removeItem('kg_theme');
+         else localStorage.kg_theme=v; }catch(err){}
+    applyTheme(v);
   });
 })();
 </script>""" % ",".join(str(s) for s in FS_STEPS)
@@ -2407,14 +2459,21 @@ FOOD_CSS_JS = r"""
   --hi-bg:#fdf0ee; --hi-line:#e9b4aa;
   --chip-bg:#fafafa;
 }
-@media (prefers-color-scheme:dark){
-  :root{
+/* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
     --lo-bg:#17251b; --lo-line:#2f4a35;
     --mid-bg:#2a2415; --mid-line:#5a4a1e;
     --hi-bg:#2b1a18; --hi-line:#5c302a;
     --chip-bg:#1a1712;
   }
 }
+:root[data-theme="dark"]{
+    --lo-bg:#17251b; --lo-line:#2f4a35;
+    --mid-bg:#2a2415; --mid-line:#5a4a1e;
+    --hi-bg:#2b1a18; --hi-line:#5c302a;
+    --chip-bg:#1a1712;
+  }
+
 .foodtool{margin:26px 0 34px}
 .fsearch{display:flex;gap:10px;flex-wrap:wrap}
 .fsearch input{flex:1 1 240px;min-width:0;padding:13px 15px;font-size:1.05rem;
@@ -2755,12 +2814,21 @@ font-weight:700;border:1px solid currentColor;margin-left:8px;vertical-align:mid
 .s-g4,.s-g5{color:var(--bad,#a33)}
 .cnote{font-size:13px;color:var(--mut);line-height:1.7;margin-top:4px}
 .cerr{color:#b03a2e;font-size:13.5px;margin-top:8px}
-@media(prefers-color-scheme:dark){
-  .s-g1,.s-g2{color:#7fd6a0}
-  .s-g3a,.s-g3b{color:#e0b25c}
-  .s-g4,.s-g5{color:#e88a80}
-  .cerr{color:#e88a80}
+/* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
+/* 逗號分隔的選擇器要用 :is() 包起來——寫成
+   「:root:not([data-theme="light"]) .s-g1,.s-g2」的話，前綴只會套到 .s-g1，
+   .s-g2 變成無條件深色，淺色模式下就會是綠字配白底。 */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) :is(.s-g1,.s-g2){color:#7fd6a0}
+  :root:not([data-theme="light"]) :is(.s-g3a,.s-g3b){color:#e0b25c}
+  :root:not([data-theme="light"]) :is(.s-g4,.s-g5){color:#e88a80}
+  :root:not([data-theme="light"]) .cerr{color:#e88a80}
 }
+:root[data-theme="dark"] :is(.s-g1,.s-g2){color:#7fd6a0}
+:root[data-theme="dark"] :is(.s-g3a,.s-g3b){color:#e0b25c}
+:root[data-theme="dark"] :is(.s-g4,.s-g5){color:#e88a80}
+:root[data-theme="dark"] .cerr{color:#e88a80}
+
 @media(max-width:560px){ .cform{grid-template-columns:1fr} }
 </style>
 <script>
