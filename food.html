@@ -18,9 +18,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
-:root{--bg:#fdfcfa;--fg:#22201d;--mut:#6b645c;--line:#e6e1d8;--card:#f6f3ed;
+:root{--bg:#fdfcfa;--fg:#22201d;--mut:#5a544b;--line:#e6e1d8;--card:#f6f3ed;
 --accent:#0f766e;--accent2:#0d5f59;--warn:#8a5a00;--maxw:720px}
-@media (prefers-color-scheme:dark){:root{--bg:#16140f;--fg:#eae5dc;--mut:#a3998a;
+@media (prefers-color-scheme:dark){:root{--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
 --line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--warn:#fbbf24}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
@@ -90,7 +90,7 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
 @media(max-width:410px){
   .brand{font-size:.88rem;gap:5px}
   .brand svg{width:20px;height:20px}
-  header.site nav a{padding:9px 6px;font-size:12.5px}
+  header.site nav a{padding:9px 5px;font-size:13.5px}
 }
 /* 最小的一批。門檻 365 不是 340：341–365 這段（多數 Android 的 360、
    部分 344）同樣是兩階之間的漏網區。
@@ -99,7 +99,7 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
 @media(max-width:365px){
   .brand{font-size:.8rem;gap:4px}
   .brand svg{width:18px;height:18px}
-  header.site nav a{padding:9px 2px;font-size:12px}
+  header.site nav a{padding:9px 2px;font-size:13px}
   header.site nav{gap:0}
 }
 h1{font-size:1.85rem;line-height:1.35;margin:28px 0 10px;letter-spacing:-.01em}
@@ -114,7 +114,7 @@ h3{font-size:1.05rem;margin:26px 0 8px;color:var(--mut)}
 p{margin:0 0 18px}
 a{color:var(--accent)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
-.meta{font-size:13.5px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.meta{font-size:15px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 /* 衛教文章頁的「常見問題」：只有問句與連結，答案在點進去的那篇長文裡。
    問句比一般列表長，所以用單欄、每項獨立一行的排法，不用多欄擠在一起。 */
 .qlist{list-style:none;padding:0;margin:18px 0 32px;
@@ -148,7 +148,7 @@ article.card{border-top:1px solid var(--line);padding-top:6px}
 padding:16px 18px;text-decoration:none;color:var(--fg)}
 .cats a:hover{border-color:var(--accent)}
 .cats .t{font-weight:700;margin-bottom:4px}
-.cats .d{font-size:13.5px;color:var(--mut);line-height:1.6}
+.cats .d{font-size:14.5px;color:var(--mut);line-height:1.6}
 .author{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);
 border-radius:12px;padding:16px 18px;margin:40px 0 20px;font-size:14.5px;line-height:1.7}
 .author .n{font-weight:700}
@@ -159,7 +159,7 @@ border-radius:12px;padding:16px 18px;margin:40px 0 20px;font-size:14.5px;line-he
    但它是佐證不是主文，所以壓小、放在簡介之後。 */
 .author .rev{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);
 font-size:12.5px;color:var(--mut)}
-.disclaimer{font-size:13.5px;color:var(--mut);background:var(--card);border-left:3px solid var(--warn);
+.disclaimer{font-size:15px;color:var(--mut);background:var(--card);border-left:3px solid var(--warn);
 padding:14px 16px;border-radius:0 8px 8px 0;margin:26px 0}
 /* 參考來源：是佐證不是主文，所以整體壓小、用 --mut，但連結本身要看得出可以按。
    機構名另起一行當附屬資訊，避免和指引名稱在視覺上打架。 */
@@ -201,7 +201,7 @@ transition:border-color .15s,color .15s}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}
 .sb.th:hover{border-color:var(--fg);color:var(--fg)}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
-font-size:13.5px;color:var(--mut)}
+font-size:14.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}
 .fcontact{margin:8px 0 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
 /* 選擇器要比 footer.site a（0,1,2）更明確，否則信箱會被壓成灰色 --mut，
@@ -259,7 +259,7 @@ border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var
 gap:12px;margin-bottom:12px}
 .gg-head b{font-size:1.08rem}
 .gg-head span{font-size:13.5px;color:var(--mut);white-space:nowrap}
-.gg-sub{font-size:13.5px;color:var(--mut);line-height:1.65;margin:-6px 0 12px}
+.gg-sub{font-size:14.5px;color:var(--mut);line-height:1.65;margin:-6px 0 12px}
 /* Day 編號做成小標籤，一眼看得出這是一堂一堂連著的課 */
 .galcard .day{display:inline-block;font-size:12px;font-weight:700;color:var(--accent2);
 background:var(--card);border:1px solid var(--line);border-radius:6px;
@@ -391,7 +391,7 @@ display:flex;align-items:center;justify-content:center}
 .mcard .k{font-size:11.5px;font-weight:700;color:var(--accent);letter-spacing:1.2px;
 margin-bottom:6px}
 .mcard .t{font-weight:700;font-size:1.02rem;line-height:1.5;margin-bottom:5px}
-.mcard .d{font-size:13.5px;color:var(--mut);line-height:1.65}
+.mcard .d{font-size:14.5px;color:var(--mut);line-height:1.65}
 .mag .mcard.cover{grid-column:1/-1}
 .mag .mcard.cover img,.mag .mcard.cover .mph{aspect-ratio:2.5/1}
 .mag .mcard.cover .t{font-size:1.32rem}
@@ -406,7 +406,7 @@ margin-bottom:6px}
 text-decoration:none;color:var(--fg);background:var(--card);margin-bottom:12px}
 .feat:hover{border-color:var(--accent)}
 .feat .t{font-weight:700;font-size:1.05rem;margin-bottom:5px;line-height:1.5}
-.feat .d{font-size:14px;color:var(--mut);line-height:1.65}
+.feat .d{font-size:15px;color:var(--mut);line-height:1.65}
 
 /* 商城入口：刻意沿用商城本身的深色＋金框風格，在淺色頁面上形成強烈對比，
    讓它成為整個首頁最醒目的元素。
@@ -488,7 +488,7 @@ border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer
 /* 全站的 h3 是灰色次級小標（color:var(--mut)），但食物名稱是卡片主體，
    要用正文色。圖卡的 .galcard h3 也是同樣的覆寫。 */
 .fcard h3{margin:0 0 3px;font-size:1.06rem;color:var(--fg)}
-.fcard .fmeta{color:var(--mut);font-size:.83rem;margin:0 0 10px}
+.fcard .fmeta{color:var(--mut);font-size:14.5px;margin:0 0 10px}
 .fvals{display:flex;flex-wrap:wrap;gap:8px}
 .fv{display:flex;align-items:baseline;gap:6px;padding:6px 11px;border-radius:999px;
 font-size:.9rem;border:1px solid var(--line);background:var(--chip-bg);color:var(--fg)}
