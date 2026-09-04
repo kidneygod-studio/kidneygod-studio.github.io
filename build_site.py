@@ -543,8 +543,34 @@ CSS = """
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
--webkit-text-size-adjust:100%}
+-webkit-text-size-adjust:100%;
+/* 信箱、帳號代號這類沒有斷點的長字串，在窄容器裡會整串撐出去
+   （about 頁的 contact@kidneygod.net 與 @kidney.godreborn 實測會溢出）。
+   只影響「本來就會溢出的字」，一般中文排版不受影響。 */
+overflow-wrap:break-word}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+/* 字級控制。zoom 放在內容容器上，頁首、導覽與這排按鈕本身不跟著放大，
+   觸控範圍與版面骨架維持不變。CSS 全站用 px，改根字級沒有效果，
+   所以只能用 zoom。 */
+.zoomable{zoom:var(--fs,1)}
+/* 分享按鈕不跟著放大：它們已經是 44px 的標準觸控尺寸，放到 64px 沒有意義，
+   而且四顆一排在 320px 螢幕的特大模式下會擠出畫面（實測整頁橫向溢出 19px）。
+   用 --fsi（--fs 的倒數）抵銷外層的 zoom。 */
+.zoomable .share{zoom:var(--fsi,1)}
+.fsbar{display:flex;align-items:center;justify-content:flex-end;gap:6px;
+margin:12px 0 -4px;font-size:13.5px;color:var(--mut)}
+.fsbar span{margin-right:2px}
+/* 內距給到 8px：按鈕高度約 36px，是給老花讀者按的，不能只做成小標籤 */
+.fsbar button{font-family:inherit;font-size:14px;padding:8px 13px;
+border-radius:99px;border:1px solid var(--line);background:var(--bg);
+color:var(--mut);cursor:pointer;line-height:1.2}
+.fsbar button:hover{border-color:var(--accent);color:var(--accent)}
+.fsbar button[aria-pressed="true"]{background:var(--card);color:var(--fg);
+border-color:var(--accent);font-weight:700}
+@media(max-width:430px){
+  .fsbar{gap:5px;font-size:13px}
+  .fsbar button{padding:8px 11px;font-size:13.5px}
+}
 /* 寬螢幕：卡片格線為主的匯總頁放寬，段落文字仍鎖在易讀寬度。
    門檻 1140 = 1060 內容 + 左右各 40 的呼吸空間；不到這個寬度放寬沒有意義。
    .hero 的說明、.lede、.sd、搜尋框都是「一行一行讀的東西」，維持 --maxw；
@@ -661,7 +687,11 @@ border-radius:0 8px 8px 0;margin:22px 0}
 .toc ol{margin:0;padding-left:20px}
 .toc li{margin:5px 0;font-size:15px}
 article.card{border-top:1px solid var(--line);padding-top:6px}
-.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:26px 0}
+/* minmax 的下限要用 min(220px,100%)：寫死 220px 的話，容器只要比 220 窄
+   （很窄的手機、或字級調到特大讓可用寬度縮成 193px）格線就撐出容器，
+   整頁跟著橫向捲動。min() 讓下限最多只到容器本身的寬度。 */
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));
+gap:14px;margin:26px 0}
 .cats a{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;
 padding:16px 18px;text-decoration:none;color:var(--fg)}
 .cats a:hover{border-color:var(--accent)}
@@ -730,8 +760,11 @@ footer.site .fcontact .note{font-size:12.5px;color:var(--mut)}
 font-variant-numeric:tabular-nums}
 .views b{color:var(--fg);font-weight:700}
 .social{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
-.social a{display:inline-flex;align-items:center;gap:6px;
-padding:6px 13px;border:1px solid var(--line);border-radius:999px;
+/* max-width + 內部也允許換行：.social 的 flex-wrap 只會在膠囊「之間」換行，
+   單一顆膠囊比容器寬時（「Threads @kidney.godreborn」在 193px 容器裡是 226px）
+   還是會撐出去。讓膠囊自己的內容也能折行才擋得住。 */
+.social a{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;
+max-width:100%;padding:6px 13px;border:1px solid var(--line);border-radius:999px;
 text-decoration:none;font-size:.92rem;color:var(--mut)}
 .social a:hover{border-color:var(--fg);color:var(--fg)}
 .social .nt{color:var(--mut);font-size:.8rem;opacity:.85}
@@ -890,7 +923,8 @@ border-radius:14px;margin:18px 0 22px;background:var(--card)}
    每篇一張大圖（hero/<slug>.jpg），第一篇佔滿整排當封面。
    圖片是人工放進來的，缺圖時用同尺寸的漸層佔位塊，格線才不會塌。
    aspect-ratio 固定＋img 有 width/height，載入時不會位移（CLS）。 */
-.mag{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));
+.mag{display:grid;gap:14px;
+grid-template-columns:repeat(auto-fill,minmax(min(258px,100%),1fr));
 margin-top:14px}
 .mcard{display:block;text-decoration:none;color:inherit;background:var(--card);
 border:1px solid var(--line);border-radius:14px;overflow:hidden;
@@ -1064,7 +1098,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <meta property="og:image:alt" content="{esc(title)}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<style>{CSS}</style>{extra_head}
+<style>{CSS}</style>{FS_BOOT}{extra_head}
 {ld}
 </head>
 <body>
@@ -1073,6 +1107,8 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <nav>{nav}</nav>
 </div></header>
 <main class="wrap{wide_cls}">
+{FSBAR}
+<div class="zoomable">
 {body}
 <div class="author">
   <div>
@@ -1083,6 +1119,8 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 </div>
 <div class="disclaimer">{esc(DISCLAIMER)}</div>
 {after_disclaimer}
+</div>
+{FS_SCRIPT}
 </main>
 <footer class="site"><div class="wrap{wide_cls}">
 <p>{SITE_NAME}　·　最後更新 {TODAY}　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
@@ -1787,6 +1825,66 @@ def search_script() -> str:
 # E-E-A-T 判定也比一長串未分類的字串清楚。
 #
 # 內容完全沿用原本那十項，沒有新增任何宣稱；True 代表加粗顯示的重點項目。
+# ---------------------------------------------------------------------------
+# 字級控制
+#
+# 讀者以中高齡為主，老花是實際存在的閱讀障礙。全站的 CSS 用 px，改根字級
+# 沒有效果，所以沿用卡片區已經驗證過的做法：用 zoom 放大「有內容的容器」
+# （.zoomable），頁首、導覽與字級按鈕本身維持原大小，觸控範圍不受影響。
+#
+# 與卡片區的差別有兩點：
+#   1. 三顆明確的按鈕，不是一顆循環切換的。循環鈕要按過才知道有幾階，
+#      對這個年齡層不友善；而且看不出「現在是哪一階」。
+#   2. localStorage 沿用同一個 key（msd_fs），設定一次全站通用——
+#      從衛教站點進卡片區不會突然變回標準。
+#
+# FS_BOOT 放在 <head>：先套用再渲染，否則會先畫出標準字級再跳大。
+# ---------------------------------------------------------------------------
+FS_STEPS = [1, 1.2, 1.45]
+FS_NAMES = ["標準", "大字", "特大"]
+
+FS_BOOT = (
+    "<script>try{var _S=[" + ",".join(str(s) for s in FS_STEPS) + "],"
+    "_i=Math.min(2,Math.max(0,+localStorage.msd_fs||0)),_d=document.documentElement;"
+    "_d.style.setProperty('--fs',_S[_i]);"
+    "_d.style.setProperty('--fsi',1/_S[_i])}catch(e){}</script>")
+
+FSBAR = ('<div class="fsbar" role="group" aria-label="調整字級">'
+         '<span aria-hidden="true">字級</span>'
+         + "".join(f'<button type="button" data-fs="{i}">{esc(n)}</button>'
+                   for i, n in enumerate(FS_NAMES))
+         + "</div>")
+
+FS_SCRIPT = """<script>
+(function(){
+  var S=[%s], bar=document.querySelector('.fsbar');
+  if(!bar) return;
+  var btns=bar.querySelectorAll('button');
+  function cur(){ try{ return Math.min(2,Math.max(0,+localStorage.msd_fs||0)); }
+                  catch(e){ return 0; } }
+  function apply(i){
+    var d=document.documentElement;
+    d.style.setProperty('--fs',S[i]);
+    /* --fsi 是倒數，給「不該跟著放大」的控制項用來抵銷外層的 zoom */
+    d.style.setProperty('--fsi',1/S[i]);
+    for(var k=0;k<btns.length;k++)
+      btns[k].setAttribute('aria-pressed', k===i ? 'true' : 'false');
+  }
+  apply(cur());
+  bar.addEventListener('click',function(e){
+    var b=e.target;
+    while(b && b!==bar && b.tagName!=='BUTTON') b=b.parentNode;
+    if(!b || b===bar) return;
+    var i=+b.getAttribute('data-fs');
+    /* 無痕視窗或封鎖網站資料時 localStorage 會丟例外，
+       但字級本身仍要生效，所以寫入失敗不能中斷後面的 apply。 */
+    try{ localStorage.msd_fs=i; }catch(err){}
+    apply(i);
+  });
+})();
+</script>""" % ",".join(str(s) for s in FS_STEPS)
+
+
 CREDENTIAL_GROUPS = [
     ("現職", [
         ("郭綜合醫院腎臟內科主治醫師", True),

@@ -25,8 +25,34 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
--webkit-text-size-adjust:100%}
+-webkit-text-size-adjust:100%;
+/* 信箱、帳號代號這類沒有斷點的長字串，在窄容器裡會整串撐出去
+   （about 頁的 contact@kidneygod.net 與 @kidney.godreborn 實測會溢出）。
+   只影響「本來就會溢出的字」，一般中文排版不受影響。 */
+overflow-wrap:break-word}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+/* 字級控制。zoom 放在內容容器上，頁首、導覽與這排按鈕本身不跟著放大，
+   觸控範圍與版面骨架維持不變。CSS 全站用 px，改根字級沒有效果，
+   所以只能用 zoom。 */
+.zoomable{zoom:var(--fs,1)}
+/* 分享按鈕不跟著放大：它們已經是 44px 的標準觸控尺寸，放到 64px 沒有意義，
+   而且四顆一排在 320px 螢幕的特大模式下會擠出畫面（實測整頁橫向溢出 19px）。
+   用 --fsi（--fs 的倒數）抵銷外層的 zoom。 */
+.zoomable .share{zoom:var(--fsi,1)}
+.fsbar{display:flex;align-items:center;justify-content:flex-end;gap:6px;
+margin:12px 0 -4px;font-size:13.5px;color:var(--mut)}
+.fsbar span{margin-right:2px}
+/* 內距給到 8px：按鈕高度約 36px，是給老花讀者按的，不能只做成小標籤 */
+.fsbar button{font-family:inherit;font-size:14px;padding:8px 13px;
+border-radius:99px;border:1px solid var(--line);background:var(--bg);
+color:var(--mut);cursor:pointer;line-height:1.2}
+.fsbar button:hover{border-color:var(--accent);color:var(--accent)}
+.fsbar button[aria-pressed="true"]{background:var(--card);color:var(--fg);
+border-color:var(--accent);font-weight:700}
+@media(max-width:430px){
+  .fsbar{gap:5px;font-size:13px}
+  .fsbar button{padding:8px 11px;font-size:13.5px}
+}
 /* 寬螢幕：卡片格線為主的匯總頁放寬，段落文字仍鎖在易讀寬度。
    門檻 1140 = 1060 內容 + 左右各 40 的呼吸空間；不到這個寬度放寬沒有意義。
    .hero 的說明、.lede、.sd、搜尋框都是「一行一行讀的東西」，維持 --maxw；
@@ -143,7 +169,11 @@ border-radius:0 8px 8px 0;margin:22px 0}
 .toc ol{margin:0;padding-left:20px}
 .toc li{margin:5px 0;font-size:15px}
 article.card{border-top:1px solid var(--line);padding-top:6px}
-.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:26px 0}
+/* minmax 的下限要用 min(220px,100%)：寫死 220px 的話，容器只要比 220 窄
+   （很窄的手機、或字級調到特大讓可用寬度縮成 193px）格線就撐出容器，
+   整頁跟著橫向捲動。min() 讓下限最多只到容器本身的寬度。 */
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));
+gap:14px;margin:26px 0}
 .cats a{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;
 padding:16px 18px;text-decoration:none;color:var(--fg)}
 .cats a:hover{border-color:var(--accent)}
@@ -212,8 +242,11 @@ footer.site .fcontact .note{font-size:12.5px;color:var(--mut)}
 font-variant-numeric:tabular-nums}
 .views b{color:var(--fg);font-weight:700}
 .social{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
-.social a{display:inline-flex;align-items:center;gap:6px;
-padding:6px 13px;border:1px solid var(--line);border-radius:999px;
+/* max-width + 內部也允許換行：.social 的 flex-wrap 只會在膠囊「之間」換行，
+   單一顆膠囊比容器寬時（「Threads @kidney.godreborn」在 193px 容器裡是 226px）
+   還是會撐出去。讓膠囊自己的內容也能折行才擋得住。 */
+.social a{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;
+max-width:100%;padding:6px 13px;border:1px solid var(--line);border-radius:999px;
 text-decoration:none;font-size:.92rem;color:var(--mut)}
 .social a:hover{border-color:var(--fg);color:var(--fg)}
 .social .nt{color:var(--mut);font-size:.8rem;opacity:.85}
@@ -372,7 +405,8 @@ border-radius:14px;margin:18px 0 22px;background:var(--card)}
    每篇一張大圖（hero/<slug>.jpg），第一篇佔滿整排當封面。
    圖片是人工放進來的，缺圖時用同尺寸的漸層佔位塊，格線才不會塌。
    aspect-ratio 固定＋img 有 width/height，載入時不會位移（CLS）。 */
-.mag{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));
+.mag{display:grid;gap:14px;
+grid-template-columns:repeat(auto-fill,minmax(min(258px,100%),1fr));
 margin-top:14px}
 .mcard{display:block;text-decoration:none;color:inherit;background:var(--card);
 border:1px solid var(--line);border-radius:14px;overflow:hidden;
@@ -435,7 +469,7 @@ letter-spacing:.4px;line-height:1.5}
   .gamebtn img{height:92px}
   .gamebtn .cap{font-size:1.06rem}
 }
-</style>
+</style><script>try{var _S=[1,1.2,1.45],_i=Math.min(2,Math.max(0,+localStorage.msd_fs||0)),_d=document.documentElement;_d.style.setProperty('--fs',_S[_i]);_d.style.setProperty('--fsi',1/_S[_i])}catch(e){}</script>
 <style>
 /* 開放使用的聲明。語氣是正面的邀請，所以用主色細邊而不是警語的橘色，
    視覺份量刻意低於下方的警語方塊。 */
@@ -617,6 +651,8 @@ else calcInit();
 <nav><a href="/articles/"><span class="np">衛教</span>文章</a><a href="/articles/gallery.html"><span class="np">衛教</span>圖卡</a><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html" aria-current="page"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
 </div></header>
 <main class="wrap">
+<div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div>
+<div class="zoomable">
 
 <h1>腎功能計算</h1>
 <p class="lede">腎功能計算採用最新的 <strong>2021 CKD-EPI eGFR</strong> 公式。
@@ -739,6 +775,35 @@ else calcInit();
 </div>
 <div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
 
+</div>
+<script>
+(function(){
+  var S=[1,1.2,1.45], bar=document.querySelector('.fsbar');
+  if(!bar) return;
+  var btns=bar.querySelectorAll('button');
+  function cur(){ try{ return Math.min(2,Math.max(0,+localStorage.msd_fs||0)); }
+                  catch(e){ return 0; } }
+  function apply(i){
+    var d=document.documentElement;
+    d.style.setProperty('--fs',S[i]);
+    /* --fsi 是倒數，給「不該跟著放大」的控制項用來抵銷外層的 zoom */
+    d.style.setProperty('--fsi',1/S[i]);
+    for(var k=0;k<btns.length;k++)
+      btns[k].setAttribute('aria-pressed', k===i ? 'true' : 'false');
+  }
+  apply(cur());
+  bar.addEventListener('click',function(e){
+    var b=e.target;
+    while(b && b!==bar && b.tagName!=='BUTTON') b=b.parentNode;
+    if(!b || b===bar) return;
+    var i=+b.getAttribute('data-fs');
+    /* 無痕視窗或封鎖網站資料時 localStorage 會丟例外，
+       但字級本身仍要生效，所以寫入失敗不能中斷後面的 apply。 */
+    try{ localStorage.msd_fs=i; }catch(err){}
+    apply(i);
+  });
+})();
+</script>
 </main>
 <footer class="site"><div class="wrap">
 <p>護腎教室　·　最後更新 2026-09-04　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
