@@ -701,6 +701,24 @@ border-top:1px solid var(--line)}
 font-size:1rem;line-height:1.6}
 .qlist a::after{content:" →";color:var(--accent);white-space:nowrap}
 .qlist a:hover{color:var(--accent);background:var(--card)}
+/* 文章開頭的重點方塊。借自 JAMA 的 Key Points：問題／發現／意義三段各一句。
+   長文兩千到四千字，很多人只看開頭——這個方塊讓只看三十秒的人也帶得走東西。
+   刻意不用卡片底色：它要看起來像「文章的一部分」，不是插進來的廣告區塊，
+   所以只用左側主色粗線＋上下細線，和站上其他方塊區分開。 */
+.kp{border-left:4px solid var(--accent);border-top:1px solid var(--line);
+border-bottom:1px solid var(--line);padding:16px 0 14px 18px;margin:24px 0 28px}
+.kp h2{font-size:.82rem;font-weight:700;letter-spacing:2px;color:var(--accent2);
+margin:0 0 12px;display:block}
+.kp h2::before{content:none}          /* 這是小標籤，不要 h2 的主色錨點 */
+.kp dl{margin:0}
+.kp dt{font-size:13px;font-weight:700;color:var(--mut);letter-spacing:.5px;
+margin:0 0 3px}
+.kp dd{margin:0 0 13px;font-size:1.02rem;line-height:1.7}
+.kp dd:last-child{margin-bottom:0}
+@media(max-width:700px){
+  .kp{padding-left:14px;margin:20px 0 24px}
+  .kp dd{font-size:1rem}
+}
 .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:26px 0}
 /* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
    色票要能跟著深色模式走，不能寫死。 */
@@ -1438,7 +1456,21 @@ def extract_faq(text: str) -> list[tuple[str, str]]:
 
 def parse_article(md: Path) -> dict:
     """解析一篇 Markdown 長文。
-    格式：`# 標題` / `> 一句話摘要` / `分類：檢查數值`（可省略）/ 內文。"""
+
+    格式：`# 標題` / `> 一句話摘要` / `分類：檢查數值`（可省略）/
+    三行重點（可省略）/ 內文。
+
+    三行重點是 JAMA 每篇文章開頭那個 Key Points 方塊的做法：
+    問題、發現、意義三段各一句。長文兩千到四千字，很多人只會看開頭——
+    這個方塊讓「只看三十秒的人」也帶得走東西。
+
+        重點問題：肌酸酐紅字是不是代表腎臟壞了？
+        重點答案：一次超標不等於壞掉，要看的是趨勢與 eGFR。
+        重點行動：同條件下複驗一次，帶著兩次結果回診。
+
+    三行是刻意的下限也是上限：少一行就湊不出「問題→答案→行動」的結構，
+    多一行就變成第二個摘要，跟導言重複。三行都缺就不輸出方塊。
+    """
     text = md.read_text(encoding="utf-8").strip()
     lines = text.split("\n")
     title = lines[0].lstrip("# ").strip() if lines else md.stem
@@ -1454,9 +1486,39 @@ def parse_article(md: Path) -> dict:
     if rest and re.match(r"^(分類|cat)\s*[:：]", rest[0]):
         cat = re.split(r"[:：]", rest.pop(0), maxsplit=1)[1].strip()
 
+    # 三行重點。順序不限，缺任一行就整個不輸出——只有兩行的方塊看起來像沒寫完。
+    kp = {}
+    while True:
+        while rest and not rest[0].strip():
+            rest.pop(0)
+        m = rest and re.match(r"^重點(問題|答案|行動)\s*[:：](.*)$", rest[0])
+        if not m:
+            break
+        kp[m.group(1)] = m.group(2).strip()
+        rest.pop(0)
+
     return {"slug": md.stem, "title": title, "summary": summary,
             "cat": cat if cat in CAT_SLUG else "",
+            "kp": kp if len(kp) == 3 else {},
             "body": "\n".join(rest), "raw": text}
+
+
+KP_LABELS = [("問題", "這篇在回答什麼"),
+             ("答案", "簡短答案"),
+             ("行動", "你該做什麼")]
+
+
+def keypoints_html(kp: dict) -> str:
+    """文章開頭的重點方塊。三行沒寫齊就什麼都不輸出。
+
+    用 <dl> 而不是 <ul>：這是「標籤—內容」的配對，不是並列的清單項目，
+    讀螢幕的人聽到的會是「這篇在回答什麼：…」而不是三個沒有頭銜的句子。
+    """
+    if not kp:
+        return ""
+    rows = "".join(f"<dt>{esc(label)}</dt><dd>{inline(kp[key])}</dd>"
+                   for key, label in KP_LABELS)
+    return f'<div class="kp"><h2>重點</h2><dl>{rows}</dl></div>'
 
 
 def build_markdown_articles() -> list[dict]:
@@ -1516,6 +1578,7 @@ def build_markdown_articles() -> list[dict]:
                      f'fetchpriority="high" decoding="async">')
         if a["summary"]:
             body += f"<p class='lede'>{esc(a['summary'])}</p>"
+        body += keypoints_html(a["kp"])
         refs = PAGE_SOURCES.get(a["slug"], [])
         itv = ITV.get(a["slug"])
         body += (f"<p class='meta'>作者：<a href='/about.html'>{esc(AUTHOR_NAME)}</a>"
