@@ -981,6 +981,8 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
                      path.replace(".html", "").replace("/", "-")).strip("-") or "index"
 
     # 以格線為主的匯總頁在寬螢幕放寬到 1060px；長文與分類頁維持 720px。
+    # 這個 class 同時掛在 header／main／footer 三個 .wrap 上——只放寬 main
+    # 的話，頁首與頁尾會比內容窄一截，看起來像沒對齊（2026-09-04 實際發生）。
     #
     # 不是全站一起放寬：720px 在 17px 字級下一行約 40 個中文字，正好落在
     # 易讀的區間；放寬到 1060 會變成一行約 60 字，眼睛回到行首時容易跳行。
@@ -1052,7 +1054,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 {ld}
 </head>
 <body>
-<header class="site"><div class="wrap">
+<header class="site"><div class="wrap{wide_cls}">
 <a class="brand" href="/">{KIDNEY_SVG}<span>{SITE_NAME}</span></a>
 <nav>{nav}</nav>
 </div></header>
@@ -1068,7 +1070,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <div class="disclaimer">{esc(DISCLAIMER)}</div>
 {after_disclaimer}
 </main>
-<footer class="site"><div class="wrap">
+<footer class="site"><div class="wrap{wide_cls}">
 <p>{SITE_NAME}　·　最後更新 {TODAY}　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
 <!-- 用途說明跟著信箱一起出現。信箱會出現在每一頁，但完整的界線說明只在
      簡介頁，所以這裡帶一句最關鍵的，並連到完整版。 -->
