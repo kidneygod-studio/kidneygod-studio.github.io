@@ -1000,7 +1000,11 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     # 1440px 螢幕上內容原本只佔 50%，其餘都是空白。
     # 首頁的 path 是空字串（canonical 要 https://kidneygod.net/ 而不是 /index.html），
     # 所以兩種寫法都要列，只寫 index.html 首頁會漏掉。
-    WIDE_PAGES = {"", "index.html", "articles/index.html", "articles/gallery.html"}
+    WIDE_PAGES = {"", "index.html", "articles/index.html", "articles/gallery.html",
+                  "food.html"}
+    # food.html 放寬的理由和匯總頁一樣：主體是一次七八十筆的查詢結果卡片，
+    # 是「掃過去找」不是「一行一行讀」。calc.html 不放寬——它的主體是表單，
+    # 數字欄位拉到 500px 寬只會更難用，而它的公式表已用 .tw.prose 修好。
     wide_cls = " wide" if path in WIDE_PAGES else ""
 
     # 目前所在區塊要標示出來，讀者才知道自己在哪一層
@@ -2330,7 +2334,12 @@ border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer
   .qchip{padding:4px 10px;font-size:.85rem}
   .fquick{gap:5px}
 }
-.fres{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.fres{margin-top:14px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+/* 查詢常常一次列出七八十筆，是「掃過去找」的動作而不是逐筆細讀。
+   寬螢幕排兩欄，一屏看得到的筆數加倍。門檻與 .wrap.wide 同一個。 */
+@media(min-width:1140px){
+  .wrap.wide .fres{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 .fcard{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--card)}
 /* 全站的 h3 是灰色次級小標（color:var(--mut)），但食物名稱是卡片主體，
    要用正文色。圖卡的 .galcard h3 也是同樣的覆寫。 */
