@@ -1,2 +1,6 @@
 __pycache__/
 *.pyc
+
+# 長文大圖的原圖（2752x1536、共 26 MB）。網站只需要 make_hero.py 壓過的那份，
+# 原圖進了 git 歷史就永遠拿不掉。要換圖時把新原圖放進去重跑 make_hero.py 即可。
+hero_src/
