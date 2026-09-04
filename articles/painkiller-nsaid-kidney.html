@@ -138,7 +138,13 @@ h2::before{content:"";flex:0 0 auto;width:4px;height:1.05em;margin-top:.22em;
 border-radius:2px;background:var(--accent)}
 h3{font-size:1.05rem;margin:26px 0 8px;color:var(--mut)}
 p{margin:0 0 18px}
-a{color:var(--accent)}
+/* 連結用比較深的 --accent2 而不是 --accent：#0f766e 對背景只有 5.34、
+   在卡片底上只有 4.94（全站最低，只比 AA 門檻 4.5 高一點）；--accent2 是
+   7.32 / 6.78。連結是要讀的文字，對中高齡讀者該往 AAA 的 7 靠。
+   按鈕、邊框、h2 錨點那些不是拿來讀的，維持原本的品牌青，外觀不變。
+   深色模式的連結本來就有 12.4，不需要動，所以把它還原成 --accent。 */
+a{color:var(--accent2)}
+@media (prefers-color-scheme:dark){a{color:var(--accent)}}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:15px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 /* 衛教文章頁的「常見問題」：只有問句與連結，答案在點進去的那篇長文裡。
