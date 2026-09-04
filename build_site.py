@@ -744,6 +744,10 @@ code{background:var(--card);padding:1px 6px;border-radius:5px;font-size:.92em}
 .tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin:22px 0}
 table{width:100%;border-collapse:collapse;font-size:15px}
 th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+/* 以文字為主的表格（句子、文獻出處）要放行換行，否則一列就能把表格撐到
+   遠寬於畫面，任何螢幕都得左右拉。數值表格維持 nowrap，欄位才對得齊。 */
+.tw.prose th,.tw.prose td{white-space:normal}
+.tw.prose td:first-child{white-space:nowrap}
 th{background:var(--card);font-weight:600;font-size:13.5px;color:var(--mut)}
 tr:last-child td{border-bottom:0}
 .callout{background:var(--card);border-left:3px solid var(--accent);
@@ -2851,7 +2855,11 @@ def build_calc() -> str:
 </div>
 
 <h2 id="gongshi">用的是哪些公式</h2>
-<div class="tw">
+<!-- tw prose：這張表的欄位是句子與文獻出處，不是數值。全域的
+     th,td{white-space:nowrap} 會讓它撐到 1396px，在 1920px 螢幕上都還要
+     左右拉才看得完（2026-09-04 量到）。數值表格維持 nowrap 才對得齊，
+     所以只在這種以文字為主的表格上放行換行。 -->
+<div class="tw prose">
 <table>
   <thead><tr><th>公式</th><th>用途</th><th>來源</th></tr></thead>
   <tbody>
