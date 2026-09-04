@@ -559,38 +559,47 @@ color:var(--fg);font-weight:800;font-size:1.04rem;letter-spacing:.3px;white-spac
 .brand svg{color:var(--accent);flex-shrink:0}
 .brand:hover{color:var(--accent2)}
 header.site nav{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:flex-end}
+/* 內距 11px → 9px：頁首的可用寬度是 .wrap 的 720px 扣掉左右內距＝680px，
+   和視窗多寬無關。七個四字標籤在 11px 內距下正好需要 680px，剛剛好卡住而換行
+   （實測 960px 視窗一樣是兩排）。收到 9px 之後多出約 28px 餘裕。 */
 header.site nav a{font-size:14px;color:var(--mut);text-decoration:none;font-weight:500;
-padding:6px 11px;border-radius:8px;white-space:nowrap;
+padding:6px 9px;border-radius:8px;white-space:nowrap;
 transition:color .15s,background .15s}
 header.site nav a:hover{color:var(--fg);background:var(--card)}
 header.site nav a[aria-current="page"]{color:var(--accent2);background:var(--card);font-weight:700}
 /* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
 header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
 header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
-/* 斷點是 700 不是 600：六個四字標籤加上品牌需要約 600px，
-   在 640px 的視窗就會擠成兩行、頁首從 60px 變 101px。
-   項目數增加時這個門檻要跟著往上調。 */
-@media(max-width:700px){
+/* 斷點 719 不是 700：七個四字標籤加上品牌需要 .wrap 撐到滿寬（720px、
+   內容 680px）才排得下，而視窗 701–719 時 .wrap 只有視窗那麼寬，
+   內容不足 680 就會換行（實測 701px 頁首從 59px 變 102px）。
+   720 以上 .wrap 到頂，桌機再寬也不會更寬——所以這個門檻要跟著 --maxw 走，
+   不是跟著「手機／桌機」的直覺走。項目數增加時要重新量一次。 */
+@media(max-width:719px){
   header.site .wrap{padding-top:8px;padding-bottom:8px;gap:8px}
   .brand{font-size:.95rem;gap:7px}
   .brand svg{width:22px;height:22px}
   header.site nav{gap:2px}
   /* 隱藏「衛教／關於／知識」前綴，只留兩個字，才排得下一行 */
   header.site nav .np{display:none}
-  /* 五個項目時，10px 的水平內距會讓總寬超出約 1px 而換行，頁首從 66px 變 105px。
-     縮到 8px 就排得下。垂直內距不動，點擊區高度不受影響。 */
-  header.site nav a{padding:9px 8px;font-size:13.5px}
+  /* 2026-09-04 加入「常見問答」變成七個項目後，8px 內距在 360–430px 全部
+     換行（實測 393px 頁首從 57px 變 105px）。收到 5px、字級 13px 才排得下。
+     垂直內距一律不動，點擊區高度維持 41px。 */
+  header.site nav a{padding:9px 5px;font-size:13px}
+  .brand{font-size:.9rem}
 }
-/* 小螢幕（iPhone SE 等 320–380px）再收一階，否則仍會換行 */
-@media(max-width:380px){
-  .brand{font-size:.88rem;gap:5px}
+/* 再收一階。門檻原本是 380px，七個項目之後 381–430 這段（iPhone 14/15 Pro
+   的 393、Plus 的 430 都在裡面）餘裕只剩 8px 而換行，所以提高到 430px。 */
+@media(max-width:430px){
+  .brand{font-size:.85rem;gap:5px}
   .brand svg{width:20px;height:20px}
-  header.site nav a{padding:9px 6px;font-size:12.5px}
+  header.site nav a{padding:9px 3px;font-size:12.5px}
 }
-/* 最小的一批（320px，iPhone SE 第一代）。六個項目時差 14px 才排得下，
+/* 最小的一批。門檻原本是 340px（只顧到 iPhone SE 第一代），七個項目之後
+   341–365 這段（Galaxy A 系列的 360、部分 344）會換行，所以提高到 365px。
    收水平內距與品牌字級即可，不必隱藏任何項目。
    垂直內距一律不動，點擊區高度維持 41px。 */
-@media(max-width:340px){
+@media(max-width:365px){
   .brand{font-size:.8rem;gap:4px}
   .brand svg{width:18px;height:18px}
   header.site nav a{padding:9px 2px;font-size:12px}
@@ -609,6 +618,17 @@ p{margin:0 0 18px}
 a{color:var(--accent)}
 .lede{font-size:1.06rem;color:var(--mut);margin-bottom:26px}
 .meta{font-size:13.5px;color:var(--mut);margin:0 0 26px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+/* 常見問題頁的一問一答。全站的 h3 是灰色細字（在長文裡當次級標題剛好），
+   但在這一頁問句才是主角，掃視時要先看到問題再決定要不要讀答案，
+   所以覆寫成主文色的粗體，並用細線把每一題分開。 */
+.qa{margin:0 0 24px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.qa:last-child{border-bottom:0;padding-bottom:0}
+.qa h3{font-size:1.13rem;font-weight:700;color:var(--fg);margin:0 0 10px;
+line-height:1.55;scroll-margin-top:76px}
+.qa p{margin:0 0 12px}
+.qmore{margin:0}
+.qmore a{font-size:14px;font-weight:600;text-decoration:none}
+.qmore a:hover{text-decoration:underline}
 .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:26px 0}
 /* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
    色票要能跟著深色模式走，不能寫死。 */
@@ -954,7 +974,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     in_articles = path.startswith("articles/") and not in_gallery
     cur = {"articles": in_articles, "gallery": in_gallery,
            "about": path == "about.html", "food": path == "food.html",
-           "calc": path == "calc.html"}
+           "calc": path == "calc.html", "faq": path == "faq.html"}
 
     # 四字標籤在手機上會擠成兩行、頁首變高，所以其中兩個字包進 .np 於手機隱藏。
     # 多數項目是「前綴＋主詞」（衛教文章 → 文章），但「食物查詢」相反：
@@ -967,8 +987,10 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
         suf = f'<span class="np">{suffix}</span>' if suffix else ""
         return f'<a href="{href}"{c}{mark}>{pre}{label}{suf}</a>'
 
-    # 手機上顯示：文章／圖卡／食物／計算／作者／遊戲
-    nav = (navlink("/articles/", "衛教", "文章", "articles")
+    # 手機上顯示：問答／文章／圖卡／食物／計算／作者／遊戲
+    # 「常見問答」排第一：多數人來的時候腦子裡是一個問句，不是一個主題。
+    nav = (navlink("/faq.html", "常見", "問答", "faq")
+           + navlink("/articles/", "衛教", "文章", "articles")
            + navlink("/articles/gallery.html", "衛教", "圖卡", "gallery")
            + navlink("/food.html", "", "食物", "food", suffix="查詢")
            + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
@@ -1454,6 +1476,9 @@ def build_search_index(data: list[dict], md_pages: list[dict],
          "查 1,728 種食物的鈉、鉀、磷、蛋白質含量，資料來自衛福部食藥署食品營養成分資料庫。"),
         ("關於吳政哲醫師", "/about.html", "關於",
          "腎臟科專科醫師的資歷、撰寫原則與聯絡方式。"),
+        ("常見問題", "/faq.html", "問答",
+         "肌酸酐紅字、eGFR 60、泡泡尿、止痛藥傷腎、要不要提前做廔管——"
+         "門診最常被問到的問題，逐題回答。"),
         ("全部衛教文章", "/articles/", "導覽", "依主題瀏覽所有衛教內容。"),
         ("衛教圖卡總覽", "/articles/gallery.html", "導覽", "社群上發表過的圖解，依主題整理。"),
     ]:
@@ -1891,6 +1916,166 @@ def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
     }
     out.append((path, page(title, desc, path, body, jsonld)))
     return out
+
+
+# ---------------------------------------------------------------------------
+# 常見問題頁
+#
+# 為什麼要獨立一頁：站上的分類是「血壓管理」「血脂代謝」這種醫學分類，
+# 但病人腦子裡是一個問句——「報告紅字是不是腎壞了」。這一頁把入口從
+# 「網站有什麼」翻成「你想問什麼」，每一題再接到寫得完整的那篇長文。
+#
+# 每個答案 80–150 字，要能單獨成立（有人只會看到這一段就離開），
+# 但不取代長文。link 指向的文章必須真的存在，check_site 會抓到死連結。
+# ---------------------------------------------------------------------------
+FAQ_GROUPS = [
+    ("看懂報告", "kan-dong-bao-gao", [
+        ("健檢報告的肌酸酐紅字，是腎臟壞掉了嗎？",
+         "肌酸酐受肌肉量、當天飲食與水分影響，<b>一次超標不等於腎臟壞掉</b>。"
+         "要看的是換算成 eGFR 之後落在哪一期，以及同樣條件下再驗一次的趨勢。"
+         "真正需要警覺的是持續偏高或一路往上，而不是單一次的紅字。"
+         "肌肉量少的人數值反而偏低，那也不代表腎功能比較好。",
+         "creatinine-high-what-to-do"),
+        ("eGFR 60 是什麼意思？算不算腎臟病？",
+         "60 是分期的分界，但<b>不是「低於 60 就是腎臟病」這麼簡單</b>。"
+         "慢性腎臟病的定義要「持續三個月以上」，而且要一併看有沒有蛋白尿——"
+         "eGFR 正常但有蛋白尿，一樣是腎臟病。年長者的 eGFR 隨年齡下降也很常見。"
+         "單看一個數字最容易嚇到自己。",
+         "egfr-meaning-ckd-stages"),
+        ("尿裡有泡泡，是蛋白尿嗎？",
+         "泡泡本身不等於蛋白尿——水流沖擊、馬桶清潔劑、尿液濃縮都會起泡。"
+         "要判斷得靠驗尿，看尿蛋白與尿液白蛋白／肌酸酐比值。"
+         "<b>值得注意的是細緻、久久不散、而且天天如此的泡泡</b>，"
+         "尤其合併眼皮或腳踝水腫、血壓升高的時候。",
+         "foamy-urine-proteinuria"),
+        ("膽固醇報告紅字，跟腎臟有關係嗎？",
+         "有關係，但不是「膽固醇高會直接把腎臟弄壞」。血脂異常加速的是全身"
+         "血管硬化，而<b>腎臟本來就是一個由血管組成的器官</b>。"
+         "慢性腎臟病本身也會改變血脂的樣貌。看報告時除了 LDL，"
+         "非 HDL 膽固醇往往更能反映整體風險。",
+         "cholesterol-report-ckd"),
+    ]),
+    ("日常照顧", "ri-chang-zhao-gu", [
+        ("多喝水可以顧腎嗎？要喝多少才夠？",
+         "水要喝夠，但「多喝水顧腎」被過度延伸了。健康成年人每日建議約"
+         "體重（公斤）乘以 30–35 毫升；已經有心臟衰竭、水腫，或醫師交代限水的人"
+         "不適用這個算法。<b>喝到超過身體需要，並不會讓腎臟變得更好。</b>",
+         "kidney-lifestyle-evidence"),
+        ("外食很鹹，一天可以吃多少鹽？",
+         "一般建議每日鈉不超過 2,000 毫克，大約是一茶匙鹽。"
+         "但外食的鈉多半藏在<b>湯、醬料與加工品</b>裡，不是桌上的鹽罐。"
+         "實務上先做「湯少喝、醬少沾」，會比努力少加鹽有效得多。",
+         "taiwan-eating-out-sodium"),
+        ("血壓要量幾次才算數？",
+         "722 原則：連續 <b>7</b> 天、早晚各 <b>2</b> 次、每次量 <b>2</b> 遍取平均。"
+         "單次量到高不代表有高血壓，重點是同一條件下的平均值。"
+         "量之前先坐著休息五分鐘、背有靠、腳平放不翹腳，"
+         "壓脈帶綁在手臂與心臟同高的位置。",
+         "home-blood-pressure-measurement"),
+        ("有糖尿病，怎麼知道腎臟開始受影響？",
+         "<b>靠感覺來不及</b>——糖尿病腎病變早期完全沒有症狀。"
+         "要靠定期驗尿（尿液白蛋白／肌酸酐比值）與抽血算 eGFR 才看得出來。"
+         "這也是為什麼糖尿病患者建議每年至少檢查一次，"
+         "而不是等到有症狀才檢查。",
+         "diabetes-kidney-disease"),
+    ]),
+    ("用藥與保健食品", "yong-yao", [
+        ("止痛藥吃了會傷腎嗎？",
+         "不是所有止痛藥都一樣。NSAID 這一類消炎止痛藥會影響腎臟血流，"
+         "脫水、年長、本來腎功能就不好的人風險更高；乙醯胺酚（普拿疼類）的"
+         "機轉不同。<b>依醫囑短期使用，和自己長期連續吃，風險差很多。</b>"
+         "感冒藥與復方止痛藥裡也常含有 NSAID，要看成分。",
+         "painkiller-nsaid-kidney"),
+        ("保健食品和中藥可以吃嗎？",
+         "不是不能吃，但要讓醫師看過成分。腎功能不好的人對鉀、磷與部分"
+         "草本萃取物的耐受度和一般人不同。含馬兜鈴酸的藥材已證實會造成"
+         "腎病變，台灣早已禁用，但來路不明的產品仍可能含有。"
+         "<b>最重要的一條：不要因為吃這些而停掉醫師開的藥。</b>",
+         "no-dialysis-therapy-claims"),
+    ]),
+    ("洗腎與治療", "xi-shen", [
+        ("腎功能掉下來，還有機會恢復嗎？",
+         "要看是急性還是慢性。<b>急性腎損傷</b>（脫水、感染、藥物造成的）"
+         "處理之後常有明顯回升；<b>已經纖維化的慢性腎臟病</b>目前沒有方法逆轉。"
+         "能做的是延緩，而延緩的效果可以很大——好的控制能讓透析晚很多年才到來，"
+         "甚至一輩子用不到。",
+         "kidney-function-recovery"),
+        ("醫師說要準備洗腎了，我還有多久時間？",
+         "開始透析的時機看的是症狀與整體狀況，不是單一個數字——"
+         "同樣 eGFR 的兩個人，處置可以完全不同。"
+         "與其問還有多久，更該問的是<b>現在該開始準備什麼</b>。"
+         "血液透析、腹膜透析與腎臟移植沒有哪一種比較高級，適合的人不一樣。",
+         "kidney-replacement-therapy"),
+        ("洗腎的管路一定要提前準備嗎？",
+         "要。自體動靜脈廔管做完<b>不能馬上使用</b>，需要數週到數月成熟，"
+         "而且可能不成熟、需要再做一次。來不及的話只能在急診插中心靜脈導管——"
+         "感染風險最高，還可能造成中心靜脈狹窄，"
+         "把未來那隻手臂的選項一起賠掉。",
+         "dialysis-access-preparation"),
+        ("網路上說吃某某東西就不用洗腎，是真的嗎？",
+         "目前沒有任何方法能讓已經纖維化的慢性腎臟病逆轉。這類說法通常有"
+         "固定的結構：先給你一句真話、再把「延緩」偷換成「逆轉」、"
+         "用個案見證取代對照數據。"
+         "<b>如果對方要你停掉正規藥物，那就是紅線，不需要再討論下去。</b>",
+         "no-dialysis-therapy-claims"),
+    ]),
+]
+
+
+def build_faq(md_pages: list[dict]) -> str:
+    """常見問題頁。獨立一個分頁，不動現有的首頁結構。"""
+    titles = {a["slug"]: a["title"] for a in md_pages}
+    n = sum(len(v) for _, _, v in FAQ_GROUPS)
+
+    title = f"腎臟病常見問題：{n} 個門診最常被問到的問題｜{SITE_NAME}"
+    desc = ("肌酸酐紅字、eGFR 60、泡泡尿、止痛藥傷腎、要不要提前做廔管——"
+            f"腎臟科醫師逐題回答 {n} 個最常被問到的問題，每題附完整說明。")
+
+    blocks, qa = [], []
+    for label, gid, items in FAQ_GROUPS:
+        rows = []
+        for q, ans, slug in items:
+            qid = slugify(q)
+            link = ""
+            if slug in titles:
+                link = (f'<p class="qmore"><a href="/articles/{slug}.html">'
+                        f'完整說明：{esc(titles[slug])} →</a></p>')
+            rows.append(f'<div class="qa"><h3 id="{qid}">{esc(q)}</h3>'
+                        f"<p>{ans}</p>{link}</div>")
+            # 結構化資料要純文字，把答案裡的 <b> 去掉
+            qa.append((q, re.sub(r"<[^>]+>", "", ans)))
+        blocks.append(f'<h2 id="{gid}">{esc(label)}</h2>' + "".join(rows))
+
+    toc = "".join(f'<li><a href="#{gid}">{esc(label)}</a></li>'
+                  for label, gid, _ in FAQ_GROUPS)
+
+    body = f"""
+<h1>常見問題</h1>
+<p class="lede">門診裡最常被問到的 {n} 個問題，先給你一段能直接用的答案，
+想深入的再往下看完整文章。看完仍然建議與你的主治醫師討論——
+你的狀況只有看得到完整病歷的人才判斷得準。</p>
+<div class="toc"><h2>本頁內容</h2><ol>{toc}</ol></div>
+{"".join(blocks)}
+{share_buttons("faq.html", f"腎臟病常見問題｜{SITE_NAME}")}
+{share_script()}
+<h2 class="backlink">還想看什麼</h2>
+<div class="cats">
+  <a href="/articles/"><div class="t">全部衛教文章</div>
+    <div class="d">依主題瀏覽，或直接看完整長文。</div></a>
+  <a href="/calc.html"><div class="t">腎功能計算</div>
+    <div class="d">把報告上的數值換算成 eGFR 與分期。</div></a>
+</div>
+"""
+    jsonld = {
+        "@context": "https://schema.org", "@type": "FAQPage",
+        "name": "腎臟病常見問題", "inLanguage": "zh-Hant",
+        "url": f"{BASE_URL}/faq.html",
+        "author": author_ld(), **reviewed_ld(),
+        "mainEntity": [{"@type": "Question", "name": q,
+                        "acceptedAnswer": {"@type": "Answer", "text": ans}}
+                       for q, ans in qa],
+    }
+    return page(title, desc, "faq.html", body, jsonld)
 
 
 HERO_DIR = ROOT / "hero"
@@ -2757,6 +2942,10 @@ def main() -> int:
     (ROOT / "about.html").write_text(build_about(), encoding="utf-8")
     print("  about.html　(關於作者，E-E-A-T 權威訊號)")
 
+    n_faq = sum(len(v) for _, _, v in FAQ_GROUPS)
+    (ROOT / "faq.html").write_text(build_faq(md_pages), encoding="utf-8")
+    print(f"  faq.html　(常見問題 {n_faq} 題，問題導向入口)")
+
     (ROOT / "index.html").write_text(
         build_home(by_cat, md_pages, len(gallery_items)), encoding="utf-8")
     print("  index.html　(網站首頁，衛教為主 + 商城大按鈕)")
@@ -2770,7 +2959,7 @@ def main() -> int:
     print(f"  calc.html　(腎功能計算工具{'' if CALC_PUBLISHED else '，未發布'})")
 
     # sitemap：讓搜尋引擎一次拿到所有網址
-    urls = ["", "articles/", "about.html", "shop.html"] + (
+    urls = ["", "faq.html", "articles/", "about.html", "shop.html"] + (
         ["food.html"] if food_html else []) + (
         ["calc.html"] if CALC_PUBLISHED else []) + [
         p for p in written if not p.endswith("index.html")]
