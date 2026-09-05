@@ -2007,7 +2007,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     # 長文隨時可讀，新知是「這陣子才有的」，會過期的東西要放前面。
     news_sect = ""
     if PAPERS:
-        news_sect = (f'<h2 class="sect" id="news">新知</h2>'
+        news_sect = (f'<h2 class="sect" id="news">醫學新知</h2>'
                      f'<div class="sd">主要期刊的最新研究，'
                      f'結構化摘要：問題、發現、意義</div>'
                      f'{digest_card(PAPERS[0], compact=True)}'
