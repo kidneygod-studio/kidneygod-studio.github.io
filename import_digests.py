@@ -55,10 +55,16 @@ JOURNAL = {
 # **順序有意義**：由窄到寬，先命中的贏。
 # 心衰竭、肥胖、代謝症候群這一類跨器官的歸 CKM，那正是這個名詞的用意。
 TOPIC_RULES: list[tuple[str, tuple[str, ...]]] = [
+    # CKM 先判：它是傘狀概念，肥胖／脂肪肝／跨器官代謝的歸這裡。
     ("心腎糖肝代謝症候群", ("CKM", "cardiovascular-kidney-metabolic",
-                            "代謝症候群", "心衰", "heart failure", "射血分數",
-                            "ejection fraction", "肥胖", "obesity", "體重",
-                            "weight", "脂肪肝", "MASLD", "NAFLD")),
+                            "代謝症候群", "metabolic syndrome",
+                            "肥胖", "obesity", "體重", "weight",
+                            "脂肪肝", "MASLD", "NAFLD", "MAFLD")),
+    # 心臟本身的疾病與終點歸心血管疾病，不要被 CKM 全部吸走
+    ("心血管疾病", ("心衰", "heart failure", "射血分數", "ejection fraction",
+                    "心肌梗塞", "myocardial infarction", "冠狀動脈",
+                    "coronary", "心房顫動", "atrial fibrillation",
+                    "中風", "stroke", "瓣膜", "valv")),
     ("高血脂", ("血脂", "膽固醇", "lipid", "cholesterol", "statin",
                 "LDL", "動脈硬化", "atheroscleros")),
     ("高血壓", ("血壓", "hypertens", "blood pressure", "醛固酮",

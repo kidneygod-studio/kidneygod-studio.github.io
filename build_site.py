@@ -3154,6 +3154,8 @@ NEWS_CATS: list[tuple[str, str, str]] = [
     ("htn", "高血壓", "HYPERTENSION"),
     ("dm", "糖尿病", "DIABETES"),
     ("lipid", "高血脂", "DYSLIPIDEMIA"),
+    ("cvd", "心血管疾病", "CARDIOVASCULAR DISEASE"),
+    # CKM 排最後：它是把上面幾項串起來的傘狀概念，不是並列的第六個器官。
     ("ckm", "心腎糖肝代謝症候群", "CKM SYNDROME"),
 ]
 # 從 NEWS_CATS 推出來，不要另外維護一份——
