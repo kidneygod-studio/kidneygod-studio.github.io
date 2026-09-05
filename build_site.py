@@ -2903,140 +2903,35 @@ GUIDELINES: list[tuple[str, str, list[tuple[str, str, str, str, str, str]]]] = [
 # 就沒有 background／methods，頁面上那兩段直接不出現。
 #
 # 順序即顯示順序，新的放前面。首頁只取第一篇。
-PAPERS: list[dict] = [
-    {
-        "journal": "THE LANCET",
-        "date": "2026-09-03",
-        "topic": "腎臟移植",
-        "zh": "豬腎異種移植作為橋接同種移植之首例人體研究",
-        "en": "Porcine Kidney Xenotransplantation as a Bridge to "
-              "Allotransplantation: A First-in-Human Study",
-        "cite": "The Lancet｜2026 年 9 月 3 日｜DOI: 10.1016/S0140-6736(26)01295-X",
-        "url": "https://doi.org/10.1016/S0140-6736(26)01295-X",
-        "q": "基因編輯豬腎異種移植能否作為末期腎病患者等待同種腎臟移植期間的橋接治療，"
-             "且不影響後續接受人類腎臟移植的機會？",
-        "f": "一名末期腎病患者接受基因編輯豬腎（EGEN-2784）移植後，維持透析獨立達 "
-             "271 天；第 14 天出現 T 細胞媒介排斥並經治療緩解；約 6 個月後因免疫抑制"
-             "減量誘發微血管發炎，進展為血栓性微血管病變而移植腎失去功能。移除異種腎 "
-             "82 天後接受人類腎臟移植，追蹤 231 天功能良好且無致敏證據。",
-        "m": "豬腎異種移植可提供長期的透析獨立支持，並且可以安全終止、"
-             "作為後續人體同種移植的橋接策略，未造成臨床顯著致敏或人畜共通感染。",
-        "bg": "器官短缺是腎臟移植領域長期存在的核心問題，異種移植被視為潛在解方之一。"
-              "但異種移植腎能撐多久、會不會傳播人畜共通病原、"
-              "以及它引發的免疫致敏是否會斷送後續接受人類捐贈腎的機會，"
-              "過去都缺乏人體證據。",
-        "me": "一名末期腎病、預期等候屍腎時間長且無合適活體捐贈者的患者，"
-              "於美國麻州總醫院接受基因編輯豬腎移植。該豬腎刪除主要醣類異種抗原、"
-              "去活化豬內源性反轉錄病毒，並植入七個人類轉殖基因。"
-              "免疫抑制以共刺激阻斷為基礎並合併補體抑制劑。"
-              "監測腎功能、流式交叉配對、抗 HLA 抗體與豬源微生物"
-              "（含總體基因體定序）。本研究為計畫收三名病人、"
-              "在美國 FDA 擴大使用研究性新藥申請下進行的首例報告。",
-        "r": [
-            "移植後（2025 年 1 月 25 日）豬腎立即發揮功能，透析獨立狀態維持 271 天",
-            "第 14 天切片顯示 T 細胞媒介排斥反應，經治療後緩解",
-            "約 6 個月時因非人畜共通細菌感染而減少免疫抑制，隨後出現微血管發炎"
-            "並發展為血栓性微血管病變；供者特異性交叉配對持續陰性，"
-            "最終仍導致移植腎失去功能並需切除",
-            "組織分析顯示以巨噬細胞與自然殺手細胞為主；未偵測到豬源病原體傳播，"
-            "抗 HLA 抗體維持不變",
-            "移除異種腎 82 天後接受人類同種腎臟移植，移植腎立即發揮功能，"
-            "追蹤 231 天無致敏證據",
-        ],
-        "sig": "首度以人體證據顯示，豬腎異種移植可作為末期腎病患者等待人類捐贈腎"
-               "之前的過渡性透析獨立支持策略，且移除後不影響後續同種移植的免疫相容性。",
-        "lim": "單一個案報告（計畫三例中的首例），樣本數極小，結果無法外推；"
-               "晚期移植腎失功能的確切免疫機轉（微血管病變合併陰性交叉配對）"
-               "尚未完全闡明，亦無對照組。",
-    },
-    {
-        "journal": "NEJM",
-        "date": "2026",
-        "topic": "IgA 腎病變",
-        "zh": "Sibeprenlimab 治療 IgA 腎病變：第三期試驗期中分析",
-        "en": "Sibeprenlimab in IgA Nephropathy — Interim Analysis of a "
-              "Phase 3 Trial",
-        "cite": "N Engl J Med 2026｜DOI: 10.1056/NEJMoa2512133｜PMID: 41211929",
-        "url": "https://doi.org/10.1056/NEJMoa2512133",
-        "q": "抑制 APRIL 這條上游路徑，能不能減少 IgA 腎病變的蛋白尿？",
-        "f": "第 9 個月時，24 小時尿蛋白／肌酸酐比值下降 50.2%，"
-             "安慰劑組則上升 2.1%。",
-        "m": "IgA 腎病變的治療正從「壓制發炎」轉向「阻斷致病抗體的產生」。"
-             "這是近年一系列新機轉藥物中的一個，讓過去只能用 RAS 抑制劑與類固醇"
-             "的病人多了選項。",
-        "r": [
-            "sibeprenlimab 是選擇性結合並抑制 APRIL 的人源化 IgG2 單株抗體",
-            "第 9 個月 24 小時尿蛋白／肌酸酐比值：治療組 −50.2%，安慰劑組 +2.1%",
-            "嚴重不良事件 3.5% 對安慰劑 4.4%，試驗期間無死亡",
-        ],
-        "lim": "這是第三期試驗的**期中**分析，主要終點為蛋白尿這個替代指標；"
-               "能不能真的延緩腎功能惡化，要等長期的 eGFR 結果。",
-    },
-    {
-        "journal": "THE LANCET",
-        "date": "2026",
-        "topic": "IgA 腎病變",
-        "zh": "Atrasentan 治療 IgA 腎病變（ALIGN）：2.5 年最終結果",
-        "en": "Atrasentan in patients with IgA nephropathy (ALIGN): final "
-              "2·5-year results from a randomised, double-blind, "
-              "placebo-controlled, phase 3 trial",
-        "cite": "The Lancet 2026",
-        "url": "https://www.thelancet.com/journals/lancet/article/"
-               "PIIS0140-6736(26)00960-8/abstract",
-        "q": "選擇性內皮素 A 受體拮抗劑能不能長期保護 IgA 腎病變的腎功能？"
-             "已經在用 SGLT2 抑制劑的人還有沒有額外好處？",
-        "f": "2.5 年的最終結果顯示，atrasentan 降低蛋白尿並保留腎功能；"
-             "**這個效果在有無併用 SGLT2 抑制劑的族群都存在**。",
-        "m": "代表它和 SGLT2 抑制劑是可以疊加的兩條路，而不是二選一——"
-             "這對已經用了標準治療、蛋白尿仍降不下來的病人特別重要。",
-        "r": [
-            "atrasentan 為選擇性內皮素 A 受體拮抗劑",
-            "追蹤 2.5 年，降低蛋白尿並保留腎功能",
-            "療效與是否併用 SGLT2 抑制劑無關",
-        ],
-    },
-    {
-        "journal": "NEJM",
-        "date": "2026-06",
-        "topic": "慢性腎臟病",
-        "zh": "Finerenone 用於非糖尿病的慢性腎臟病（FIND-CKD）",
-        "en": "Finerenone in Persons with Chronic Kidney Disease without Diabetes",
-        "cite": "N Engl J Med 2026（2026 年 6 月 ERA 年會同步發表）"
-                "｜DOI: 10.1056/NEJMoa2604625",
-        "url": "https://doi.org/10.1056/NEJMoa2604625",
-        "q": "finerenone 原本只用在糖尿病腎病變。沒有糖尿病的慢性腎臟病人也有效嗎？",
-        "f": "1,584 位非糖尿病 CKD；主要終點 eGFR 斜率年降幅 −3.3 對 −4.0 "
-             "mL/min/1.73m²（p<0.001）；次要複合腎臟—心血管終點風險下降約 23%。",
-        "m": "非糖尿病的慢性腎臟病人可用的藥一直比糖尿病的少。這個結果等於"
-             "把一個原本被歸類為「糖尿病用藥」的選項打開給更多人。",
-        "r": [
-            "收案含高血壓腎病變與慢性腎絲球腎炎等病因",
-            "主要終點為 32 個月的 eGFR 年變化斜率",
-            "次要複合終點含腎衰竭、eGFR 持續下降 ≥57%、"
-            "心衰竭住院或心血管死亡",
-        ],
-    },
-    {
-        "journal": "NEJM",
-        "date": "2024",
-        "topic": "糖尿病腎病變",
-        "zh": "Semaglutide 對第二型糖尿病合併慢性腎臟病的影響（FLOW）",
-        "en": "Effects of Semaglutide on Chronic Kidney Disease in Patients "
-              "with Type 2 Diabetes",
-        "cite": "N Engl J Med 2024;391:109–121｜DOI: 10.1056/NEJMoa2403347",
-        "url": "https://doi.org/10.1056/NEJMoa2403347",
-        "q": "減重與降血糖用的 GLP-1 受體促效劑，對腎臟本身有沒有保護作用？",
-        "f": "3,533 位第二型糖尿病合併 CKD 且已使用 RAS 抑制劑者，"
-             "主要複合終點風險下降 24%，全因死亡亦下降。",
-        "m": "這是 GLP-1 這類藥物第一次以腎臟結果為主要終點取得陽性結果，"
-             "把它從「血糖與體重的藥」推進成「腎臟保護的藥」。",
-        "r": [
-            "主要複合終點：eGFR 下降 ≥50%、腎衰竭、腎臟死亡或心血管死亡",
-            "主要終點風險下降 24%",
-            "心血管事件與全因死亡同步下降",
-        ],
-    },
-]
+NEWS_JSON = ROOT / "articles_src" / "news.json"
+
+
+def load_papers() -> list[dict]:
+    """新知的資料。
+
+    來源是 articles_src/news.json，由 import_digests.py 從作者另一支排程
+    產生的「腎臟病學每日精選摘要」匯入，加上少數手寫的條目。
+    **不要把條目寫回這支程式**——五十幾篇塞在原始碼裡沒辦法維護，
+    而且每次改內容都會弄髒 build_site.py 的 diff。
+
+    檔案不存在時回空清單：新知區與分類頁會整個消失，網站其餘部分不受影響。
+    """
+    if not NEWS_JSON.exists():
+        return []
+    try:
+        rows = json.loads(NEWS_JSON.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        raise SystemExit(f"{NEWS_JSON.name} 壞了：{e}")
+    # 新的排前面。日期格式混用 2026 / 2026-06 / 2026-09-03，
+    # 補齊成同長度再比，否則 "2026" 會排在 "2026-09-03" 後面。
+    def key(x: dict) -> str:
+        d = x.get("date", "")
+        return d + "-99" * (2 - d.count("-"))
+    rows.sort(key=key, reverse=True)
+    return rows
+
+
+PAPERS: list[dict] = load_papers()
 
 
 # 新知的分類。(slug, 中文, 英文)——中英並列是刻意的：
@@ -3045,23 +2940,31 @@ PAPERS: list[dict] = [
 #
 # 順序＝顯示順序。**只渲染有文章的分類**：空的分類頁是薄內容，
 # 對搜尋引擎是扣分，對讀者是死路。
+# **中文名必須和 import_digests.py 的 TOPIC_RULES 用同一組字串**，
+# 對不上的主題會變成孤兒——文章存在、但不出現在任何分類頁，而且不會噴錯。
+# main() 最後會對帳，有孤兒就印出來。
 NEWS_CATS: list[tuple[str, str, str]] = [
     ("ckd", "慢性腎臟病", "CHRONIC KIDNEY DISEASE"),
     ("dkd", "糖尿病腎病變", "DIABETIC KIDNEY DISEASE"),
     ("igan", "IgA 腎病變", "IgA NEPHROPATHY"),
+    ("gn", "腎絲球腎炎", "GLOMERULONEPHRITIS"),
     ("dialysis", "透析", "DIALYSIS"),
     ("transplant", "腎臟移植", "KIDNEY TRANSPLANTATION"),
+    ("aki", "急性腎損傷", "ACUTE KIDNEY INJURY"),
+    ("genetic", "遺傳性腎病", "GENETIC KIDNEY DISEASE"),
     ("htn", "高血壓", "HYPERTENSION"),
     ("lipid", "血脂與心血管", "LIPIDS & CARDIOVASCULAR"),
-    ("aki", "急性腎損傷", "ACUTE KIDNEY INJURY"),
+    ("electrolyte", "電解質異常", "ELECTROLYTE DISORDERS"),
+    ("mbd", "礦物質與骨病變", "MINERAL & BONE DISORDER"),
+    ("anemia", "貧血", "ANEMIA"),
+    ("drug", "用藥安全", "DRUG SAFETY"),
+    ("biomarker", "檢查與生物標記", "BIOMARKERS"),
+    ("nutrition", "營養", "NUTRITION"),
+    ("supportive", "支持性照護", "SUPPORTIVE CARE"),
 ]
-# PAPERS 裡的 topic 字串 → 分類 slug。topic 是給人看的，slug 是給網址用的，
-# 分開才不會為了網址好看而把中文標籤寫得不像話。
-TOPIC2CAT = {
-    "慢性腎臟病": "ckd", "糖尿病腎病變": "dkd", "IgA 腎病變": "igan",
-    "透析": "dialysis", "腎臟移植": "transplant", "高血壓": "htn",
-    "血脂": "lipid", "急性腎損傷": "aki",
-}
+# 從 NEWS_CATS 推出來，不要另外維護一份——
+# 兩份手動維護的對照表一定會漂移（第一版就漏了七個主題，18 篇變孤兒）。
+TOPIC2CAT = {zh: slug for slug, zh, _en in NEWS_CATS}
 
 
 def news_cat_path(slug: str) -> str:
@@ -4286,6 +4189,15 @@ def main() -> int:
     print(f"  {ALL_NEWS}　(新知入口：{len(PAPERS)} 篇研究，{len(ncats)} 個主題)")
     for slug, zh, _en, items in ncats:
         print(f"    {news_cat_path(slug)}　({zh} {len(items)} 篇)")
+    # 對帳：topic 對不上 NEWS_CATS 的文章會存在卻不出現在任何分類頁，
+    # 而且不會噴錯。第一版就這樣漏掉 18 篇。
+    orphan = [x for x in PAPERS if x.get("topic") not in TOPIC2CAT]
+    if orphan:
+        from collections import Counter as _C
+        print(f"    ⚠ {len(orphan)} 篇的主題不在 NEWS_CATS，不會出現在分類頁："
+              + "、".join(f"{t}×{n}" for t, n in
+                          _C(x.get("topic") or "（空）"
+                             for x in orphan).most_common()))
     print(f"  {ALL_GUIDE}　(指引：{n_guide} 份，盤點於 {UPDATES_REVIEWED})")
     print(f"  {ALL_UPDATES}　(舊網址，轉到新知)")
 

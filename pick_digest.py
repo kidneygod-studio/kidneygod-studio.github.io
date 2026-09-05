@@ -69,50 +69,61 @@ def strip(s: str) -> str:
     return zh_punct(re.sub(r"\s+", " ", htmllib.unescape(s)).strip())
 
 
+def by_class(blk: str, cls: str) -> list[str]:
+    """抓某個 class 的元素內容，**不管它用什麼標籤**。
+
+    這份摘要的產生器改過十幾版：zh-title 在新版是 <div>、舊版是 <h2>；
+    en-title 有時是 <div> 有時是 <p>。寫死標籤名的話，一改版就整批抓不到，
+    而且不會噴錯——只會安靜地產出一堆空欄位。
+    """
+    return [m.group(2) for m in
+            re.finditer(rf'<(\w+)[^>]*class="{cls}"[^>]*>(.*?)</\1>', blk, re.S)]
+
+
 def parse(path: Path) -> list[dict]:
     h = path.read_text("utf-8", "replace")
     out = []
     for blk in re.findall(r'<article class="paper">(.*?)</article>', h, re.S):
-        def one(pat, flags=re.S):
-            m = re.search(pat, blk, flags)
-            return strip(m.group(1)) if m else ""
+        def one(cls):
+            v = by_class(blk, cls)
+            return strip(v[0]) if v else ""
 
         kp = {}
-        kpblk = re.search(r'<div class="keypoints">(.*?)</div>', blk, re.S)
-        if kpblk:
-            pairs = re.findall(r"<dt>(.*?)</dt>\s*<dd>(.*?)</dd>",
-                               kpblk.group(1), re.S)
-            for dt, dd in pairs:
+        for k in by_class(blk, "keypoints"):
+            for dt, dd in re.findall(r"<dt>(.*?)</dt>\s*<dd>(.*?)</dd>", k, re.S):
                 kp[strip(dt)] = strip(dd)
 
+        # 段落標題與內容是**兄弟節點**，不是父子：
+        #   <div class="sec">研究背景 BACKGROUND</div>
+        #   <p class="sec-body">……</p>
+        # 第一版當成父子去抓，所以背景與方法從來沒抓到過，而且不會噴錯。
         secs = {}
-        for head, body in re.findall(
-                r'<div class="sec">\s*<h4[^>]*>(.*?)</h4>(.*?)</div>', blk, re.S):
-            secs[strip(head)] = strip(re.sub(r"<ul.*?</ul>", "", body, flags=re.S))
+        for lab, body in re.findall(
+                r'<(?:\w+)[^>]*class="sec"[^>]*>(.*?)</\w+>\s*'
+                r'<(?:\w+)[^>]*class="sec-body"[^>]*>(.*?)</\w+>', blk, re.S):
+            secs[strip(lab)] = strip(body)
 
-        bullets = [strip(x) for x in
-                   re.findall(r'<ul class="findings">(.*?)</ul>', blk, re.S)]
         items = []
-        for ul in re.findall(r'<ul class="findings">(.*?)</ul>', blk, re.S):
+        for ul in by_class(blk, "findings"):
             items += [strip(li) for li in re.findall(r"<li>(.*?)</li>", ul, re.S)]
 
-        byline = one(r'<p class="byline">(.*?)</p>')
+        byline = one("byline")
         doi = ""
         md = re.search(r"10\.\d{4,9}/[^\s<\"]+", byline)
         if md:
             doi = md.group(0).rstrip(".,;")
 
         out.append({
-            "jtag": one(r'<span class="jtag"[^>]*>(.*?)</span>'),
-            "zh": one(r'<div class="zh-title">(.*?)</div>'),
-            "en": one(r'<div class="en-title">(.*?)</div>'),
+            "jtag": one("jtag"),
+            "zh": one("zh-title"),
+            "en": one("en-title"),
             "byline": byline,
             "doi": doi,
             "kp": kp,
             "secs": secs,
             "items": items,
-            "clin": one(r'<div class="clin">(.*?)</div>'),
-            "limit": one(r'<p class="limit">(.*?)</p>'),
+            "clin": one("clin"),
+            "limit": one("limit"),
         })
     return out
 
