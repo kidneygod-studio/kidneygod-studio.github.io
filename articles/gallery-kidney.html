@@ -125,14 +125,17 @@ header.site nav a[aria-current="page"]{color:var(--accent2);background:var(--car
    父項是 <button> 不是 <a>：它不導向任何地方，只負責展開。
    面板用 absolute 掛在群組上，所以不會把導覽列撐高、也不影響斷點計算。 */
 .ngrp{position:relative;display:inline-flex}
-.ngbtn{display:inline-flex;align-items:center;gap:4px;font-family:inherit;
+/* 不要用 gap 來推箭頭：按鈕裡是 <span class="np">衛教</span>文章，
+   「文章」是匿名文字節點、在 flex 裡自成一個項目，gap 會插在標籤中間，
+   變成「衛教 文章」。間距改掛在箭頭上，才只作用於該作用的地方。 */
+.ngbtn{display:inline-flex;align-items:center;font-family:inherit;
 font-size:14px;color:var(--mut);font-weight:500;padding:6px 11px;border-radius:8px;
 white-space:nowrap;border:0;background:none;cursor:pointer;line-height:inherit;
 transition:color .15s,background .15s}
 .ngbtn:hover{color:var(--fg);background:var(--card)}
 .ngbtn[data-on]{color:var(--accent2);background:var(--card);font-weight:700}
 .ngbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.ngcaret{flex-shrink:0;transition:transform .2s}
+.ngcaret{flex-shrink:0;margin-left:4px;transition:transform .2s}
 .ngbtn[aria-expanded="true"] .ngcaret{transform:rotate(180deg)}
 /* right:0 讓面板往左長：父項在導覽列偏右，往右長會衝出視窗 */
 .ngmenu{position:absolute;top:calc(100% + 8px);right:0;z-index:60;min-width:132px;
@@ -143,8 +146,8 @@ box-shadow:0 12px 30px rgba(0,0,0,.14);padding:6px;overflow:hidden}
 .ngmenu[hidden]{display:none}
 .ngmenu a{display:block;padding:10px 14px;border-radius:8px;font-size:14.5px;
 white-space:nowrap}
-@media(max-width:450px){.ngbtn{padding:9px 5px;font-size:13.5px;gap:3px}}
-@media(max-width:390px){.ngbtn{padding:9px 2px;font-size:13px;gap:2px}}
+@media(max-width:450px){.ngbtn{padding:9px 5px;font-size:13.5px}.ngcaret{margin-left:3px}}
+@media(max-width:390px){.ngbtn{padding:9px 2px;font-size:13px}.ngcaret{margin-left:2px}}
 /* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
 header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
 header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
@@ -578,7 +581,12 @@ font-size:1.02rem;line-height:1.55}
 .hero .sub{font-size:1.08rem;color:var(--mut);margin-bottom:6px}
 .hero .cred{font-size:14px;color:var(--mut)}
 /* 首頁區塊標題：錨點由上方的 h2 通用規則提供，這裡只調字級與間距 */
-.sect{font-size:1.15rem;margin:44px 0 4px}
+/* 2026-09-06 區塊間距 44px→26px。標題自帶左邊的色條，區塊分界靠那條線
+   就看得出來，不需要再靠大片留白；44px 在手機上等於每捲一區就少半屏。 */
+.sect{font-size:1.15rem;margin:26px 0 4px}
+/* 緊接在開場白後面的第一個區塊再更近一點：開場白與第一個區塊之間
+   本來就有搜尋框當視覺句點，不必再加一次分界。 */
+.hero + .sect{margin-top:14px}
 .sect + .sd{font-size:14px;color:var(--mut);margin-bottom:16px;padding-left:14px}
 /* 使用說明：定位在「先看這個再決定往哪走」，所以視覺上要跟一般段落分開，
    但又不能重到搶走主標題的位置 */
