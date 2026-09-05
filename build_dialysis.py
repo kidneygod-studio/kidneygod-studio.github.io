@@ -102,13 +102,30 @@ def has(key: str) -> bool:
     return not isinstance(FACTS[key], TODO)
 
 
-def ready() -> bool:
-    """機構事實與醫師陣容是否都填完了。
+# 要不要讓搜尋引擎收錄這個站。
+#
+# 和 ready() 是兩回事，刻意分開：ready() 只代表「資料填完了」，
+# 不代表「可以公開」——院方確認、對外時機，那是人要決定的事。
+# 少了這個開關，把 FACTS 填完的那一刻網站就自己對 Google 開放了，
+# 而填資料的人多半只是想「先填一填看看長怎樣」。
+#
+# 檔案本來就放在 GitHub Pages 上，知道網址的人隨時打得開（作者要的就是這樣）。
+# 這個開關管的只有「搜尋引擎收不收錄」與「產不產生 sitemap」。
+PUBLISH = False
 
-    決定兩件事：頁面要不要輸出 noindex，以及要不要產生 sitemap。
-    綁在一起是刻意的——擋搜尋引擎卻又給它一份網址清單，是自相矛盾的。
-    """
+
+def ready() -> bool:
+    """機構事實與醫師陣容是否都填完了。"""
     return all(not isinstance(v, TODO) for v in FACTS.values()) and bool(DOCTORS)
+
+
+def live() -> bool:
+    """要不要拿掉 noindex 並產生 sitemap。
+
+    兩個條件都要成立：資料填完了，而且人也說了可以公開。
+    綁在一起是刻意的——擋著搜尋引擎卻又給它一份網址清單，是自相矛盾的。
+    """
+    return PUBLISH and ready()
 
 
 # ---------------------------------------------------------------------------
@@ -510,7 +527,7 @@ def shell(path: str, title: str, desc: str, body: str,
     # 還有待填欄位就擋搜尋引擎。這是一間真實醫療機構的頁面，
     # 帶著「待填：透析室電話」被索引，比晚一點上線糟糕得多。
     # 全部填完之後這一行會自己消失，不必記得回來改。
-    robots = "" if ready() else '<meta name="robots" content="noindex,nofollow">\n'
+    robots = "" if live() else '<meta name="robots" content="noindex,nofollow">\n'
     cf = (f'\n<script type="module" src="https://static.cloudflareinsights.com/'
           f'beacon.min.js" data-cf-beacon=\'{{"token": "{ANALYTICS_TOKEN}"}}\'>'
           f'</script>' if ANALYTICS_TOKEN else "")
@@ -1109,7 +1126,7 @@ def main() -> None:
     # sitemap 和 noindex 綁在同一個條件：擋著搜尋引擎卻又遞給它一份網址清單，
     # 是自相矛盾的。還沒 ready 就把舊的 sitemap 刪掉，不留下會誤導的殘檔。
     sm = OUT / "sitemap.xml"
-    if ready():
+    if live():
         urls = "".join(
             f"<url><loc>{BASE_URL}/{'' if n == 'index.html' else n}</loc>"
             f"<lastmod>{TODAY}</lastmod><changefreq>monthly</changefreq>"
@@ -1143,10 +1160,16 @@ def main() -> None:
     print(f"\n圖片：{len(missing) - len(absent)}/{len(missing)} 已放"
           + (f"（缺 {', '.join(absent)}）" if absent else ""))
 
-    print(f"\n可以上線了嗎：{'✓ 是，已產生 sitemap、已移除 noindex' if ready() else '✗ 還沒，五頁維持 noindex、不產生 sitemap'}")
-    if ready():
-        print("  記得到 Search Console 提交 "
-              f"{BASE_URL}/sitemap.xml（和主站的是兩份）")
+    print(f"\n網址：{BASE_URL}/　（檔案已在 GitHub Pages 上，"
+          f"知道網址就打得開；站上沒有任何連結指過來）")
+    if live():
+        print("  搜尋引擎：已收錄（noindex 已移除、sitemap 已產生）")
+        print(f"  記得到 Search Console 提交 {BASE_URL}/sitemap.xml"
+              f"（和主站的是兩份）")
+    elif not ready():
+        print("  搜尋引擎：不收錄。資料還沒填完，就算把 PUBLISH 改成 True 也不會開。")
+    else:
+        print("  搜尋引擎：不收錄。資料填完了，要公開請把 PUBLISH 改成 True。")
 
 
 if __name__ == "__main__":
