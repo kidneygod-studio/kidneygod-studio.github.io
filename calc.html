@@ -150,11 +150,13 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
   .brand svg{width:20px;height:20px}
   header.site nav a{padding:9px 5px;font-size:13.5px}
 }
-/* 最小的一批。門檻 365 不是 340：341–365 這段（多數 Android 的 360、
-   部分 344）同樣是兩階之間的漏網區。
-   收水平內距與品牌字級即可，不必隱藏任何項目。
-   垂直內距一律不動，點擊區高度維持 41px。 */
-@media(max-width:365px){
+/* 最緊的一階。門檻 2026-09-05 從 365 放寬到 440：
+   加入第六項「新知&指引」之後，375–430px（iPhone SE 375、13/14 的 390、
+   14/15 Pro 的 393、Pro Max 的 430——正好是最常見的一批）全部會換行，
+   而 360 與 344 因為已經落在這一階反而排得下。把門檻拉到 440 讓所有手機
+   都吃到這一階，六項才排得下一行。
+   代價是項目間距歸零、字級 13px；垂直內距一律不動，點擊區高度維持 42px。 */
+@media(max-width:440px){
   .brand{font-size:.8rem;gap:4px}
   .brand svg{width:18px;height:18px}
   header.site nav a{padding:9px 2px;font-size:13px}
@@ -218,6 +220,29 @@ margin:0 0 3px}
   .kp dd{font-size:1rem}
 }
 .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:26px 0}
+/* ── 新知＆指引 ──
+   每一則兩層：白話一句給病人、專業重點給同業。用左邊一條線把兩層綁成
+   一個單位，而不是三段各自獨立的 <p>——不然掃過去會看成三則。 */
+.updlist{margin:14px 0 30px}
+.upd{border-left:3px solid var(--line);padding:2px 0 2px 16px;margin:0 0 22px}
+.upd:hover{border-left-color:var(--accent)}
+.uh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+/* 年份與試驗代號用等寬數字，直排掃過去時對得比較齊 */
+.uyr,.utag{flex:0 0 auto;font-size:12.5px;font-weight:700;letter-spacing:.5px;
+color:var(--link);background:var(--card);border:1px solid var(--line);
+border-radius:99px;padding:2px 10px;font-variant-numeric:tabular-nums}
+/* 這裡的 h3 是「一則的標題」，不是文件結構的次級標題，
+   所以要蓋掉全站 h3 的灰色與上下留白 */
+.upd h3{margin:0;font-size:1.05rem;line-height:1.5;color:var(--fg)}
+.upd h3 a{color:var(--fg)}
+.upd h3 a:hover{color:var(--link)}
+.uplain{margin:8px 0 0}
+.upro{margin:8px 0 0;font-size:14.5px;color:var(--mut);line-height:1.8}
+.ucite{margin:6px 0 0;font-size:13px;color:var(--mut);font-style:italic}
+@media(max-width:520px){
+  .upd{padding-left:12px}
+  .uh{gap:6px}
+}
 /* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
    色票要能跟著深色模式走，不能寫死。 */
 :root{--wbg:#fff6f0;--wline:#c05621;--wttl:#9c4221}
@@ -726,7 +751,7 @@ else calcInit();
 <body>
 <header class="site"><div class="wrap">
 <a class="brand" href="/"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true"><path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 4.6 13.6 4.6Z"/></svg><span>護腎教室</span></a>
-<nav><a href="/articles/"><span class="np">衛教</span>文章</a><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html" aria-current="page"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
+<nav><a href="/articles/"><span class="np">衛教</span>文章</a><a href="/articles/updates.html"><span class="np">新知&</span>指引</a><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html" aria-current="page"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
 </div></header>
 <main class="wrap">
 <div class="prefbar"><div class="preficons"><button type="button" class="prefbtn fsbtn" id="fsBtn"><span class="fsglyph" aria-hidden="true">A</span></button><button type="button" class="prefbtn thbtn" id="thBtn"><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="auto" aria-hidden="true" hidden><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 000 17z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="light" aria-hidden="true" hidden><circle cx="12" cy="12" r="4.4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></g></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="dark" aria-hidden="true" hidden><path d="M20 14.2A8.4 8.4 0 019.8 4 8.6 8.6 0 1020 14.2z" fill="currentColor"/></svg></button></div><div class="preffull"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div></div>

@@ -687,11 +687,13 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
   .brand svg{width:20px;height:20px}
   header.site nav a{padding:9px 5px;font-size:13.5px}
 }
-/* 最小的一批。門檻 365 不是 340：341–365 這段（多數 Android 的 360、
-   部分 344）同樣是兩階之間的漏網區。
-   收水平內距與品牌字級即可，不必隱藏任何項目。
-   垂直內距一律不動，點擊區高度維持 41px。 */
-@media(max-width:365px){
+/* 最緊的一階。門檻 2026-09-05 從 365 放寬到 440：
+   加入第六項「新知&指引」之後，375–430px（iPhone SE 375、13/14 的 390、
+   14/15 Pro 的 393、Pro Max 的 430——正好是最常見的一批）全部會換行，
+   而 360 與 344 因為已經落在這一階反而排得下。把門檻拉到 440 讓所有手機
+   都吃到這一階，六項才排得下一行。
+   代價是項目間距歸零、字級 13px；垂直內距一律不動，點擊區高度維持 42px。 */
+@media(max-width:440px){
   .brand{font-size:.8rem;gap:4px}
   .brand svg{width:18px;height:18px}
   header.site nav a{padding:9px 2px;font-size:13px}
@@ -755,6 +757,29 @@ margin:0 0 3px}
   .kp dd{font-size:1rem}
 }
 .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:26px 0}
+/* ── 新知＆指引 ──
+   每一則兩層：白話一句給病人、專業重點給同業。用左邊一條線把兩層綁成
+   一個單位，而不是三段各自獨立的 <p>——不然掃過去會看成三則。 */
+.updlist{margin:14px 0 30px}
+.upd{border-left:3px solid var(--line);padding:2px 0 2px 16px;margin:0 0 22px}
+.upd:hover{border-left-color:var(--accent)}
+.uh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+/* 年份與試驗代號用等寬數字，直排掃過去時對得比較齊 */
+.uyr,.utag{flex:0 0 auto;font-size:12.5px;font-weight:700;letter-spacing:.5px;
+color:var(--link);background:var(--card);border:1px solid var(--line);
+border-radius:99px;padding:2px 10px;font-variant-numeric:tabular-nums}
+/* 這裡的 h3 是「一則的標題」，不是文件結構的次級標題，
+   所以要蓋掉全站 h3 的灰色與上下留白 */
+.upd h3{margin:0;font-size:1.05rem;line-height:1.5;color:var(--fg)}
+.upd h3 a{color:var(--fg)}
+.upd h3 a:hover{color:var(--link)}
+.uplain{margin:8px 0 0}
+.upro{margin:8px 0 0;font-size:14.5px;color:var(--mut);line-height:1.8}
+.ucite{margin:6px 0 0;font-size:13px;color:var(--mut);font-style:italic}
+@media(max-width:520px){
+  .upd{padding-left:12px}
+  .uh{gap:6px}
+}
 /* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
    色票要能跟著深色模式走，不能寫死。 */
 :root{--wbg:#fff6f0;--wline:#c05621;--wttl:#9c4221}
@@ -1133,7 +1158,10 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     # 目前所在區塊要標示出來，讀者才知道自己在哪一層。
     # 圖卡頁也算在「衛教文章」底下——2026-09-05 拿掉圖卡分頁之後，
     # 圖卡的唯一入口就在文章頁裡，頁首要標的是那一層。
-    cur = {"articles": path.startswith("articles/"),
+    # 新知＆指引自己有一項，不能被 articles/ 那條規則吃掉
+    is_upd = path == ALL_UPDATES
+    cur = {"articles": path.startswith("articles/") and not is_upd,
+           "updates": is_upd,
            "about": path == "about.html", "food": path == "food.html",
            "calc": path == "calc.html"}
 
@@ -1155,7 +1183,11 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     # 2026-09-05 再拿掉「衛教圖卡」剩五項，同樣改成文章頁裡的一個區塊
     # （/articles/#gallery）——圖卡本來就是衛教內容的一種呈現，
     # 和長文、分類並列在同一頁比自成一個分頁更符合讀者的心智模型。
+    # 2026-09-05 加回第六項「新知&指引」（手機只顯示「指引」）。
+    # 六項在 375–430px 原本會換行，靠把最緊那一階的斷點從 365 放寬到 440
+    # 才排得下——加第七項之前一定要重跑 scratchpad 的 nav 掃描。
     nav = (navlink("/articles/", "衛教", "文章", "articles")
+           + navlink(f"/{ALL_UPDATES}", "新知&", "指引", "updates")
            + navlink("/food.html", "", "食物", "food", suffix="查詢")
            + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
            + navlink("/about.html", "關於", "作者", "about")
@@ -1757,6 +1789,9 @@ def build_search_index(data: list[dict], md_pages: list[dict],
          "所有長文的完整列表，新的排在前面。"),
         ("全部衛教文章", "/articles/", "導覽", "依主題瀏覽所有衛教內容。"),
         ("衛教圖卡總覽", "/articles/gallery.html", "導覽", "社群上發表過的圖解，依主題整理。"),
+        ("新知＆指引", f"/{ALL_UPDATES}", "導覽",
+         "KDIGO、KDOQI、ADA、AHA、ESC 的現行腎臟病與三高指引，"
+         "以及 NEJM、Lancet、JAMA 等期刊中改變處置的重要研究。"),
     ]:
         idx.append({"t": t, "u": u, "c": c, "b": b})
 
@@ -2554,6 +2589,219 @@ def build_faq_page(md_pages: list[dict]) -> tuple[str, str]:
               "name": "腎臟病常見問題", "description": desc, "inLanguage": "zh-Hant",
               "url": f"{BASE_URL}/{ALL_FAQ}", "author": author_ld()}
     return ALL_FAQ, page(title, desc, ALL_FAQ, body, jsonld)
+
+
+# ---------------------------------------------------------------------------
+# 新知＆指引
+#
+# 這一頁的每一則都是關於真實文獻的事實陳述，寫錯就是錯誤資訊。所以：
+#   1. 年份、期刊、卷期一律以查證過的為準，不確定的欄位寧可留空也不編。
+#   2. 「白話」那一句是自己寫的，不是摘要的翻譯——不能重製人家的 abstract。
+#   3. 頁面標示 UPDATES_REVIEWED，讀者才知道這份清單是什麼時候盤點的。
+#
+# 不做自動抓取（PubMed／RSS）：那要排程與 API 金鑰，而這個 repo 的原則是
+# 紀錄檔優先於自動化。指引改版是以年為單位的事，手動維護足夠。
+#
+# 盤點日期。**每次增修這份清單就把這行改掉**，不要用建置日自動帶入——
+# 那會變成每次跑 build_site.py 都宣稱「今天盤點過」，等於用日期說謊。
+UPDATES_REVIEWED = "2026-09-05"
+
+# (機構, 說明, [(標題, 年, 出處, 網址, 白話一句, 專業重點)])
+GUIDELINES: list[tuple[str, str, list[tuple[str, str, str, str, str, str]]]] = [
+    ("KDIGO", "國際腎臟病預後改善組織。腎臟科最主要的國際指引來源，"
+              "本站長文的依據多半出自這裡。", [
+        ("慢性腎臟病的評估與處置", "2024",
+         "Kidney Int 2024;105(4S):S117–S314",
+         "https://kdigo.org/guidelines/ckd-evaluation-and-management/",
+         "現行 CKD 分期與追蹤頻率的依據。確立「同時看 eGFR 與尿蛋白」"
+         "而不是只看一個數字。",
+         "沿用 eGFR／白蛋白尿雙軸分期；建議優先採用合併肌酸酐與胱抑素 C 的"
+         "估算式；eGFR 單次變動超過 20% 才視為超出檢驗變異、需要評估。"),
+        ("慢性腎臟病的貧血", "2026",
+         "Kidney International（2026 年 1 月發表）",
+         "https://kdigo.org/guidelines/anemia-in-ckd/",
+         "腎性貧血的處置指引，隔了十四年才改版——這中間治療選項改變很大。",
+         "取代 2012 年版，納入十餘年來貧血機轉與治療的新證據，"
+         "涵蓋透析與腎臟移植族群，成人與兒童皆適用。"),
+        ("糖尿病與慢性腎臟病", "2022",
+         "Kidney Int 2022;102(5S):S1–S127",
+         "https://kdigo.org/guidelines/diabetes-ckd/",
+         "糖尿病腎病變的用藥主軸。**2026 更新版的公開審查已於 2026 年 4 月"
+         "結束，尚未正式發表**，在那之前 2022 版仍是現行版本。",
+         "2026 更新為重點修訂（第一、二、四章），涵蓋定義、預防、分期、"
+         "心血管風險評估與血糖監測，證據檢索至 2025 年 7 月。"),
+        ("慢性腎臟病的血壓處置", "2021",
+         "Kidney Int 2021;99(3S):S1–S87",
+         "https://kdigo.org/guidelines/blood-pressure-in-ckd/",
+         "把 CKD 病人的收縮壓目標訂在 120 以下——比一般成人的標準更嚴，"
+         "但前提是「量得準」。",
+         "收縮壓 <120 mmHg（2B），依據以 SPRINT 的心血管與存活益處為主，"
+         "腎臟保護的證據並不充分；**不適用於透析與腎臟移植病人**；"
+         "且以標準化診間量測為前提。"),
+    ]),
+    ("KDOQI", "美國國家腎臟基金會的臨床實務指引，"
+              "在營養與血管通路這兩塊比 KDIGO 更細。", [
+        ("慢性腎臟病的營養", "2020 更新",
+         "Am J Kidney Dis（與美國營養與飲食學會共同制定）",
+         "https://www.kidney.org/professionals/kdoqi/guidelines-and-commentaries/nutrition-ckd",
+         "透析飲食建議的來源。重點是「吃得夠」而不是「什麼都不能吃」。",
+         "涵蓋範圍從末期腎病擴大到 CKD 1–5 期未透析者與移植後病人；"
+         "分為營養評估、營養治療、蛋白質與熱量、營養補充、微量營養素、"
+         "電解質六個面向。"),
+        ("血液透析的血管通路", "2019 更新",
+         "Am J Kidney Dis 2020;75(4 Suppl 2)",
+         "https://www.kidney.org/professionals/kdoqi/guidelines-and-commentaries",
+         "廔管、人工血管與導管怎麼選、怎麼追蹤的依據。",
+         "改以「以病人為中心的 ESKD 生命計畫（Life-Plan）」取代舊版"
+         "一律「廔管優先」的思維。"),
+    ]),
+    ("ADA", "美國糖尿病學會。每年一月更新一次，是糖尿病照護最常被引用的標準。", [
+        ("Standards of Care in Diabetes—2026", "2026",
+         "Diabetes Care 2026;49(Suppl 1)；第 11 章「慢性腎臟病與風險處置」S246",
+         "https://diabetesjournals.org/care/article/49/Supplement_1/S246/163914/11-Chronic-Kidney-Disease-and-Risk-Management",
+         "糖尿病病人多久要驗一次腎、驗什麼、什麼時候要加藥，"
+         "現在的答案都在這一章。",
+         "強調更早、更頻繁以 uACR 與 eGFR 篩檢；第二型糖尿病合併 CKD 者，"
+         "**不論糖化血色素落在哪裡**都應使用具實證的 SGLT2 抑制劑或 GLP-1 RA；"
+         "並新增透析病人降血糖藥物的使用建議。"),
+    ]),
+    ("AHA／ACC", "美國心臟協會與美國心臟病學會。高血壓標準的主要來源之一。", [
+        ("成人高血壓的預防、偵測、評估與處置", "2025",
+         "Hypertension／Circulation（DOI: 10.1161/HYP.0000000000000249）",
+         "https://www.ahajournals.org/doi/10.1161/HYP.0000000000000249",
+         "自 2017 年以來第一次大改版。治療目標統一為 130/80 以下。",
+         "取代 2017 年版；治療目標 <130/80 mmHg，"
+         "對安養機構住民、餘命有限者與孕婦另有個別化例外；"
+         "心血管風險改用 PREVENT 計算器，取代原本的 Pooled Cohort Equation。"),
+    ]),
+    ("ESC", "歐洲心臟學會。歐洲的標準，和美國版偶爾有差異，值得並列著看。", [
+        ("心血管疾病與慢性腎臟病（與 ERA 首次聯合制定）", "2026",
+         "Eur Heart J（2026 年 8 月 29 日 ESC Congress 發表）",
+         "https://www.escardio.org/guidelines/clinical-practice-guidelines/all-esc-practice-guidelines/cvd-chronic-kidney-disease/",
+         "心臟科與腎臟科第一次一起寫的指引。核心主張是："
+         "**心血管疾病新診斷的病人，全部都要驗腎。**",
+         "以 STAMP 架構組織（Screen／Triage／Address risk／Modify CVD "
+         "management／Plan health services）；建議對所有新診斷心血管疾病者"
+         "同時以 eGFR 與 uACR 進行普篩；擴大 SGLT2 抑制劑、finerenone 與"
+         "semaglutide 在 CKD 的建議。"),
+        ("血壓升高與高血壓的處置", "2024",
+         "Eur Heart J 2024;45(38):3912",
+         "https://academic.oup.com/eurheartj/article/45/38/3912/7741010",
+         "新增了一個介於正常與高血壓之間的分類「血壓升高」，"
+         "把介入時機往前拉。",
+         "更新 2018 年 ESC/ESH 版；新增「elevated blood pressure」"
+         "（收縮壓 120–139 或舒張壓 70–89）此一分類；"
+         "接受治療者收縮壓目標 120–129 mmHg；優先使用單顆複方製劑。"),
+    ]),
+]
+
+# (試驗名, 標題, 期刊與年, 網址, 白話一句, 專業重點)
+PAPERS: list[tuple[str, str, str, str, str, str]] = [
+    ("FIND-CKD", "Finerenone in Persons with Chronic Kidney Disease without Diabetes",
+     "N Engl J Med 2026（2026 年 6 月 ERA 年會同步發表）",
+     "https://www.nejm.org/doi/full/10.1056/NEJMoa2604625",
+     "finerenone 這個藥原本只用在糖尿病腎病變。這個試驗顯示"
+     "**沒有糖尿病的慢性腎臟病人也有效**，等於多了一個可用的選項。",
+     "1,584 位非糖尿病 CKD（含高血壓腎病變與慢性腎絲球腎炎）；"
+     "主要終點 eGFR 斜率年降幅 −3.3 對 −4.0 mL/min/1.73m²（p<0.001）；"
+     "次要複合腎臟—心血管終點風險下降約 23%。"),
+    ("FLOW", "Effects of Semaglutide on Chronic Kidney Disease in Patients "
+             "with Type 2 Diabetes",
+     "N Engl J Med 2024;391:109–121",
+     "https://www.nejm.org/doi/10.1056/NEJMoa2403347",
+     "減重與降血糖用的 semaglutide，在糖尿病合併腎病變的人身上"
+     "把重大腎臟事件降低了約四分之一。",
+     "3,533 位第二型糖尿病、eGFR 與 uACR 符合條件且已使用 RAS 抑制劑者；"
+     "主要複合終點（eGFR 下降 ≥50%、腎衰竭、腎臟死亡或心血管死亡）"
+     "風險下降 24%；全因死亡亦下降。"),
+]
+
+
+ALL_UPDATES = "articles/updates.html"
+
+
+def build_updates_page() -> tuple[str, str]:
+    """新知＆指引。
+
+    寫給兩種人看，所以每一則有兩層：先一句白話（給病人與家屬），
+    再一段專業重點與正式出處（給同業，也是給搜尋引擎的專業度訊號）。
+    分成兩層而不是各做一頁，是因為同一件事拆成兩頁會互相搶關鍵字。
+    """
+    gsec = []
+    for org, intro, items in GUIDELINES:
+        gid = "g-" + re.sub(r"[^a-z]+", "-", org.lower()).strip("-")
+        rows = "".join(
+            f'<article class="upd">'
+            f'<div class="uh"><span class="uyr">{esc(year)}</span>'
+            f'<h3><a href="{url}" target="_blank" rel="nofollow noopener">'
+            f'{esc(name)}</a></h3></div>'
+            f'<p class="uplain">{inline(plain)}</p>'
+            f'<p class="upro">{inline(pro)}</p>'
+            f'<p class="ucite">{esc(cite)}</p>'
+            f'</article>'
+            for name, year, cite, url, plain, pro in items)
+        gsec.append(f'<h2 id="{gid}">{esc(org)}</h2>'
+                    f'<div class="sd">{esc(intro)}</div>'
+                    f'<div class="updlist">{rows}</div>')
+
+    prow = "".join(
+        f'<article class="upd">'
+        f'<div class="uh"><span class="utag">{esc(tag)}</span>'
+        f'<h3><a href="{url}" target="_blank" rel="nofollow noopener">'
+        f'{esc(title)}</a></h3></div>'
+        f'<p class="uplain">{inline(plain)}</p>'
+        f'<p class="upro">{inline(pro)}</p>'
+        f'<p class="ucite">{esc(cite)}</p>'
+        f'</article>'
+        for tag, title, cite, url, plain, pro in PAPERS)
+
+    n_g = sum(len(items) for _o, _i, items in GUIDELINES)
+    toc = "".join(
+        f'<li><a href="#g-{re.sub(r"[^a-z]+", "-", o.lower()).strip("-")}">'
+        f'{esc(o)}</a></li>' for o, _i, _x in GUIDELINES)
+
+    title = f"腎臟病與三高的最新指引與重要文獻｜{SITE_NAME}"
+    desc = ("KDIGO、KDOQI、ADA、AHA／ACC、ESC 的最新腎臟病與三高臨床指引，"
+            "以及 NEJM、Lancet、JAMA 等期刊中真正改變處置的重要研究，"
+            "每一則附白話說明與正式出處。")
+    body = f"""
+<h1>新知＆指引</h1>
+<p class="lede">這一頁整理腎臟病與三高的<strong>現行國際指引</strong>，
+以及近年真正改變臨床處置的重要研究。每一則先用一句話說明它對你的意義，
+再附上專業重點與正式出處——想深入的人可以直接點過去看原文。</p>
+<p class="meta">最後盤點：{UPDATES_REVIEWED}　·
+指引改版是以年為單位的事，這一頁不會每天變動。</p>
+
+<div class="warnbox">
+  <b>這一頁不是治療建議</b>
+  <p>指引是寫給醫療人員看的、針對「一群人」的建議，不是針對你個人的處方。
+  同樣一份指引，在不同年齡、不同共病、不同腎功能的人身上，
+  實際做法可能完全不同。<strong>請不要拿這一頁的內容自行調整用藥。</strong></p>
+</div>
+
+<div class="toc"><h2>本頁內容</h2><ol>{toc}
+<li><a href="#papers">重要研究</a></li></ol></div>
+
+<h2 class="backlink">現行指引（{n_g} 份）</h2>
+{"".join(gsec)}
+
+<h2 id="papers">重要研究</h2>
+<div class="sd">不做大清單。只收真正改變處置、或改變了指引寫法的研究。</div>
+<div class="updlist">{prow}</div>
+
+<h2 class="backlink">延伸閱讀</h2>
+<div class="cats">
+  <a href="/{ALL_ARTICLES}"><div class="t">全部深入文章</div>
+    <div class="d">把指引寫成一般人看得懂的長文，這裡是完整列表。</div></a>
+  <a href="/{ALL_FAQ}"><div class="t">常見問題</div>
+    <div class="d">門診最常被問到的問題，每題連到回答它的那篇文章。</div></a>
+</div>
+"""
+    jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
+              "name": "新知＆指引", "description": desc, "inLanguage": "zh-Hant",
+              "url": f"{BASE_URL}/{ALL_UPDATES}", "dateModified": UPDATES_REVIEWED,
+              "author": author_ld()}
+    return ALL_UPDATES, page(title, desc, ALL_UPDATES, body, jsonld)
 
 
 HERO_DIR = ROOT / "hero"
@@ -3458,12 +3706,16 @@ def main() -> int:
 
     # 兩個「完整清單」頁：首頁與總覽頁只列一部分，這裡是全部。
     # 不進導覽列——導覽項目愈少手機頁首愈鬆，這兩頁從內容區進去就夠了。
-    for path, html in (build_longform_page(md_pages), build_faq_page(md_pages)):
+    for path, html in (build_longform_page(md_pages), build_faq_page(md_pages),
+                       build_updates_page()):
         (ROOT / path).write_text(html, encoding="utf-8")
         written.append(path)
     n_faq = sum(1 for _l, _g, items in FAQ_GROUPS for _ in items)
     print(f"  {ALL_ARTICLES}　(全部深入文章 {len(md_pages)} 篇)")
     print(f"  {ALL_FAQ}　(全部常見問題 {n_faq} 題)")
+    n_guide = sum(len(x) for _o, _i, x in GUIDELINES)
+    print(f"  {ALL_UPDATES}　(新知＆指引：{n_guide} 份指引 + "
+          f"{len(PAPERS)} 篇研究，盤點於 {UPDATES_REVIEWED})")
 
 
     (ROOT / "index.html").write_text(
