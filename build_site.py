@@ -788,6 +788,46 @@ border-radius:99px;padding:2px 10px;font-variant-numeric:tabular-nums}
   .upd{padding-left:12px}
   .uh{gap:6px}
 }
+/* ── 結構化摘要卡（沿用作者那份「腎臟病學每日精選摘要」的結構）──
+   期刊標籤／中英標題／出處／Key Points／背景／方法／結果／意義／限制。
+   配色不照抄那份的暗紅——這個站是青綠色系，兩邊視覺要能分得出來。 */
+.dg{border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+margin:0 0 20px;background:var(--bg)}
+.dgtop{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:10px}
+/* 期刊標籤：實心，是這張卡最先被看到的東西 */
+.dgj{background:var(--accent2);color:#fff;font-size:11.5px;font-weight:700;
+letter-spacing:.08em;border-radius:4px;padding:3px 9px}
+.dgd,.dgt{font-size:12.5px;color:var(--mut);font-variant-numeric:tabular-nums}
+.dgt{border:1px solid var(--line);border-radius:99px;padding:2px 9px}
+.dg h3{margin:0;font-size:1.12rem;line-height:1.55;color:var(--fg)}
+.dg h3 a{color:var(--fg)}
+.dg h3 a:hover{color:var(--link)}
+/* 英文原標題：給要去找原文的人核對用，不是給一般讀者讀的，所以壓小壓灰 */
+.dgen{margin:6px 0 0;font-size:13.5px;line-height:1.6;color:var(--mut);
+font-style:italic}
+.dgcite{margin:6px 0 0;font-size:12.5px;color:var(--mut)}
+.dgkp{background:var(--card);border-left:3px solid var(--accent);
+border-radius:0 10px 10px 0;padding:14px 16px;margin:14px 0 0}
+.dgkp>b{display:block;font-size:12px;letter-spacing:.14em;color:var(--accent2);
+margin-bottom:8px}
+/* 用 dl 而不是連續的 p：標籤與內容是成對的，讀螢幕軟體念起來才對 */
+.dgkp dl{margin:0}
+.dgkp dt{font-size:12.5px;font-weight:700;color:var(--mut);margin-top:10px}
+.dgkp dt:first-child{margin-top:0}
+.dgkp dd{margin:3px 0 0;font-size:15px;line-height:1.8}
+.dg h4{font-size:12px;letter-spacing:.12em;color:var(--accent2);
+margin:18px 0 6px;font-weight:700}
+.dg h4::before{content:none}
+.dg p,.dg li{font-size:14.5px;line-height:1.85}
+.dg ul{margin:0;padding-left:1.3em}
+.dg li{margin-bottom:6px}
+.dgsig{margin:14px 0 0;background:var(--card);border-radius:10px;
+padding:12px 15px;font-weight:500}
+.dglim{margin:10px 0 0;font-size:13px;color:var(--mut);font-style:italic}
+@media(max-width:520px){.dg{padding:16px 15px;border-radius:12px}}
+/* 首頁那張只到 Key Points 為止 */
+.dg.compact{margin:0}
+.dg.compact h3{font-size:1.05rem}
 /* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
    色票要能跟著深色模式走，不能寫死。 */
 :root{--wbg:#fff6f0;--wline:#c05621;--wttl:#9c4221}
@@ -1836,6 +1876,17 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
                  f'<div class="mag">{feats}</div>{feat_more}'
                  if feats else "")
 
+    # 新知：只放最新一篇，右下角進新知頁。排在深入文章之前——
+    # 長文隨時可讀，新知是「這陣子才有的」，會過期的東西要放前面。
+    news_sect = ""
+    if PAPERS:
+        news_sect = (f'<h2 class="sect" id="news">新知</h2>'
+                     f'<div class="sd">主要期刊的最新研究，'
+                     f'結構化摘要：問題、發現、意義</div>'
+                     f'{digest_card(PAPERS[0], compact=True)}'
+                     + more_link(ALL_UPDATES,
+                                 f"閱讀更多（{len(PAPERS)} 篇研究＋現行指引）"))
+
     # 直接讀 logo 實際尺寸，換圖時不必再手改寫死的數字（換過一次比例就變了）
     lw = img_size(ROOT / "logo.png")
     logo_dims = f' width="{lw[0]}" height="{lw[1]}"' if lw else ""
@@ -1904,6 +1955,8 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 </div>
 </div>
 </div>
+
+{news_sect}
 
 {feat_sect}
 
@@ -2704,30 +2757,191 @@ GUIDELINES: list[tuple[str, str, list[tuple[str, str, str, str, str, str]]]] = [
     ]),
 ]
 
-# (試驗名, 標題, 期刊與年, 網址, 白話一句, 專業重點)
-PAPERS: list[tuple[str, str, str, str, str, str]] = [
-    ("FIND-CKD", "Finerenone in Persons with Chronic Kidney Disease without Diabetes",
-     "N Engl J Med 2026（2026 年 6 月 ERA 年會同步發表）"
-     "　DOI: 10.1056/NEJMoa2604625",
-     "https://www.nejm.org/doi/full/10.1056/NEJMoa2604625",
-     "finerenone 這個藥原本只用在糖尿病腎病變。這個試驗顯示"
-     "**沒有糖尿病的慢性腎臟病人也有效**，等於多了一個可用的選項。",
-     "1,584 位非糖尿病 CKD（含高血壓腎病變與慢性腎絲球腎炎）；"
-     "主要終點 eGFR 斜率年降幅 −3.3 對 −4.0 mL/min/1.73m²（p<0.001）；"
-     "次要複合腎臟—心血管終點風險下降約 23%。"),
-    ("FLOW", "Effects of Semaglutide on Chronic Kidney Disease in Patients "
-             "with Type 2 Diabetes",
-     "N Engl J Med 2024;391:109–121　DOI: 10.1056/NEJMoa2403347",
-     "https://www.nejm.org/doi/10.1056/NEJMoa2403347",
-     "減重與降血糖用的 semaglutide，在糖尿病合併腎病變的人身上"
-     "把重大腎臟事件降低了約四分之一。",
-     "3,533 位第二型糖尿病、eGFR 與 uACR 符合條件且已使用 RAS 抑制劑者；"
-     "主要複合終點（eGFR 下降 ≥50%、腎衰竭、腎臟死亡或心血管死亡）"
-     "風險下降 24%；全因死亡亦下降。"),
+# 重要研究。格式沿用作者自己那套「腎臟病學每日精選摘要」的結構化摘要：
+# 期刊標籤／中英標題／出處行／Key Points（問題·發現·意義）／背景／方法／
+# 主要結果／臨床意義／限制。那份摘要在 C:\Users\user\nephrology_digest\，
+# 由另一支排程每天產生，這裡是人工挑出值得長期掛在網站上的幾篇。
+#
+# **欄位可以留空**：查證不到的段落寧可不渲染，也不要為了版面完整去編。
+# 例如 sibeprenlimab 那篇我只查得到 Key Points 與主要結果，
+# 就沒有 background／methods，頁面上那兩段直接不出現。
+#
+# 順序即顯示順序，新的放前面。首頁只取第一篇。
+PAPERS: list[dict] = [
+    {
+        "journal": "THE LANCET",
+        "date": "2026-09-03",
+        "topic": "腎臟移植",
+        "zh": "豬腎異種移植作為橋接同種移植之首例人體研究",
+        "en": "Porcine Kidney Xenotransplantation as a Bridge to "
+              "Allotransplantation: A First-in-Human Study",
+        "cite": "The Lancet｜2026 年 9 月 3 日｜DOI: 10.1016/S0140-6736(26)01295-X",
+        "url": "https://doi.org/10.1016/S0140-6736(26)01295-X",
+        "q": "基因編輯豬腎異種移植能否作為末期腎病患者等待同種腎臟移植期間的橋接治療，"
+             "且不影響後續接受人類腎臟移植的機會？",
+        "f": "一名末期腎病患者接受基因編輯豬腎（EGEN-2784）移植後，維持透析獨立達 "
+             "271 天；第 14 天出現 T 細胞媒介排斥並經治療緩解；約 6 個月後因免疫抑制"
+             "減量誘發微血管發炎，進展為血栓性微血管病變而移植腎失去功能。移除異種腎 "
+             "82 天後接受人類腎臟移植，追蹤 231 天功能良好且無致敏證據。",
+        "m": "豬腎異種移植可提供長期的透析獨立支持，並且可以安全終止、"
+             "作為後續人體同種移植的橋接策略，未造成臨床顯著致敏或人畜共通感染。",
+        "bg": "器官短缺是腎臟移植領域長期存在的核心問題，異種移植被視為潛在解方之一。"
+              "但異種移植腎能撐多久、會不會傳播人畜共通病原、"
+              "以及它引發的免疫致敏是否會斷送後續接受人類捐贈腎的機會，"
+              "過去都缺乏人體證據。",
+        "me": "一名末期腎病、預期等候屍腎時間長且無合適活體捐贈者的患者，"
+              "於美國麻州總醫院接受基因編輯豬腎移植。該豬腎刪除主要醣類異種抗原、"
+              "去活化豬內源性反轉錄病毒，並植入七個人類轉殖基因。"
+              "免疫抑制以共刺激阻斷為基礎並合併補體抑制劑。"
+              "監測腎功能、流式交叉配對、抗 HLA 抗體與豬源微生物"
+              "（含總體基因體定序）。本研究為計畫收三名病人、"
+              "在美國 FDA 擴大使用研究性新藥申請下進行的首例報告。",
+        "r": [
+            "移植後（2025 年 1 月 25 日）豬腎立即發揮功能，透析獨立狀態維持 271 天",
+            "第 14 天切片顯示 T 細胞媒介排斥反應，經治療後緩解",
+            "約 6 個月時因非人畜共通細菌感染而減少免疫抑制，隨後出現微血管發炎"
+            "並發展為血栓性微血管病變；供者特異性交叉配對持續陰性，"
+            "最終仍導致移植腎失去功能並需切除",
+            "組織分析顯示以巨噬細胞與自然殺手細胞為主；未偵測到豬源病原體傳播，"
+            "抗 HLA 抗體維持不變",
+            "移除異種腎 82 天後接受人類同種腎臟移植，移植腎立即發揮功能，"
+            "追蹤 231 天無致敏證據",
+        ],
+        "sig": "首度以人體證據顯示，豬腎異種移植可作為末期腎病患者等待人類捐贈腎"
+               "之前的過渡性透析獨立支持策略，且移除後不影響後續同種移植的免疫相容性。",
+        "lim": "單一個案報告（計畫三例中的首例），樣本數極小，結果無法外推；"
+               "晚期移植腎失功能的確切免疫機轉（微血管病變合併陰性交叉配對）"
+               "尚未完全闡明，亦無對照組。",
+    },
+    {
+        "journal": "NEJM",
+        "date": "2026",
+        "topic": "IgA 腎病變",
+        "zh": "Sibeprenlimab 治療 IgA 腎病變：第三期試驗期中分析",
+        "en": "Sibeprenlimab in IgA Nephropathy — Interim Analysis of a "
+              "Phase 3 Trial",
+        "cite": "N Engl J Med 2026｜DOI: 10.1056/NEJMoa2512133｜PMID: 41211929",
+        "url": "https://doi.org/10.1056/NEJMoa2512133",
+        "q": "抑制 APRIL 這條上游路徑，能不能減少 IgA 腎病變的蛋白尿？",
+        "f": "第 9 個月時，24 小時尿蛋白／肌酸酐比值下降 50.2%，"
+             "安慰劑組則上升 2.1%。",
+        "m": "IgA 腎病變的治療正從「壓制發炎」轉向「阻斷致病抗體的產生」。"
+             "這是近年一系列新機轉藥物中的一個，讓過去只能用 RAS 抑制劑與類固醇"
+             "的病人多了選項。",
+        "r": [
+            "sibeprenlimab 是選擇性結合並抑制 APRIL 的人源化 IgG2 單株抗體",
+            "第 9 個月 24 小時尿蛋白／肌酸酐比值：治療組 −50.2%，安慰劑組 +2.1%",
+            "嚴重不良事件 3.5% 對安慰劑 4.4%，試驗期間無死亡",
+        ],
+        "lim": "這是第三期試驗的**期中**分析，主要終點為蛋白尿這個替代指標；"
+               "能不能真的延緩腎功能惡化，要等長期的 eGFR 結果。",
+    },
+    {
+        "journal": "THE LANCET",
+        "date": "2026",
+        "topic": "IgA 腎病變",
+        "zh": "Atrasentan 治療 IgA 腎病變（ALIGN）：2.5 年最終結果",
+        "en": "Atrasentan in patients with IgA nephropathy (ALIGN): final "
+              "2·5-year results from a randomised, double-blind, "
+              "placebo-controlled, phase 3 trial",
+        "cite": "The Lancet 2026",
+        "url": "https://www.thelancet.com/journals/lancet/article/"
+               "PIIS0140-6736(26)00960-8/abstract",
+        "q": "選擇性內皮素 A 受體拮抗劑能不能長期保護 IgA 腎病變的腎功能？"
+             "已經在用 SGLT2 抑制劑的人還有沒有額外好處？",
+        "f": "2.5 年的最終結果顯示，atrasentan 降低蛋白尿並保留腎功能；"
+             "**這個效果在有無併用 SGLT2 抑制劑的族群都存在**。",
+        "m": "代表它和 SGLT2 抑制劑是可以疊加的兩條路，而不是二選一——"
+             "這對已經用了標準治療、蛋白尿仍降不下來的病人特別重要。",
+        "r": [
+            "atrasentan 為選擇性內皮素 A 受體拮抗劑",
+            "追蹤 2.5 年，降低蛋白尿並保留腎功能",
+            "療效與是否併用 SGLT2 抑制劑無關",
+        ],
+    },
+    {
+        "journal": "NEJM",
+        "date": "2026-06",
+        "topic": "慢性腎臟病",
+        "zh": "Finerenone 用於非糖尿病的慢性腎臟病（FIND-CKD）",
+        "en": "Finerenone in Persons with Chronic Kidney Disease without Diabetes",
+        "cite": "N Engl J Med 2026（2026 年 6 月 ERA 年會同步發表）"
+                "｜DOI: 10.1056/NEJMoa2604625",
+        "url": "https://doi.org/10.1056/NEJMoa2604625",
+        "q": "finerenone 原本只用在糖尿病腎病變。沒有糖尿病的慢性腎臟病人也有效嗎？",
+        "f": "1,584 位非糖尿病 CKD；主要終點 eGFR 斜率年降幅 −3.3 對 −4.0 "
+             "mL/min/1.73m²（p<0.001）；次要複合腎臟—心血管終點風險下降約 23%。",
+        "m": "非糖尿病的慢性腎臟病人可用的藥一直比糖尿病的少。這個結果等於"
+             "把一個原本被歸類為「糖尿病用藥」的選項打開給更多人。",
+        "r": [
+            "收案含高血壓腎病變與慢性腎絲球腎炎等病因",
+            "主要終點為 32 個月的 eGFR 年變化斜率",
+            "次要複合終點含腎衰竭、eGFR 持續下降 ≥57%、"
+            "心衰竭住院或心血管死亡",
+        ],
+    },
+    {
+        "journal": "NEJM",
+        "date": "2024",
+        "topic": "糖尿病腎病變",
+        "zh": "Semaglutide 對第二型糖尿病合併慢性腎臟病的影響（FLOW）",
+        "en": "Effects of Semaglutide on Chronic Kidney Disease in Patients "
+              "with Type 2 Diabetes",
+        "cite": "N Engl J Med 2024;391:109–121｜DOI: 10.1056/NEJMoa2403347",
+        "url": "https://doi.org/10.1056/NEJMoa2403347",
+        "q": "減重與降血糖用的 GLP-1 受體促效劑，對腎臟本身有沒有保護作用？",
+        "f": "3,533 位第二型糖尿病合併 CKD 且已使用 RAS 抑制劑者，"
+             "主要複合終點風險下降 24%，全因死亡亦下降。",
+        "m": "這是 GLP-1 這類藥物第一次以腎臟結果為主要終點取得陽性結果，"
+             "把它從「血糖與體重的藥」推進成「腎臟保護的藥」。",
+        "r": [
+            "主要複合終點：eGFR 下降 ≥50%、腎衰竭、腎臟死亡或心血管死亡",
+            "主要終點風險下降 24%",
+            "心血管事件與全因死亡同步下降",
+        ],
+    },
 ]
 
 
 ALL_UPDATES = "articles/updates.html"
+
+
+def digest_card(x: dict, compact: bool = False) -> str:
+    """結構化摘要卡。沒有的欄位就不渲染，不用空段落佔位。
+
+    compact 版給首頁用：只到 Key Points 的「意義」為止，
+    背景／方法／結果留在新知頁——首頁的任務是讓人知道有這件事，不是讀完它。
+    """
+    head = (f'<div class="dgtop"><span class="dgj">{esc(x["journal"])}</span>'
+            f'<span class="dgd">{esc(x["date"])}</span>'
+            f'<span class="dgt">{esc(x["topic"])}</span></div>'
+            f'<h3><a href="{x["url"]}" target="_blank" rel="nofollow noopener">'
+            f'{esc(x["zh"])}</a></h3>'
+            f'<p class="dgen">{esc(x["en"])}</p>'
+            f'<p class="dgcite">{esc(x["cite"])}</p>')
+
+    kp = ""
+    if x.get("q") or x.get("f") or x.get("m"):
+        rows = "".join(
+            f'<dt>{lab}</dt><dd>{inline(x[k])}</dd>'
+            for k, lab in (("q", "問題 Question"), ("f", "發現 Findings"),
+                           ("m", "意義 Meaning")) if x.get(k))
+        kp = f'<div class="dgkp"><b>KEY POINTS</b><dl>{rows}</dl></div>'
+    if compact:
+        return f'<article class="dg compact">{head}{kp}</article>'
+
+    body = ""
+    for k, lab in (("bg", "研究背景 BACKGROUND"), ("me", "研究方法 METHODS")):
+        if x.get(k):
+            body += f'<h4>{lab}</h4><p>{inline(x[k])}</p>'
+    if x.get("r"):
+        body += ('<h4>主要結果 RESULTS</h4><ul>'
+                 + "".join(f"<li>{inline(i)}</li>" for i in x["r"]) + "</ul>")
+    if x.get("sig"):
+        body += f'<p class="dgsig">{inline(x["sig"])}</p>'
+    if x.get("lim"):
+        body += f'<p class="dglim">限制：{inline(x["lim"])}</p>'
+    return f'<article class="dg">{head}{kp}{body}</article>'
 
 
 def build_updates_page() -> tuple[str, str]:
@@ -2754,17 +2968,7 @@ def build_updates_page() -> tuple[str, str]:
                     f'<div class="sd">{esc(intro)}</div>'
                     f'<div class="updlist">{rows}</div>')
 
-    prow = "".join(
-        f'<article class="upd">'
-        f'<div class="uh"><span class="utag">{esc(tag)}</span>'
-        f'<h3><a href="{url}" target="_blank" rel="nofollow noopener">'
-        f'{esc(title)}</a></h3></div>'
-        f'<p class="uplain">{inline(plain)}</p>'
-        f'<p class="upro">{inline(pro)}</p>'
-        f'<p class="ucite">{esc(cite)}</p>'
-        f'</article>'
-        for tag, title, cite, url, plain, pro in PAPERS)
-
+    prow = "".join(digest_card(x) for x in PAPERS)
     n_g = sum(len(items) for _o, _i, items in GUIDELINES)
     toc = "".join(
         f'<li><a href="#g-{re.sub(r"[^a-z]+", "-", o.lower()).strip("-")}">'
@@ -2776,9 +2980,9 @@ def build_updates_page() -> tuple[str, str]:
             "每一則附白話說明與正式出處。")
     body = f"""
 <h1>新知＆指引</h1>
-<p class="lede">這一頁整理腎臟病與三高的<strong>現行國際指引</strong>，
-以及近年真正改變臨床處置的重要研究。每一則先用一句話說明它對你的意義，
-再附上專業重點與正式出處——想深入的人可以直接點過去看原文。</p>
+<p class="lede">腎臟與三高領域<strong>主要期刊的最新研究</strong>，
+以及目前實際被當成標準的<strong>現行國際指引</strong>。
+研究用結構化摘要呈現——問題、發現、意義先講完，想細看的再往下讀方法與結果。</p>
 <p class="meta">最後盤點：{UPDATES_REVIEWED}　·
 指引改版是以年為單位的事，這一頁不會每天變動。</p>
 
@@ -2789,15 +2993,18 @@ def build_updates_page() -> tuple[str, str]:
   實際做法可能完全不同。<strong>請不要拿這一頁的內容自行調整用藥。</strong></p>
 </div>
 
-<div class="toc"><h2>本頁內容</h2><ol>{toc}
-<li><a href="#papers">重要研究</a></li></ol></div>
+<div class="toc"><h2>本頁內容</h2><ol>
+<li><a href="#papers">最新研究</a></li>
+{toc}</ol></div>
+
+<h2 id="papers">最新研究（{len(PAPERS)} 篇）</h2>
+<div class="sd">以 NEJM、Lancet、JAMA 等主要期刊為主。
+不做大清單，只收真正改變處置、或改變了指引寫法的研究，新的排在前面。</div>
+<div class="updlist">{prow}</div>
 
 <h2 class="backlink">現行指引（{n_g} 份）</h2>
+<div class="sd">研究要累積很久才會變成指引。這裡是目前實際被拿來當標準的那幾份。</div>
 {"".join(gsec)}
-
-<h2 id="papers">重要研究</h2>
-<div class="sd">不做大清單。只收真正改變處置、或改變了指引寫法的研究。</div>
-<div class="updlist">{prow}</div>
 
 <h2 class="backlink">延伸閱讀</h2>
 <div class="cats">
