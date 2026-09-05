@@ -825,9 +825,10 @@ margin:18px 0 6px;font-weight:700}
 padding:12px 15px;font-weight:500}
 .dglim{margin:10px 0 0;font-size:13px;color:var(--mut);font-style:italic}
 @media(max-width:520px){.dg{padding:16px 15px;border-radius:12px}}
-/* 首頁那張只到 Key Points 為止 */
+/* 首頁那張只留「意義」一段 */
 .dg.compact{margin:0}
 .dg.compact h3{font-size:1.05rem}
+.dg.compact .dgkp p{margin:0;font-size:15px;line-height:1.8}
 /* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
    色票要能跟著深色模式走，不能寫死。 */
 :root{--wbg:#fff6f0;--wline:#c05621;--wttl:#9c4221}
@@ -2909,8 +2910,9 @@ ALL_UPDATES = "articles/updates.html"
 def digest_card(x: dict, compact: bool = False) -> str:
     """結構化摘要卡。沒有的欄位就不渲染，不用空段落佔位。
 
-    compact 版給首頁用：只到 Key Points 的「意義」為止，
-    背景／方法／結果留在新知頁——首頁的任務是讓人知道有這件事，不是讀完它。
+    compact 版給首頁用：**只留 Key Points 的「意義 Meaning」**。
+    問題與發現留在新知頁——首頁的任務是讓人知道有這件事並判斷要不要點進去，
+    不是在首頁把它讀完。三段全放的話這張卡約 700px 高，會把下面的區塊推很遠。
     """
     head = (f'<div class="dgtop"><span class="dgj">{esc(x["journal"])}</span>'
             f'<span class="dgd">{esc(x["date"])}</span>'
@@ -2920,6 +2922,11 @@ def digest_card(x: dict, compact: bool = False) -> str:
             f'<p class="dgen">{esc(x["en"])}</p>'
             f'<p class="dgcite">{esc(x["cite"])}</p>')
 
+    if compact:
+        kp = (f'<div class="dgkp"><b>意義 MEANING</b>'
+              f'<p>{inline(x["m"])}</p></div>' if x.get("m") else "")
+        return f'<article class="dg compact">{head}{kp}</article>'
+
     kp = ""
     if x.get("q") or x.get("f") or x.get("m"):
         rows = "".join(
@@ -2927,8 +2934,6 @@ def digest_card(x: dict, compact: bool = False) -> str:
             for k, lab in (("q", "問題 Question"), ("f", "發現 Findings"),
                            ("m", "意義 Meaning")) if x.get(k))
         kp = f'<div class="dgkp"><b>KEY POINTS</b><dl>{rows}</dl></div>'
-    if compact:
-        return f'<article class="dg compact">{head}{kp}</article>'
 
     body = ""
     for k, lab in (("bg", "研究背景 BACKGROUND"), ("me", "研究方法 METHODS")):
