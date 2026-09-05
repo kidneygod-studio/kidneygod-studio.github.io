@@ -2676,7 +2676,8 @@ GUIDELINES: list[tuple[str, str, list[tuple[str, str, str, str, str, str]]]] = [
     ]),
     ("ESC", "歐洲心臟學會。歐洲的標準，和美國版偶爾有差異，值得並列著看。", [
         ("心血管疾病與慢性腎臟病（與 ERA 首次聯合制定）", "2026",
-         "Eur Heart J（2026 年 8 月 29 日 ESC Congress 發表）",
+         "Eur Heart J（2026 年 8 月 29 日 ESC Congress 發表）"
+         "　DOI: 10.1093/eurheartj/ehag098",
          "https://www.escardio.org/guidelines/clinical-practice-guidelines/all-esc-practice-guidelines/cvd-chronic-kidney-disease/",
          "心臟科與腎臟科第一次一起寫的指引。核心主張是："
          "**心血管疾病新診斷的病人，全部都要驗腎。**",
@@ -2698,7 +2699,8 @@ GUIDELINES: list[tuple[str, str, list[tuple[str, str, str, str, str, str]]]] = [
 # (試驗名, 標題, 期刊與年, 網址, 白話一句, 專業重點)
 PAPERS: list[tuple[str, str, str, str, str, str]] = [
     ("FIND-CKD", "Finerenone in Persons with Chronic Kidney Disease without Diabetes",
-     "N Engl J Med 2026（2026 年 6 月 ERA 年會同步發表）",
+     "N Engl J Med 2026（2026 年 6 月 ERA 年會同步發表）"
+     "　DOI: 10.1056/NEJMoa2604625",
      "https://www.nejm.org/doi/full/10.1056/NEJMoa2604625",
      "finerenone 這個藥原本只用在糖尿病腎病變。這個試驗顯示"
      "**沒有糖尿病的慢性腎臟病人也有效**，等於多了一個可用的選項。",
@@ -2707,7 +2709,7 @@ PAPERS: list[tuple[str, str, str, str, str, str]] = [
      "次要複合腎臟—心血管終點風險下降約 23%。"),
     ("FLOW", "Effects of Semaglutide on Chronic Kidney Disease in Patients "
              "with Type 2 Diabetes",
-     "N Engl J Med 2024;391:109–121",
+     "N Engl J Med 2024;391:109–121　DOI: 10.1056/NEJMoa2403347",
      "https://www.nejm.org/doi/10.1056/NEJMoa2403347",
      "減重與降血糖用的 semaglutide，在糖尿病合併腎病變的人身上"
      "把重大腎臟事件降低了約四分之一。",
