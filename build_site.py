@@ -274,6 +274,8 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "kidney-lifestyle-evidence": ["kdigo_ckd", "hpa_kidney", "niddk"],
     "kidney-replacement-therapy": ["kdigo_ckd", "tsn", "niddk"],
     "dialysis-access-preparation": ["kdigo_ckd", "tsn", "niddk"],
+    # 旅遊透析靠的是實務規定不是臨床指引，所以引的是腎友協會與健保署
+    "dialysis-travel": ["capd", "nhi", "tsn"],
     "no-dialysis-therapy-claims": ["kdigo_ckd", "tsn", "hpa_kidney"],
 }
 
@@ -2386,7 +2388,9 @@ FAQ_GROUPS = [
         ("數字回來了，就代表完全復原了嗎？", "kidney-function-recovery", False),
         ("醫師說要準備洗腎了，我還有多久時間？", "kidney-replacement-therapy", False),
         ("血液透析和腹膜透析差在哪？", "kidney-replacement-therapy", False),
-        ("洗腎之後還能不能工作、出國？", "kidney-replacement-therapy", False),
+        ("洗腎之後還能不能工作、出國？", "dialysis-travel", False),
+        ("旅遊透析要提前多久安排？", "dialysis-travel", False),
+        ("腹膜透析出國，透析液怎麼辦？", "dialysis-travel", False),
         ("腹膜透析要自己在家操作，我做得來嗎？", "kidney-replacement-therapy", False),
         ("腎臟移植可以在還沒洗腎之前就做嗎？", "kidney-replacement-therapy", False),
         ("洗腎的管路一定要提前準備嗎？", "dialysis-access-preparation", False),
