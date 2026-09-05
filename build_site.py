@@ -57,6 +57,11 @@ CONTACT_EMAIL = "contact@kidneygod.net"
 DIALYSIS_LINK = False
 DIALYSIS_URL = "/dialysis/"
 
+# 首頁要不要顯示「這個網站怎麼用」那六格導覽磚。
+# 2026-09-06 作者要求移除。改成 True 重跑 build_site.py 就完整回來——
+# 版面、文案、六個連結都還在原始碼裡（build_home 的 howto），沒有刪掉。
+HOWTO = False
+
 # Cloudflare Web Analytics 的 beacon token。
 # 選它而不是 GA4 的理由：不放 cookie、不收集個人識別資料，
 # 因此不需要同意橫幅，也不會和「本站不收集任何資料」的定位衝突。
@@ -2044,6 +2049,33 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
                 f'<div class="d">血壓、血糖、血脂、飲食、用藥安全、檢查數值…'
                 f'點主題可跳到該區。</div></a>' if n_gallery else "")
 
+    # 「這個網站怎麼用」——2026-09-06 作者要求移除，但保留可還原。
+    # 用開關而不是刪掉：原始碼留在這裡就是備份，把 HOWTO 改成 True
+    # 重跑一次就完全回來，不必去翻 git 歷史或憑記憶重打。
+    #
+    # 這一區當初的用途是把入口從「網站有什麼」翻成「你想做什麼」。
+    # 現在頁首的兩個下拉已經涵蓋深入文章／主題衛教／衛教圖卡，
+    # 首頁本身也依序陳列了各區塊，重複性確實變高了。
+    howto = ("""
+<div class="howto">
+<b>這個網站怎麼用</b>
+<div class="hgrid">
+  <a class="htile" href="#deep"><span class="hq">想徹底弄懂一件事</span>
+    <span class="hgo">深入文章</span></a>
+  <a class="htile" href="#topics"><span class="hq">有明確想查的問題</span>
+    <span class="hgo">主題衛教</span></a>
+  <a class="htile" href="/calc.html"><span class="hq">拿到報告想換算</span>
+    <span class="hgo">腎功能計算</span></a>
+  <a class="htile" href="/food.html"><span class="hq">想查某個食物</span>
+    <span class="hgo">食物查詢</span></a>
+  <a class="htile" href="#gallery"><span class="hq">只想快速看重點</span>
+    <span class="hgo">衛教圖卡</span></a>
+  <a class="htile" href="/shop.html"><span class="hq">不知道從哪開始</span>
+    <span class="hgo">遊戲場</span></a>
+</div>
+</div>
+""" if HOWTO else "")
+
     body = f"""
 <div class="hero">
 <h1>護腎專家－{esc(AUTHOR_NAME)}醫師的護腎教室</h1>
@@ -2063,23 +2095,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
   <div id="sres" class="sres" hidden></div>
 </div>
 
-<div class="howto">
-<b>這個網站怎麼用</b>
-<div class="hgrid">
-  <a class="htile" href="#deep"><span class="hq">想徹底弄懂一件事</span>
-    <span class="hgo">深入文章</span></a>
-  <a class="htile" href="#topics"><span class="hq">有明確想查的問題</span>
-    <span class="hgo">主題衛教</span></a>
-  <a class="htile" href="/calc.html"><span class="hq">拿到報告想換算</span>
-    <span class="hgo">腎功能計算</span></a>
-  <a class="htile" href="/food.html"><span class="hq">想查某個食物</span>
-    <span class="hgo">食物查詢</span></a>
-  <a class="htile" href="#gallery"><span class="hq">只想快速看重點</span>
-    <span class="hgo">衛教圖卡</span></a>
-  <a class="htile" href="/shop.html"><span class="hq">不知道從哪開始</span>
-    <span class="hgo">遊戲場</span></a>
-</div>
-</div>
+{howto}
 </div>
 
 {news_sect}
