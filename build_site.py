@@ -874,6 +874,14 @@ text-decoration:none}
 color:var(--mut);padding-right:4em}
 .ncn{position:absolute;right:16px;bottom:14px;font-size:12.5px;
 color:var(--link);font-variant-numeric:tabular-nums;white-space:nowrap}
+/* 分組標題。左邊主題名、右邊「N 篇 全部 →」，本身不是連結，
+   只有右邊那截是——整列可點的話，讀者不會知道自己會去哪裡。 */
+.ngh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+margin:26px 0 0;font-size:1.05rem;color:var(--fg)}
+.ngh::before{content:"";flex:0 0 auto;width:4px;height:1.05em;margin-top:.22em;
+border-radius:2px;background:var(--accent)}
+.ngh a{margin-left:auto;font-size:13px;font-weight:500;white-space:nowrap;
+color:var(--link)}
 /* 帶日期的清單。日期與期刊用等寬數字對齊，掃過去像一份目錄 */
 .nlist{list-style:none;margin:14px 0 8px;padding:0;
 border-top:1px solid var(--line)}
@@ -3071,15 +3079,19 @@ CROSSLINK = f"""
 """
 
 
-def news_list_rows(items: list[dict], cat_of: dict[str, str] | None = None) -> str:
-    """日期＋期刊＋標題的清單。分類頁與首頁的「最新研究」共用。"""
+def news_list_rows(items: list[dict], in_group: bool = False) -> str:
+    """日期＋期刊＋標題的單行列。
+
+    in_group：已經分在某個主題底下了，就不再重複標主題標籤——
+    每一列都掛著和上面標題一樣的字，只是雜訊。
+    """
     rows = []
     for x in items:
         slug = TOPIC2CAT.get(x.get("topic", ""))
         href = (f'/{news_cat_path(slug)}#{x["id"]}' if slug
                 else f"/{ALL_NEWS}")
-        cat = (f'<span class="nlc">{esc(x["topic"])}</span>'
-               if cat_of is None else "")
+        cat = ("" if in_group
+               else f'<span class="nlc">{esc(x.get("topic", ""))}</span>')
         rows.append(
             f'<li><a href="{href}">'
             f'<span class="nld">{esc(x["date"])}</span>'
@@ -3106,6 +3118,14 @@ def build_news_page() -> tuple[str, str]:
         f'<span class="ncn">{len(items)} 篇</span></a>'
         for slug, zh, en, items in cats)
 
+    # 依分類分組，不是一條 55 筆的流水帳。列出全部但用單行列，
+    # 這一段是目錄不是內文——要能一眼掃到自己的主題在哪。
+    grouped = "".join(
+        f'<h3 class="ngh" id="g-{slug}">{esc(zh)}'
+        f'<a href="/{news_cat_path(slug)}">{len(items)} 篇　全部 →</a></h3>'
+        + news_list_rows(items, in_group=True)
+        for slug, zh, _en, items in cats)
+
     title = f"腎臟與三高的最新研究：NEJM、Lancet、JAMA 重要文獻｜{SITE_NAME}"
     desc = ("NEJM、Lancet、JAMA 等主要期刊中真正改變腎臟病與三高處置的研究，"
             "依慢性腎臟病、糖尿病腎病變、IgA 腎病變、透析、腎臟移植等主題分類，"
@@ -3127,10 +3147,10 @@ def build_news_page() -> tuple[str, str]:
 <div class="sd">點主題看該主題的全部研究</div>
 <div class="ncats">{cards}</div>
 
-<p class="neyebrow">Latest</p>
-<h2 class="sect">最新研究</h2>
-<div class="sd">新的排在前面</div>
-{news_list_rows(PAPERS)}
+<p class="neyebrow">All research</p>
+<h2 class="sect">全部研究</h2>
+<div class="sd">依主題分組，每組內新的排在前面</div>
+{grouped}
 
 <p class="neyebrow">Guidelines</p>
 <h2 class="sect">現行指引</h2>
