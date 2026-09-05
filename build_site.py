@@ -849,6 +849,49 @@ margin:18px 0 6px;font-weight:700}
 padding:12px 15px;font-weight:500}
 .dglim{margin:10px 0 0;font-size:13px;color:var(--mut);font-style:italic}
 @media(max-width:520px){.dg{padding:16px 15px;border-radius:12px}}
+/* ── 新知的入口頁（版面組織參考 wecareheart 的 medical-updates）──
+   英文小標＋中文大標、中英並列的分類卡片格、帶日期的清單。 */
+.nhero{margin:6px 0 28px}
+.nhero h1{margin:2px 0 12px}
+.neyebrow{margin:34px 0 0;font-size:11.5px;font-weight:700;letter-spacing:.26em;
+text-transform:uppercase;color:var(--link);
+font-family:-apple-system,"Segoe UI",sans-serif}
+.nhero .neyebrow{margin:0}
+.neyebrow + .sect{margin-top:2px}
+/* 分類卡：中文大、英文小，右下角掛篇數。minmax 用 min() 包住，
+   特大字級下容器比 210px 窄時才不會撐爆（這站踩過兩次）。 */
+.ncats{display:grid;gap:12px;margin:14px 0 8px;
+grid-template-columns:repeat(auto-fill,minmax(min(210px,100%),1fr))}
+.ncat{display:block;position:relative;background:var(--card);
+border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;
+text-decoration:none;color:var(--fg);transition:border-color .15s,transform .15s}
+.ncat:hover{border-color:var(--accent);transform:translateY(-2px);
+text-decoration:none}
+.nczh{display:block;font-size:1.06rem;font-weight:700;line-height:1.45}
+/* 右邊留出篇數的位置。少了這個 padding，長英文名（CHRONIC KIDNEY
+   DISEASE）會直接撞上絕對定位的篇數，變成「…DISEASE1 篇」。 */
+.ncen{display:block;margin-top:3px;font-size:11.5px;letter-spacing:.1em;
+color:var(--mut);padding-right:4em}
+.ncn{position:absolute;right:16px;bottom:14px;font-size:12.5px;
+color:var(--link);font-variant-numeric:tabular-nums;white-space:nowrap}
+/* 帶日期的清單。日期與期刊用等寬數字對齊，掃過去像一份目錄 */
+.nlist{list-style:none;margin:14px 0 8px;padding:0;
+border-top:1px solid var(--line)}
+.nlist li{border-bottom:1px solid var(--line)}
+.nlist a{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;
+padding:13px 4px;text-decoration:none;color:var(--fg)}
+.nlist a:hover{background:var(--card);color:var(--link)}
+.nld{font-size:12.5px;color:var(--mut);font-variant-numeric:tabular-nums;
+flex:0 0 auto;min-width:5.6em}
+.nlj{font-size:11px;font-weight:700;letter-spacing:.06em;color:#fff;
+background:var(--accent2);border-radius:3px;padding:2px 7px;flex:0 0 auto}
+.nlc{font-size:12px;color:var(--mut);border:1px solid var(--line);
+border-radius:99px;padding:1px 8px;flex:0 0 auto}
+.nlt{flex:1 1 14em;line-height:1.6}
+@media(max-width:520px){
+  .nld{min-width:0}
+  .nlt{flex:1 1 100%}
+}
 /* 首頁那張只留「意義」一段 */
 .dg.compact{margin:0}
 .dg.compact h3{font-size:1.05rem}
@@ -2996,6 +3039,66 @@ PAPERS: list[dict] = [
 ]
 
 
+# 新知的分類。(slug, 中文, 英文)——中英並列是刻意的：
+# 讀者搜到的關鍵字常常是英文（IgA nephropathy、SGLT2），
+# 而中文才是他們看得懂的。兩個都放，兩邊都接得住。
+#
+# 順序＝顯示順序。**只渲染有文章的分類**：空的分類頁是薄內容，
+# 對搜尋引擎是扣分，對讀者是死路。
+NEWS_CATS: list[tuple[str, str, str]] = [
+    ("ckd", "慢性腎臟病", "CHRONIC KIDNEY DISEASE"),
+    ("dkd", "糖尿病腎病變", "DIABETIC KIDNEY DISEASE"),
+    ("igan", "IgA 腎病變", "IgA NEPHROPATHY"),
+    ("dialysis", "透析", "DIALYSIS"),
+    ("transplant", "腎臟移植", "KIDNEY TRANSPLANTATION"),
+    ("htn", "高血壓", "HYPERTENSION"),
+    ("lipid", "血脂與心血管", "LIPIDS & CARDIOVASCULAR"),
+    ("aki", "急性腎損傷", "ACUTE KIDNEY INJURY"),
+]
+# PAPERS 裡的 topic 字串 → 分類 slug。topic 是給人看的，slug 是給網址用的，
+# 分開才不會為了網址好看而把中文標籤寫得不像話。
+TOPIC2CAT = {
+    "慢性腎臟病": "ckd", "糖尿病腎病變": "dkd", "IgA 腎病變": "igan",
+    "透析": "dialysis", "腎臟移植": "transplant", "高血壓": "htn",
+    "血脂": "lipid", "急性腎損傷": "aki",
+}
+
+
+def news_cat_path(slug: str) -> str:
+    return f"articles/news-{slug}.html"
+
+
+def _assign_paper_ids() -> None:
+    """給每篇一個穩定的錨點 id。
+
+    用「日期＋期刊」而不是流水號：清單改順序或中間插一篇時，
+    流水號會讓所有既有連結指到別篇文章，而且不會噴錯。
+    """
+    seen: dict[str, int] = {}
+    for x in PAPERS:
+        base = re.sub(r"[^a-z0-9]+", "-",
+                      f'{x["date"]}-{x["journal"]}'.lower()).strip("-")
+        seen[base] = seen.get(base, 0) + 1
+        x["id"] = base if seen[base] == 1 else f"{base}-{seen[base]}"
+
+
+_assign_paper_ids()
+
+
+def papers_in(slug: str) -> list[dict]:
+    return [x for x in PAPERS if TOPIC2CAT.get(x.get("topic", "")) == slug]
+
+
+def live_news_cats() -> list[tuple[str, str, str, list[dict]]]:
+    """有文章的分類，附上該分類的文章。"""
+    out = []
+    for slug, zh, en in NEWS_CATS:
+        items = papers_in(slug)
+        if items:
+            out.append((slug, zh, en, items))
+    return out
+
+
 ALL_NEWS = "articles/news.html"
 ALL_GUIDE = "articles/guidelines.html"
 # 舊網址。2026-09-05 拆成上面兩頁，這一頁留著當轉址頁。
@@ -3065,29 +3168,69 @@ CROSSLINK = f"""
 """
 
 
+def news_list_rows(items: list[dict], cat_of: dict[str, str] | None = None) -> str:
+    """日期＋期刊＋標題的清單。分類頁與首頁的「最新研究」共用。"""
+    rows = []
+    for x in items:
+        slug = TOPIC2CAT.get(x.get("topic", ""))
+        href = (f'/{news_cat_path(slug)}#{x["id"]}' if slug
+                else f"/{ALL_NEWS}")
+        cat = (f'<span class="nlc">{esc(x["topic"])}</span>'
+               if cat_of is None else "")
+        rows.append(
+            f'<li><a href="{href}">'
+            f'<span class="nld">{esc(x["date"])}</span>'
+            f'<span class="nlj">{esc(x["journal"])}</span>'
+            f'{cat}<span class="nlt">{esc(x["zh"])}</span></a></li>')
+    return f'<ul class="nlist">{"".join(rows)}</ul>'
+
+
 def build_news_page() -> tuple[str, str]:
-    """新知：主要期刊的最新研究，結構化摘要。"""
+    """新知：專業區的入口頁。
+
+    版面組織參考 wecareheart.com/medical-updates/：
+    英文小標＋中文大標的區塊、熱門分類的中英並列卡片格、帶日期的最新清單。
+    程式與文案自己寫，配色維持本站的青綠。
+
+    這一頁**不放完整摘要**，只放分類入口與清單——完整的結構化摘要在分類頁。
+    全部攤在一頁的話，五篇就要捲很久，而讀者多半是為了某一個主題來的。
+    """
+    cats = live_news_cats()
+    cards = "".join(
+        f'<a class="ncat" href="/{news_cat_path(slug)}">'
+        f'<span class="nczh">{esc(zh)}</span>'
+        f'<span class="ncen">{esc(en)}</span>'
+        f'<span class="ncn">{len(items)} 篇</span></a>'
+        for slug, zh, en, items in cats)
+
     title = f"腎臟與三高的最新研究：NEJM、Lancet、JAMA 重要文獻｜{SITE_NAME}"
     desc = ("NEJM、Lancet、JAMA 等主要期刊中真正改變腎臟病與三高處置的研究，"
-            "以結構化摘要呈現：問題、發現、意義，附研究方法、主要結果與正式出處。")
-    toc = "".join(
-        f'<li><a href="#p{i}">{esc(x["zh"][:34])}</a></li>'
-        for i, x in enumerate(PAPERS, 1))
-    cards = "".join(
-        digest_card(x).replace('<article class="dg">',
-                               f'<article class="dg" id="p{i}">', 1)
-        for i, x in enumerate(PAPERS, 1))
+            "依慢性腎臟病、糖尿病腎病變、IgA 腎病變、透析、腎臟移植等主題分類，"
+            "每篇附結構化摘要與正式出處。")
     body = f"""
-<h1>新知</h1>
-<p class="lede">腎臟與三高領域<strong>主要期刊的最新研究</strong>。
-用結構化摘要呈現——問題、發現、意義先講完，想細看的再往下讀方法與結果。
-不做大清單，只收真正改變處置、或改變了指引寫法的研究，新的排在前面。</p>
-<p class="meta">最後盤點：{UPDATES_REVIEWED}　·　共 {len(PAPERS)} 篇</p>
+<div class="nhero">
+  <p class="neyebrow">Latest Research</p>
+  <h1>新知</h1>
+  <p class="lede">腎臟與三高領域<strong>主要期刊的最新研究</strong>。
+  每篇用結構化摘要呈現——問題、發現、意義先講完，想細看的再往下讀方法與結果。
+  不做大清單，只收真正改變處置、或改變了指引寫法的研究。</p>
+  <p class="meta">最後盤點：{UPDATES_REVIEWED}　·　共 {len(PAPERS)} 篇　·
+  分成 {len(cats)} 個主題</p>
+</div>
 {DISCLAIM_BOX}
-<div class="toc"><h2>本頁內容</h2><ol>{toc}</ol></div>
-<div class="updlist">{cards}</div>
 
-<h2 class="backlink">現行指引</h2>
+<p class="neyebrow">Browse by topic</p>
+<h2 class="sect">依主題瀏覽</h2>
+<div class="sd">點主題看該主題的全部研究</div>
+<div class="ncats">{cards}</div>
+
+<p class="neyebrow">Latest</p>
+<h2 class="sect">最新研究</h2>
+<div class="sd">新的排在前面</div>
+{news_list_rows(PAPERS)}
+
+<p class="neyebrow">Guidelines</p>
+<h2 class="sect">現行指引</h2>
 <div class="cats">
   <a href="/{ALL_GUIDE}"><div class="t">現行國際指引</div>
     <div class="d">研究要累積很久才會變成指引。
@@ -3100,6 +3243,48 @@ def build_news_page() -> tuple[str, str]:
               "url": f"{BASE_URL}/{ALL_NEWS}", "dateModified": UPDATES_REVIEWED,
               "author": author_ld()}
     return ALL_NEWS, page(title, desc, ALL_NEWS, body, jsonld)
+
+
+def build_news_cat_pages() -> list[tuple[str, str]]:
+    """每個有文章的主題各一頁，放該主題的完整結構化摘要。"""
+    out = []
+    cats = live_news_cats()
+    for slug, zh, en, items in cats:
+        path = news_cat_path(slug)
+        cards = "".join(
+            digest_card(x).replace('<article class="dg">',
+                                   f'<article class="dg" id="{x["id"]}">', 1)
+            for x in items)
+        others = "".join(
+            f'<a href="/{news_cat_path(s2)}"><div class="t">{esc(z2)}</div>'
+            f'<div class="d">{esc(e2)}　·　{len(i2)} 篇</div></a>'
+            for s2, z2, e2, i2 in cats if s2 != slug)
+        title = f"{zh}的最新研究：{en}｜{SITE_NAME}"
+        desc = (f"{zh}（{en}）領域主要期刊的最新研究，共 {len(items)} 篇，"
+                f"每篇附結構化摘要：問題、發現、意義，以及方法、結果與正式出處。")
+        body = f"""
+<div class="nhero">
+  <p class="neyebrow">{esc(en)}</p>
+  <h1>{esc(zh)}</h1>
+  <p class="lede">{esc(zh)}領域主要期刊的最新研究，共 {len(items)} 篇。
+  每篇用結構化摘要呈現——問題、發現、意義先講完，
+  想細看的再往下讀方法與結果。</p>
+  <p class="meta">最後盤點：{UPDATES_REVIEWED}　·
+  <a href="/{ALL_NEWS}">← 回新知</a></p>
+</div>
+{DISCLAIM_BOX}
+<div class="updlist">{cards}</div>
+
+<h2 class="backlink">其他主題</h2>
+<div class="cats">{others}</div>
+{CROSSLINK}
+"""
+        jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
+                  "name": f"{zh}的最新研究", "description": desc,
+                  "inLanguage": "zh-Hant", "url": f"{BASE_URL}/{path}",
+                  "dateModified": UPDATES_REVIEWED, "author": author_ld()}
+        out.append((path, page(title, desc, path, body, jsonld)))
+    return out
 
 
 def build_guidelines_page() -> tuple[str, str]:
@@ -4087,16 +4272,20 @@ def main() -> int:
 
     # 兩個「完整清單」頁：首頁與總覽頁只列一部分，這裡是全部。
     # 不進導覽列——導覽項目愈少手機頁首愈鬆，這兩頁從內容區進去就夠了。
-    for path, html in (build_longform_page(md_pages), build_faq_page(md_pages),
-                       build_news_page(), build_guidelines_page(),
-                       build_updates_redirect()):
+    for path, html in ([build_longform_page(md_pages), build_faq_page(md_pages),
+                        build_news_page(), build_guidelines_page(),
+                        build_updates_redirect()]
+                       + build_news_cat_pages()):
         (ROOT / path).write_text(html, encoding="utf-8")
         written.append(path)
     n_faq = sum(1 for _l, _g, items in FAQ_GROUPS for _ in items)
     print(f"  {ALL_ARTICLES}　(全部深入文章 {len(md_pages)} 篇)")
     print(f"  {ALL_FAQ}　(全部常見問題 {n_faq} 題)")
     n_guide = sum(len(x) for _o, _i, x in GUIDELINES)
-    print(f"  {ALL_NEWS}　(新知：{len(PAPERS)} 篇研究)")
+    ncats = live_news_cats()
+    print(f"  {ALL_NEWS}　(新知入口：{len(PAPERS)} 篇研究，{len(ncats)} 個主題)")
+    for slug, zh, _en, items in ncats:
+        print(f"    {news_cat_path(slug)}　({zh} {len(items)} 篇)")
     print(f"  {ALL_GUIDE}　(指引：{n_guide} 份，盤點於 {UPDATES_REVIEWED})")
     print(f"  {ALL_UPDATES}　(舊網址，轉到新知)")
 

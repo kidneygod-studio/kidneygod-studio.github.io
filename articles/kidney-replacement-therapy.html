@@ -312,6 +312,49 @@ margin:18px 0 6px;font-weight:700}
 padding:12px 15px;font-weight:500}
 .dglim{margin:10px 0 0;font-size:13px;color:var(--mut);font-style:italic}
 @media(max-width:520px){.dg{padding:16px 15px;border-radius:12px}}
+/* ── 新知的入口頁（版面組織參考 wecareheart 的 medical-updates）──
+   英文小標＋中文大標、中英並列的分類卡片格、帶日期的清單。 */
+.nhero{margin:6px 0 28px}
+.nhero h1{margin:2px 0 12px}
+.neyebrow{margin:34px 0 0;font-size:11.5px;font-weight:700;letter-spacing:.26em;
+text-transform:uppercase;color:var(--link);
+font-family:-apple-system,"Segoe UI",sans-serif}
+.nhero .neyebrow{margin:0}
+.neyebrow + .sect{margin-top:2px}
+/* 分類卡：中文大、英文小，右下角掛篇數。minmax 用 min() 包住，
+   特大字級下容器比 210px 窄時才不會撐爆（這站踩過兩次）。 */
+.ncats{display:grid;gap:12px;margin:14px 0 8px;
+grid-template-columns:repeat(auto-fill,minmax(min(210px,100%),1fr))}
+.ncat{display:block;position:relative;background:var(--card);
+border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;
+text-decoration:none;color:var(--fg);transition:border-color .15s,transform .15s}
+.ncat:hover{border-color:var(--accent);transform:translateY(-2px);
+text-decoration:none}
+.nczh{display:block;font-size:1.06rem;font-weight:700;line-height:1.45}
+/* 右邊留出篇數的位置。少了這個 padding，長英文名（CHRONIC KIDNEY
+   DISEASE）會直接撞上絕對定位的篇數，變成「…DISEASE1 篇」。 */
+.ncen{display:block;margin-top:3px;font-size:11.5px;letter-spacing:.1em;
+color:var(--mut);padding-right:4em}
+.ncn{position:absolute;right:16px;bottom:14px;font-size:12.5px;
+color:var(--link);font-variant-numeric:tabular-nums;white-space:nowrap}
+/* 帶日期的清單。日期與期刊用等寬數字對齊，掃過去像一份目錄 */
+.nlist{list-style:none;margin:14px 0 8px;padding:0;
+border-top:1px solid var(--line)}
+.nlist li{border-bottom:1px solid var(--line)}
+.nlist a{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;
+padding:13px 4px;text-decoration:none;color:var(--fg)}
+.nlist a:hover{background:var(--card);color:var(--link)}
+.nld{font-size:12.5px;color:var(--mut);font-variant-numeric:tabular-nums;
+flex:0 0 auto;min-width:5.6em}
+.nlj{font-size:11px;font-weight:700;letter-spacing:.06em;color:#fff;
+background:var(--accent2);border-radius:3px;padding:2px 7px;flex:0 0 auto}
+.nlc{font-size:12px;color:var(--mut);border:1px solid var(--line);
+border-radius:99px;padding:1px 8px;flex:0 0 auto}
+.nlt{flex:1 1 14em;line-height:1.6}
+@media(max-width:520px){
+  .nld{min-width:0}
+  .nlt{flex:1 1 100%}
+}
 /* 首頁那張只留「意義」一段 */
 .dg.compact{margin:0}
 .dg.compact h3{font-size:1.05rem}
