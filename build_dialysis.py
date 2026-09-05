@@ -53,12 +53,42 @@ FACTS: dict[str, str] = {
     "beds":       TODO("透析床位數"),
     "machines":   TODO("透析機台數"),
     "staff":      TODO("專責護理人員數"),
-    "doctors":    TODO("醫師陣容"),
-    "line":       TODO("LINE 官方帳號網址"),
+    # 洗腎室服務專員的 LINE。給的是「找得到人」的窗口，不是院方的行銷帳號——
+    # 這一頁的讀者多半是正在準備透析、或臨時需要安排透析的人。
+    "line":       TODO("洗腎室服務專員的 LINE ID 或加好友網址"),
     "booking":    TODO("掛號系統網址"),
     "transit":    TODO("大眾運輸方式"),
     "parking":    TODO("停車資訊"),
 }
+
+# 醫師陣容。空的時候頁面顯示待填標記；填了就渲染成一張一張的介紹。
+# 分開放而不是塞進 FACTS，是因為它是「一份清單」不是「一個值」——
+# 塞成一個字串的話，兩位以上就只能用頓號硬串，排版很難看。
+#   ("姓名", "職稱", "專長")
+DOCTORS: list[tuple[str, str, str]] = [
+    # ("吳政哲", "腎臟科主治醫師", "慢性腎臟病、血液透析、腹膜透析、三高"),
+]
+
+# 停診／代診公告。
+#
+# 這一區原本是寫死的「目前無停診公告」。一個永遠寫著「目前無停診」的公告欄，
+# 比沒有公告欄更糟——讀者會相信它，然後白跑一趟。所以改成：
+#   有公告 → 條列出來
+#   沒公告 → 寫「目前無停診公告」，並附上最後確認日期
+#
+# NOTICE_CHECKED 要手動改。刻意不用 TODAY 自動帶入：那會變成每次建置
+# 都宣稱「今天確認過」，但其實沒有人確認，等於用日期說謊。
+NOTICE_CHECKED = "2026-09-05"
+NOTICES: list[tuple[str, str]] = [
+    # ("2026-10-10（六）國慶連假", "當日停診。二四六的病友改至 10/11 補洗，"
+    #  "護理人員會主動聯繫確認時段。"),
+]
+
+# Cloudflare Web Analytics。**刻意和 build_site.py 用同一個 token**：
+# CF 的統計是按網域算的，兩個站都在 kidneygod.net 底下，同一個 token
+# 就會在同一個儀表板裡分路徑呈現，不必也不能另外開一個站點。
+# 換 token 的時候兩個檔案都要改。不放 cookie、不收個人識別資料。
+ANALYTICS_TOKEN = "e44b1d39221d4a5085336497dbff3ce4"
 
 
 def fact(key: str) -> str:
@@ -70,6 +100,15 @@ def fact(key: str) -> str:
 
 def has(key: str) -> bool:
     return not isinstance(FACTS[key], TODO)
+
+
+def ready() -> bool:
+    """機構事實與醫師陣容是否都填完了。
+
+    決定兩件事：頁面要不要輸出 noindex，以及要不要產生 sitemap。
+    綁在一起是刻意的——擋搜尋引擎卻又給它一份網址清單，是自相矛盾的。
+    """
+    return all(not isinstance(v, TODO) for v in FACTS.values()) and bool(DOCTORS)
 
 
 # ---------------------------------------------------------------------------
@@ -329,6 +368,16 @@ margin:44px 0 14px;line-height:1.5}
 .prose th,.prose td{border:1px solid var(--line);padding:11px 13px;text-align:left;
 vertical-align:top}
 .prose th{background:var(--mist);color:var(--navy);font-weight:700}
+/* 醫師陣容。一位一張，姓名、職稱、專長各自成行——
+   多位醫師用頓號串成一段的話，讀者要找「誰看什麼」得整段掃過去。 */
+.docs{list-style:none;margin:0 0 20px;padding:0;display:grid;
+grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:14px}
+.docs li{border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+background:var(--mist)}
+.docs b{display:block;font-family:var(--serif);font-size:19px;color:var(--navy)}
+.docs .r{display:block;font-size:14px;color:var(--blue);margin-top:2px}
+.docs .s{display:block;font-size:14.5px;color:var(--mut);margin-top:6px;
+line-height:1.75}
 .disc{margin-top:48px;background:var(--mist);border-left:4px solid var(--blue);
 border-radius:0 10px 10px 0;padding:18px 22px;font-size:14.5px;color:var(--mut)}
 """
@@ -460,9 +509,11 @@ def shell(path: str, title: str, desc: str, body: str,
             if (OUT / "img" / "logo.png").exists() else "")
     # 還有待填欄位就擋搜尋引擎。這是一間真實醫療機構的頁面，
     # 帶著「待填：透析室電話」被索引，比晚一點上線糟糕得多。
-    # FACTS 全部填完之後這一行會自己消失，不必記得回來改。
-    robots = ("" if all(not isinstance(v, TODO) for v in FACTS.values())
-              else '<meta name="robots" content="noindex,nofollow">\n')
+    # 全部填完之後這一行會自己消失，不必記得回來改。
+    robots = "" if ready() else '<meta name="robots" content="noindex,nofollow">\n'
+    cf = (f'\n<script type="module" src="https://static.cloudflareinsights.com/'
+          f'beacon.min.js" data-cf-beacon=\'{{"token": "{ANALYTICS_TOKEN}"}}\'>'
+          f'</script>' if ANALYTICS_TOKEN else "")
     return f"""<!doctype html>
 <html lang="zh-Hant" class="no-js">
 <head>
@@ -526,7 +577,7 @@ def shell(path: str, title: str, desc: str, body: str,
 </footer>
 
 <a class="float" href="visit.html#booking">預約與諮詢</a>
-<script src="assets/site.js?v={ASSET_V}"></script>
+<script src="assets/site.js?v={ASSET_V}"></script>{cf}
 </body>
 </html>
 """
@@ -643,6 +694,22 @@ def build_home() -> str:
         f'<div class="ans">{"".join(f"<p>{esc(p)}</p>" for p in a)}</div></details>'
         for i, (q, a) in enumerate(FAQ))
 
+    # 沒有公告時附上最後確認日期。少了這個日期，讀者沒辦法分辨
+    # 「今天確認過沒有停診」和「三年前寫上去就沒人管過」。
+    if NOTICES:
+        notice = ('<h3>近期公告</h3><ul>'
+                  + "".join(f'<li><strong>{esc(w)}</strong>：{esc(t)}</li>'
+                            for w, t in NOTICES)
+                  + '</ul>')
+    else:
+        notice = (f'<h3>目前無停診公告</h3>'
+                  f'<p class="sd" style="margin:0 0 10px">'
+                  f'最後確認：{esc(NOTICE_CHECKED)}</p><ul>')
+        notice += (
+            '<li>國定假日與颱風天的透析安排，會另行公告並由護理人員主動聯繫。</li>'
+            f'<li>臨時無法到院透析，請盡早來電，我們會協助安排補洗時段：'
+            f'{fact("tel")}</li></ul>')
+
     hero_img = (f'<img class="shot" src="img/hero.jpg" alt="">'
                 if (OUT / "img" / "hero.jpg").exists() else "")
     band_img = (f'<img class="shot" src="img/band-process.jpg" alt="">'
@@ -697,13 +764,7 @@ def build_home() -> str:
 
 <section class="tint"><div class="wrap">
   <div class="shead reveal"><span class="en">Notice</span><h2>停診與代診公告</h2></div>
-  <div{rv("notice", "", .08)}>
-    <h3>目前無停診公告</h3>
-    <ul>
-      <li>國定假日與颱風天的透析安排，會另行公告並由護理人員主動聯繫。</li>
-      <li>臨時無法到院透析，請盡早來電，我們會協助安排補洗時段：{fact('tel')}</li>
-    </ul>
-  </div>
+  <div{rv("notice", "", .08)}>{notice}</div>
 </div></section>
 
 <section class="band">{band_img}<div class="wrap">
@@ -762,6 +823,17 @@ def page_hero(en: str, h1: str, lead: str = "") -> str:
             f'</div></section>')
 
 
+def doctors_html() -> str:
+    if not DOCTORS:
+        return ('<p><span class="todo">待填：醫師陣容——'
+                '在 build_dialysis.py 的 DOCTORS 加上（姓名, 職稱, 專長）</span></p>')
+    return ('<ul class="docs">'
+            + "".join(f'<li><b>{esc(n)}</b><span class="r">{esc(t)}</span>'
+                      f'<span class="s">{esc(s)}</span></li>'
+                      for n, t, s in DOCTORS)
+            + '</ul>')
+
+
 def build_about() -> str:
     body = page_hero("About us", "關於中心",
                      "長期的治療需要一個穩定的地方——固定的團隊、固定的時段、"
@@ -771,7 +843,7 @@ def build_about() -> str:
 <p>{fact('center')}由腎臟科專科醫師與專責透析護理人員組成固定團隊，
 配合營養師與社工，提供血液透析與血液透析過濾治療。</p>
 <h3>醫療團隊</h3>
-<p>{fact('doctors')}</p>
+{doctors_html()}
 <h3>設備與規模</h3>
 <ul>
   <li>透析機台：{fact('machines')}</li>
@@ -965,7 +1037,7 @@ def build_visit() -> str:
   <li><strong>電話</strong>：{fact('tel')}（{fact('tel_note')}）</li>
   <li><strong>地址</strong>：{fact('addr')}</li>
   <li><strong>線上掛號</strong>：{fact('booking')}</li>
-  <li><strong>LINE 官方帳號</strong>：{fact('line')}</li>
+  <li><strong>洗腎室服務專員 LINE</strong>：{fact('line')}</li>
 </ul>
 
 <h2>第一次來，請帶這些</h2>
@@ -1034,6 +1106,22 @@ def main() -> None:
     print(f"  dialysis/assets/site.css　({len(css):,} bytes)")
     print(f"  dialysis/assets/site.js　({len(js):,} bytes)　v={ASSET_V}")
 
+    # sitemap 和 noindex 綁在同一個條件：擋著搜尋引擎卻又遞給它一份網址清單，
+    # 是自相矛盾的。還沒 ready 就把舊的 sitemap 刪掉，不留下會誤導的殘檔。
+    sm = OUT / "sitemap.xml"
+    if ready():
+        urls = "".join(
+            f"<url><loc>{BASE_URL}/{'' if n == 'index.html' else n}</loc>"
+            f"<lastmod>{TODAY}</lastmod><changefreq>monthly</changefreq>"
+            f"<priority>{'1.0' if n == 'index.html' else '0.8'}</priority></url>"
+            for n in pages)
+        sm.write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
+                      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+                      f"{urls}</urlset>\n", encoding="utf-8")
+        print(f"  dialysis/sitemap.xml　({len(pages)} 個網址)")
+    elif sm.exists():
+        sm.unlink()
+
     todo = [k for k, v in FACTS.items() if isinstance(v, TODO)]
     have = len(FACTS) - len(todo)
     print(f"\n機構事實：{have}/{len(FACTS)} 已填")
@@ -1041,12 +1129,24 @@ def main() -> None:
         print("  還缺（填在 build_dialysis.py 最上面的 FACTS）：")
         for k in todo:
             print(f"    {k:<10}{FACTS[k]}")
+    if not DOCTORS:
+        print("  還缺　DOCTORS　醫師陣容（姓名, 職稱, 專長）")
+    if NOTICES:
+        print(f"\n停診公告：{len(NOTICES)} 則")
+    else:
+        print(f"\n停診公告：無，頁面顯示「最後確認：{NOTICE_CHECKED}」"
+              f"（確認過記得改 NOTICE_CHECKED）")
 
     missing = [n for _t, n, _d in SERVICES + COLUMNS] + ["hero", "about-center",
                                                          "band-process"]
     absent = [n for n in missing if not (OUT / "img" / f"{n}.jpg").exists()]
     print(f"\n圖片：{len(missing) - len(absent)}/{len(missing)} 已放"
           + (f"（缺 {', '.join(absent)}）" if absent else ""))
+
+    print(f"\n可以上線了嗎：{'✓ 是，已產生 sitemap、已移除 noindex' if ready() else '✗ 還沒，五頁維持 noindex、不產生 sitemap'}")
+    if ready():
+        print("  記得到 Search Console 提交 "
+              f"{BASE_URL}/sitemap.xml（和主站的是兩份）")
 
 
 if __name__ == "__main__":
