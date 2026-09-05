@@ -3150,23 +3150,11 @@ PAPERS: list[dict] = load_papers()
 # 對不上的主題會變成孤兒——文章存在、但不出現在任何分類頁，而且不會噴錯。
 # main() 最後會對帳，有孤兒就印出來。
 NEWS_CATS: list[tuple[str, str, str]] = [
-    ("ckd", "慢性腎臟病", "CHRONIC KIDNEY DISEASE"),
-    ("dkd", "糖尿病腎病變", "DIABETIC KIDNEY DISEASE"),
-    ("igan", "IgA 腎病變", "IgA NEPHROPATHY"),
-    ("gn", "腎絲球腎炎", "GLOMERULONEPHRITIS"),
-    ("dialysis", "透析", "DIALYSIS"),
-    ("transplant", "腎臟移植", "KIDNEY TRANSPLANTATION"),
-    ("aki", "急性腎損傷", "ACUTE KIDNEY INJURY"),
-    ("genetic", "遺傳性腎病", "GENETIC KIDNEY DISEASE"),
+    ("kidney", "腎臟疾病", "KIDNEY DISEASE"),
     ("htn", "高血壓", "HYPERTENSION"),
-    ("lipid", "血脂與心血管", "LIPIDS & CARDIOVASCULAR"),
-    ("electrolyte", "電解質異常", "ELECTROLYTE DISORDERS"),
-    ("mbd", "礦物質與骨病變", "MINERAL & BONE DISORDER"),
-    ("anemia", "貧血", "ANEMIA"),
-    ("drug", "用藥安全", "DRUG SAFETY"),
-    ("biomarker", "檢查與生物標記", "BIOMARKERS"),
-    ("nutrition", "營養", "NUTRITION"),
-    ("supportive", "支持性照護", "SUPPORTIVE CARE"),
+    ("dm", "糖尿病", "DIABETES"),
+    ("lipid", "高血脂", "DYSLIPIDEMIA"),
+    ("ckm", "心腎糖肝代謝症候群", "CKM SYNDROME"),
 ]
 # 從 NEWS_CATS 推出來，不要另外維護一份——
 # 兩份手動維護的對照表一定會漂移（第一版就漏了七個主題，18 篇變孤兒）。
@@ -4422,7 +4410,19 @@ def main() -> int:
     print(f"  {ALL_FAQ}　(全部常見問題 {n_faq} 題)")
     print(f"  {ALL_TOPICS}　(主題衛教 {len(by_cat)} 個主題)")
     n_guide = sum(len(x) for _o, _i, x in GUIDELINES)
+    # 分類改過之後，上一版產生的 news-*.html 會留在目錄裡變成孤兒——
+    # 沒有任何連結指到它，卻還在 sitemap 之外被搜尋引擎收著。
+    # 每次建置都把「這次沒產生的」刪掉，比記得手動清可靠。
     ncats = live_news_cats()
+    keep = {news_cat_path(s) for s, _z, _e, _i in ncats}
+    stale = sorted(p for p in OUT.glob("news-*.html")
+                   if f"articles/{p.name}" not in keep)
+    for p in stale:
+        p.unlink()
+    if stale:
+        print(f"  清掉 {len(stale)} 個過期的分類頁："
+              + "、".join(p.name for p in stale))
+
     print(f"  {ALL_NEWS}　(新知入口：{len(PAPERS)} 篇研究，{len(ncats)} 個主題)")
     for slug, zh, _en, items in ncats:
         print(f"    {news_cat_path(slug)}　({zh} {len(items)} 篇)")

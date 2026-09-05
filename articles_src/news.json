@@ -2,7 +2,7 @@
   {
     "journal": "NEJM",
     "date": "2026",
-    "topic": "IgA 腎病變",
+    "topic": "腎臟疾病",
     "zh": "Sibeprenlimab 治療 IgA 腎病變：第三期試驗期中分析",
     "en": "Sibeprenlimab in IgA Nephropathy — Interim Analysis of a Phase 3 Trial",
     "cite": "N Engl J Med 2026｜DOI: 10.1056/NEJMoa2512133｜PMID: 41211929",
@@ -21,7 +21,7 @@
   {
     "journal": "THE LANCET",
     "date": "2026",
-    "topic": "IgA 腎病變",
+    "topic": "腎臟疾病",
     "zh": "Atrasentan 治療 IgA 腎病變（ALIGN）：2.5 年最終結果",
     "en": "Atrasentan in patients with IgA nephropathy (ALIGN): final 2·5-year results from a randomised, double-blind, placebo-controlled, phase 3 trial",
     "cite": "The Lancet 2026",
@@ -38,7 +38,7 @@
   {
     "journal": "THE LANCET",
     "date": "2026-09-03",
-    "topic": "腎臟移植",
+    "topic": "腎臟疾病",
     "zh": "豬腎異種移植作為橋接同種移植之首例人體研究",
     "en": "Porcine Kidney Xenotransplantation as a Bridge to Allotransplantation: A First-in-Human Study",
     "cite": "The Lancet｜發表日期：2026年9月3日｜DOI: 10.1016/S0140-6736(26)01295-X",
@@ -62,7 +62,7 @@
   {
     "journal": "JAMA",
     "date": "2026-07-30",
-    "topic": "急性腎損傷",
+    "topic": "腎臟疾病",
     "zh": "心臟手術後之達格列淨與急性腎損傷：一項隨機臨床試驗（MERCURI-2）",
     "en": "Dapagliflozin and Acute Kidney Injury Following Cardiac Surgery: A Randomized Clinical Trial (MERCURI-2)",
     "cite": "JAMA・2026年7月30日・DOI: 10.1001/jama.2026.9268",
@@ -85,7 +85,7 @@
   {
     "journal": "NEJM",
     "date": "2026-06",
-    "topic": "慢性腎臟病",
+    "topic": "腎臟疾病",
     "zh": "Finerenone 用於非糖尿病的慢性腎臟病（FIND-CKD）",
     "en": "Finerenone in Persons with Chronic Kidney Disease without Diabetes",
     "cite": "N Engl J Med 2026（2026 年 6 月 ERA 年會同步發表）｜DOI: 10.1056/NEJMoa2604625",
@@ -103,7 +103,7 @@
   {
     "journal": "NEJM",
     "date": "2025-02",
-    "topic": "慢性腎臟病",
+    "topic": "腎臟疾病",
     "zh": "Empagliflozin 用於慢性腎臟病的長期效果（EMPA-KIDNEY 試驗後追蹤）",
     "en": "Long-Term Effects of Empagliflozin in Patients with Chronic Kidney Disease",
     "cite": "N Engl J Med 2025;392:777-787｜DOI: 10.1056/NEJMoa2409183",
@@ -120,7 +120,7 @@
   {
     "journal": "NEJM",
     "date": "2024",
-    "topic": "糖尿病腎病變",
+    "topic": "糖尿病",
     "zh": "Semaglutide 對第二型糖尿病合併慢性腎臟病的影響（FLOW）",
     "en": "Effects of Semaglutide on Chronic Kidney Disease in Patients with Type 2 Diabetes",
     "cite": "N Engl J Med 2024;391:109–121｜DOI: 10.1056/NEJMoa2403347",
@@ -138,7 +138,7 @@
   {
     "journal": "NEJM",
     "date": "2023-12",
-    "topic": "血脂與心血管",
+    "topic": "心腎糖肝代謝症候群",
     "zh": "Semaglutide 對肥胖但無糖尿病者心血管結果的影響（SELECT）",
     "en": "Semaglutide and Cardiovascular Outcomes in Obesity without Diabetes",
     "cite": "N Engl J Med 2023;389:2221-2232｜DOI: 10.1056/NEJMoa2307563",
@@ -156,7 +156,7 @@
   {
     "journal": "NEJM",
     "date": "2023-01",
-    "topic": "慢性腎臟病",
+    "topic": "腎臟疾病",
     "zh": "Empagliflozin 用於慢性腎臟病（EMPA-KIDNEY）",
     "en": "Empagliflozin in Patients with Chronic Kidney Disease",
     "cite": "N Engl J Med 2023;388:117-127｜DOI: 10.1056/NEJMoa2204233",
@@ -174,7 +174,7 @@
   {
     "journal": "NEJM",
     "date": "2022-09",
-    "topic": "血脂與心血管",
+    "topic": "心腎糖肝代謝症候群",
     "zh": "Dapagliflozin 用於射血分數輕度降低或保留的心衰竭（DELIVER）",
     "en": "Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction",
     "cite": "N Engl J Med 2022;387:1089-1098｜DOI: 10.1056/NEJMoa2206286",
@@ -191,7 +191,7 @@
   {
     "journal": "NEJM",
     "date": "2022-07",
-    "topic": "血脂與心血管",
+    "topic": "心腎糖肝代謝症候群",
     "zh": "每週一次 tirzepatide 用於肥胖治療（SURMOUNT-1）",
     "en": "Tirzepatide Once Weekly for the Treatment of Obesity",
     "cite": "N Engl J Med 2022;387:205-216｜DOI: 10.1056/NEJMoa2206038",
@@ -209,7 +209,7 @@
   {
     "journal": "NEJM",
     "date": "2021-10",
-    "topic": "血脂與心血管",
+    "topic": "心腎糖肝代謝症候群",
     "zh": "Empagliflozin 用於射血分數保留的心衰竭（EMPEROR-Preserved）",
     "en": "Empagliflozin in Heart Failure with a Preserved Ejection Fraction",
     "cite": "N Engl J Med 2021;385:1451-1461｜DOI: 10.1056/NEJMoa2107038",
@@ -227,7 +227,7 @@
   {
     "journal": "NEJM",
     "date": "2021-08",
-    "topic": "糖尿病腎病變",
+    "topic": "糖尿病",
     "zh": "Efpeglenatide 對第二型糖尿病心血管與腎臟結果的影響（AMPLITUDE-O）",
     "en": "Cardiovascular and Renal Outcomes with Efpeglenatide in Type 2 Diabetes",
     "cite": "N Engl J Med 2021;385:896-907｜DOI: 10.1056/NEJMoa2108269",
@@ -245,7 +245,7 @@
   {
     "journal": "NEJM",
     "date": "2021-03",
-    "topic": "血脂與心血管",
+    "topic": "心腎糖肝代謝症候群",
     "zh": "每週一次 semaglutide 用於體重過重或肥胖成人（STEP 1）",
     "en": "Once-Weekly Semaglutide in Adults with Overweight or Obesity",
     "cite": "N Engl J Med 2021;384:989-1002｜DOI: 10.1056/NEJMoa2032183",
@@ -264,7 +264,7 @@
   {
     "journal": "NEJM",
     "date": "2020-10",
-    "topic": "慢性腎臟病",
+    "topic": "腎臟疾病",
     "zh": "Dapagliflozin 用於慢性腎臟病（DAPA-CKD）",
     "en": "Dapagliflozin in Patients with Chronic Kidney Disease",
     "cite": "N Engl J Med 2020;383:1436-1446｜DOI: 10.1056/NEJMoa2024816",
@@ -283,7 +283,7 @@
   {
     "journal": "NEJM",
     "date": "2020-10",
-    "topic": "血脂與心血管",
+    "topic": "心腎糖肝代謝症候群",
     "zh": "Empagliflozin 用於心衰竭的心血管與腎臟結果（EMPEROR-Reduced）",
     "en": "Cardiovascular and Renal Outcomes with Empagliflozin in Heart Failure",
     "cite": "N Engl J Med 2020;383:1413-1424｜DOI: 10.1056/NEJMoa2022190",
@@ -301,7 +301,7 @@
   {
     "journal": "NEJM",
     "date": "2019-11",
-    "topic": "血脂與心血管",
+    "topic": "心腎糖肝代謝症候群",
     "zh": "Dapagliflozin 用於射血分數降低的心衰竭（DAPA-HF）",
     "en": "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
     "cite": "N Engl J Med 2019;381:1995-2008｜DOI: 10.1056/NEJMoa1911303",
@@ -319,7 +319,7 @@
   {
     "journal": "NEJM",
     "date": "2019-08",
-    "topic": "糖尿病腎病變",
+    "topic": "糖尿病",
     "zh": "口服 semaglutide 對第二型糖尿病心血管結果的影響（PIONEER 6）",
     "en": "Oral Semaglutide and Cardiovascular Outcomes in Patients with Type 2 Diabetes",
     "cite": "N Engl J Med 2019;381:841-851｜DOI: 10.1056/NEJMoa1901118",
@@ -337,7 +337,7 @@
   {
     "journal": "NEJM",
     "date": "2019-06",
-    "topic": "糖尿病腎病變",
+    "topic": "腎臟疾病",
     "zh": "Canagliflozin 對糖尿病腎病變腎臟結果的影響（CREDENCE）",
     "en": "Canagliflozin and Renal Outcomes in Type 2 Diabetes and Nephropathy",
     "cite": "N Engl J Med 2019;380:2295-2306｜DOI: 10.1056/NEJMoa1811744",
@@ -355,7 +355,7 @@
   {
     "journal": "NEJM",
     "date": "2019-01",
-    "topic": "糖尿病腎病變",
+    "topic": "糖尿病",
     "zh": "Dapagliflozin 對第二型糖尿病心血管結果的影響（DECLARE-TIMI 58）",
     "en": "Dapagliflozin and Cardiovascular Outcomes in Type 2 Diabetes",
     "cite": "N Engl J Med 2019;380:347-357｜DOI: 10.1056/NEJMoa1812389",
@@ -373,7 +373,7 @@
   {
     "journal": "NEJM",
     "date": "2017-08",
-    "topic": "糖尿病腎病變",
+    "topic": "糖尿病",
     "zh": "Canagliflozin 對第二型糖尿病心血管與腎臟事件的影響（CANVAS）",
     "en": "Canagliflozin and Cardiovascular and Renal Events in Type 2 Diabetes",
     "cite": "N Engl J Med 2017;377:644-657｜DOI: 10.1056/NEJMoa1611925",
@@ -392,7 +392,7 @@
   {
     "journal": "NEJM",
     "date": "2016-11",
-    "topic": "糖尿病腎病變",
+    "topic": "糖尿病",
     "zh": "Semaglutide 對第二型糖尿病心血管結果的影響（SUSTAIN-6）",
     "en": "Semaglutide and Cardiovascular Outcomes in Patients with Type 2 Diabetes",
     "cite": "N Engl J Med 2016;375:1834-1844｜DOI: 10.1056/NEJMoa1607141",
@@ -410,7 +410,7 @@
   {
     "journal": "NEJM",
     "date": "2016-07",
-    "topic": "糖尿病腎病變",
+    "topic": "糖尿病",
     "zh": "Liraglutide 對第二型糖尿病心血管結果的影響（LEADER）",
     "en": "Liraglutide and Cardiovascular Outcomes in Type 2 Diabetes",
     "cite": "N Engl J Med 2016;375:311-322｜DOI: 10.1056/NEJMoa1603827",
@@ -428,7 +428,7 @@
   {
     "journal": "NEJM",
     "date": "2015-11",
-    "topic": "糖尿病腎病變",
+    "topic": "糖尿病",
     "zh": "Empagliflozin 對第二型糖尿病心血管結果與死亡率的影響（EMPA-REG OUTCOME）",
     "en": "Empagliflozin, Cardiovascular Outcomes, and Mortality in Type 2 Diabetes",
     "cite": "N Engl J Med 2015;373:2117-2128｜DOI: 10.1056/NEJMoa1504720",

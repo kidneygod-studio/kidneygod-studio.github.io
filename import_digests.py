@@ -51,41 +51,24 @@ JOURNAL = {
 
 # 主題判定。**順序有意義**：由窄到寬，先命中的贏。
 # 例如「IgA 腎病變合併糖尿病」應該歸 IgA，不是糖尿病腎病變。
+# 五個標籤，和 build_site.py 的 NEWS_CATS 用同一組中文字串。
+# **順序有意義**：由窄到寬，先命中的贏。
+# 心衰竭、肥胖、代謝症候群這一類跨器官的歸 CKM，那正是這個名詞的用意。
 TOPIC_RULES: list[tuple[str, tuple[str, ...]]] = [
-    ("IgA 腎病變", ("IgA", "IgAN")),
-    ("遺傳性腎病", ("Alport", "多囊", "polycystic", "ADPKD", "基因體", "genom",
-                    "genetic", "轉錄體", "transcriptom", "遺傳")),
-    ("腎臟移植", ("移植", "transplant", "xenotransplant", "異種",
-                  "供腎", "捐腎", "捐贈", "donor")),
-    ("急性腎損傷", ("急性腎損傷", "AKI", "acute kidney injury")),
-    ("透析", ("透析", "dialysis", "血液透析過濾", "HDF", "腹膜", "peritoneal",
-              "血管通路", "廔管", "fistula")),
-    ("電解質異常", ("血鉀", "potassium", "血鈉", "sodium", "電解質",
-                    "electrolyte", "酸中毒", "acidosis")),
-    ("腎絲球腎炎", ("腎絲球", "glomerul", "膜性", "membranous", "FSGS",
-                    "狼瘡", "lupus", "血管炎", "vasculitis", "ANCA",
-                    "腎病症候群", "nephrotic", "微血管病變", "TMA")),
-    ("糖尿病腎病變", ("糖尿病", "diabet", "SGLT2", "GLP-1", "finerenone",
-                      "canagliflozin", "dapagliflozin", "empagliflozin",
-                      "gliflozin")),
-    ("高血壓", ("血壓", "hypertens", "blood pressure")),
-    ("血脂與心血管", ("血脂", "膽固醇", "lipid", "statin", "心血管",
-                      "cardiovascular", "心衰", "heart failure", "射血分數")),
-    ("礦物質與骨病變", ("副甲狀腺", "parathyroid", "磷", "phosphate", "骨",
-                        "bone", "鈣化", "calcificat")),
-    ("貧血", ("貧血", "anemia", "anaemia", "EPO", "紅血球生成", "鐵劑",
-              "iron")),
-    ("用藥安全", ("氫離子幫浦", "質子幫浦", "PPI", "腎毒", "nephrotox",
-                  "藥物安全", "止痛藥", "NSAID")),
-    ("檢查與生物標記", ("生物標記", "biomarker", "蛋白質體", "proteomic",
-                        "心電圖", "定序", "sequenc")),
-    ("營養", ("營養", "nutrition", "蛋白質攝取", "protein intake", "飲食")),
-    ("支持性照護", ("支持性照護", "保守治療", "conservative", "安寧",
-                    "palliative", "共享決策", "溝通")),
+    ("心腎糖肝代謝症候群", ("CKM", "cardiovascular-kidney-metabolic",
+                            "代謝症候群", "心衰", "heart failure", "射血分數",
+                            "ejection fraction", "肥胖", "obesity", "體重",
+                            "weight", "脂肪肝", "MASLD", "NAFLD")),
+    ("高血脂", ("血脂", "膽固醇", "lipid", "cholesterol", "statin",
+                "LDL", "動脈硬化", "atheroscleros")),
+    ("高血壓", ("血壓", "hypertens", "blood pressure", "醛固酮",
+                "aldosteron")),
+    ("糖尿病", ("糖尿病", "diabet", "SGLT2", "GLP-1", "gliflozin",
+                "glutide", "血糖", "glycemic", "HbA1c")),
     # 最寬的放最後：前面全部沒中才落到這裡
-    ("慢性腎臟病", ("慢性腎臟病", "CKD", "eGFR", "蛋白尿", "albuminuria",
-                    "腎功能", "腎臟病", "kidney disease", "腎臟衰竭",
-                    "kidney failure", "腎臟預後")),
+    ("腎臟疾病", ("腎", "kidney", "renal", "透析", "dialysis", "eGFR",
+                  "蛋白尿", "albuminuria", "nephro", "IgA", "移植",
+                  "transplant", "AKI")),
 ]
 
 
