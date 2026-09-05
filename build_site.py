@@ -1354,8 +1354,8 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
                      (f"/{ALL_TOPICS}", "主題衛教", "topics"),
                      ("/articles/gallery.html", "衛教圖卡", "gallery")])
            + navgroup("upd", "新知&", "指引",
-                      [(f"/{ALL_NEWS}", "新知", "news"),
-                       (f"/{ALL_GUIDE}", "指引", "guide")])
+                      [(f"/{ALL_NEWS}", "醫學新知", "news"),
+                       (f"/{ALL_GUIDE}", "國際指引", "guide")])
            + navlink("/food.html", "", "食物", "food", suffix="查詢")
            + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
            + navlink("/about.html", "關於", "作者", "about")
