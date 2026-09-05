@@ -225,6 +225,12 @@ SOURCES: dict[str, tuple[str, str, str]] = {
                 "https://professional.diabetes.org/standards-of-care",
                 "American Diabetes Association"),
     "tsn": ("台灣腎臟醫學會", "https://www.tsn.org.tw/", "台灣腎臟醫學會"),
+    # 旅遊透析的實務（透析液配送、通關文件、航空公司規定）沒有指引可引，
+    # 病友團體的整理是目前最接近一手的來源。
+    "capd": ("中華民國腹膜透析腎友協會", "https://www.capd.org.tw/",
+             "中華民國腹膜透析腎友協會"),
+    "nhi": ("衛生福利部中央健康保險署", "https://www.nhi.gov.tw/",
+            "衛生福利部中央健康保險署"),
     "tsoc": ("中華民國心臟學會", "https://www.tsoc.org.tw/", "中華民國心臟學會"),
     "endo_dm": ("中華民國內分泌暨糖尿病學會", "https://www.endo-dm.org.tw/",
                 "中華民國內分泌暨糖尿病學會"),
@@ -1371,7 +1377,17 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
 def inline(s: str) -> str:
     """行內語法：**粗體**、`程式碼`、[文字](網址)。先跳脫再還原標記，避免注入。"""
     s = esc(s)
-    s = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", r'<a href="\2">\1</a>', s)
+
+    def _a(m: re.Match) -> str:
+        text, url = m.group(1), m.group(2)
+        # 站外連結加 nofollow noopener 並另開分頁——與文末參考來源同一套規則：
+        # nofollow 是因為這些是佐證用的引用，不是要把權重推給對方；
+        # 另開分頁是因為讀者正在讀的文章不該被換掉。站內連結維持原樣。
+        ext = url.startswith(("http://", "https://"))
+        attr = ' target="_blank" rel="nofollow noopener"' if ext else ""
+        return f'<a href="{url}"{attr}>{text}</a>'
+
+    s = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", _a, s)
     s = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", s)
     s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
     return s
