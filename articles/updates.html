@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>腎臟病與三高的最新指引與重要文獻｜護腎教室</title>
-<meta name="description" content="KDIGO、KDOQI、ADA、AHA／ACC、ESC 的最新腎臟病與三高臨床指引，以及 NEJM、Lancet、JAMA 等期刊中真正改變處置的重要研究，每一則附白話說明與正式出處。">
-<link rel="canonical" href="https://kidneygod.net/articles/updates.html">
+<title>新知＆指引已分成兩頁｜護腎教室</title>
+<meta name="description" content="新知＆指引已分成「新知」與「指引」兩頁。">
+<link rel="canonical" href="https://kidneygod.net/articles/news.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="護腎教室">
-<meta property="og:title" content="腎臟病與三高的最新指引與重要文獻｜護腎教室">
-<meta property="og:description" content="KDIGO、KDOQI、ADA、AHA／ACC、ESC 的最新腎臟病與三高臨床指引，以及 NEJM、Lancet、JAMA 等期刊中真正改變處置的重要研究，每一則附白話說明與正式出處。">
+<meta property="og:title" content="新知＆指引已分成兩頁｜護腎教室">
+<meta property="og:description" content="新知＆指引已分成「新知」與「指引」兩頁。">
 <meta property="og:url" content="https://kidneygod.net/articles/updates.html">
 <meta property="og:image" content="https://kidneygod.net/og/articles-updates.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="腎臟病與三高的最新指引與重要文獻｜護腎教室">
+<meta property="og:image:alt" content="新知＆指引已分成兩頁｜護腎教室">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
@@ -121,6 +121,30 @@ padding:6px 11px;border-radius:8px;white-space:nowrap;
 transition:color .15s,background .15s}
 header.site nav a:hover{color:var(--fg);background:var(--card)}
 header.site nav a[aria-current="page"]{color:var(--accent2);background:var(--card);font-weight:700}
+/* ── 頁首的次階層（目前只有「新知&指引」用）──
+   父項是 <button> 不是 <a>：它不導向任何地方，只負責展開。
+   面板用 absolute 掛在群組上，所以不會把導覽列撐高、也不影響斷點計算。 */
+.ngrp{position:relative;display:inline-flex}
+.ngbtn{display:inline-flex;align-items:center;gap:4px;font-family:inherit;
+font-size:14px;color:var(--mut);font-weight:500;padding:6px 11px;border-radius:8px;
+white-space:nowrap;border:0;background:none;cursor:pointer;line-height:inherit;
+transition:color .15s,background .15s}
+.ngbtn:hover{color:var(--fg);background:var(--card)}
+.ngbtn[data-on]{color:var(--accent2);background:var(--card);font-weight:700}
+.ngbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ngcaret{flex-shrink:0;transition:transform .2s}
+.ngbtn[aria-expanded="true"] .ngcaret{transform:rotate(180deg)}
+/* right:0 讓面板往左長：父項在導覽列偏右，往右長會衝出視窗 */
+.ngmenu{position:absolute;top:calc(100% + 8px);right:0;z-index:60;min-width:132px;
+background:var(--bg);border:1px solid var(--line);border-radius:12px;
+box-shadow:0 12px 30px rgba(0,0,0,.14);padding:6px;overflow:hidden}
+/* hidden 要壓過上面的 display——作者樣式優先於瀏覽器預設，
+   少了這行面板會一直開著。這個坑這個站踩過三次了（分享鈕、主題圖示）。 */
+.ngmenu[hidden]{display:none}
+.ngmenu a{display:block;padding:10px 14px;border-radius:8px;font-size:14.5px;
+white-space:nowrap}
+@media(max-width:410px){.ngbtn{padding:9px 5px;font-size:13.5px;gap:3px}}
+@media(max-width:365px){.ngbtn{padding:9px 2px;font-size:13px;gap:2px}}
 /* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
 header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
 header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
@@ -612,51 +636,26 @@ letter-spacing:.4px;line-height:1.5}
   .gamebtn img{height:92px}
   .gamebtn .cap{font-size:1.06rem}
 }
-</style><script>try{var _S=[1,1.2,1.45],_i=Math.min(2,Math.max(0,+localStorage.msd_fs||0)),_d=document.documentElement;_d.style.setProperty('--fs',_S[_i]);_d.style.setProperty('--fsi',1/_S[_i]);var _t=localStorage.kg_theme;if(_t==='light'||_t==='dark')_d.setAttribute('data-theme',_t)}catch(e){}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "新知＆指引", "description": "KDIGO、KDOQI、ADA、AHA／ACC、ESC 的最新腎臟病與三高臨床指引，以及 NEJM、Lancet、JAMA 等期刊中真正改變處置的重要研究，每一則附白話說明與正式出處。", "inLanguage": "zh-Hant", "url": "https://kidneygod.net/articles/updates.html", "dateModified": "2026-09-05", "author": {"@type": "Physician", "@id": "https://kidneygod.net/about.html#author", "name": "吳政哲", "jobTitle": "腎臟科醫師", "url": "https://kidneygod.net/about.html", "medicalSpecialty": ["Nephrologic", "InternalMedicine"], "hasCredential": [{"@type": "EducationalOccupationalCredential", "credentialCategory": "專科醫師證書", "name": "腎臟科專科醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "專科醫師證書", "name": "內科專科醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "認證", "name": "戒菸治療醫師"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "認證", "name": "糖尿病共同照護網醫師"}], "worksFor": {"@type": "Hospital", "name": "郭綜合醫院", "department": {"@type": "MedicalOrganization", "name": "腎臟內科"}}, "alumniOf": {"@type": "CollegeOrUniversity", "name": "國立成功大學醫學系"}, "memberOf": [{"@type": "Organization", "name": "台灣慢性腎臟病臨床診療指引編撰委員會"}, {"@type": "MedicalOrganization", "name": "台灣腎臟醫學會"}, {"@type": "MedicalOrganization", "name": "美國腎臟醫學會", "alternateName": "American Society of Nephrology"}], "sameAs": ["https://www.threads.com/@kidney.godreborn", "https://www.instagram.com/kidney.god/", "https://www.instagram.com/kidney.godreborn/", "https://www.facebook.com/kidneygod"]}}</script>
+</style><script>try{var _S=[1,1.2,1.45],_i=Math.min(2,Math.max(0,+localStorage.msd_fs||0)),_d=document.documentElement;_d.style.setProperty('--fs',_S[_i]);_d.style.setProperty('--fsi',1/_S[_i]);var _t=localStorage.kg_theme;if(_t==='light'||_t==='dark')_d.setAttribute('data-theme',_t)}catch(e){}</script><meta http-equiv="refresh" content="0; url=/articles/news.html"><meta name="robots" content="noindex,follow">
+
 </head>
 <body>
 <header class="site"><div class="wrap">
 <a class="brand" href="/"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true"><path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 4.6 13.6 4.6Z"/></svg><span>護腎教室</span></a>
-<nav><a href="/articles/"><span class="np">衛教</span>文章</a><a href="/articles/updates.html" aria-current="page"><span class="np">新知&</span>指引</a><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
+<nav><a href="/articles/"><span class="np">衛教</span>文章</a><div class="ngrp"><button type="button" class="ngbtn" aria-expanded="false" aria-controls="ngm"><span class="np">新知&</span>指引<svg class="ngcaret" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></button><div class="ngmenu" id="ngm" hidden><a href="/articles/news.html">新知</a><a href="/articles/guidelines.html">指引</a></div></div><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
 </div></header>
 <main class="wrap">
 <div class="prefbar"><div class="preficons"><button type="button" class="prefbtn fsbtn" id="fsBtn"><span class="fsglyph" aria-hidden="true">A</span></button><button type="button" class="prefbtn thbtn" id="thBtn"><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="auto" aria-hidden="true" hidden><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 000 17z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="light" aria-hidden="true" hidden><circle cx="12" cy="12" r="4.4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></g></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="dark" aria-hidden="true" hidden><path d="M20 14.2A8.4 8.4 0 019.8 4 8.6 8.6 0 1020 14.2z" fill="currentColor"/></svg></button></div><div class="preffull"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div></div>
 <div class="zoomable">
 
-<h1>新知＆指引</h1>
-<p class="lede">腎臟與三高領域<strong>主要期刊的最新研究</strong>，
-以及目前實際被當成標準的<strong>現行國際指引</strong>。
-研究用結構化摘要呈現——問題、發現、意義先講完，想細看的再往下讀方法與結果。</p>
-<p class="meta">最後盤點：2026-09-05　·
-指引改版是以年為單位的事，這一頁不會每天變動。</p>
-
-<div class="warnbox">
-  <b>這一頁不是治療建議</b>
-  <p>指引是寫給醫療人員看的、針對「一群人」的建議，不是針對你個人的處方。
-  同樣一份指引，在不同年齡、不同共病、不同腎功能的人身上，
-  實際做法可能完全不同。<strong>請不要拿這一頁的內容自行調整用藥。</strong></p>
-</div>
-
-<div class="toc"><h2>本頁內容</h2><ol>
-<li><a href="#papers">最新研究</a></li>
-<li><a href="#g-kdigo">KDIGO</a></li><li><a href="#g-kdoqi">KDOQI</a></li><li><a href="#g-ada">ADA</a></li><li><a href="#g-aha-acc">AHA／ACC</a></li><li><a href="#g-esc">ESC</a></li></ol></div>
-
-<h2 id="papers">最新研究（5 篇）</h2>
-<div class="sd">以 NEJM、Lancet、JAMA 等主要期刊為主。
-不做大清單，只收真正改變處置、或改變了指引寫法的研究，新的排在前面。</div>
-<div class="updlist"><article class="dg"><div class="dgtop"><span class="dgj">THE LANCET</span><span class="dgd">2026-09-03</span><span class="dgt">腎臟移植</span></div><h3><a href="https://doi.org/10.1016/S0140-6736(26)01295-X" target="_blank" rel="nofollow noopener">豬腎異種移植作為橋接同種移植之首例人體研究</a></h3><p class="dgen">Porcine Kidney Xenotransplantation as a Bridge to Allotransplantation: A First-in-Human Study</p><p class="dgcite">The Lancet｜2026 年 9 月 3 日｜DOI: 10.1016/S0140-6736(26)01295-X</p><div class="dgkp"><b>KEY POINTS</b><dl><dt>問題 Question</dt><dd>基因編輯豬腎異種移植能否作為末期腎病患者等待同種腎臟移植期間的橋接治療，且不影響後續接受人類腎臟移植的機會？</dd><dt>發現 Findings</dt><dd>一名末期腎病患者接受基因編輯豬腎（EGEN-2784）移植後，維持透析獨立達 271 天；第 14 天出現 T 細胞媒介排斥並經治療緩解；約 6 個月後因免疫抑制減量誘發微血管發炎，進展為血栓性微血管病變而移植腎失去功能。移除異種腎 82 天後接受人類腎臟移植，追蹤 231 天功能良好且無致敏證據。</dd><dt>意義 Meaning</dt><dd>豬腎異種移植可提供長期的透析獨立支持，並且可以安全終止、作為後續人體同種移植的橋接策略，未造成臨床顯著致敏或人畜共通感染。</dd></dl></div><h4>研究背景 BACKGROUND</h4><p>器官短缺是腎臟移植領域長期存在的核心問題，異種移植被視為潛在解方之一。但異種移植腎能撐多久、會不會傳播人畜共通病原、以及它引發的免疫致敏是否會斷送後續接受人類捐贈腎的機會，過去都缺乏人體證據。</p><h4>研究方法 METHODS</h4><p>一名末期腎病、預期等候屍腎時間長且無合適活體捐贈者的患者，於美國麻州總醫院接受基因編輯豬腎移植。該豬腎刪除主要醣類異種抗原、去活化豬內源性反轉錄病毒，並植入七個人類轉殖基因。免疫抑制以共刺激阻斷為基礎並合併補體抑制劑。監測腎功能、流式交叉配對、抗 HLA 抗體與豬源微生物（含總體基因體定序）。本研究為計畫收三名病人、在美國 FDA 擴大使用研究性新藥申請下進行的首例報告。</p><h4>主要結果 RESULTS</h4><ul><li>移植後（2025 年 1 月 25 日）豬腎立即發揮功能，透析獨立狀態維持 271 天</li><li>第 14 天切片顯示 T 細胞媒介排斥反應，經治療後緩解</li><li>約 6 個月時因非人畜共通細菌感染而減少免疫抑制，隨後出現微血管發炎並發展為血栓性微血管病變；供者特異性交叉配對持續陰性，最終仍導致移植腎失去功能並需切除</li><li>組織分析顯示以巨噬細胞與自然殺手細胞為主；未偵測到豬源病原體傳播，抗 HLA 抗體維持不變</li><li>移除異種腎 82 天後接受人類同種腎臟移植，移植腎立即發揮功能，追蹤 231 天無致敏證據</li></ul><p class="dgsig">首度以人體證據顯示，豬腎異種移植可作為末期腎病患者等待人類捐贈腎之前的過渡性透析獨立支持策略，且移除後不影響後續同種移植的免疫相容性。</p><p class="dglim">限制：單一個案報告（計畫三例中的首例），樣本數極小，結果無法外推；晚期移植腎失功能的確切免疫機轉（微血管病變合併陰性交叉配對）尚未完全闡明，亦無對照組。</p></article><article class="dg"><div class="dgtop"><span class="dgj">NEJM</span><span class="dgd">2026</span><span class="dgt">IgA 腎病變</span></div><h3><a href="https://doi.org/10.1056/NEJMoa2512133" target="_blank" rel="nofollow noopener">Sibeprenlimab 治療 IgA 腎病變：第三期試驗期中分析</a></h3><p class="dgen">Sibeprenlimab in IgA Nephropathy — Interim Analysis of a Phase 3 Trial</p><p class="dgcite">N Engl J Med 2026｜DOI: 10.1056/NEJMoa2512133｜PMID: 41211929</p><div class="dgkp"><b>KEY POINTS</b><dl><dt>問題 Question</dt><dd>抑制 APRIL 這條上游路徑，能不能減少 IgA 腎病變的蛋白尿？</dd><dt>發現 Findings</dt><dd>第 9 個月時，24 小時尿蛋白／肌酸酐比值下降 50.2%，安慰劑組則上升 2.1%。</dd><dt>意義 Meaning</dt><dd>IgA 腎病變的治療正從「壓制發炎」轉向「阻斷致病抗體的產生」。這是近年一系列新機轉藥物中的一個，讓過去只能用 RAS 抑制劑與類固醇的病人多了選項。</dd></dl></div><h4>主要結果 RESULTS</h4><ul><li>sibeprenlimab 是選擇性結合並抑制 APRIL 的人源化 IgG2 單株抗體</li><li>第 9 個月 24 小時尿蛋白／肌酸酐比值：治療組 −50.2%，安慰劑組 +2.1%</li><li>嚴重不良事件 3.5% 對安慰劑 4.4%，試驗期間無死亡</li></ul><p class="dglim">限制：這是第三期試驗的<strong>期中</strong>分析，主要終點為蛋白尿這個替代指標；能不能真的延緩腎功能惡化，要等長期的 eGFR 結果。</p></article><article class="dg"><div class="dgtop"><span class="dgj">THE LANCET</span><span class="dgd">2026</span><span class="dgt">IgA 腎病變</span></div><h3><a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(26)00960-8/abstract" target="_blank" rel="nofollow noopener">Atrasentan 治療 IgA 腎病變（ALIGN）：2.5 年最終結果</a></h3><p class="dgen">Atrasentan in patients with IgA nephropathy (ALIGN): final 2·5-year results from a randomised, double-blind, placebo-controlled, phase 3 trial</p><p class="dgcite">The Lancet 2026</p><div class="dgkp"><b>KEY POINTS</b><dl><dt>問題 Question</dt><dd>選擇性內皮素 A 受體拮抗劑能不能長期保護 IgA 腎病變的腎功能？已經在用 SGLT2 抑制劑的人還有沒有額外好處？</dd><dt>發現 Findings</dt><dd>2.5 年的最終結果顯示，atrasentan 降低蛋白尿並保留腎功能；<strong>這個效果在有無併用 SGLT2 抑制劑的族群都存在</strong>。</dd><dt>意義 Meaning</dt><dd>代表它和 SGLT2 抑制劑是可以疊加的兩條路，而不是二選一——這對已經用了標準治療、蛋白尿仍降不下來的病人特別重要。</dd></dl></div><h4>主要結果 RESULTS</h4><ul><li>atrasentan 為選擇性內皮素 A 受體拮抗劑</li><li>追蹤 2.5 年，降低蛋白尿並保留腎功能</li><li>療效與是否併用 SGLT2 抑制劑無關</li></ul></article><article class="dg"><div class="dgtop"><span class="dgj">NEJM</span><span class="dgd">2026-06</span><span class="dgt">慢性腎臟病</span></div><h3><a href="https://doi.org/10.1056/NEJMoa2604625" target="_blank" rel="nofollow noopener">Finerenone 用於非糖尿病的慢性腎臟病（FIND-CKD）</a></h3><p class="dgen">Finerenone in Persons with Chronic Kidney Disease without Diabetes</p><p class="dgcite">N Engl J Med 2026（2026 年 6 月 ERA 年會同步發表）｜DOI: 10.1056/NEJMoa2604625</p><div class="dgkp"><b>KEY POINTS</b><dl><dt>問題 Question</dt><dd>finerenone 原本只用在糖尿病腎病變。沒有糖尿病的慢性腎臟病人也有效嗎？</dd><dt>發現 Findings</dt><dd>1,584 位非糖尿病 CKD；主要終點 eGFR 斜率年降幅 −3.3 對 −4.0 mL/min/1.73m²（p&lt;0.001）；次要複合腎臟—心血管終點風險下降約 23%。</dd><dt>意義 Meaning</dt><dd>非糖尿病的慢性腎臟病人可用的藥一直比糖尿病的少。這個結果等於把一個原本被歸類為「糖尿病用藥」的選項打開給更多人。</dd></dl></div><h4>主要結果 RESULTS</h4><ul><li>收案含高血壓腎病變與慢性腎絲球腎炎等病因</li><li>主要終點為 32 個月的 eGFR 年變化斜率</li><li>次要複合終點含腎衰竭、eGFR 持續下降 ≥57%、心衰竭住院或心血管死亡</li></ul></article><article class="dg"><div class="dgtop"><span class="dgj">NEJM</span><span class="dgd">2024</span><span class="dgt">糖尿病腎病變</span></div><h3><a href="https://doi.org/10.1056/NEJMoa2403347" target="_blank" rel="nofollow noopener">Semaglutide 對第二型糖尿病合併慢性腎臟病的影響（FLOW）</a></h3><p class="dgen">Effects of Semaglutide on Chronic Kidney Disease in Patients with Type 2 Diabetes</p><p class="dgcite">N Engl J Med 2024;391:109–121｜DOI: 10.1056/NEJMoa2403347</p><div class="dgkp"><b>KEY POINTS</b><dl><dt>問題 Question</dt><dd>減重與降血糖用的 GLP-1 受體促效劑，對腎臟本身有沒有保護作用？</dd><dt>發現 Findings</dt><dd>3,533 位第二型糖尿病合併 CKD 且已使用 RAS 抑制劑者，主要複合終點風險下降 24%，全因死亡亦下降。</dd><dt>意義 Meaning</dt><dd>這是 GLP-1 這類藥物第一次以腎臟結果為主要終點取得陽性結果，把它從「血糖與體重的藥」推進成「腎臟保護的藥」。</dd></dl></div><h4>主要結果 RESULTS</h4><ul><li>主要複合終點：eGFR 下降 ≥50%、腎衰竭、腎臟死亡或心血管死亡</li><li>主要終點風險下降 24%</li><li>心血管事件與全因死亡同步下降</li></ul></article></div>
-
-<h2 class="backlink">現行指引（10 份）</h2>
-<div class="sd">研究要累積很久才會變成指引。這裡是目前實際被拿來當標準的那幾份。</div>
-<h2 id="g-kdigo">KDIGO</h2><div class="sd">國際腎臟病預後改善組織。腎臟科最主要的國際指引來源，本站長文的依據多半出自這裡。</div><div class="updlist"><article class="upd"><div class="uh"><span class="uyr">2024</span><h3><a href="https://kdigo.org/guidelines/ckd-evaluation-and-management/" target="_blank" rel="nofollow noopener">慢性腎臟病的評估與處置</a></h3></div><p class="uplain">現行 CKD 分期與追蹤頻率的依據。確立「同時看 eGFR 與尿蛋白」而不是只看一個數字。</p><p class="upro">沿用 eGFR／白蛋白尿雙軸分期；建議優先採用合併肌酸酐與胱抑素 C 的估算式；eGFR 單次變動超過 20% 才視為超出檢驗變異、需要評估。</p><p class="ucite">Kidney Int 2024;105(4S):S117–S314</p></article><article class="upd"><div class="uh"><span class="uyr">2026</span><h3><a href="https://kdigo.org/guidelines/anemia-in-ckd/" target="_blank" rel="nofollow noopener">慢性腎臟病的貧血</a></h3></div><p class="uplain">腎性貧血的處置指引，隔了十四年才改版——這中間治療選項改變很大。</p><p class="upro">取代 2012 年版，納入十餘年來貧血機轉與治療的新證據，涵蓋透析與腎臟移植族群，成人與兒童皆適用。</p><p class="ucite">Kidney International（2026 年 1 月發表）</p></article><article class="upd"><div class="uh"><span class="uyr">2022</span><h3><a href="https://kdigo.org/guidelines/diabetes-ckd/" target="_blank" rel="nofollow noopener">糖尿病與慢性腎臟病</a></h3></div><p class="uplain">糖尿病腎病變的用藥主軸。<strong>2026 更新版的公開審查已於 2026 年 4 月結束，尚未正式發表</strong>，在那之前 2022 版仍是現行版本。</p><p class="upro">2026 更新為重點修訂（第一、二、四章），涵蓋定義、預防、分期、心血管風險評估與血糖監測，證據檢索至 2025 年 7 月。</p><p class="ucite">Kidney Int 2022;102(5S):S1–S127</p></article><article class="upd"><div class="uh"><span class="uyr">2021</span><h3><a href="https://kdigo.org/guidelines/blood-pressure-in-ckd/" target="_blank" rel="nofollow noopener">慢性腎臟病的血壓處置</a></h3></div><p class="uplain">把 CKD 病人的收縮壓目標訂在 120 以下——比一般成人的標準更嚴，但前提是「量得準」。</p><p class="upro">收縮壓 &lt;120 mmHg（2B），依據以 SPRINT 的心血管與存活益處為主，腎臟保護的證據並不充分；<strong>不適用於透析與腎臟移植病人</strong>；且以標準化診間量測為前提。</p><p class="ucite">Kidney Int 2021;99(3S):S1–S87</p></article></div><h2 id="g-kdoqi">KDOQI</h2><div class="sd">美國國家腎臟基金會的臨床實務指引，在營養與血管通路這兩塊比 KDIGO 更細。</div><div class="updlist"><article class="upd"><div class="uh"><span class="uyr">2020 更新</span><h3><a href="https://www.kidney.org/professionals/kdoqi/guidelines-and-commentaries/nutrition-ckd" target="_blank" rel="nofollow noopener">慢性腎臟病的營養</a></h3></div><p class="uplain">透析飲食建議的來源。重點是「吃得夠」而不是「什麼都不能吃」。</p><p class="upro">涵蓋範圍從末期腎病擴大到 CKD 1–5 期未透析者與移植後病人；分為營養評估、營養治療、蛋白質與熱量、營養補充、微量營養素、電解質六個面向。</p><p class="ucite">Am J Kidney Dis（與美國營養與飲食學會共同制定）</p></article><article class="upd"><div class="uh"><span class="uyr">2019 更新</span><h3><a href="https://www.kidney.org/professionals/kdoqi/guidelines-and-commentaries" target="_blank" rel="nofollow noopener">血液透析的血管通路</a></h3></div><p class="uplain">廔管、人工血管與導管怎麼選、怎麼追蹤的依據。</p><p class="upro">改以「以病人為中心的 ESKD 生命計畫（Life-Plan）」取代舊版一律「廔管優先」的思維。</p><p class="ucite">Am J Kidney Dis 2020;75(4 Suppl 2)</p></article></div><h2 id="g-ada">ADA</h2><div class="sd">美國糖尿病學會。每年一月更新一次，是糖尿病照護最常被引用的標準。</div><div class="updlist"><article class="upd"><div class="uh"><span class="uyr">2026</span><h3><a href="https://diabetesjournals.org/care/article/49/Supplement_1/S246/163914/11-Chronic-Kidney-Disease-and-Risk-Management" target="_blank" rel="nofollow noopener">Standards of Care in Diabetes—2026</a></h3></div><p class="uplain">糖尿病病人多久要驗一次腎、驗什麼、什麼時候要加藥，現在的答案都在這一章。</p><p class="upro">強調更早、更頻繁以 uACR 與 eGFR 篩檢；第二型糖尿病合併 CKD 者，<strong>不論糖化血色素落在哪裡</strong>都應使用具實證的 SGLT2 抑制劑或 GLP-1 RA；並新增透析病人降血糖藥物的使用建議。</p><p class="ucite">Diabetes Care 2026;49(Suppl 1)；第 11 章「慢性腎臟病與風險處置」S246</p></article></div><h2 id="g-aha-acc">AHA／ACC</h2><div class="sd">美國心臟協會與美國心臟病學會。高血壓標準的主要來源之一。</div><div class="updlist"><article class="upd"><div class="uh"><span class="uyr">2025</span><h3><a href="https://www.ahajournals.org/doi/10.1161/HYP.0000000000000249" target="_blank" rel="nofollow noopener">成人高血壓的預防、偵測、評估與處置</a></h3></div><p class="uplain">自 2017 年以來第一次大改版。治療目標統一為 130/80 以下。</p><p class="upro">取代 2017 年版；治療目標 &lt;130/80 mmHg，對安養機構住民、餘命有限者與孕婦另有個別化例外；心血管風險改用 PREVENT 計算器，取代原本的 Pooled Cohort Equation。</p><p class="ucite">Hypertension／Circulation（DOI: 10.1161/HYP.0000000000000249）</p></article></div><h2 id="g-esc">ESC</h2><div class="sd">歐洲心臟學會。歐洲的標準，和美國版偶爾有差異，值得並列著看。</div><div class="updlist"><article class="upd"><div class="uh"><span class="uyr">2026</span><h3><a href="https://www.escardio.org/guidelines/clinical-practice-guidelines/all-esc-practice-guidelines/cvd-chronic-kidney-disease/" target="_blank" rel="nofollow noopener">心血管疾病與慢性腎臟病（與 ERA 首次聯合制定）</a></h3></div><p class="uplain">心臟科與腎臟科第一次一起寫的指引。核心主張是：<strong>心血管疾病新診斷的病人，全部都要驗腎。</strong></p><p class="upro">以 STAMP 架構組織（Screen／Triage／Address risk／Modify CVD management／Plan health services）；建議對所有新診斷心血管疾病者同時以 eGFR 與 uACR 進行普篩；擴大 SGLT2 抑制劑、finerenone 與semaglutide 在 CKD 的建議。</p><p class="ucite">Eur Heart J（2026 年 8 月 29 日 ESC Congress 發表）　DOI: 10.1093/eurheartj/ehag098</p></article><article class="upd"><div class="uh"><span class="uyr">2024</span><h3><a href="https://academic.oup.com/eurheartj/article/45/38/3912/7741010" target="_blank" rel="nofollow noopener">血壓升高與高血壓的處置</a></h3></div><p class="uplain">新增了一個介於正常與高血壓之間的分類「血壓升高」，把介入時機往前拉。</p><p class="upro">更新 2018 年 ESC/ESH 版；新增「elevated blood pressure」（收縮壓 120–139 或舒張壓 70–89）此一分類；接受治療者收縮壓目標 120–129 mmHg；優先使用單顆複方製劑。</p><p class="ucite">Eur Heart J 2024;45(38):3912</p></article></div>
-
-<h2 class="backlink">延伸閱讀</h2>
+<h1>這一頁已經分成兩頁</h1>
+<p class="lede">原本的「新知＆指引」拆成兩個獨立的頁面，內容都在，只是分開了。
+如果沒有自動跳轉，請直接點下面。</p>
 <div class="cats">
-  <a href="/articles/long-form.html"><div class="t">全部深入文章</div>
-    <div class="d">把指引寫成一般人看得懂的長文，這裡是完整列表。</div></a>
-  <a href="/articles/faq.html"><div class="t">常見問題</div>
-    <div class="d">門診最常被問到的問題，每題連到回答它的那篇文章。</div></a>
+  <a href="/articles/news.html"><div class="t">新知</div>
+    <div class="d">主要期刊的最新研究，結構化摘要。</div></a>
+  <a href="/articles/guidelines.html"><div class="t">指引</div>
+    <div class="d">KDIGO、KDOQI、ADA、AHA／ACC、ESC 的現行國際指引。</div></a>
 </div>
 
 <div class="author">
@@ -733,6 +732,42 @@ letter-spacing:.4px;line-height:1.5}
     var b=e.target;
     while(b && b!==tRow && b.tagName!=='BUTTON') b=b.parentNode;
     if(b && b!==tRow) thSet(TK.indexOf(b.getAttribute('data-th')));
+  });
+})();
+</script><script>
+(function(){
+  var grp=document.querySelector('.ngrp');
+  if(!grp) return;
+  var btn=grp.querySelector('.ngbtn'), menu=grp.querySelector('.ngmenu');
+  if(!btn||!menu) return;
+
+  function open(on){
+    btn.setAttribute('aria-expanded', String(on));
+    menu.hidden = !on;
+  }
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    open(btn.getAttribute('aria-expanded') !== 'true');
+  });
+  /* 點面板外面就收起來。用 document 的 click，不是 blur——
+     blur 在點面板裡的連結時會先觸發，連結就按不到了。 */
+  document.addEventListener('click', function(e){
+    if(!grp.contains(e.target)) open(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true'){
+      open(false);
+      btn.focus();
+    }
+  });
+  /* 鍵盤：在按鈕上按下箭頭直接進第一個項目 */
+  btn.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowDown'){
+      e.preventDefault();
+      open(true);
+      var a = menu.querySelector('a');
+      if(a) a.focus();
+    }
   });
 })();
 </script>

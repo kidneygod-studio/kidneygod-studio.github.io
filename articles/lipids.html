@@ -121,6 +121,30 @@ padding:6px 11px;border-radius:8px;white-space:nowrap;
 transition:color .15s,background .15s}
 header.site nav a:hover{color:var(--fg);background:var(--card)}
 header.site nav a[aria-current="page"]{color:var(--accent2);background:var(--card);font-weight:700}
+/* ── 頁首的次階層（目前只有「新知&指引」用）──
+   父項是 <button> 不是 <a>：它不導向任何地方，只負責展開。
+   面板用 absolute 掛在群組上，所以不會把導覽列撐高、也不影響斷點計算。 */
+.ngrp{position:relative;display:inline-flex}
+.ngbtn{display:inline-flex;align-items:center;gap:4px;font-family:inherit;
+font-size:14px;color:var(--mut);font-weight:500;padding:6px 11px;border-radius:8px;
+white-space:nowrap;border:0;background:none;cursor:pointer;line-height:inherit;
+transition:color .15s,background .15s}
+.ngbtn:hover{color:var(--fg);background:var(--card)}
+.ngbtn[data-on]{color:var(--accent2);background:var(--card);font-weight:700}
+.ngbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ngcaret{flex-shrink:0;transition:transform .2s}
+.ngbtn[aria-expanded="true"] .ngcaret{transform:rotate(180deg)}
+/* right:0 讓面板往左長：父項在導覽列偏右，往右長會衝出視窗 */
+.ngmenu{position:absolute;top:calc(100% + 8px);right:0;z-index:60;min-width:132px;
+background:var(--bg);border:1px solid var(--line);border-radius:12px;
+box-shadow:0 12px 30px rgba(0,0,0,.14);padding:6px;overflow:hidden}
+/* hidden 要壓過上面的 display——作者樣式優先於瀏覽器預設，
+   少了這行面板會一直開著。這個坑這個站踩過三次了（分享鈕、主題圖示）。 */
+.ngmenu[hidden]{display:none}
+.ngmenu a{display:block;padding:10px 14px;border-radius:8px;font-size:14.5px;
+white-space:nowrap}
+@media(max-width:410px){.ngbtn{padding:9px 5px;font-size:13.5px;gap:3px}}
+@media(max-width:365px){.ngbtn{padding:9px 2px;font-size:13px;gap:2px}}
 /* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
 header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
 header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
@@ -618,7 +642,7 @@ letter-spacing:.4px;line-height:1.5}
 <body>
 <header class="site"><div class="wrap">
 <a class="brand" href="/"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true"><path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 4.6 13.6 4.6Z"/></svg><span>護腎教室</span></a>
-<nav><a href="/articles/" aria-current="page"><span class="np">衛教</span>文章</a><a href="/articles/updates.html"><span class="np">新知&</span>指引</a><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
+<nav><a href="/articles/" aria-current="page"><span class="np">衛教</span>文章</a><div class="ngrp"><button type="button" class="ngbtn" aria-expanded="false" aria-controls="ngm"><span class="np">新知&</span>指引<svg class="ngcaret" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></button><div class="ngmenu" id="ngm" hidden><a href="/articles/news.html">新知</a><a href="/articles/guidelines.html">指引</a></div></div><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
 </div></header>
 <main class="wrap">
 <div class="prefbar"><div class="preficons"><button type="button" class="prefbtn fsbtn" id="fsBtn"><span class="fsglyph" aria-hidden="true">A</span></button><button type="button" class="prefbtn thbtn" id="thBtn"><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="auto" aria-hidden="true" hidden><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 000 17z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="light" aria-hidden="true" hidden><circle cx="12" cy="12" r="4.4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></g></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="dark" aria-hidden="true" hidden><path d="M20 14.2A8.4 8.4 0 019.8 4 8.6 8.6 0 1020 14.2z" fill="currentColor"/></svg></button></div><div class="preffull"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div></div>
@@ -774,6 +798,42 @@ letter-spacing:.4px;line-height:1.5}
     var b=e.target;
     while(b && b!==tRow && b.tagName!=='BUTTON') b=b.parentNode;
     if(b && b!==tRow) thSet(TK.indexOf(b.getAttribute('data-th')));
+  });
+})();
+</script><script>
+(function(){
+  var grp=document.querySelector('.ngrp');
+  if(!grp) return;
+  var btn=grp.querySelector('.ngbtn'), menu=grp.querySelector('.ngmenu');
+  if(!btn||!menu) return;
+
+  function open(on){
+    btn.setAttribute('aria-expanded', String(on));
+    menu.hidden = !on;
+  }
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    open(btn.getAttribute('aria-expanded') !== 'true');
+  });
+  /* 點面板外面就收起來。用 document 的 click，不是 blur——
+     blur 在點面板裡的連結時會先觸發，連結就按不到了。 */
+  document.addEventListener('click', function(e){
+    if(!grp.contains(e.target)) open(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true'){
+      open(false);
+      btn.focus();
+    }
+  });
+  /* 鍵盤：在按鈕上按下箭頭直接進第一個項目 */
+  btn.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowDown'){
+      e.preventDefault();
+      open(true);
+      var a = menu.querySelector('a');
+      if(a) a.focus();
+    }
   });
 })();
 </script>

@@ -658,6 +658,30 @@ padding:6px 11px;border-radius:8px;white-space:nowrap;
 transition:color .15s,background .15s}
 header.site nav a:hover{color:var(--fg);background:var(--card)}
 header.site nav a[aria-current="page"]{color:var(--accent2);background:var(--card);font-weight:700}
+/* ── 頁首的次階層（目前只有「新知&指引」用）──
+   父項是 <button> 不是 <a>：它不導向任何地方，只負責展開。
+   面板用 absolute 掛在群組上，所以不會把導覽列撐高、也不影響斷點計算。 */
+.ngrp{position:relative;display:inline-flex}
+.ngbtn{display:inline-flex;align-items:center;gap:4px;font-family:inherit;
+font-size:14px;color:var(--mut);font-weight:500;padding:6px 11px;border-radius:8px;
+white-space:nowrap;border:0;background:none;cursor:pointer;line-height:inherit;
+transition:color .15s,background .15s}
+.ngbtn:hover{color:var(--fg);background:var(--card)}
+.ngbtn[data-on]{color:var(--accent2);background:var(--card);font-weight:700}
+.ngbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ngcaret{flex-shrink:0;transition:transform .2s}
+.ngbtn[aria-expanded="true"] .ngcaret{transform:rotate(180deg)}
+/* right:0 讓面板往左長：父項在導覽列偏右，往右長會衝出視窗 */
+.ngmenu{position:absolute;top:calc(100% + 8px);right:0;z-index:60;min-width:132px;
+background:var(--bg);border:1px solid var(--line);border-radius:12px;
+box-shadow:0 12px 30px rgba(0,0,0,.14);padding:6px;overflow:hidden}
+/* hidden 要壓過上面的 display——作者樣式優先於瀏覽器預設，
+   少了這行面板會一直開著。這個坑這個站踩過三次了（分享鈕、主題圖示）。 */
+.ngmenu[hidden]{display:none}
+.ngmenu a{display:block;padding:10px 14px;border-radius:8px;font-size:14.5px;
+white-space:nowrap}
+@media(max-width:410px){.ngbtn{padding:9px 5px;font-size:13.5px;gap:3px}}
+@media(max-width:365px){.ngbtn{padding:9px 2px;font-size:13px;gap:2px}}
 /* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
 header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
 header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
@@ -1207,10 +1231,10 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     # 目前所在區塊要標示出來，讀者才知道自己在哪一層。
     # 圖卡頁也算在「衛教文章」底下——2026-09-05 拿掉圖卡分頁之後，
     # 圖卡的唯一入口就在文章頁裡，頁首要標的是那一層。
-    # 新知＆指引自己有一項，不能被 articles/ 那條規則吃掉
-    is_upd = path == ALL_UPDATES
-    cur = {"articles": path.startswith("articles/") and not is_upd,
-           "updates": is_upd,
+    # 新知與指引自己有一項，不能被 articles/ 那條規則吃掉
+    in_upd = path in (ALL_NEWS, ALL_GUIDE, ALL_UPDATES)
+    cur = {"articles": path.startswith("articles/") and not in_upd,
+           "news": path == ALL_NEWS, "guide": path == ALL_GUIDE,
            "about": path == "about.html", "food": path == "food.html",
            "calc": path == "calc.html"}
 
@@ -1232,11 +1256,32 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     # 2026-09-05 再拿掉「衛教圖卡」剩五項，同樣改成文章頁裡的一個區塊
     # （/articles/#gallery）——圖卡本來就是衛教內容的一種呈現，
     # 和長文、分類並列在同一頁比自成一個分頁更符合讀者的心智模型。
+    # 「新知&指引」是唯一有次階層的項目：它自己沒有頁面，按下去展開
+    # 「新知」與「指引」兩頁。做成 <button> 而不是 <a>，因為它不導向任何地方——
+    # 用 <a href="#"> 假裝成連結，鍵盤與讀螢幕軟體都會被騙。
+    def navgroup(prefix: str, label: str, items: list[tuple[str, str, str]]) -> str:
+        on = any(cur.get(k) for _h, _t, k in items)
+        pre = f'<span class="np">{prefix}</span>' if prefix else ""
+        links = "".join(
+            f'<a href="{h}"{" aria-current=\"page\"" if cur.get(k) else ""}>'
+            f'{esc(t)}</a>' for h, t, k in items)
+        return (f'<div class="ngrp">'
+                f'<button type="button" class="ngbtn" aria-expanded="false"'
+                f' aria-controls="ngm"{" data-on" if on else ""}>'
+                f'{pre}{label}'
+                f'<svg class="ngcaret" viewBox="0 0 24 24" width="11" height="11"'
+                f' fill="none" stroke="currentColor" stroke-width="3"'
+                f' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+                f'<path d="M5 9l7 7 7-7"/></svg></button>'
+                f'<div class="ngmenu" id="ngm" hidden>{links}</div></div>')
+
     # 2026-09-05 加回第六項「新知&指引」（手機只顯示「指引」）。
-    # 六項在 375–430px 原本會換行，靠把最緊那一階的斷點從 365 放寬到 440
-    # 才排得下——加第七項之前一定要重跑 scratchpad 的 nav 掃描。
+    # 六項在 375–430px 原本會換行，靠三階斷點 700/410/365 才排得下——
+    # 加第七項之前一定要重跑 scratchpad 的 nav 掃描。
     nav = (navlink("/articles/", "衛教", "文章", "articles")
-           + navlink(f"/{ALL_UPDATES}", "新知&", "指引", "updates")
+           + navgroup("新知&", "指引",
+                      [(f"/{ALL_NEWS}", "新知", "news"),
+                       (f"/{ALL_GUIDE}", "指引", "guide")])
            + navlink("/food.html", "", "食物", "food", suffix="查詢")
            + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
            + navlink("/about.html", "關於", "作者", "about")
@@ -1292,7 +1337,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <div class="disclaimer">{esc(DISCLAIMER)}</div>
 {after_disclaimer}
 </div>
-{FS_SCRIPT}
+{FS_SCRIPT}{NAVMENU_SCRIPT}
 </main>
 <footer class="site"><div class="wrap{wide_cls}">
 <p>{SITE_NAME}　·　最後更新 {TODAY}　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
@@ -1838,9 +1883,12 @@ def build_search_index(data: list[dict], md_pages: list[dict],
          "所有長文的完整列表，新的排在前面。"),
         ("全部衛教文章", "/articles/", "導覽", "依主題瀏覽所有衛教內容。"),
         ("衛教圖卡總覽", "/articles/gallery.html", "導覽", "社群上發表過的圖解，依主題整理。"),
-        ("新知＆指引", f"/{ALL_UPDATES}", "導覽",
-         "KDIGO、KDOQI、ADA、AHA、ESC 的現行腎臟病與三高指引，"
-         "以及 NEJM、Lancet、JAMA 等期刊中改變處置的重要研究。"),
+        ("新知", f"/{ALL_NEWS}", "導覽",
+         "NEJM、Lancet、JAMA 等主要期刊中真正改變腎臟病與三高處置的研究，"
+         "結構化摘要：問題、發現、意義。"),
+        ("指引", f"/{ALL_GUIDE}", "導覽",
+         "KDIGO、KDOQI、ADA、AHA／ACC、ESC 目前實際被當成標準的"
+         "腎臟病與三高臨床指引。"),
     ]:
         idx.append({"t": t, "u": u, "c": c, "b": b})
 
@@ -1885,8 +1933,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
                      f'<div class="sd">主要期刊的最新研究，'
                      f'結構化摘要：問題、發現、意義</div>'
                      f'{digest_card(PAPERS[0], compact=True)}'
-                     + more_link(ALL_UPDATES,
-                                 f"閱讀更多（{len(PAPERS)} 篇研究＋現行指引）"))
+                     + more_link(ALL_NEWS, f"閱讀更多（全部 {len(PAPERS)} 篇）"))
 
     # 直接讀 logo 實際尺寸，換圖時不必再手改寫死的數字（換過一次比例就變了）
     lw = img_size(ROOT / "logo.png")
@@ -2186,6 +2233,51 @@ def prefbar(left: str = "") -> str:
     """
     slot = f'<div class="prefshare">{left}</div>' if left else ""
     return f'<div class="prefbar">{slot}{PREF_CONTROLS}</div>'
+
+# 頁首次階層的開關。
+#
+# 沒有 JS 時面板打不開——所以次階層裡的兩頁**一定要有別的路徑到得了**，
+# 目前兩頁互相有連結、首頁的新知區也連得到新知頁，不會變成孤島。
+#
+# 用 hidden 屬性而不是 class：面板在 DOM 裡預設是關的，
+# 讀螢幕軟體與鍵盤 Tab 都不會走進去，不必另外處理 aria-hidden。
+NAVMENU_SCRIPT = """<script>
+(function(){
+  var grp=document.querySelector('.ngrp');
+  if(!grp) return;
+  var btn=grp.querySelector('.ngbtn'), menu=grp.querySelector('.ngmenu');
+  if(!btn||!menu) return;
+
+  function open(on){
+    btn.setAttribute('aria-expanded', String(on));
+    menu.hidden = !on;
+  }
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    open(btn.getAttribute('aria-expanded') !== 'true');
+  });
+  /* 點面板外面就收起來。用 document 的 click，不是 blur——
+     blur 在點面板裡的連結時會先觸發，連結就按不到了。 */
+  document.addEventListener('click', function(e){
+    if(!grp.contains(e.target)) open(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true'){
+      open(false);
+      btn.focus();
+    }
+  });
+  /* 鍵盤：在按鈕上按下箭頭直接進第一個項目 */
+  btn.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowDown'){
+      e.preventDefault();
+      open(true);
+      var a = menu.querySelector('a');
+      if(a) a.focus();
+    }
+  });
+})();
+</script>"""
 
 FS_SCRIPT = """<script>
 (function(){
@@ -2904,6 +2996,9 @@ PAPERS: list[dict] = [
 ]
 
 
+ALL_NEWS = "articles/news.html"
+ALL_GUIDE = "articles/guidelines.html"
+# 舊網址。2026-09-05 拆成上面兩頁，這一頁留著當轉址頁。
 ALL_UPDATES = "articles/updates.html"
 
 
@@ -2949,13 +3044,66 @@ def digest_card(x: dict, compact: bool = False) -> str:
     return f'<article class="dg">{head}{kp}{body}</article>'
 
 
-def build_updates_page() -> tuple[str, str]:
-    """新知＆指引。
+DISCLAIM_BOX = """
+<div class="warnbox">
+  <b>這一頁不是治療建議</b>
+  <p>研究與指引都是寫給醫療人員看的、針對「一群人」的結論，
+  不是針對你個人的處方。同樣一份研究或指引，在不同年齡、不同共病、
+  不同腎功能的人身上，實際做法可能完全不同。
+  <strong>請不要拿這一頁的內容自行調整用藥。</strong></p>
+</div>
+"""
 
-    寫給兩種人看，所以每一則有兩層：先一句白話（給病人與家屬），
-    再一段專業重點與正式出處（給同業，也是給搜尋引擎的專業度訊號）。
-    分成兩層而不是各做一頁，是因為同一件事拆成兩頁會互相搶關鍵字。
-    """
+CROSSLINK = f"""
+<h2 class="backlink">延伸閱讀</h2>
+<div class="cats">
+  <a href="/{ALL_ARTICLES}"><div class="t">全部深入文章</div>
+    <div class="d">把指引寫成一般人看得懂的長文，這裡是完整列表。</div></a>
+  <a href="/{ALL_FAQ}"><div class="t">常見問題</div>
+    <div class="d">門診最常被問到的問題，每題連到回答它的那篇文章。</div></a>
+</div>
+"""
+
+
+def build_news_page() -> tuple[str, str]:
+    """新知：主要期刊的最新研究，結構化摘要。"""
+    title = f"腎臟與三高的最新研究：NEJM、Lancet、JAMA 重要文獻｜{SITE_NAME}"
+    desc = ("NEJM、Lancet、JAMA 等主要期刊中真正改變腎臟病與三高處置的研究，"
+            "以結構化摘要呈現：問題、發現、意義，附研究方法、主要結果與正式出處。")
+    toc = "".join(
+        f'<li><a href="#p{i}">{esc(x["zh"][:34])}</a></li>'
+        for i, x in enumerate(PAPERS, 1))
+    cards = "".join(
+        digest_card(x).replace('<article class="dg">',
+                               f'<article class="dg" id="p{i}">', 1)
+        for i, x in enumerate(PAPERS, 1))
+    body = f"""
+<h1>新知</h1>
+<p class="lede">腎臟與三高領域<strong>主要期刊的最新研究</strong>。
+用結構化摘要呈現——問題、發現、意義先講完，想細看的再往下讀方法與結果。
+不做大清單，只收真正改變處置、或改變了指引寫法的研究，新的排在前面。</p>
+<p class="meta">最後盤點：{UPDATES_REVIEWED}　·　共 {len(PAPERS)} 篇</p>
+{DISCLAIM_BOX}
+<div class="toc"><h2>本頁內容</h2><ol>{toc}</ol></div>
+<div class="updlist">{cards}</div>
+
+<h2 class="backlink">現行指引</h2>
+<div class="cats">
+  <a href="/{ALL_GUIDE}"><div class="t">現行國際指引</div>
+    <div class="d">研究要累積很久才會變成指引。
+    KDIGO、KDOQI、ADA、AHA／ACC、ESC 目前實際被當成標準的那幾份。</div></a>
+</div>
+{CROSSLINK}
+"""
+    jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
+              "name": "新知", "description": desc, "inLanguage": "zh-Hant",
+              "url": f"{BASE_URL}/{ALL_NEWS}", "dateModified": UPDATES_REVIEWED,
+              "author": author_ld()}
+    return ALL_NEWS, page(title, desc, ALL_NEWS, body, jsonld)
+
+
+def build_guidelines_page() -> tuple[str, str]:
+    """指引：目前實際被當成標準的那幾份。"""
     gsec = []
     for org, intro, items in GUIDELINES:
         gid = "g-" + re.sub(r"[^a-z]+", "-", org.lower()).strip("-")
@@ -2973,57 +3121,68 @@ def build_updates_page() -> tuple[str, str]:
                     f'<div class="sd">{esc(intro)}</div>'
                     f'<div class="updlist">{rows}</div>')
 
-    prow = "".join(digest_card(x) for x in PAPERS)
     n_g = sum(len(items) for _o, _i, items in GUIDELINES)
     toc = "".join(
         f'<li><a href="#g-{re.sub(r"[^a-z]+", "-", o.lower()).strip("-")}">'
         f'{esc(o)}</a></li>' for o, _i, _x in GUIDELINES)
 
-    title = f"腎臟病與三高的最新指引與重要文獻｜{SITE_NAME}"
-    desc = ("KDIGO、KDOQI、ADA、AHA／ACC、ESC 的最新腎臟病與三高臨床指引，"
-            "以及 NEJM、Lancet、JAMA 等期刊中真正改變處置的重要研究，"
-            "每一則附白話說明與正式出處。")
+    title = f"腎臟病與三高的現行國際指引：KDIGO、KDOQI、ADA、AHA、ESC｜{SITE_NAME}"
+    desc = ("KDIGO、KDOQI、ADA、AHA／ACC、ESC 目前實際被當成標準的腎臟病與"
+            "三高臨床指引，每一份附白話說明、專業重點與正式出處。")
     body = f"""
-<h1>新知＆指引</h1>
-<p class="lede">腎臟與三高領域<strong>主要期刊的最新研究</strong>，
-以及目前實際被當成標準的<strong>現行國際指引</strong>。
-研究用結構化摘要呈現——問題、發現、意義先講完，想細看的再往下讀方法與結果。</p>
-<p class="meta">最後盤點：{UPDATES_REVIEWED}　·
+<h1>指引</h1>
+<p class="lede">腎臟與三高領域<strong>目前實際被當成標準的國際指引</strong>。
+每一份先用一句話說明它對你的意義，再附上專業重點與正式出處——
+想深入的人可以直接點過去看原文。</p>
+<p class="meta">最後盤點：{UPDATES_REVIEWED}　·　共 {n_g} 份　·
 指引改版是以年為單位的事，這一頁不會每天變動。</p>
-
-<div class="warnbox">
-  <b>這一頁不是治療建議</b>
-  <p>指引是寫給醫療人員看的、針對「一群人」的建議，不是針對你個人的處方。
-  同樣一份指引，在不同年齡、不同共病、不同腎功能的人身上，
-  實際做法可能完全不同。<strong>請不要拿這一頁的內容自行調整用藥。</strong></p>
-</div>
-
-<div class="toc"><h2>本頁內容</h2><ol>
-<li><a href="#papers">最新研究</a></li>
-{toc}</ol></div>
-
-<h2 id="papers">最新研究（{len(PAPERS)} 篇）</h2>
-<div class="sd">以 NEJM、Lancet、JAMA 等主要期刊為主。
-不做大清單，只收真正改變處置、或改變了指引寫法的研究，新的排在前面。</div>
-<div class="updlist">{prow}</div>
-
-<h2 class="backlink">現行指引（{n_g} 份）</h2>
-<div class="sd">研究要累積很久才會變成指引。這裡是目前實際被拿來當標準的那幾份。</div>
+{DISCLAIM_BOX}
+<div class="toc"><h2>本頁內容</h2><ol>{toc}</ol></div>
 {"".join(gsec)}
 
-<h2 class="backlink">延伸閱讀</h2>
+<h2 class="backlink">最新研究</h2>
 <div class="cats">
-  <a href="/{ALL_ARTICLES}"><div class="t">全部深入文章</div>
-    <div class="d">把指引寫成一般人看得懂的長文，這裡是完整列表。</div></a>
-  <a href="/{ALL_FAQ}"><div class="t">常見問題</div>
-    <div class="d">門診最常被問到的問題，每題連到回答它的那篇文章。</div></a>
+  <a href="/{ALL_NEWS}"><div class="t">新知</div>
+    <div class="d">NEJM、Lancet、JAMA 等主要期刊中真正改變處置的研究，
+    結構化摘要：問題、發現、意義。</div></a>
 </div>
+{CROSSLINK}
 """
     jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
-              "name": "新知＆指引", "description": desc, "inLanguage": "zh-Hant",
-              "url": f"{BASE_URL}/{ALL_UPDATES}", "dateModified": UPDATES_REVIEWED,
+              "name": "指引", "description": desc, "inLanguage": "zh-Hant",
+              "url": f"{BASE_URL}/{ALL_GUIDE}", "dateModified": UPDATES_REVIEWED,
               "author": author_ld()}
-    return ALL_UPDATES, page(title, desc, ALL_UPDATES, body, jsonld)
+    return ALL_GUIDE, page(title, desc, ALL_GUIDE, body, jsonld)
+
+
+def build_updates_redirect() -> tuple[str, str]:
+    """舊的 /articles/updates.html。
+
+    這個網址只活了幾小時，但已經進過 sitemap，可能被抓走了。
+    靜態站沒有 301 可用，所以用 canonical + meta refresh，
+    並且**留一段看得見的文字與連結**——meta refresh 被擋掉時，
+    使用者不會落在一片空白。
+    """
+    title = f"新知＆指引已分成兩頁｜{SITE_NAME}"
+    body = f"""
+<h1>這一頁已經分成兩頁</h1>
+<p class="lede">原本的「新知＆指引」拆成兩個獨立的頁面，內容都在，只是分開了。
+如果沒有自動跳轉，請直接點下面。</p>
+<div class="cats">
+  <a href="/{ALL_NEWS}"><div class="t">新知</div>
+    <div class="d">主要期刊的最新研究，結構化摘要。</div></a>
+  <a href="/{ALL_GUIDE}"><div class="t">指引</div>
+    <div class="d">KDIGO、KDOQI、ADA、AHA／ACC、ESC 的現行國際指引。</div></a>
+</div>
+"""
+    extra = (f'<meta http-equiv="refresh" content="0; url=/{ALL_NEWS}">'
+             f'<meta name="robots" content="noindex,follow">')
+    html = page(title, "新知＆指引已分成「新知」與「指引」兩頁。",
+                ALL_UPDATES, body, None, extra_head=extra)
+    # canonical 要指到新頁，不然搜尋引擎會把這個轉址頁當成正主
+    html = html.replace(f'<link rel="canonical" href="{BASE_URL}/{ALL_UPDATES}">',
+                        f'<link rel="canonical" href="{BASE_URL}/{ALL_NEWS}">')
+    return ALL_UPDATES, html
 
 
 HERO_DIR = ROOT / "hero"
@@ -3929,15 +4088,17 @@ def main() -> int:
     # 兩個「完整清單」頁：首頁與總覽頁只列一部分，這裡是全部。
     # 不進導覽列——導覽項目愈少手機頁首愈鬆，這兩頁從內容區進去就夠了。
     for path, html in (build_longform_page(md_pages), build_faq_page(md_pages),
-                       build_updates_page()):
+                       build_news_page(), build_guidelines_page(),
+                       build_updates_redirect()):
         (ROOT / path).write_text(html, encoding="utf-8")
         written.append(path)
     n_faq = sum(1 for _l, _g, items in FAQ_GROUPS for _ in items)
     print(f"  {ALL_ARTICLES}　(全部深入文章 {len(md_pages)} 篇)")
     print(f"  {ALL_FAQ}　(全部常見問題 {n_faq} 題)")
     n_guide = sum(len(x) for _o, _i, x in GUIDELINES)
-    print(f"  {ALL_UPDATES}　(新知＆指引：{n_guide} 份指引 + "
-          f"{len(PAPERS)} 篇研究，盤點於 {UPDATES_REVIEWED})")
+    print(f"  {ALL_NEWS}　(新知：{len(PAPERS)} 篇研究)")
+    print(f"  {ALL_GUIDE}　(指引：{n_guide} 份，盤點於 {UPDATES_REVIEWED})")
+    print(f"  {ALL_UPDATES}　(舊網址，轉到新知)")
 
 
     (ROOT / "index.html").write_text(
@@ -3952,11 +4113,15 @@ def main() -> int:
     (ROOT / "calc.html").write_text(build_calc(), encoding="utf-8")
     print(f"  calc.html　(腎功能計算工具{'' if CALC_PUBLISHED else '，未發布'})")
 
-    # sitemap：讓搜尋引擎一次拿到所有網址
+    # sitemap：讓搜尋引擎一次拿到所有網址。
+    # 排除轉址頁——它自己帶 noindex，收進 sitemap 等於一邊叫 Google 別收、
+    # 一邊把網址遞給它，自相矛盾。
+    NO_SITEMAP = {ALL_UPDATES}
     urls = ["", "articles/", "about.html", "shop.html"] + (
         ["food.html"] if food_html else []) + (
         ["calc.html"] if CALC_PUBLISHED else []) + [
-        p for p in written if not p.endswith("index.html")]
+        p for p in written
+        if not p.endswith("index.html") and p not in NO_SITEMAP]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>',
           '<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9">'.replace(
               "www.sitemap.org", "www.sitemaps.org")]
