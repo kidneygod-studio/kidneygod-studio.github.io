@@ -46,6 +46,17 @@ SITE_NAME = "護腎教室"
 # 不需要另外架郵件伺服器。
 CONTACT_EMAIL = "contact@kidneygod.net"
 
+# 關於作者頁最下方要不要放血液透析中心（/dialysis/）的連結。
+#
+# 2026-09-05 作者指定「先做好但先不上線」，所以預設 False——改成 True、
+# 重跑 build_site.py 再推上去就會出現，不需要再改別的地方。
+#
+# 為什麼要有這個開關而不是先寫好再手動刪：/dialysis/ 那個站的機構事實
+# （地址、電話、機台數）還沒填完，整站是 noindex 狀態。從這裡連過去等於
+# 讓搜尋引擎與讀者提早找到半成品。等那邊的 FACTS 填完再打開。
+DIALYSIS_LINK = False
+DIALYSIS_URL = "/dialysis/"
+
 # Cloudflare Web Analytics 的 beacon token。
 # 選它而不是 GA4 的理由：不放 cookie、不收集個人識別資料，
 # 因此不需要同意橫幅，也不會和「本站不收集任何資料」的定位衝突。
@@ -2607,6 +2618,17 @@ def build_about() -> str:
         photo_html = ""
         grid_cls = "docintro nophoto"
 
+    # 臨床服務。放在整頁最下方而不是「臨床專長」旁邊，是刻意的：
+    # 這一頁的主線是「這個站憑什麼可信」，把就醫入口擺在資歷與撰寫原則
+    # 前面，會讓整頁讀起來像招攬。看完前面再看到它，順序才對。
+    dialysis = (f"""
+<h2 id="lin-chuang">臨床服務</h2>
+<p>這個網站寫的是一般性的衛教。如果你或家人正在準備透析、或想知道一間透析中心實際是怎麼運作的：</p>
+<a class="feat" href="{DIALYSIS_URL}">
+  <div class="t">郭綜合醫院血液透析中心</div>
+  <div class="d">服務項目、就醫流程、透析時段與交通資訊。那裡是實際的醫療服務說明，和本站的衛教內容分開。</div></a>
+""" if DIALYSIS_LINK else "")
+
     creds = "".join(
         f'<div class="credgrp"><h3>{esc(label)}</h3><ul class="doccred">'
         + "".join(
@@ -2691,7 +2713,7 @@ def build_about() -> str:
 <h2 id="she-qun">社群帳號</h2>
 <p>以下是我本人經營的帳號。日常的衛教圖卡與短文會先發在社群，
 完整的長文與整理過的內容放在這個網站。</p>
-<p class="social sociallist">{social_links()}</p>
+<p class="social sociallist">{social_links()}</p>{dialysis}
 """
 
     jsonld = {
