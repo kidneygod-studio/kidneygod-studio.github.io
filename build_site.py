@@ -704,6 +704,12 @@ border-top:1px solid var(--line)}
 font-size:1rem;line-height:1.6}
 .qlist a::after{content:" →";color:var(--accent);white-space:nowrap}
 .qlist a:hover{color:var(--accent);background:var(--card)}
+/* 區塊右下角的「看完整清單」。靠右是因為它是那一區的結尾，不是新的開始；
+   放左邊會被誤讀成下一個項目。 */
+.morelink{display:flex;justify-content:flex-end;margin:-6px 0 30px}
+.morelink a{font-size:14.5px;font-weight:600;text-decoration:none;
+padding:8px 2px}
+.morelink a:hover{text-decoration:underline}
 /* 文章開頭的重點方塊。借自 JAMA 的 Key Points：問題／發現／意義三段各一句。
    長文兩千到四千字，很多人只看開頭——這個方塊讓只看三十秒的人也帶得走東西。
    刻意不用卡片底色：它要看起來像「文章的一部分」，不是插進來的廣告區塊，
@@ -1291,16 +1297,21 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
     # 更適合回頭查找；首頁才是要凸顯新內容的地方。
     extra = ""
     if extra_pages:
+        # 這一頁是總覽，順序沿用檔名序（穩定、方便回頭查找），
+        # 但超過 16 篇之後同樣要收起來——兩欄 × 8 列已經是一屏半。
+        listed = extra_pages[:INDEX_FEAT_MAX]
         cs = "".join(
             f'<a class="feat" href="/{a["path"]}">'
             f'<div class="t">{esc(a["title"])}</div>'
             f'<div class="d">{esc(a["summary"][:88])}…</div></a>'
-            for a in extra_pages)
+            for a in listed)
         # 卡片包一層容器：寬螢幕上要排成兩欄。單欄時 1020px 寬的卡片，
         # 摘要一行會到 70 個中文字，比長文內文還長。
+        more = (more_link(ALL_ARTICLES, f"閱讀更多（全部 {len(extra_pages)} 篇）")
+                if len(extra_pages) > len(listed) else "")
         extra = (f"<h2>深入文章</h2>"
                  f"<div class='sd'>完整長文，適合想把一個主題徹底搞懂的人</div>"
-                 f"<div class='featgrid'>{cs}</div>")
+                 f"<div class='featgrid'>{cs}</div>{more}")
 
     # 常見問題：只放問句與連結，不放答案。
     #
@@ -1316,16 +1327,15 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
     faq_html = ""
     if extra_pages:
         have = {a["slug"] for a in extra_pages}
-        lis = "".join(
-            f'<li><a href="/articles/{slug}.html">{esc(q)}</a></li>'
-            for _label, _gid, items in FAQ_GROUPS
-            for q, _ans, slug in items if slug in have)
-        n_q = lis.count("<li>")
-        if lis:
+        alive = [it for _l, _g, items in FAQ_GROUPS for it in items
+                 if it[1].startswith("/") or it[1] in have]
+        feat = [it for it in alive if it[2]][:INDEX_FAQ_MAX]
+        if feat:
             faq_html = (f'<h2 id="faq">常見問題</h2>'
-                        f'<div class="sd">門診最常被問到的 {n_q} 個問題，'
+                        f'<div class="sd">門診最常被問到的問題，'
                         f'每一題直接連到回答它的那篇文章</div>'
-                        f'<ul class="qlist">{lis}</ul>')
+                        f'<ul class="qlist">{faq_list_html(feat)}</ul>'
+                        + more_link(ALL_FAQ, f"全部 {len(alive)} 個常見問題"))
 
     gal = ""
     if n_gallery:
@@ -1684,9 +1694,11 @@ def build_search_index(data: list[dict], md_pages: list[dict],
          "查 1,728 種食物的鈉、鉀、磷、蛋白質含量，資料來自衛福部食藥署食品營養成分資料庫。"),
         ("關於吳政哲醫師", "/about.html", "關於",
          "腎臟科專科醫師的資歷、撰寫原則與聯絡方式。"),
-        ("常見問題", "/articles/#faq", "問答",
+        ("常見問題", f"/{ALL_FAQ}", "問答",
          "肌酸酐紅字、eGFR 60、泡泡尿、止痛藥傷腎、要不要提前做廔管——"
          "門診最常被問到的問題，每題直接連到回答它的那篇文章。"),
+        ("全部深入文章", f"/{ALL_ARTICLES}", "導覽",
+         "所有長文的完整列表，新的排在前面。"),
         ("全部衛教文章", "/articles/", "導覽", "依主題瀏覽所有衛教內容。"),
         ("衛教圖卡總覽", "/articles/gallery.html", "導覽", "社群上發表過的圖解，依主題整理。"),
     ]:
@@ -1713,11 +1725,16 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     # 是 sorted glob），雜誌式陳列用字母序沒有意義——讀者期待的是「最新的在最上面」。
     # 只影響首頁的呈現順序，其他地方用到的 md_pages 不動。
     feed = sorted(extra, key=lambda a: (a.get("published", ""), a["path"]), reverse=True)
-    feats = "".join(mag_card(a, i == 0) for i, a in enumerate(feed))
+    shown = feed[:HOME_FEAT_MAX]
+    feats = "".join(mag_card(a, i == 0) for i, a in enumerate(shown))
 
+    # 首頁只放最新的幾篇，其餘在完整頁。首頁的任務是「讓人看到有東西」，
+    # 不是把整個書目攤開——雜誌卡片一張很高，全部列出來會把下面的區塊推到很遠。
+    feat_more = more_link(ALL_ARTICLES, f"閱讀更多（全部 {len(feed)} 篇）") \
+        if len(feed) > len(shown) else ""
     feat_sect = (f'<h2 class="sect" id="deep">深入文章</h2>'
                  f'<div class="sd">完整長文，適合想把一個主題徹底搞懂的人</div>'
-                 f'<div class="mag">{feats}</div>'
+                 f'<div class="mag">{feats}</div>{feat_more}'
                  if feats else "")
 
     # 直接讀 logo 實際尺寸，換圖時不必再手改寫死的數字（換過一次比例就變了）
@@ -2281,107 +2298,182 @@ def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
 
 
 # ---------------------------------------------------------------------------
-# 常見問題頁
+# 常見問題
 #
-# 為什麼要獨立一頁：站上的分類是「血壓管理」「血脂代謝」這種醫學分類，
-# 但病人腦子裡是一個問句——「報告紅字是不是腎壞了」。這一頁把入口從
-# 「網站有什麼」翻成「你想問什麼」，每一題再接到寫得完整的那篇長文。
+# 站上的分類是「血壓管理」「血脂代謝」這種醫學分類，但病人腦子裡是一個問句——
+# 「報告紅字是不是腎壞了」。這一組把入口從「網站有什麼」翻成「你想問什麼」。
 #
-# 每個答案 80–150 字，要能單獨成立（有人只會看到這一段就離開），
-# 但不取代長文。link 指向的文章必須真的存在，check_site 會抓到死連結。
+# **只放問句與連結，不放答案。** 2026-09-04 一度做成有答案的獨立分頁，
+# 但每則答案講的都是對應長文裡的重點，兩個網址搶同一組關鍵字
+# （泡泡尿、eGFR 60…），而長文答得更完整，被摘要版壓過去反而是損失。
+# FAQPage 結構化資料也不補——每篇長文自己的「常見問題」段落已經有了，
+# 那才是答案真正所在的位置。
+#
+# 每一項是 (問句, 連到哪個 slug, 是否在衛教文章總覽頁露出)。
+# 總覽頁只露出 6 題，其餘在 /articles/faq.html；六題刻意跨組挑，
+# 讓人一眼看出這裡不只有「看報告」的問題。
+# slug 可以是長文（自動加 /articles/ 前綴）或以 / 開頭的完整路徑。
+# 連到的目標不存在時該題會被略過，check_site 的死連結檢查也擋得住。
 # ---------------------------------------------------------------------------
 FAQ_GROUPS = [
-    ("看懂報告", "kan-dong-bao-gao", [
-        ("健檢報告的肌酸酐紅字，是腎臟壞掉了嗎？",
-         "肌酸酐受肌肉量、當天飲食與水分影響，<b>一次超標不等於腎臟壞掉</b>。"
-         "要看的是換算成 eGFR 之後落在哪一期，以及同樣條件下再驗一次的趨勢。"
-         "真正需要警覺的是持續偏高或一路往上，而不是單一次的紅字。"
-         "肌肉量少的人數值反而偏低，那也不代表腎功能比較好。",
-         "creatinine-high-what-to-do"),
-        ("eGFR 60 是什麼意思？算不算腎臟病？",
-         "60 是分期的分界，但<b>不是「低於 60 就是腎臟病」這麼簡單</b>。"
-         "慢性腎臟病的定義要「持續三個月以上」，而且要一併看有沒有蛋白尿——"
-         "eGFR 正常但有蛋白尿，一樣是腎臟病。年長者的 eGFR 隨年齡下降也很常見。"
-         "單看一個數字最容易嚇到自己。",
-         "egfr-meaning-ckd-stages"),
-        ("尿裡有泡泡，是蛋白尿嗎？",
-         "泡泡本身不等於蛋白尿——水流沖擊、馬桶清潔劑、尿液濃縮都會起泡。"
-         "要判斷得靠驗尿，看尿蛋白與尿液白蛋白／肌酸酐比值。"
-         "<b>值得注意的是細緻、久久不散、而且天天如此的泡泡</b>，"
-         "尤其合併眼皮或腳踝水腫、血壓升高的時候。",
-         "foamy-urine-proteinuria"),
-        ("膽固醇報告紅字，跟腎臟有關係嗎？",
-         "有關係，但不是「膽固醇高會直接把腎臟弄壞」。血脂異常加速的是全身"
-         "血管硬化，而<b>腎臟本來就是一個由血管組成的器官</b>。"
-         "慢性腎臟病本身也會改變血脂的樣貌。看報告時除了 LDL，"
-         "非 HDL 膽固醇往往更能反映整體風險。",
-         "cholesterol-report-ckd"),
+    ("看懂報告", "kan-bao-gao", [
+        ("健檢報告的肌酸酐紅字，是腎臟壞掉了嗎？", "creatinine-high-what-to-do", True),
+        ("肌酸酐「正常」，就代表腎功能沒問題嗎？", "creatinine-high-what-to-do", False),
+        ("肌酸酐偏高，什麼情況不能等、要立刻就醫？", "creatinine-high-what-to-do", False),
+        ("複驗之前要注意什麼？", "creatinine-high-what-to-do", False),
+        ("eGFR 60 是什麼意思？算不算腎臟病？", "egfr-meaning-ckd-stages", True),
+        ("腎功能分期 G1 到 G5 是怎麼分的？", "egfr-meaning-ckd-stages", False),
+        ("年紀大了 eGFR 下降，算正常嗎？", "egfr-meaning-ckd-stages", False),
+        ("什麼時候真的需要看腎臟科？", "egfr-meaning-ckd-stages", False),
+        ("報告上只有肌酸酐、沒有 eGFR，怎麼換算？", "/calc.html", False),
+        ("尿裡有泡泡，是蛋白尿嗎？", "foamy-urine-proteinuria", True),
+        ("醫師為什麼一直要我驗尿？UACR 是什麼？", "foamy-urine-proteinuria", False),
+        ("膽固醇報告紅字，跟腎臟有關係嗎？", "cholesterol-report-ckd", False),
+        ("驗血脂一定要空腹嗎？", "cholesterol-report-ckd", False),
+        ("Lp(a) 是什麼？需要驗嗎？", "cholesterol-report-ckd", False),
     ]),
-    ("日常照顧", "ri-chang-zhao-gu", [
-        ("多喝水可以顧腎嗎？要喝多少才夠？",
-         "水要喝夠，但「多喝水顧腎」被過度延伸了。健康成年人每日建議約"
-         "體重（公斤）乘以 30–35 毫升；已經有心臟衰竭、水腫，或醫師交代限水的人"
-         "不適用這個算法。<b>喝到超過身體需要，並不會讓腎臟變得更好。</b>",
-         "kidney-lifestyle-evidence"),
-        ("外食很鹹，一天可以吃多少鹽？",
-         "一般建議每日鈉不超過 2,000 毫克，大約是一茶匙鹽。"
-         "但外食的鈉多半藏在<b>湯、醬料與加工品</b>裡，不是桌上的鹽罐。"
-         "實務上先做「湯少喝、醬少沾」，會比努力少加鹽有效得多。",
-         "taiwan-eating-out-sodium"),
-        ("血壓要量幾次才算數？",
-         "722 原則：連續 <b>7</b> 天、早晚各 <b>2</b> 次、每次量 <b>2</b> 遍取平均。"
-         "單次量到高不代表有高血壓，重點是同一條件下的平均值。"
-         "量之前先坐著休息五分鐘、背有靠、腳平放不翹腳，"
-         "壓脈帶綁在手臂與心臟同高的位置。",
-         "home-blood-pressure-measurement"),
-        ("有糖尿病，怎麼知道腎臟開始受影響？",
-         "<b>靠感覺來不及</b>——糖尿病腎病變早期完全沒有症狀。"
-         "要靠定期驗尿（尿液白蛋白／肌酸酐比值）與抽血算 eGFR 才看得出來。"
-         "這也是為什麼糖尿病患者建議每年至少檢查一次，"
-         "而不是等到有症狀才檢查。",
-         "diabetes-kidney-disease"),
+    ("日常照顧與飲食", "ri-chang", [
+        ("多喝水可以顧腎嗎？要喝多少才夠？", "kidney-lifestyle-evidence", True),
+        ("抽菸真的會傷腎嗎？戒菸有藥物可以幫忙嗎？", "kidney-lifestyle-evidence", False),
+        ("網路上的護腎建議那麼多，哪些是真的有用？", "kidney-lifestyle-evidence", False),
+        ("外食很鹹，一天可以吃多少鹽？", "taiwan-eating-out-sodium", False),
+        ("低鈉鹽比較健康，腎臟病人可以用嗎？", "taiwan-eating-out-sodium", False),
+        ("怎麼知道自己是不是吃太鹹？", "taiwan-eating-out-sodium", False),
+        ("腎臟不好，要不要少吃蛋白質？", "/food.html", False),
+        ("哪些食物的鉀、磷特別高？", "/food.html", False),
+        ("血壓要量幾次才算數？", "home-blood-pressure-measurement", False),
+        ("手腕式血壓計可以用嗎？", "home-blood-pressure-measurement", False),
+        ("居家血壓的數字要怎麼看才對？", "home-blood-pressure-measurement", False),
     ]),
     ("用藥與保健食品", "yong-yao", [
-        ("止痛藥吃了會傷腎嗎？",
-         "不是所有止痛藥都一樣。NSAID 這一類消炎止痛藥會影響腎臟血流，"
-         "脫水、年長、本來腎功能就不好的人風險更高；乙醯胺酚（普拿疼類）的"
-         "機轉不同。<b>依醫囑短期使用，和自己長期連續吃，風險差很多。</b>"
-         "感冒藥與復方止痛藥裡也常含有 NSAID，要看成分。",
-         "painkiller-nsaid-kidney"),
-        ("保健食品和中藥可以吃嗎？",
-         "不是不能吃，但要讓醫師看過成分。腎功能不好的人對鉀、磷與部分"
-         "草本萃取物的耐受度和一般人不同。含馬兜鈴酸的藥材已證實會造成"
-         "腎病變，台灣早已禁用，但來路不明的產品仍可能含有。"
-         "<b>最重要的一條：不要因為吃這些而停掉醫師開的藥。</b>",
-         "no-dialysis-therapy-claims"),
+        ("止痛藥吃了會傷腎嗎？", "painkiller-nsaid-kidney", True),
+        ("感冒藥裡面也有會傷腎的成分嗎？", "painkiller-nsaid-kidney", False),
+        ("腎功能不好，痛的時候可以吃什麼？", "painkiller-nsaid-kidney", False),
+        ("已經有腎臟病，止痛藥就完全不能碰嗎？", "painkiller-nsaid-kidney", False),
+        ("醫師開的藥會不會傷腎？能不能少吃？", "/articles/medication-safety.html", False),
+        ("保健食品和中藥可以吃嗎？", "no-dialysis-therapy-claims", False),
+        ("吃保健食品是不是完全沒有意義？", "no-dialysis-therapy-claims", False),
+        ("家人買了「逆轉腎功能」的產品，我該怎麼勸？", "no-dialysis-therapy-claims", False),
+        ("為什麼這些產品沒有被取締？", "no-dialysis-therapy-claims", False),
+    ]),
+    ("糖尿病與腎臟", "tang-niao-bing", [
+        ("有糖尿病，怎麼知道腎臟已經開始受影響？", "diabetes-kidney-disease", False),
+        ("血糖控制好，腎臟就沒事了嗎？", "diabetes-kidney-disease", False),
+        ("糖尿病要多久驗一次腎功能？", "diabetes-kidney-disease", False),
+        ("糖尿病的新藥對腎臟也有幫助嗎？", "diabetes-kidney-disease", False),
+        ("糖尿病病人什麼時候該轉看腎臟科？", "diabetes-kidney-disease", False),
     ]),
     ("洗腎與治療", "xi-shen", [
-        ("腎功能掉下來，還有機會恢復嗎？",
-         "要看是急性還是慢性。<b>急性腎損傷</b>（脫水、感染、藥物造成的）"
-         "處理之後常有明顯回升；<b>已經纖維化的慢性腎臟病</b>目前沒有方法逆轉。"
-         "能做的是延緩，而延緩的效果可以很大——好的控制能讓透析晚很多年才到來，"
-         "甚至一輩子用不到。",
-         "kidney-function-recovery"),
-        ("醫師說要準備洗腎了，我還有多久時間？",
-         "開始透析的時機看的是症狀與整體狀況，不是單一個數字——"
-         "同樣 eGFR 的兩個人，處置可以完全不同。"
-         "與其問還有多久，更該問的是<b>現在該開始準備什麼</b>。"
-         "血液透析、腹膜透析與腎臟移植沒有哪一種比較高級，適合的人不一樣。",
-         "kidney-replacement-therapy"),
-        ("洗腎的管路一定要提前準備嗎？",
-         "要。自體動靜脈廔管做完<b>不能馬上使用</b>，需要數週到數月成熟，"
-         "而且可能不成熟、需要再做一次。來不及的話只能在急診插中心靜脈導管——"
-         "感染風險最高，還可能造成中心靜脈狹窄，"
-         "把未來那隻手臂的選項一起賠掉。",
-         "dialysis-access-preparation"),
-        ("網路上說吃某某東西就不用洗腎，是真的嗎？",
-         "目前沒有任何方法能讓已經纖維化的慢性腎臟病逆轉。這類說法通常有"
-         "固定的結構：先給你一句真話、再把「延緩」偷換成「逆轉」、"
-         "用個案見證取代對照數據。"
-         "<b>如果對方要你停掉正規藥物，那就是紅線，不需要再討論下去。</b>",
-         "no-dialysis-therapy-claims"),
+        ("腎功能掉下來，還有機會恢復嗎？", "kidney-function-recovery", True),
+        ("急性腎損傷洗腎，是不是就要洗一輩子？", "kidney-function-recovery", False),
+        ("怎麼分辨自己是急性還是慢性？", "kidney-function-recovery", False),
+        ("數字回來了，就代表完全復原了嗎？", "kidney-function-recovery", False),
+        ("醫師說要準備洗腎了，我還有多久時間？", "kidney-replacement-therapy", False),
+        ("血液透析和腹膜透析差在哪？", "kidney-replacement-therapy", False),
+        ("洗腎之後還能不能工作、出國？", "kidney-replacement-therapy", False),
+        ("腹膜透析要自己在家操作，我做得來嗎？", "kidney-replacement-therapy", False),
+        ("腎臟移植可以在還沒洗腎之前就做嗎？", "kidney-replacement-therapy", False),
+        ("洗腎的管路一定要提前準備嗎？", "dialysis-access-preparation", False),
+        ("廔管做好之後要怎麼照顧？", "dialysis-access-preparation", False),
+        ("已經在用導管了，還能改做廔管嗎？", "dialysis-access-preparation", False),
+        ("廔管做了但一直沒用到，會不會白做？", "dialysis-access-preparation", False),
+        ("網路上說吃某某東西就不用洗腎，是真的嗎？", "no-dialysis-therapy-claims", False),
     ]),
 ]
+
+
+def faq_href(slug: str) -> str:
+    """slug 可以是長文檔名，也可以是以 / 開頭的站內完整路徑。"""
+    return slug if slug.startswith("/") else f"/articles/{slug}.html"
+
+
+def faq_list_html(items) -> str:
+    return "".join(f'<li><a href="{faq_href(s)}">{esc(q)}</a></li>'
+                   for q, s, _feat in items)
+
+
+# 首頁與衛教文章總覽頁各自的上限。超過就只顯示前幾筆，末尾放「閱讀更多」
+# 連到完整頁——首頁的雜誌卡片一張很高，總覽頁的文字卡片密度高得多，
+# 所以兩邊的數字不一樣。
+HOME_FEAT_MAX = 10          # 首頁：1 張封面 + 9 張，桌機剛好排滿三列
+INDEX_FEAT_MAX = 16         # 總覽頁：兩欄 × 8 列
+INDEX_FAQ_MAX = 6           # 總覽頁的常見問題只露出跨組挑的六題
+
+ALL_ARTICLES = "articles/long-form.html"
+ALL_FAQ = "articles/faq.html"
+
+
+def more_link(href: str, text: str) -> str:
+    """區塊右下角的「看完整清單」連結。"""
+    return f'<div class="morelink"><a href="/{href}">{esc(text)} →</a></div>'
+
+
+def build_longform_page(md_pages: list[dict]) -> tuple[str, str]:
+    """全部深入文章。首頁與總覽頁都只列一部分，這裡是完整的那一份。
+
+    用雜誌式卡片（有大圖）而不是總覽頁的文字卡片：這一頁是拿來「瀏覽挑一篇」
+    的，圖片幫得上忙；而且圖在首頁已經載過，多半直接命中快取。
+    """
+    feed = sorted(md_pages, key=lambda a: (a.get("published", ""), a["path"]),
+                  reverse=True)
+    title = f"全部深入文章：{len(feed)} 篇腎臟與三高長文｜{SITE_NAME}"
+    desc = (f"{AUTHOR_NAME}醫師撰寫的 {len(feed)} 篇長文完整列表，"
+            "涵蓋檢查數值判讀、血壓血糖血脂、飲食與用藥安全、洗腎與常見迷思。")
+    cards = "".join(mag_card(a, i == 0) for i, a in enumerate(feed))
+    body = f"""
+<h1>全部深入文章</h1>
+<p class="lede">{len(feed)} 篇完整長文，新的排在前面。每一篇都寫明依據的臨床指引，
+適合想把一個主題徹底搞懂的人。</p>
+<div class="mag">{cards}</div>
+<h2 class="backlink">還想看什麼</h2>
+<div class="cats">
+  <a href="/articles/"><div class="t">依主題閱讀</div>
+    <div class="d">60 則衛教內容，分成八個主題。</div></a>
+  <a href="/{ALL_FAQ}"><div class="t">常見問題</div>
+    <div class="d">門診最常被問到的問題，每題連到回答它的文章。</div></a>
+</div>
+"""
+    jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
+              "name": "全部深入文章", "description": desc, "inLanguage": "zh-Hant",
+              "url": f"{BASE_URL}/{ALL_ARTICLES}", "author": author_ld()}
+    return ALL_ARTICLES, page(title, desc, ALL_ARTICLES, body, jsonld)
+
+
+def build_faq_page(md_pages: list[dict]) -> tuple[str, str]:
+    """全部常見問題。只有問句與連結，答案在點進去的那篇文章裡。"""
+    have = {a["slug"] for a in md_pages}
+    blocks, n = [], 0
+    for label, gid, items in FAQ_GROUPS:
+        live = [it for it in items
+                if it[1].startswith("/") or it[1] in have]
+        if not live:
+            continue
+        n += len(live)
+        blocks.append(f'<h2 id="{gid}">{esc(label)}</h2>'
+                      f'<ul class="qlist">{faq_list_html(live)}</ul>')
+    title = f"腎臟病常見問題：{n} 個門診最常被問到的問題｜{SITE_NAME}"
+    desc = ("肌酸酐紅字、eGFR 60、泡泡尿、止痛藥傷腎、要不要提前做廔管——"
+            f"{n} 個門診最常被問到的問題，每題直接連到回答它的那篇文章。")
+    toc = "".join(f'<li><a href="#{gid}">{esc(label)}</a></li>'
+                  for label, gid, _ in FAQ_GROUPS)
+    body = f"""
+<h1>常見問題</h1>
+<p class="lede">門診最常被問到的 {n} 個問題，依主題分成 {len(FAQ_GROUPS)} 組。
+每一題直接連到回答它的那篇文章——這裡只放問句，完整的答案在文章裡。</p>
+<div class="toc"><h2>本頁內容</h2><ol>{toc}</ol></div>
+{"".join(blocks)}
+<h2 class="backlink">還想看什麼</h2>
+<div class="cats">
+  <a href="/{ALL_ARTICLES}"><div class="t">全部深入文章</div>
+    <div class="d">完整長文列表，適合想徹底搞懂一個主題的人。</div></a>
+  <a href="/calc.html"><div class="t">腎功能計算</div>
+    <div class="d">把報告上的數值換算成 eGFR 與分期。</div></a>
+</div>
+"""
+    jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
+              "name": "腎臟病常見問題", "description": desc, "inLanguage": "zh-Hant",
+              "url": f"{BASE_URL}/{ALL_FAQ}", "author": author_ld()}
+    return ALL_FAQ, page(title, desc, ALL_FAQ, body, jsonld)
 
 
 HERO_DIR = ROOT / "hero"
@@ -3272,6 +3364,15 @@ def main() -> int:
 
     (ROOT / "about.html").write_text(build_about(), encoding="utf-8")
     print("  about.html　(關於作者，E-E-A-T 權威訊號)")
+
+    # 兩個「完整清單」頁：首頁與總覽頁只列一部分，這裡是全部。
+    # 不進導覽列——導覽只放六項，加第七項會把手機頁首擠成兩排。
+    for path, html in (build_longform_page(md_pages), build_faq_page(md_pages)):
+        (ROOT / path).write_text(html, encoding="utf-8")
+        written.append(path)
+    n_faq = sum(1 for _l, _g, items in FAQ_GROUPS for _ in items)
+    print(f"  {ALL_ARTICLES}　(全部深入文章 {len(md_pages)} 篇)")
+    print(f"  {ALL_FAQ}　(全部常見問題 {n_faq} 題)")
 
 
     (ROOT / "index.html").write_text(

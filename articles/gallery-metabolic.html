@@ -186,6 +186,12 @@ border-top:1px solid var(--line)}
 font-size:1rem;line-height:1.6}
 .qlist a::after{content:" →";color:var(--accent);white-space:nowrap}
 .qlist a:hover{color:var(--accent);background:var(--card)}
+/* 區塊右下角的「看完整清單」。靠右是因為它是那一區的結尾，不是新的開始；
+   放左邊會被誤讀成下一個項目。 */
+.morelink{display:flex;justify-content:flex-end;margin:-6px 0 30px}
+.morelink a{font-size:14.5px;font-weight:600;text-decoration:none;
+padding:8px 2px}
+.morelink a:hover{text-decoration:underline}
 /* 文章開頭的重點方塊。借自 JAMA 的 Key Points：問題／發現／意義三段各一句。
    長文兩千到四千字，很多人只看開頭——這個方塊讓只看三十秒的人也帶得走東西。
    刻意不用卡片底色：它要看起來像「文章的一部分」，不是插進來的廣告區塊，
