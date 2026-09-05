@@ -1957,10 +1957,10 @@ def build_search_index(data: list[dict], md_pages: list[dict],
          "所有長文的完整列表，新的排在前面。"),
         ("全部衛教文章", "/articles/", "導覽", "依主題瀏覽所有衛教內容。"),
         ("衛教圖卡總覽", "/articles/gallery.html", "導覽", "社群上發表過的圖解，依主題整理。"),
-        ("新知", f"/{ALL_NEWS}", "導覽",
+        ("醫學新知", f"/{ALL_NEWS}", "導覽",
          "NEJM、Lancet、JAMA 等主要期刊中真正改變腎臟病與三高處置的研究，"
          "結構化摘要：問題、發現、意義。"),
-        ("指引", f"/{ALL_GUIDE}", "導覽",
+        ("國際指引", f"/{ALL_GUIDE}", "導覽",
          "KDIGO、KDOQI、ADA、AHA／ACC、ESC 目前實際被當成標準的"
          "腎臟病與三高臨床指引。"),
     ]:
@@ -3327,7 +3327,7 @@ def build_news_page() -> tuple[str, str]:
     body = f"""
 <div class="nhero">
   <p class="neyebrow">Latest Research</p>
-  <h1>新知</h1>
+  <h1>醫學新知</h1>
   <p class="lede">腎臟與三高領域<strong>主要期刊的最新研究</strong>。
   每篇用結構化摘要呈現——問題、發現、意義先講完，想細看的再往下讀方法與結果。
   不做大清單，只收真正改變處置、或改變了指引寫法的研究。</p>
@@ -3349,14 +3349,14 @@ def build_news_page() -> tuple[str, str]:
 <p class="neyebrow">Guidelines</p>
 <h2 class="sect">現行指引</h2>
 <div class="cats">
-  <a href="/{ALL_GUIDE}"><div class="t">現行國際指引</div>
+  <a href="/{ALL_GUIDE}"><div class="t">國際指引</div>
     <div class="d">研究要累積很久才會變成指引。
     KDIGO、KDOQI、ADA、AHA／ACC、ESC 目前實際被當成標準的那幾份。</div></a>
 </div>
 {CROSSLINK}
 """
     jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
-              "name": "新知", "description": desc, "inLanguage": "zh-Hant",
+              "name": "醫學新知", "description": desc, "inLanguage": "zh-Hant",
               "url": f"{BASE_URL}/{ALL_NEWS}", "dateModified": UPDATES_REVIEWED,
               "author": author_ld()}
     return ALL_NEWS, page(title, desc, ALL_NEWS, body, jsonld)
@@ -3387,7 +3387,7 @@ def build_news_cat_pages() -> list[tuple[str, str]]:
   每篇用結構化摘要呈現——問題、發現、意義先講完，
   想細看的再往下讀方法與結果。</p>
   <p class="meta">最後盤點：{UPDATES_REVIEWED}　·
-  <a href="/{ALL_NEWS}">← 回新知</a></p>
+  <a href="/{ALL_NEWS}">← 回醫學新知</a></p>
 </div>
 {DISCLAIM_BOX}
 <div class="updlist">{cards}</div>
@@ -3428,12 +3428,17 @@ def build_guidelines_page() -> tuple[str, str]:
         f'<li><a href="#g-{re.sub(r"[^a-z]+", "-", o.lower()).strip("-")}">'
         f'{esc(o)}</a></li>' for o, _i, _x in GUIDELINES)
 
-    title = f"腎臟病與三高的現行國際指引：KDIGO、KDOQI、ADA、AHA、ESC｜{SITE_NAME}"
-    desc = ("KDIGO、KDOQI、ADA、AHA／ACC、ESC 目前實際被當成標準的腎臟病與"
-            "三高臨床指引，每一份附白話說明、專業重點與正式出處。")
+    # 標題與描述要照實列本土學會——這一頁 23 份裡有 11 份是台灣的，
+    # 只寫「國際指引」對搜尋引擎與讀者都是誤導。
+    title = (f"腎臟病與三高臨床指引：台灣腎臟醫學會、KDIGO、KDOQI、"
+             f"ADA、AHA、ESC｜{SITE_NAME}")
+    desc = ("台灣腎臟醫學會與台灣心臟／血脂學會的本土指引，"
+            "加上 KDIGO、KDOQI、ADA、AHA／ACC、ESC 的國際指引，"
+            "每一份附白話說明、專業重點與正式出處。")
     body = f"""
-<h1>指引</h1>
-<p class="lede">腎臟與三高領域<strong>目前實際被當成標準的國際指引</strong>。
+<h1>國際指引</h1>
+<p class="lede">腎臟與三高領域<strong>目前實際被當成標準的臨床指引</strong>——
+台灣本土的排在前面，後面是 KDIGO、KDOQI、ADA、AHA／ACC、ESC 的國際指引。
 每一份先用一句話說明它對你的意義，再附上專業重點與正式出處——
 想深入的人可以直接點過去看原文。</p>
 <p class="meta">最後盤點：{UPDATES_REVIEWED}　·　共 {n_g} 份　·
@@ -3444,14 +3449,14 @@ def build_guidelines_page() -> tuple[str, str]:
 
 <h2 class="backlink">最新研究</h2>
 <div class="cats">
-  <a href="/{ALL_NEWS}"><div class="t">新知</div>
+  <a href="/{ALL_NEWS}"><div class="t">醫學新知</div>
     <div class="d">NEJM、Lancet、JAMA 等主要期刊中真正改變處置的研究，
     結構化摘要：問題、發現、意義。</div></a>
 </div>
 {CROSSLINK}
 """
     jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
-              "name": "指引", "description": desc, "inLanguage": "zh-Hant",
+              "name": "國際指引", "description": desc, "inLanguage": "zh-Hant",
               "url": f"{BASE_URL}/{ALL_GUIDE}", "dateModified": UPDATES_REVIEWED,
               "author": author_ld()}
     return ALL_GUIDE, page(title, desc, ALL_GUIDE, body, jsonld)
@@ -3471,7 +3476,7 @@ def build_updates_redirect() -> tuple[str, str]:
 <p class="lede">原本的「新知＆指引」拆成兩個獨立的頁面，內容都在，只是分開了。
 如果沒有自動跳轉，請直接點下面。</p>
 <div class="cats">
-  <a href="/{ALL_NEWS}"><div class="t">新知</div>
+  <a href="/{ALL_NEWS}"><div class="t">醫學新知</div>
     <div class="d">主要期刊的最新研究，結構化摘要。</div></a>
   <a href="/{ALL_GUIDE}"><div class="t">指引</div>
     <div class="d">KDIGO、KDOQI、ADA、AHA／ACC、ESC 的現行國際指引。</div></a>
