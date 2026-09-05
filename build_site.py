@@ -2111,7 +2111,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 {gal_sect}
 
 <!-- 商城放最後：衛教是主體，遊戲是其中一種學習方式。
-     順序與上方「這個網站怎麼用」的方塊一致，避免導航與陳列互相矛盾。 -->
+     順序與頁首下拉選單一致，避免導航與陳列互相矛盾。 -->
 <h2 class="sect" id="play">從免費遊戲學習</h2>
 <div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
 <a class="gamebtn" href="/shop.html">
