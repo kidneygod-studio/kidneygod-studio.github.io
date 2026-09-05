@@ -680,8 +680,8 @@ box-shadow:0 12px 30px rgba(0,0,0,.14);padding:6px;overflow:hidden}
 .ngmenu[hidden]{display:none}
 .ngmenu a{display:block;padding:10px 14px;border-radius:8px;font-size:14.5px;
 white-space:nowrap}
-@media(max-width:410px){.ngbtn{padding:9px 5px;font-size:13.5px;gap:3px}}
-@media(max-width:365px){.ngbtn{padding:9px 2px;font-size:13px;gap:2px}}
+@media(max-width:450px){.ngbtn{padding:9px 5px;font-size:13.5px;gap:3px}}
+@media(max-width:390px){.ngbtn{padding:9px 2px;font-size:13px;gap:2px}}
 /* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
 header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
 header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
@@ -706,10 +706,11 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
    2026-09-04 逐寬度掃描才發現這是既有問題，與當天加減導覽項目無關——
    斷點是「一階一階往下收」的設計，只在幾個測試過的寬度正確，
    兩階之間的區段沒人量過就會漏掉。改斷點後一定要整段掃，不能只看幾個點。 */
-/* 中間階。門檻維持 410——**標誌與導覽的門檻必須對齊**：
-   我一度把這裡改成 401，結果 402–410 這段落回上一階、標誌從 83 變 91px，
-   多出來的 8px 剛好讓導覽換行。兩者在同一個媒體查詢裡一起收才不會互相踩。 */
-@media(max-width:410px){
+/* 中間階。門檻 2026-09-05 從 410 提高到 450：「衛教文章」也做成下拉之後，
+   兩個下拉箭頭各佔約 15px，411–450px 這段就排不下了。
+   **標誌與導覽的門檻必須對齊**：一度把導覽切在 401、標誌切在 410，
+   402–410 這段標誌落回大的一階、多出 8px 剛好讓導覽換行。 */
+@media(max-width:450px){
   .brand{font-size:.88rem;gap:5px}
   .brand svg{width:20px;height:20px}
   header.site nav a{padding:9px 5px;font-size:13.5px}
@@ -719,17 +720,23 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
        內距 8／字 13.5／間距 2 → 268px，402px 以上可用
        內距 5／字 13.5／間距 2 → 232px，360px 以上可用
        內距 2／字 13  ／間距 0 → 180px，320px 以上可用
-   加上標誌各階的寬度（91／83／74），真正需要最緊設定的只有 ≤365px。
+   加上標誌各階的寬度（91／83／74）與兩個下拉箭頭，門檻是 390。
 
    ⚠ 2026-09-05 我一度把這一階套到 ≤440，讓所有手機都吃最緊的設定——
    六項確實排得下了，但 393px 時空著 90px、430px 時空著 119px，
    字卻縮到 13px、間距歸零。作者反映「頁首特別小且擁擠」，是對的。
    排得下不等於排得好，能用的空間要用掉。 */
-@media(max-width:365px){
+@media(max-width:390px){
   .brand{font-size:.8rem;gap:4px}
   .brand svg{width:18px;height:18px}
   header.site nav a{padding:9px 2px;font-size:13px}
   header.site nav{gap:0}
+}
+/* 最後一道。330px 以下連最緊的設定都排不下，把下拉箭頭收掉再省 30px。
+   按鈕本身照常可以按，只是少了「這裡會展開」的視覺提示——
+   在這個寬度下，排成兩排的代價比少一個箭頭大。 */
+@media(max-width:330px){
+  .ngcaret{display:none}
 }
 h1{font-size:1.85rem;line-height:1.35;margin:28px 0 10px;letter-spacing:-.01em}
 /* 區塊標題左側的主色錨點。長文有 10–12 個 h2，這條線提供滑動時的節奏感，
@@ -1282,9 +1289,21 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     # 目前所在區塊要標示出來，讀者才知道自己在哪一層。
     # 圖卡頁也算在「衛教文章」底下——2026-09-05 拿掉圖卡分頁之後，
     # 圖卡的唯一入口就在文章頁裡，頁首要標的是那一層。
-    # 新知與指引自己有一項，不能被 articles/ 那條規則吃掉
-    in_upd = path in (ALL_NEWS, ALL_GUIDE, ALL_UPDATES)
-    cur = {"articles": path.startswith("articles/") and not in_upd,
+    # 每一個下拉子項各自對應一頁；父項亮不亮由 navgroup 自己算。
+    # 分類頁（articles/blood-pressure.html 之類）與長文都歸「深入文章」那一支，
+    # 讀者從那裡點進來，回頭時頁首要指向同一個地方。
+    in_upd = path.startswith(("articles/news", "articles/guidelines")) or \
+        path == ALL_UPDATES
+    in_gal = "gallery" in path
+    # 八個分類頁（blood-pressure.html 之類）歸「主題衛教」，
+    # 長文歸「深入文章」——讀者是從哪一支點進來的，回頭就要指向同一支。
+    is_cat = path in {f"articles/{s}.html" for s in CAT_SLUG.values()}
+    cur = {"longform": path == ALL_ARTICLES or (
+               path.startswith("articles/") and not in_upd and not in_gal
+               and not is_cat
+               and path not in (ALL_TOPICS, ALL_FAQ, "articles/index.html")),
+           "topics": is_cat or path in (ALL_TOPICS, "articles/index.html"),
+           "gallery": in_gal,
            "news": path == ALL_NEWS, "guide": path == ALL_GUIDE,
            "about": path == "about.html", "food": path == "food.html",
            "calc": path == "calc.html"}
@@ -1310,7 +1329,8 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     # 「新知&指引」是唯一有次階層的項目：它自己沒有頁面，按下去展開
     # 「新知」與「指引」兩頁。做成 <button> 而不是 <a>，因為它不導向任何地方——
     # 用 <a href="#"> 假裝成連結，鍵盤與讀螢幕軟體都會被騙。
-    def navgroup(prefix: str, label: str, items: list[tuple[str, str, str]]) -> str:
+    def navgroup(gid: str, prefix: str, label: str,
+                 items: list[tuple[str, str, str]]) -> str:
         on = any(cur.get(k) for _h, _t, k in items)
         pre = f'<span class="np">{prefix}</span>' if prefix else ""
         links = "".join(
@@ -1318,19 +1338,22 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
             f'{esc(t)}</a>' for h, t, k in items)
         return (f'<div class="ngrp">'
                 f'<button type="button" class="ngbtn" aria-expanded="false"'
-                f' aria-controls="ngm"{" data-on" if on else ""}>'
+                f' aria-controls="ngm-{gid}"{" data-on" if on else ""}>'
                 f'{pre}{label}'
                 f'<svg class="ngcaret" viewBox="0 0 24 24" width="11" height="11"'
                 f' fill="none" stroke="currentColor" stroke-width="3"'
                 f' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
                 f'<path d="M5 9l7 7 7-7"/></svg></button>'
-                f'<div class="ngmenu" id="ngm" hidden>{links}</div></div>')
+                f'<div class="ngmenu" id="ngm-{gid}" hidden>{links}</div></div>')
 
     # 2026-09-05 加回第六項「新知&指引」（手機只顯示「指引」）。
     # 六項在 375–430px 原本會換行，靠三階斷點 700/410/365 才排得下——
     # 加第七項之前一定要重跑 scratchpad 的 nav 掃描。
-    nav = (navlink("/articles/", "衛教", "文章", "articles")
-           + navgroup("新知&", "指引",
+    nav = (navgroup("edu", "衛教", "文章",
+                    [(f"/{ALL_ARTICLES}", "深入文章", "longform"),
+                     (f"/{ALL_TOPICS}", "主題衛教", "topics"),
+                     ("/articles/gallery.html", "衛教圖卡", "gallery")])
+           + navgroup("upd", "新知&", "指引",
                       [(f"/{ALL_NEWS}", "新知", "news"),
                        (f"/{ALL_GUIDE}", "指引", "guide")])
            + navlink("/food.html", "", "食物", "food", suffix="查詢")
@@ -1573,7 +1596,7 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
 依據國際指引與期刊文獻撰寫，目的是讓一般人也能看懂自己的身體與檢查報告。</p>
 {extra}
 
-<h2>依主題閱讀</h2>
+<h2>主題衛教</h2>
 <div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>
 <div class="cats">{cards}</div>
 {faq_html}
@@ -2042,7 +2065,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
   <a class="htile" href="#deep"><span class="hq">想徹底弄懂一件事</span>
     <span class="hgo">深入文章</span></a>
   <a class="htile" href="#topics"><span class="hq">有明確想查的問題</span>
-    <span class="hgo">依主題閱讀</span></a>
+    <span class="hgo">主題衛教</span></a>
   <a class="htile" href="/calc.html"><span class="hq">拿到報告想換算</span>
     <span class="hgo">腎功能計算</span></a>
   <a class="htile" href="/food.html"><span class="hq">想查某個食物</span>
@@ -2059,7 +2082,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 
 {feat_sect}
 
-<h2 class="sect" id="topics">依主題閱讀</h2>
+<h2 class="sect" id="topics">主題衛教</h2>
 <div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>
 <div class="cats">{cards}</div>
 
@@ -2294,38 +2317,47 @@ def prefbar(left: str = "") -> str:
 # 讀螢幕軟體與鍵盤 Tab 都不會走進去，不必另外處理 aria-hidden。
 NAVMENU_SCRIPT = """<script>
 (function(){
-  var grp=document.querySelector('.ngrp');
-  if(!grp) return;
-  var btn=grp.querySelector('.ngbtn'), menu=grp.querySelector('.ngmenu');
-  if(!btn||!menu) return;
+  var grps=[].slice.call(document.querySelectorAll('.ngrp'));
+  if(!grps.length) return;
 
-  function open(on){
-    btn.setAttribute('aria-expanded', String(on));
-    menu.hidden = !on;
+  function set(g, on){
+    var b=g.querySelector('.ngbtn'), m=g.querySelector('.ngmenu');
+    b.setAttribute('aria-expanded', String(on));
+    m.hidden = !on;
   }
-  btn.addEventListener('click', function(e){
-    e.stopPropagation();
-    open(btn.getAttribute('aria-expanded') !== 'true');
+  function closeAll(except){
+    grps.forEach(function(g){ if(g !== except) set(g, false); });
+  }
+  grps.forEach(function(g){
+    var btn=g.querySelector('.ngbtn'), menu=g.querySelector('.ngmenu');
+    if(!btn||!menu) return;
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var on = btn.getAttribute('aria-expanded') === 'true';
+      closeAll(g);              /* 一次只開一個，兩個面板疊在一起沒人看得懂 */
+      set(g, !on);
+    });
+    btn.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowDown'){
+        e.preventDefault();
+        closeAll(g);
+        set(g, true);
+        var a = menu.querySelector('a');
+        if(a) a.focus();
+      }
+    });
   });
   /* 點面板外面就收起來。用 document 的 click，不是 blur——
      blur 在點面板裡的連結時會先觸發，連結就按不到了。 */
   document.addEventListener('click', function(e){
-    if(!grp.contains(e.target)) open(false);
+    if(!e.target.closest('.ngrp')) closeAll(null);
   });
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true'){
-      open(false);
-      btn.focus();
-    }
-  });
-  /* 鍵盤：在按鈕上按下箭頭直接進第一個項目 */
-  btn.addEventListener('keydown', function(e){
-    if(e.key === 'ArrowDown'){
-      e.preventDefault();
-      open(true);
-      var a = menu.querySelector('a');
-      if(a) a.focus();
-    }
+    if(e.key !== 'Escape') return;
+    var open = grps.filter(function(g){
+      return g.querySelector('.ngbtn').getAttribute('aria-expanded') === 'true';
+    })[0];
+    if(open){ set(open, false); open.querySelector('.ngbtn').focus(); }
   });
 })();
 </script>"""
@@ -2747,7 +2779,7 @@ def build_longform_page(md_pages: list[dict]) -> tuple[str, str]:
 <div class="mag">{cards}</div>
 <h2 class="backlink">還想看什麼</h2>
 <div class="cats">
-  <a href="/articles/"><div class="t">依主題閱讀</div>
+  <a href="/articles/topics.html"><div class="t">主題衛教</div>
     <div class="d">60 則衛教內容，分成八個主題。</div></a>
   <a href="/{ALL_FAQ}"><div class="t">常見問題</div>
     <div class="d">門診最常被問到的問題，每題連到回答它的文章。</div></a>
@@ -2757,6 +2789,48 @@ def build_longform_page(md_pages: list[dict]) -> tuple[str, str]:
               "name": "全部深入文章", "description": desc, "inLanguage": "zh-Hant",
               "url": f"{BASE_URL}/{ALL_ARTICLES}", "author": author_ld()}
     return ALL_ARTICLES, page(title, desc, ALL_ARTICLES, body, jsonld)
+
+
+ALL_TOPICS = "articles/topics.html"
+
+
+def build_topics_page(by_cat: dict[str, list[dict]]) -> tuple[str, str]:
+    """主題衛教：八個主題的入口。
+
+    原本只是 /articles/ 上的一個區塊（舊名「依主題閱讀」）。2026-09-05
+    頁首的「衛教文章」改成下拉之後，三個子項各自需要一個落點，
+    所以獨立成頁；/articles/ 仍是總覽，從頁尾與首頁進得去。
+    """
+    cards = "".join(
+        f'<a href="/articles/{CAT_SLUG[c]}.html">'
+        f'<div class="t">{esc(c)}（{len(v)} 則）</div>'
+        f'<div class="d">{esc(CAT_INTRO.get(c, "")[:80])}…</div></a>'
+        for c, v in by_cat.items())
+    n = sum(len(v) for v in by_cat.values())
+    title = f"主題衛教：{len(by_cat)} 個主題、{n} 則腎臟與三高衛教｜{SITE_NAME}"
+    desc = (f"血壓、血糖、血脂、飲食、用藥安全、生活習慣、檢查數值與常見迷思——"
+            f"{n} 則衛教內容分成 {len(by_cat)} 個主題，適合想直接找答案的人。")
+    body = f"""
+<h1>主題衛教</h1>
+<p class="lede">{n} 則衛教內容，分成 {len(by_cat)} 個主題。
+每一則都是一個具體問題的答案，適合<strong>已經知道自己想查什麼</strong>的人。
+想把一個主題徹底搞懂，看<a href="/{ALL_ARTICLES}">深入文章</a>。</p>
+<div class="cats">{cards}</div>
+
+<h2 class="backlink">還想看什麼</h2>
+<div class="cats">
+  <a href="/{ALL_ARTICLES}"><div class="t">深入文章</div>
+    <div class="d">完整長文，適合想把一個主題徹底搞懂的人。</div></a>
+  <a href="/{ALL_FAQ}"><div class="t">常見問題</div>
+    <div class="d">門診最常被問到的問題，每題連到回答它的那篇文章。</div></a>
+  <a href="/articles/gallery.html"><div class="t">衛教圖卡</div>
+    <div class="d">社群上發表過的圖解，依系列整理並附完整說明。</div></a>
+</div>
+"""
+    jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
+              "name": "主題衛教", "description": desc, "inLanguage": "zh-Hant",
+              "url": f"{BASE_URL}/{ALL_TOPICS}", "author": author_ld()}
+    return ALL_TOPICS, page(title, desc, ALL_TOPICS, body, jsonld)
 
 
 def build_faq_page(md_pages: list[dict]) -> tuple[str, str]:
@@ -4196,6 +4270,7 @@ def main() -> int:
     # 兩個「完整清單」頁：首頁與總覽頁只列一部分，這裡是全部。
     # 不進導覽列——導覽項目愈少手機頁首愈鬆，這兩頁從內容區進去就夠了。
     for path, html in ([build_longform_page(md_pages), build_faq_page(md_pages),
+                        build_topics_page(by_cat),
                         build_news_page(), build_guidelines_page(),
                         build_updates_redirect()]
                        + build_news_cat_pages()):
@@ -4204,6 +4279,7 @@ def main() -> int:
     n_faq = sum(1 for _l, _g, items in FAQ_GROUPS for _ in items)
     print(f"  {ALL_ARTICLES}　(全部深入文章 {len(md_pages)} 篇)")
     print(f"  {ALL_FAQ}　(全部常見問題 {n_faq} 題)")
+    print(f"  {ALL_TOPICS}　(主題衛教 {len(by_cat)} 個主題)")
     n_guide = sum(len(x) for _o, _i, x in GUIDELINES)
     ncats = live_news_cats()
     print(f"  {ALL_NEWS}　(新知入口：{len(PAPERS)} 篇研究，{len(ncats)} 個主題)")

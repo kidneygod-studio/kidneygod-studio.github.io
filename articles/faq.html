@@ -143,8 +143,8 @@ box-shadow:0 12px 30px rgba(0,0,0,.14);padding:6px;overflow:hidden}
 .ngmenu[hidden]{display:none}
 .ngmenu a{display:block;padding:10px 14px;border-radius:8px;font-size:14.5px;
 white-space:nowrap}
-@media(max-width:410px){.ngbtn{padding:9px 5px;font-size:13.5px;gap:3px}}
-@media(max-width:365px){.ngbtn{padding:9px 2px;font-size:13px;gap:2px}}
+@media(max-width:450px){.ngbtn{padding:9px 5px;font-size:13.5px;gap:3px}}
+@media(max-width:390px){.ngbtn{padding:9px 2px;font-size:13px;gap:2px}}
 /* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
 header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
 header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
@@ -169,10 +169,11 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
    2026-09-04 逐寬度掃描才發現這是既有問題，與當天加減導覽項目無關——
    斷點是「一階一階往下收」的設計，只在幾個測試過的寬度正確，
    兩階之間的區段沒人量過就會漏掉。改斷點後一定要整段掃，不能只看幾個點。 */
-/* 中間階。門檻維持 410——**標誌與導覽的門檻必須對齊**：
-   我一度把這裡改成 401，結果 402–410 這段落回上一階、標誌從 83 變 91px，
-   多出來的 8px 剛好讓導覽換行。兩者在同一個媒體查詢裡一起收才不會互相踩。 */
-@media(max-width:410px){
+/* 中間階。門檻 2026-09-05 從 410 提高到 450：「衛教文章」也做成下拉之後，
+   兩個下拉箭頭各佔約 15px，411–450px 這段就排不下了。
+   **標誌與導覽的門檻必須對齊**：一度把導覽切在 401、標誌切在 410，
+   402–410 這段標誌落回大的一階、多出 8px 剛好讓導覽換行。 */
+@media(max-width:450px){
   .brand{font-size:.88rem;gap:5px}
   .brand svg{width:20px;height:20px}
   header.site nav a{padding:9px 5px;font-size:13.5px}
@@ -182,17 +183,23 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
        內距 8／字 13.5／間距 2 → 268px，402px 以上可用
        內距 5／字 13.5／間距 2 → 232px，360px 以上可用
        內距 2／字 13  ／間距 0 → 180px，320px 以上可用
-   加上標誌各階的寬度（91／83／74），真正需要最緊設定的只有 ≤365px。
+   加上標誌各階的寬度（91／83／74）與兩個下拉箭頭，門檻是 390。
 
    ⚠ 2026-09-05 我一度把這一階套到 ≤440，讓所有手機都吃最緊的設定——
    六項確實排得下了，但 393px 時空著 90px、430px 時空著 119px，
    字卻縮到 13px、間距歸零。作者反映「頁首特別小且擁擠」，是對的。
    排得下不等於排得好，能用的空間要用掉。 */
-@media(max-width:365px){
+@media(max-width:390px){
   .brand{font-size:.8rem;gap:4px}
   .brand svg{width:18px;height:18px}
   header.site nav a{padding:9px 2px;font-size:13px}
   header.site nav{gap:0}
+}
+/* 最後一道。330px 以下連最緊的設定都排不下，把下拉箭頭收掉再省 30px。
+   按鈕本身照常可以按，只是少了「這裡會展開」的視覺提示——
+   在這個寬度下，排成兩排的代價比少一個箭頭大。 */
+@media(max-width:330px){
+  .ngcaret{display:none}
 }
 h1{font-size:1.85rem;line-height:1.35;margin:28px 0 10px;letter-spacing:-.01em}
 /* 區塊標題左側的主色錨點。長文有 10–12 個 h2，這條線提供滑動時的節奏感，
@@ -693,7 +700,7 @@ letter-spacing:.4px;line-height:1.5}
 <body>
 <header class="site"><div class="wrap">
 <a class="brand" href="/"><svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true"><path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 4.6 13.6 4.6Z"/></svg><span>護腎教室</span></a>
-<nav><a href="/articles/" aria-current="page"><span class="np">衛教</span>文章</a><div class="ngrp"><button type="button" class="ngbtn" aria-expanded="false" aria-controls="ngm"><span class="np">新知&</span>指引<svg class="ngcaret" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></button><div class="ngmenu" id="ngm" hidden><a href="/articles/news.html">新知</a><a href="/articles/guidelines.html">指引</a></div></div><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
+<nav><div class="ngrp"><button type="button" class="ngbtn" aria-expanded="false" aria-controls="ngm-edu"><span class="np">衛教</span>文章<svg class="ngcaret" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></button><div class="ngmenu" id="ngm-edu" hidden><a href="/articles/long-form.html">深入文章</a><a href="/articles/topics.html">主題衛教</a><a href="/articles/gallery.html">衛教圖卡</a></div></div><div class="ngrp"><button type="button" class="ngbtn" aria-expanded="false" aria-controls="ngm-upd"><span class="np">新知&</span>指引<svg class="ngcaret" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></button><div class="ngmenu" id="ngm-upd" hidden><a href="/articles/news.html">新知</a><a href="/articles/guidelines.html">指引</a></div></div><a href="/food.html">食物<span class="np">查詢</span></a><a href="/calc.html"><span class="np">腎功能</span>計算</a><a href="/about.html"><span class="np">關於</span>作者</a><a href="/shop.html" class="shoplink"><span class="np">護腎</span>遊戲</a></nav>
 </div></header>
 <main class="wrap">
 <div class="prefbar"><div class="preficons"><button type="button" class="prefbtn fsbtn" id="fsBtn"><span class="fsglyph" aria-hidden="true">A</span></button><button type="button" class="prefbtn thbtn" id="thBtn"><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="auto" aria-hidden="true" hidden><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 000 17z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="light" aria-hidden="true" hidden><circle cx="12" cy="12" r="4.4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></g></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="dark" aria-hidden="true" hidden><path d="M20 14.2A8.4 8.4 0 019.8 4 8.6 8.6 0 1020 14.2z" fill="currentColor"/></svg></button></div><div class="preffull"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div></div>
@@ -790,38 +797,47 @@ letter-spacing:.4px;line-height:1.5}
 })();
 </script><script>
 (function(){
-  var grp=document.querySelector('.ngrp');
-  if(!grp) return;
-  var btn=grp.querySelector('.ngbtn'), menu=grp.querySelector('.ngmenu');
-  if(!btn||!menu) return;
+  var grps=[].slice.call(document.querySelectorAll('.ngrp'));
+  if(!grps.length) return;
 
-  function open(on){
-    btn.setAttribute('aria-expanded', String(on));
-    menu.hidden = !on;
+  function set(g, on){
+    var b=g.querySelector('.ngbtn'), m=g.querySelector('.ngmenu');
+    b.setAttribute('aria-expanded', String(on));
+    m.hidden = !on;
   }
-  btn.addEventListener('click', function(e){
-    e.stopPropagation();
-    open(btn.getAttribute('aria-expanded') !== 'true');
+  function closeAll(except){
+    grps.forEach(function(g){ if(g !== except) set(g, false); });
+  }
+  grps.forEach(function(g){
+    var btn=g.querySelector('.ngbtn'), menu=g.querySelector('.ngmenu');
+    if(!btn||!menu) return;
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var on = btn.getAttribute('aria-expanded') === 'true';
+      closeAll(g);              /* 一次只開一個，兩個面板疊在一起沒人看得懂 */
+      set(g, !on);
+    });
+    btn.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowDown'){
+        e.preventDefault();
+        closeAll(g);
+        set(g, true);
+        var a = menu.querySelector('a');
+        if(a) a.focus();
+      }
+    });
   });
   /* 點面板外面就收起來。用 document 的 click，不是 blur——
      blur 在點面板裡的連結時會先觸發，連結就按不到了。 */
   document.addEventListener('click', function(e){
-    if(!grp.contains(e.target)) open(false);
+    if(!e.target.closest('.ngrp')) closeAll(null);
   });
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true'){
-      open(false);
-      btn.focus();
-    }
-  });
-  /* 鍵盤：在按鈕上按下箭頭直接進第一個項目 */
-  btn.addEventListener('keydown', function(e){
-    if(e.key === 'ArrowDown'){
-      e.preventDefault();
-      open(true);
-      var a = menu.querySelector('a');
-      if(a) a.focus();
-    }
+    if(e.key !== 'Escape') return;
+    var open = grps.filter(function(g){
+      return g.querySelector('.ngbtn').getAttribute('aria-expanded') === 'true';
+    })[0];
+    if(open){ set(open, false); open.querySelector('.ngbtn').focus(); }
   });
 })();
 </script>
