@@ -150,17 +150,25 @@ header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
   .brand svg{width:20px;height:20px}
   header.site nav a{padding:9px 5px;font-size:13.5px}
 }
-/* 最緊的一階。門檻 2026-09-05 從 365 放寬到 440：
+/* 導覽最緊的一階。門檻 2026-09-05 從 365 放寬到 440：
    加入第六項「新知&指引」之後，375–430px（iPhone SE 375、13/14 的 390、
    14/15 Pro 的 393、Pro Max 的 430——正好是最常見的一批）全部會換行，
    而 360 與 344 因為已經落在這一階反而排得下。把門檻拉到 440 讓所有手機
    都吃到這一階，六項才排得下一行。
-   代價是項目間距歸零、字級 13px；垂直內距一律不動，點擊區高度維持 42px。 */
+   垂直內距一律不動，點擊區高度維持 42px。
+
+   ⚠ 這一階**只收導覽，不動標誌**。第一版連 .brand 一起縮，結果 440px 時
+   標誌被縮到 12.8px／74px 寬，中間卻空著 146px——導覽排不下是導覽的問題，
+   標誌是被連坐的。標誌自己的縮小階仍維持在下面的 ≤365。 */
 @media(max-width:440px){
-  .brand{font-size:.8rem;gap:4px}
-  .brand svg{width:18px;height:18px}
   header.site nav a{padding:9px 2px;font-size:13px}
   header.site nav{gap:0}
+}
+/* 標誌最小的一階。維持 365：340–365 這段（多數 Android 的 360、部分 344）
+   是兩階之間的漏網區，再往上放大就會和導覽擠在一起。 */
+@media(max-width:365px){
+  .brand{font-size:.8rem;gap:4px}
+  .brand svg{width:18px;height:18px}
 }
 h1{font-size:1.85rem;line-height:1.35;margin:28px 0 10px;letter-spacing:-.01em}
 /* 區塊標題左側的主色錨點。長文有 10–12 個 h2，這條線提供滑動時的節奏感，
