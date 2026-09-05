@@ -4,3 +4,7 @@ __pycache__/
 # 長文大圖的原圖（2752x1536、共 26 MB）。網站只需要 make_hero.py 壓過的那份，
 # 原圖進了 git 歷史就永遠拿不掉。要換圖時把新原圖放進去重跑 make_hero.py 即可。
 hero_src/
+
+# 血液透析中心那個站的原圖，理由同上。壓過的 dialysis/img/ 才進版控，
+# 換圖時把新原圖丟回去重跑 make_dialysis_img.py。
+dialysis/img_src/

@@ -153,7 +153,11 @@ background:linear-gradient(115deg,#4b7fae 0%,#7fa8c9 42%,#cfe0ec 100%)}
 .hero .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero::after{content:"";position:absolute;inset:0;
 background:linear-gradient(90deg,rgba(20,40,72,.72) 0%,rgba(20,40,72,.34) 55%,rgba(20,40,72,.06) 100%)}
-.hero .wrap{position:relative;z-index:2;padding-top:60px;padding-bottom:60px}
+/* width:100% 是必要的：.hero 是 flex 容器，.wrap 當 flex item 時寬度由內容
+   決定，不會填滿——標題會縮成 598px 並被 margin:0 auto 推到畫面中間，
+   和頁首、頁尾、下面各區塊的左緣差 281px（1280px 下實測）。 */
+.hero .wrap{position:relative;z-index:2;width:100%;
+padding-top:60px;padding-bottom:60px}
 .hero .eyebrow{font-size:13px;letter-spacing:.28em;text-transform:uppercase;
 color:#bfd8ec;margin:0 0 14px}
 .hero h1{font-family:var(--serif);font-size:clamp(28px,5.2vw,50px);line-height:1.32;
@@ -188,8 +192,11 @@ color:var(--navy);line-height:1.4}
 .split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);
 gap:clamp(28px,5vw,60px);align-items:center}
 @media(max-width:860px){.split{grid-template-columns:1fr}}
+/* 4:3 而不是參考站的直式：那邊放的是醫師人像，直式合理；
+   這裡放的是透析治療區的空景，橫式才看得出空間感，
+   硬裁成直式會把兩側的窗與走道切掉六成。 */
 .split .fig{border-radius:14px;overflow:hidden;box-shadow:0 18px 40px rgba(23,48,84,.14);
-aspect-ratio:4/5;background:linear-gradient(150deg,#c9dcea,#eaf2f8)}
+aspect-ratio:4/3;background:linear-gradient(150deg,#c9dcea,#eaf2f8)}
 .split .fig img{width:100%;height:100%;object-fit:cover}
 .split h3{font-family:var(--serif);font-size:clamp(20px,2.6vw,26px);color:var(--navy);
 margin:0 0 14px;line-height:1.5}
@@ -444,6 +451,13 @@ def shell(path: str, title: str, desc: str, body: str,
         for h, t in NAV)
     ld = (f'<script type="application/ld+json">'
           f'{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else "")
+    # 標誌：img/logo-white.png 放進去就自動換掉內建的線條 SVG。
+    # 頁首與頁尾都是深藍底，所以用白色那版；navy 那版留給 favicon。
+    mark = ('<img src="img/logo-white.png" alt="" aria-hidden="true" '
+            'width="26" height="26" style="height:26px;width:auto">'
+            if (OUT / "img" / "logo-white.png").exists() else LOGO_SVG)
+    icon = ('<link rel="icon" href="img/logo.png">'
+            if (OUT / "img" / "logo.png").exists() else "")
     # 還有待填欄位就擋搜尋引擎。這是一間真實醫療機構的頁面，
     # 帶著「待填：透析室電話」被索引，比晚一點上線糟糕得多。
     # FACTS 全部填完之後這一行會自己消失，不必記得回來改。
@@ -468,12 +482,13 @@ def shell(path: str, title: str, desc: str, body: str,
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap">
 <link rel="stylesheet" href="assets/site.css?v={ASSET_V}">
+{icon}
 {ld}
 </head>
 <body>
 <header class="hd">
 <div class="wrap">
-  <a class="logo" href="index.html">{LOGO_SVG}<span>血液透析中心</span></a>
+  <a class="logo" href="index.html">{mark}<span>血液透析中心</span></a>
   <button class="burger" type="button" aria-expanded="false" aria-label="選單">
     <span></span><span></span><span></span></button>
   <nav>{nav}<a class="cta" href="visit.html#booking">預約與諮詢</a></nav>
