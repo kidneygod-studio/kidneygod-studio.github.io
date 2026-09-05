@@ -212,7 +212,16 @@ def check_text_size_adjust():
         h = p.read_text("utf-8", "replace")
         if "<body" not in h:
             continue
-        if "text-size-adjust" not in h:
+        # 衛教站把 CSS 內嵌在 <style>，但 /dialysis/ 那個站是連外部樣式表，
+        # 只看 HTML 會誤報。連進來的本地樣式表也要一起看。
+        css = ""
+        for href in re.findall(r'<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"', h):
+            if href.startswith(("http://", "https://", "//")):
+                continue
+            f = (ROOT if href.startswith("/") else p.parent) / href.lstrip("/").split("?")[0]
+            with contextlib.suppress(OSError):
+                css += f.read_text("utf-8", "replace")
+        if "text-size-adjust" not in h + css:
             bad.append(f"{rel(p)} 缺 text-size-adjust（手機字級會被瀏覽器改掉）")
     if VERBOSE and not bad:
         print("    所有頁面都關掉了瀏覽器的自動字體放大")

@@ -9,7 +9,7 @@
      其他來源 一律不碰（Firebase、Google 字型等交給瀏覽器自己處理）
 
    VERSION 由 bump_assets.py 自動更新，改版時舊快取會整批清掉。 */
-const VERSION = "kg-bda5cb6994";
+const VERSION = "kg-305034ecc4";
 const SHELL = `${VERSION}-shell`, IMG = `${VERSION}-img`;
 
 /* 先抓起來的骨架：三個頁面加標誌。JS 與圖片留給實際瀏覽時自然填入，
@@ -42,6 +42,12 @@ self.addEventListener("fetch", e => {
 
   const url = new URL(req.url);
   if(url.origin !== self.location.origin) return;      // 外部資源不插手
+
+  /* /dialysis/ 是掛在同一個網域下的另一個網站（血液透析中心），有自己的
+     產生器與改版節奏。這個 SW 對圖片是「快取優先且不看查詢字串」，
+     會讓那邊換過的圖永遠停在舊版，所以整個子目錄一律不接管，
+     交給瀏覽器自己的 HTTP 快取處理。 */
+  if(url.pathname.startsWith("/dialysis/")) return;
 
   /* 網頁：連線優先。拿不到（離線）才退回快取，最後退回商城首頁
      （安裝成 App 的使用者是為了商城與遊戲而來，退回那裡比退回文章首頁有用）。 */

@@ -1,0 +1,248 @@
+:root{
+  --navy:#1e3a63; --navy-d:#162c4b; --blue:#2e7fb8; --teal:#14807a;
+  --mist:#f3f7fa; --ink:#333a44; --mut:#6b7480; --line:#dce5ec;
+  --bg:#fff; --maxw:1160px; --pad:24px;
+  --serif:"Noto Serif TC",Georgia,"Songti TC",serif;
+  --sans:"Noto Sans TC",-apple-system,"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);
+line-height:1.85;font-size:16.5px;-webkit-font-smoothing:antialiased;
+/* 不加這一行，iOS Safari 橫向時會自己放大字，版面會跑掉。
+   check_site.py 第 5 項會擋，兩個站用同一條規則。 */
+-webkit-text-size-adjust:100%;text-size-adjust:100%;
+overflow-wrap:break-word}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+
+/* 待填標記：黃底，掃一眼就知道還缺什麼，上線前不該存在。
+   不能寫 white-space:nowrap——待填的字比實際值長得多（「待填：透析時段，
+   例如 一三五／二四六，早中晚三班」），不換行會把整頁撐出橫向捲軸，
+   而且是在還沒放真資料、最容易被忽略的階段。 */
+.todo{background:#fff3c4;color:#7a5b00;border:1px dashed #d9ac2e;
+border-radius:4px;padding:0 6px;font-size:.86em;
+white-space:normal;overflow-wrap:anywhere}
+
+/* ---- 頁首：固定在最上面，捲動後加陰影 ---- */
+.hd{position:fixed;inset:0 0 auto;z-index:60;background:var(--navy);
+transition:box-shadow .25s,background .25s}
+.hd.stuck{box-shadow:0 2px 18px rgba(15,32,58,.28)}
+.hd .wrap{display:flex;align-items:center;gap:18px;height:68px}
+.logo{display:flex;align-items:center;gap:10px;color:#fff;font-family:var(--serif);
+font-size:19px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.logo:hover{text-decoration:none;color:#fff}
+.logo svg{flex-shrink:0}
+.hd nav{margin-left:auto;display:flex;align-items:center;gap:26px}
+.hd nav a{color:#dbe6f2;font-size:15px;padding:6px 0;position:relative}
+.hd nav a:hover{color:#fff;text-decoration:none}
+/* 底線從中間長出來，是這類醫療網站很常見的一個小動作 */
+.hd nav a::after{content:"";position:absolute;left:50%;right:50%;bottom:0;height:2px;
+background:#7fb6e0;transition:left .22s,right .22s}
+.hd nav a:hover::after,.hd nav a[aria-current]::after{left:0;right:0}
+.hd nav a[aria-current]{color:#fff}
+.cta{background:#fff;color:var(--navy)!important;border-radius:999px;
+padding:9px 20px!important;font-weight:700;font-size:14.5px;
+transition:transform .18s,box-shadow .18s}
+.cta::after{display:none}
+.cta:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.22);
+text-decoration:none}
+/* 手機：選單收成抽屜 */
+.burger{display:none;margin-left:auto;width:44px;height:44px;border:0;padding:0;
+background:none;color:#fff;cursor:pointer}
+.burger span{display:block;width:22px;height:2px;background:#fff;margin:5px auto;
+transition:transform .25s,opacity .2s}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(max-width:920px){
+  .burger{display:block}
+  .hd nav{position:fixed;inset:68px 0 auto;flex-direction:column;align-items:stretch;
+  gap:0;background:var(--navy-d);padding:8px 0 18px;margin:0;
+  max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .hd nav.open{max-height:70vh;overflow:auto}
+  .hd nav a{padding:14px 24px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .hd nav a::after{display:none}
+  .cta{margin:14px 24px 0;text-align:center}
+}
+
+/* ---- 主視覺 ---- */
+.hero{position:relative;margin-top:68px;min-height:min(74vh,620px);
+display:flex;align-items:center;color:#fff;overflow:hidden;
+background:linear-gradient(115deg,#4b7fae 0%,#7fa8c9 42%,#cfe0ec 100%)}
+.hero .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero::after{content:"";position:absolute;inset:0;
+background:linear-gradient(90deg,rgba(20,40,72,.72) 0%,rgba(20,40,72,.34) 55%,rgba(20,40,72,.06) 100%)}
+.hero .wrap{position:relative;z-index:2;padding-top:60px;padding-bottom:60px}
+.hero .eyebrow{font-size:13px;letter-spacing:.28em;text-transform:uppercase;
+color:#bfd8ec;margin:0 0 14px}
+.hero h1{font-family:var(--serif);font-size:clamp(28px,5.2vw,50px);line-height:1.32;
+margin:0 0 18px;max-width:16em;text-shadow:0 2px 14px rgba(10,25,48,.35)}
+.hero p{max-width:30em;font-size:clamp(15px,1.9vw,18px);color:#e7f0f8;margin:0 0 28px}
+.hbtns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;border-radius:999px;padding:13px 30px;font-weight:700;
+font-size:15.5px;transition:transform .18s,box-shadow .18s,background .18s}
+.btn:hover{transform:translateY(-2px);text-decoration:none}
+.btn.solid{background:#fff;color:var(--navy)}
+.btn.solid:hover{box-shadow:0 8px 22px rgba(0,0,0,.25)}
+.btn.ghost{border:1.5px solid rgba(255,255,255,.75);color:#fff}
+.btn.ghost:hover{background:rgba(255,255,255,.14)}
+
+/* ---- 區塊骨架：英文小標在上、中文大標在下 ---- */
+/* overflow-x:clip 是給淡入動畫用的安全網：.reveal 的起始狀態帶
+   translateX，在動畫播完之前那 30px 會伸到視窗外、產生橫向捲軸
+   （393px 手機上實測多出 6px）。用 clip 而不是 hidden：hidden 會
+   建立捲動容器，把裡面的 position:sticky 一起弄壞。 */
+section{padding:clamp(56px,8vw,96px) 0;overflow-x:clip}
+section.tint{background:var(--mist)}
+.shead{margin:0 0 clamp(28px,4vw,46px)}
+.shead .en{display:block;font-size:12.5px;letter-spacing:.34em;text-transform:uppercase;
+color:var(--blue);font-weight:700;margin-bottom:8px}
+.shead h2{font-family:var(--serif);font-size:clamp(24px,3.6vw,34px);margin:0;
+color:var(--navy);line-height:1.4}
+.shead .sub{margin:12px 0 0;color:var(--mut);max-width:44em}
+.shead.mid{text-align:center}
+.shead.mid .sub{margin-left:auto;margin-right:auto}
+
+/* ---- 關於：左圖右文 ---- */
+.split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);
+gap:clamp(28px,5vw,60px);align-items:center}
+@media(max-width:860px){.split{grid-template-columns:1fr}}
+.split .fig{border-radius:14px;overflow:hidden;box-shadow:0 18px 40px rgba(23,48,84,.14);
+aspect-ratio:4/5;background:linear-gradient(150deg,#c9dcea,#eaf2f8)}
+.split .fig img{width:100%;height:100%;object-fit:cover}
+.split h3{font-family:var(--serif);font-size:clamp(20px,2.6vw,26px);color:var(--navy);
+margin:0 0 14px;line-height:1.5}
+.split p{margin:0 0 16px}
+.facts{list-style:none;margin:26px 0 0;padding:0;display:grid;
+grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:14px}
+.facts li{background:#fff;border:1px solid var(--line);border-radius:12px;
+padding:16px 18px}
+section.tint .facts li{background:#fff}
+.facts b{display:block;font-family:var(--serif);font-size:23px;color:var(--navy);
+line-height:1.3}
+.facts span{font-size:13.5px;color:var(--mut)}
+
+/* ---- 卡片格線 ---- */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));
+gap:clamp(18px,2.6vw,26px)}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+display:flex;flex-direction:column;transition:transform .22s,box-shadow .22s}
+.card:hover{transform:translateY(-5px);box-shadow:0 16px 34px rgba(23,48,84,.13);
+text-decoration:none}
+.card .ph{aspect-ratio:4/3;background:linear-gradient(140deg,#dbe8f2,#f0f5f9);
+position:relative}
+.card .ph img{width:100%;height:100%;object-fit:cover}
+.card .bd{padding:20px 22px 24px}
+.card h3{font-family:var(--serif);font-size:19px;color:var(--navy);margin:0 0 8px;
+line-height:1.5}
+.card p{margin:0;color:var(--mut);font-size:15px;line-height:1.8}
+.card .more{display:inline-block;margin-top:14px;color:var(--blue);font-size:14.5px;
+font-weight:700}
+
+/* ---- 公告條 ---- */
+.notice{border-left:5px solid var(--teal);background:#fff;border:1px solid var(--line);
+border-left:5px solid var(--teal);border-radius:12px;padding:22px 26px}
+.notice h3{margin:0 0 10px;font-family:var(--serif);font-size:19px;color:var(--navy)}
+.notice ul{margin:0;padding-left:1.2em;color:var(--mut)}
+.notice li+li{margin-top:6px}
+
+/* ---- 流程橫幅 ---- */
+.band{position:relative;color:#fff;background:linear-gradient(120deg,#1e3a63,#2e7fb8);
+overflow:hidden}
+.band .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35}
+.band::after{content:"";position:absolute;inset:0;background:rgba(20,40,72,.55)}
+.band .wrap{position:relative;z-index:2}
+.band .shead h2,.band .shead .en{color:#fff}
+.band .shead .en{color:#a9cbe8}
+.band .shead .sub{color:#d8e6f2}
+.steps{list-style:none;margin:0;padding:0;display:grid;
+grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:22px}
+.steps li{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);
+border-radius:14px;padding:24px 22px;backdrop-filter:blur(2px)}
+.steps .n{font-family:var(--serif);font-size:34px;line-height:1;color:#a9cbe8;
+display:block;margin-bottom:10px}
+.steps h3{margin:0 0 8px;font-size:17.5px;font-family:var(--serif)}
+.steps p{margin:0;font-size:14.5px;color:#dbe8f3;line-height:1.8}
+
+/* ---- 常見問題手風琴 ---- */
+.faq{border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;padding:20px 44px 20px 0;position:relative;
+font-family:var(--serif);font-size:17.5px;color:var(--navy);line-height:1.6}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";position:absolute;right:12px;top:50%;width:11px;height:11px;
+border-right:2px solid var(--blue);border-bottom:2px solid var(--blue);
+transform:translateY(-70%) rotate(45deg);transition:transform .25s}
+.faq details[open] summary::after{transform:translateY(-30%) rotate(-135deg)}
+.faq summary:hover{color:var(--blue)}
+.faq .ans{padding:0 0 22px;color:var(--mut);max-width:52em}
+.faq .ans p{margin:0 0 12px}
+.faq .ans p:last-child{margin:0}
+
+/* ---- 頁尾 ---- */
+footer.site{background:var(--navy);color:#c7d6e6;padding:56px 0 30px;font-size:14.5px}
+footer.site a{color:#c7d6e6}
+footer.site a:hover{color:#fff}
+.fgrid{display:grid;grid-template-columns:minmax(0,2fr) repeat(auto-fit,minmax(150px,1fr));
+gap:32px}
+.fgrid h4{font-family:var(--serif);color:#fff;font-size:16px;margin:0 0 12px}
+.fgrid ul{list-style:none;margin:0;padding:0}
+.fgrid li+li{margin-top:8px}
+.fbrand{font-family:var(--serif);color:#fff;font-size:19px;margin:0 0 10px}
+.fnote{margin-top:34px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14);
+font-size:13px;color:#93a8bf;line-height:1.9}
+
+/* ---- 浮動預約鈕 ---- */
+.float{position:fixed;right:20px;bottom:20px;z-index:55;display:flex;align-items:center;
+gap:9px;background:var(--teal);color:#fff!important;border-radius:999px;
+padding:14px 22px;font-weight:700;font-size:15px;
+box-shadow:0 10px 26px rgba(11,74,70,.35);transition:transform .2s,box-shadow .2s}
+.float:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(11,74,70,.45);
+text-decoration:none}
+@media(max-width:520px){.float{right:14px;bottom:14px;padding:13px 18px;font-size:14px}}
+
+/* ---- 捲動淡入 ----
+   用 IntersectionObserver 加 .in，不是 CSS animation：只播一次、
+   而且沒有 JS 時內容照樣看得到（下面 .no-js 直接把它變成顯示狀態）。 */
+.reveal{opacity:0;transform:translateY(26px);
+transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1);
+transition-delay:var(--d,0s)}
+/* 左右進場只在雙欄版面用得上。單欄時圖與文是上下排的，
+   還做左右滑動只會讓人覺得畫面在晃。 */
+@media(min-width:861px){
+  .reveal.left{transform:translateX(-30px)}
+  .reveal.right{transform:translateX(30px)}
+}
+.reveal.in{opacity:1;transform:none}
+.no-js .reveal{opacity:1;transform:none}
+/* 使用者要求減少動態就全部關掉——這個站的讀者有相當比例是長輩與暈眩病人 */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .card:hover,.btn:hover,.cta:hover,.float:hover{transform:none}
+}
+
+/* ---- 內頁 ---- */
+.page-hero{margin-top:68px;background:linear-gradient(120deg,#1e3a63,#3a6d9e);
+color:#fff;padding:clamp(46px,7vw,84px) 0}
+.page-hero .en{font-size:12.5px;letter-spacing:.34em;text-transform:uppercase;
+color:#a9cbe8;font-weight:700;display:block;margin-bottom:8px}
+.page-hero h1{font-family:var(--serif);font-size:clamp(26px,4.4vw,40px);margin:0;
+line-height:1.4}
+.page-hero p{margin:14px 0 0;color:#d8e6f2;max-width:40em}
+.prose{max-width:44em}
+.prose h2{font-family:var(--serif);color:var(--navy);font-size:clamp(21px,2.8vw,27px);
+margin:44px 0 14px;line-height:1.5}
+.prose h3{font-family:var(--serif);color:var(--navy);font-size:19px;margin:28px 0 10px}
+.prose p{margin:0 0 16px}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:1.4em}
+.prose li{margin-bottom:8px}
+.prose table{width:100%;border-collapse:collapse;margin:0 0 20px;font-size:15px}
+.prose th,.prose td{border:1px solid var(--line);padding:11px 13px;text-align:left;
+vertical-align:top}
+.prose th{background:var(--mist);color:var(--navy);font-weight:700}
+.disc{margin-top:48px;background:var(--mist);border-left:4px solid var(--blue);
+border-radius:0 10px 10px 0;padding:18px 22px;font-size:14.5px;color:var(--mut)}
