@@ -1119,10 +1119,10 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     # 數字欄位拉到 500px 寬只會更難用，而它的公式表已用 .tw.prose 修好。
     wide_cls = " wide" if path in WIDE_PAGES else ""
 
-    # 目前所在區塊要標示出來，讀者才知道自己在哪一層
-    in_gallery = "gallery" in path
-    in_articles = path.startswith("articles/") and not in_gallery
-    cur = {"articles": in_articles, "gallery": in_gallery,
+    # 目前所在區塊要標示出來，讀者才知道自己在哪一層。
+    # 圖卡頁也算在「衛教文章」底下——2026-09-05 拿掉圖卡分頁之後，
+    # 圖卡的唯一入口就在文章頁裡，頁首要標的是那一層。
+    cur = {"articles": path.startswith("articles/"),
            "about": path == "about.html", "food": path == "food.html",
            "calc": path == "calc.html"}
 
@@ -1137,12 +1137,14 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
         suf = f'<span class="np">{suffix}</span>' if suffix else ""
         return f'<a href="{href}"{c}{mark}>{pre}{label}{suf}</a>'
 
-    # 手機上顯示：文章／圖卡／食物／計算／作者／遊戲
+    # 手機上顯示：文章／食物／計算／作者／遊戲
     # 2026-09-04 一度加入第七項「常見問答」，手機上必須把三個斷點全部收緊
     # 才排得下，作者反映太擠——六項是這個頁首的實際上限。常見問題改成
     # 衛教文章頁裡的一個區塊（/articles/#faq）。
+    # 2026-09-05 再拿掉「衛教圖卡」剩五項，同樣改成文章頁裡的一個區塊
+    # （/articles/#gallery）——圖卡本來就是衛教內容的一種呈現，
+    # 和長文、分類並列在同一頁比自成一個分頁更符合讀者的心智模型。
     nav = (navlink("/articles/", "衛教", "文章", "articles")
-           + navlink("/articles/gallery.html", "衛教", "圖卡", "gallery")
            + navlink("/food.html", "", "食物", "food", suffix="查詢")
            + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
            + navlink("/about.html", "關於", "作者", "about")
@@ -1291,7 +1293,8 @@ def build_category(cat: str, items: list[dict],
 
 
 def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
-                n_gallery: int = 0) -> tuple[str, str]:
+                n_gallery: int = 0,
+                series: list[dict] | None = None) -> tuple[str, str]:
     path = "articles/index.html"
     title = f"腎臟與三高衛教文章總覽｜{SITE_NAME}"
     desc = ("腎臟科醫師整理的慢性腎臟病與三高衛教文章：血壓、血糖、血脂、飲食、用藥安全、"
@@ -1353,12 +1356,28 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
                         f'<ul class="qlist">{faq_list_html(feat)}</ul>'
                         + more_link(ALL_FAQ, f"全部 {len(alive)} 個常見問題"))
 
+    # 衛教圖卡：2026-09-05 拿掉分頁之後，這裡是進圖卡的唯一入口，
+    # 所以從原本一張薄卡片改成把五個系列直接攤開——單一張「共 107 張」的
+    # 卡片點進去還要再選一次系列，而讀者其實是照系列在找的。
+    # 用 .cats 而不是 .feat：和上面的「依主題閱讀」同一套視覺，
+    # 這兩區在讀者眼裡是同一件事（依主題找內容），只是一個是文字一個是圖。
     gal = ""
     if n_gallery:
-        gal = (f'<h2>衛教圖卡</h2>'
-               f'<a class="feat" href="/articles/gallery.html">'
-               f'<div class="t">{n_gallery} 張圖解，依主題分類</div>'
-               f'<div class="d">原本發表在社群上的衛教圖，整理後收在這裡方便回頭查找。</div></a>')
+        rows = "".join(
+            f'<a href="/articles/gallery-{s["slug"]}.html">'
+            f'<div class="t">{esc(s["name"])}（{s["count"]} 張）</div>'
+            f'<div class="d">{esc(s.get("intro", "")[:44])}…</div></a>'
+            for s in (series or []))
+        gal = (f'<h2 id="gallery">衛教圖卡</h2>'
+               f'<div class="sd">原本發表在社群上的衛教圖解，共 {n_gallery} 張，'
+               f'依系列整理，每一張都附上當初的完整說明文字</div>'
+               + (f'<div class="cats">{rows}</div>'
+                  + more_link("articles/gallery.html", "全部圖卡總覽")
+                  if rows else
+                  f'<a class="feat" href="/articles/gallery.html">'
+                  f'<div class="t">{n_gallery} 張圖解，依主題分類</div>'
+                  f'<div class="d">原本發表在社群上的衛教圖，'
+                  f'整理後收在這裡方便回頭查找。</div></a>'))
 
     body = f"""
 <h1>腎臟與三高衛教文章</h1>
@@ -2213,6 +2232,19 @@ def load_gallery() -> list[dict]:
         return []
 
 
+def load_series() -> list[dict]:
+    """系列的中繼資料由 import_gallery.py 產生，這裡直接讀，避免兩邊各維護一份。
+
+    圖卡總覽頁與衛教文章頁（拿掉圖卡分頁之後的唯一入口）都要用到。"""
+    sp = ROOT / "gallery" / "series.json"
+    if not sp.exists():
+        return []
+    try:
+        return json.loads(sp.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return []
+
+
 def _gal_card(it: dict) -> str:
     src = (f'<span class="src">{it["date"]}　·　'
            f'<a href="{esc(it["permalink"])}" target="_blank" rel="noopener">原始貼文 →</a>'
@@ -2242,12 +2274,7 @@ def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
     if not items:
         return []
 
-    # 系列的中繼資料由 import_gallery.py 產生，這裡直接讀，避免兩邊各維護一份
-    sp = ROOT / "gallery" / "series.json"
-    try:
-        series = json.loads(sp.read_text(encoding="utf-8")) if sp.exists() else []
-    except json.JSONDecodeError:
-        series = []
+    series = load_series()
     by_series: dict[str, list[dict]] = {}
     for it in items:
         by_series.setdefault(it.get("series", "其他"), []).append(it)
@@ -2280,7 +2307,7 @@ def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
 <p class="meta">作者：<a href="/about.html">{esc(AUTHOR_NAME)}</a>（{esc(AUTHOR_TITLE)}）
 　·　共 {len(group)} 張{rng}　·　更新於 {TODAY}</p>
 <div class="galnav"><a href="/articles/gallery.html">← 全部系列</a>
-<a href="/articles/">依主題閱讀 →</a></div>
+<a href="/articles/#gallery">衛教文章 →</a></div>
 {''.join(_gal_card(it) for it in group)}
 <h2 class="backlink">其他系列</h2>
 <div class="cats">{others}</div>
@@ -2322,6 +2349,9 @@ def build_gallery(items: list[dict]) -> list[tuple[str, str]]:
 共 {len(items)} 張。</p>
 <p class="meta">作者：<a href="/about.html">{esc(AUTHOR_NAME)}</a>（{esc(AUTHOR_TITLE)}）
 　·　更新於 {TODAY}</p>
+<!-- 頁首沒有「衛教圖卡」這一項了（2026-09-05 移除），這一頁的上一層是
+     衛教文章，要給一條回去的路，否則進來的人只能按瀏覽器上一頁。 -->
+<div class="galnav"><a href="/articles/#gallery">← 衛教文章</a></div>
 {''.join(blocks)}
 """
     jsonld = {
@@ -3396,7 +3426,7 @@ def main() -> int:
         print(f"  {gpath}")
 
     idx_path, idx_html = build_index(by_cat, md_pages,
-                                     len(gallery_items))
+                                     len(gallery_items), load_series())
     (ROOT / idx_path).write_text(idx_html, encoding="utf-8")
     written.insert(0, idx_path)
     print(f"  {idx_path}")
@@ -3405,7 +3435,7 @@ def main() -> int:
     print("  about.html　(關於作者，E-E-A-T 權威訊號)")
 
     # 兩個「完整清單」頁：首頁與總覽頁只列一部分，這裡是全部。
-    # 不進導覽列——導覽只放六項，加第七項會把手機頁首擠成兩排。
+    # 不進導覽列——導覽項目愈少手機頁首愈鬆，這兩頁從內容區進去就夠了。
     for path, html in (build_longform_page(md_pages), build_faq_page(md_pages)):
         (ROOT / path).write_text(html, encoding="utf-8")
         written.append(path)
