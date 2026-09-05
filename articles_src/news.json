@@ -1,5 +1,41 @@
 [
   {
+    "journal": "NEJM",
+    "date": "2026",
+    "topic": "IgA 腎病變",
+    "zh": "Sibeprenlimab 治療 IgA 腎病變：第三期試驗期中分析",
+    "en": "Sibeprenlimab in IgA Nephropathy — Interim Analysis of a Phase 3 Trial",
+    "cite": "N Engl J Med 2026｜DOI: 10.1056/NEJMoa2512133｜PMID: 41211929",
+    "url": "https://doi.org/10.1056/NEJMoa2512133",
+    "q": "抑制 APRIL 這條上游路徑，能不能減少 IgA 腎病變的蛋白尿？",
+    "f": "第 9 個月時，24 小時尿蛋白／肌酸酐比值下降 50.2%，安慰劑組則上升 2.1%。",
+    "m": "IgA 腎病變的治療正從「壓制發炎」轉向「阻斷致病抗體的產生」。這是近年一系列新機轉藥物中的一個，讓過去只能用 RAS 抑制劑與類固醇的病人多了選項。",
+    "r": [
+      "sibeprenlimab 是選擇性結合並抑制 APRIL 的人源化 IgG2 單株抗體",
+      "第 9 個月 24 小時尿蛋白／肌酸酐比值：治療組 −50.2%，安慰劑組 +2.1%",
+      "嚴重不良事件 3.5% 對安慰劑 4.4%，試驗期間無死亡"
+    ],
+    "lim": "這是第三期試驗的**期中**分析，主要終點為蛋白尿這個替代指標；能不能真的延緩腎功能惡化，要等長期的 eGFR 結果。",
+    "doi": "10.1056/NEJMoa2512133"
+  },
+  {
+    "journal": "THE LANCET",
+    "date": "2026",
+    "topic": "IgA 腎病變",
+    "zh": "Atrasentan 治療 IgA 腎病變（ALIGN）：2.5 年最終結果",
+    "en": "Atrasentan in patients with IgA nephropathy (ALIGN): final 2·5-year results from a randomised, double-blind, placebo-controlled, phase 3 trial",
+    "cite": "The Lancet 2026",
+    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(26)00960-8/abstract",
+    "q": "選擇性內皮素 A 受體拮抗劑能不能長期保護 IgA 腎病變的腎功能？已經在用 SGLT2 抑制劑的人還有沒有額外好處？",
+    "f": "2.5 年的最終結果顯示，atrasentan 降低蛋白尿並保留腎功能；**這個效果在有無併用 SGLT2 抑制劑的族群都存在**。",
+    "m": "代表它和 SGLT2 抑制劑是可以疊加的兩條路，而不是二選一——這對已經用了標準治療、蛋白尿仍降不下來的病人特別重要。",
+    "r": [
+      "atrasentan 為選擇性內皮素 A 受體拮抗劑",
+      "追蹤 2.5 年，降低蛋白尿並保留腎功能",
+      "療效與是否併用 SGLT2 抑制劑無關"
+    ]
+  },
+  {
     "journal": "THE LANCET",
     "date": "2026-09-03",
     "topic": "腎臟移植",
@@ -66,38 +102,19 @@
   },
   {
     "journal": "NEJM",
-    "date": "2026",
-    "topic": "IgA 腎病變",
-    "zh": "Sibeprenlimab 治療 IgA 腎病變：第三期試驗期中分析",
-    "en": "Sibeprenlimab in IgA Nephropathy — Interim Analysis of a Phase 3 Trial",
-    "cite": "N Engl J Med 2026｜DOI: 10.1056/NEJMoa2512133｜PMID: 41211929",
-    "url": "https://doi.org/10.1056/NEJMoa2512133",
-    "q": "抑制 APRIL 這條上游路徑，能不能減少 IgA 腎病變的蛋白尿？",
-    "f": "第 9 個月時，24 小時尿蛋白／肌酸酐比值下降 50.2%，安慰劑組則上升 2.1%。",
-    "m": "IgA 腎病變的治療正從「壓制發炎」轉向「阻斷致病抗體的產生」。這是近年一系列新機轉藥物中的一個，讓過去只能用 RAS 抑制劑與類固醇的病人多了選項。",
+    "date": "2025-02",
+    "topic": "慢性腎臟病",
+    "zh": "Empagliflozin 用於慢性腎臟病的長期效果（EMPA-KIDNEY 試驗後追蹤）",
+    "en": "Long-Term Effects of Empagliflozin in Patients with Chronic Kidney Disease",
+    "cite": "N Engl J Med 2025;392:777-787｜DOI: 10.1056/NEJMoa2409183",
+    "url": "https://doi.org/10.1056/NEJMoa2409183",
+    "doi": "10.1056/NEJMoa2409183",
+    "q": "停藥之後，先前累積的腎臟保護還留得住嗎？",
+    "f": "試驗結束、藥物停用後仍持續追蹤，觀察益處的殘留與消退情形。",
+    "m": "長期追蹤回答的是門診最常被問的一句話——「這個藥要吃多久」。停藥後的軌跡，比試驗期間的曲線更貼近真實世界的決策。",
     "r": [
-      "sibeprenlimab 是選擇性結合並抑制 APRIL 的人源化 IgG2 單株抗體",
-      "第 9 個月 24 小時尿蛋白／肌酸酐比值：治療組 −50.2%，安慰劑組 +2.1%",
-      "嚴重不良事件 3.5% 對安慰劑 4.4%，試驗期間無死亡"
-    ],
-    "lim": "這是第三期試驗的**期中**分析，主要終點為蛋白尿這個替代指標；能不能真的延緩腎功能惡化，要等長期的 eGFR 結果。",
-    "doi": "10.1056/NEJMoa2512133"
-  },
-  {
-    "journal": "THE LANCET",
-    "date": "2026",
-    "topic": "IgA 腎病變",
-    "zh": "Atrasentan 治療 IgA 腎病變（ALIGN）：2.5 年最終結果",
-    "en": "Atrasentan in patients with IgA nephropathy (ALIGN): final 2·5-year results from a randomised, double-blind, placebo-controlled, phase 3 trial",
-    "cite": "The Lancet 2026",
-    "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(26)00960-8/abstract",
-    "q": "選擇性內皮素 A 受體拮抗劑能不能長期保護 IgA 腎病變的腎功能？已經在用 SGLT2 抑制劑的人還有沒有額外好處？",
-    "f": "2.5 年的最終結果顯示，atrasentan 降低蛋白尿並保留腎功能；**這個效果在有無併用 SGLT2 抑制劑的族群都存在**。",
-    "m": "代表它和 SGLT2 抑制劑是可以疊加的兩條路，而不是二選一——這對已經用了標準治療、蛋白尿仍降不下來的病人特別重要。",
-    "r": [
-      "atrasentan 為選擇性內皮素 A 受體拮抗劑",
-      "追蹤 2.5 年，降低蛋白尿並保留腎功能",
-      "療效與是否併用 SGLT2 抑制劑無關"
+      "原 EMPA-KIDNEY 受試者於試驗結束後的延伸追蹤",
+      "觀察停藥後 eGFR 軌跡與臨床終點的變化"
     ]
   },
   {
@@ -117,5 +134,313 @@
       "心血管事件與全因死亡同步下降"
     ],
     "doi": "10.1056/NEJMoa2403347"
+  },
+  {
+    "journal": "NEJM",
+    "date": "2023-12",
+    "topic": "血脂與心血管",
+    "zh": "Semaglutide 對肥胖但無糖尿病者心血管結果的影響（SELECT）",
+    "en": "Semaglutide and Cardiovascular Outcomes in Obesity without Diabetes",
+    "cite": "N Engl J Med 2023;389:2221-2232｜DOI: 10.1056/NEJMoa2307563",
+    "url": "https://doi.org/10.1056/NEJMoa2307563",
+    "doi": "10.1056/NEJMoa2307563",
+    "q": "**沒有糖尿病**、但體重過重且已有心血管疾病的人，用了有沒有好處？",
+    "f": "17,604 名受試者；主要心血管終點事件發生率 6.5%（569/8,803）對安慰劑 8.0%（701/8,801）。",
+    "m": "第一次證明這類藥的心血管益處**不必經過血糖**。對腎臟科而言，這打開了「代謝性肥胖相關腎病變」這條線的想像。",
+    "r": [
+      "體重過重或肥胖、已有心血管疾病、但無第二型糖尿病者",
+      "每週一次 semaglutide 2.4 mg 對安慰劑",
+      "主要終點為心血管死亡、非致死性心肌梗塞或中風的複合"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2023-01",
+    "topic": "慢性腎臟病",
+    "zh": "Empagliflozin 用於慢性腎臟病（EMPA-KIDNEY）",
+    "en": "Empagliflozin in Patients with Chronic Kidney Disease",
+    "cite": "N Engl J Med 2023;388:117-127｜DOI: 10.1056/NEJMoa2204233",
+    "url": "https://doi.org/10.1056/NEJMoa2204233",
+    "doi": "10.1056/NEJMoa2204233",
+    "q": "把收案條件放得更寬——**包含蛋白尿不高、eGFR 更低的人**——還有效嗎？",
+    "f": "超過六千名慢性腎臟病病人，心腎複合終點風險比 0.72（95% CI 0.64–0.82，p<0.0001），相當於下降 28%。",
+    "m": "收案族群比 DAPA-CKD 更廣，把適應範圍再往外推。現行 KDIGO 指引中 SGLT2 抑制劑的建議範圍，主要就是靠這兩篇撐起來的。",
+    "r": [
+      "慢性腎臟病族群，含低蛋白尿與較低 eGFR 者",
+      "主要終點為腎臟疾病進展或心血管死亡的複合",
+      "因效益明確提前中止"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2022-09",
+    "topic": "血脂與心血管",
+    "zh": "Dapagliflozin 用於射血分數輕度降低或保留的心衰竭（DELIVER）",
+    "en": "Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction",
+    "cite": "N Engl J Med 2022;387:1089-1098｜DOI: 10.1056/NEJMoa2206286",
+    "url": "https://doi.org/10.1056/NEJMoa2206286",
+    "doi": "10.1056/NEJMoa2206286",
+    "q": "把射血分數的範圍再放寬，益處還在嗎？",
+    "f": "在射血分數輕度降低與保留的心衰竭族群中，降低心衰竭惡化或心血管死亡的複合終點。",
+    "m": "與 EMPEROR-Preserved 合起來，讓 SGLT2 抑制劑涵蓋了**全射血分數範圍**的心衰竭。",
+    "r": [
+      "射血分數輕度降低（HFmrEF）或保留（HFpEF）者",
+      "主要終點為心衰竭惡化或心血管死亡的複合"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2022-07",
+    "topic": "血脂與心血管",
+    "zh": "每週一次 tirzepatide 用於肥胖治療（SURMOUNT-1）",
+    "en": "Tirzepatide Once Weekly for the Treatment of Obesity",
+    "cite": "N Engl J Med 2022;387:205-216｜DOI: 10.1056/NEJMoa2206038",
+    "url": "https://doi.org/10.1056/NEJMoa2206038",
+    "doi": "10.1056/NEJMoa2206038",
+    "q": "同時作用於 GIP 與 GLP-1 兩條路徑的雙重促效劑，減重效果如何？",
+    "f": "體重下降幅度較既有 GLP-1 單一促效劑更大。",
+    "m": "把減重藥物的天花板再往上推一階。長期的心腎結果仍待後續試驗回答。",
+    "r": [
+      "肥胖或體重過重合併至少一項共病、無糖尿病者",
+      "主要終點為體重變化百分比"
+    ],
+    "lim": "以體重為主要終點，尚無腎臟結果的長期資料。"
+  },
+  {
+    "journal": "NEJM",
+    "date": "2021-10",
+    "topic": "血脂與心血管",
+    "zh": "Empagliflozin 用於射血分數保留的心衰竭（EMPEROR-Preserved）",
+    "en": "Empagliflozin in Heart Failure with a Preserved Ejection Fraction",
+    "cite": "N Engl J Med 2021;385:1451-1461｜DOI: 10.1056/NEJMoa2107038",
+    "url": "https://doi.org/10.1056/NEJMoa2107038",
+    "doi": "10.1056/NEJMoa2107038",
+    "q": "射血分數**保留**的心衰竭長年沒有有效藥物，SGLT2 抑制劑行不行？",
+    "f": "降低心血管死亡或心衰竭住院的複合終點，主要來自心衰竭住院的減少。",
+    "m": "HFpEF 第一個有明確療效的藥物類別。這群病人常合併慢性腎臟病，在腎臟科門診並不少見。",
+    "r": [
+      "射血分數保留（HFpEF）的心衰竭病人",
+      "主要終點為心血管死亡或心衰竭住院的複合",
+      "獲益主要由心衰竭住院驅動"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2021-08",
+    "topic": "糖尿病腎病變",
+    "zh": "Efpeglenatide 對第二型糖尿病心血管與腎臟結果的影響（AMPLITUDE-O）",
+    "en": "Cardiovascular and Renal Outcomes with Efpeglenatide in Type 2 Diabetes",
+    "cite": "N Engl J Med 2021;385:896-907｜DOI: 10.1056/NEJMoa2108269",
+    "url": "https://doi.org/10.1056/NEJMoa2108269",
+    "doi": "10.1056/NEJMoa2108269",
+    "q": "GLP-1 受體促效劑的心腎益處是不是整個藥理類別共通的？",
+    "f": "心血管與腎臟複合終點均顯著下降，且與是否併用 SGLT2 抑制劑無關。",
+    "m": "支持「類別效應」的說法，也顯示 GLP-1 與 SGLT2 兩條路可以疊加——這一點後來被寫進多份指引。",
+    "r": [
+      "第二型糖尿病、心血管或腎臟風險高的族群",
+      "心血管與腎臟複合終點皆獲益",
+      "與是否併用 SGLT2 抑制劑無交互作用"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2021-03",
+    "topic": "血脂與心血管",
+    "zh": "每週一次 semaglutide 用於體重過重或肥胖成人（STEP 1）",
+    "en": "Once-Weekly Semaglutide in Adults with Overweight or Obesity",
+    "cite": "N Engl J Med 2021;384:989-1002｜DOI: 10.1056/NEJMoa2032183",
+    "url": "https://doi.org/10.1056/NEJMoa2032183",
+    "doi": "10.1056/NEJMoa2032183",
+    "q": "以減重為目的使用時，semaglutide 的效果有多大？",
+    "f": "體重顯著下降，幅度遠超過過去的藥物治療。",
+    "m": "肥胖是慢性腎臟病的獨立危險因子。這篇改變了「肥胖能不能靠藥物處理」的答案，也連帶影響腎臟病防治的思路。",
+    "r": [
+      "體重過重或肥胖、無糖尿病的成人",
+      "每週一次 semaglutide 2.4 mg 合併生活型態介入",
+      "主要終點為體重變化百分比"
+    ],
+    "lim": "以體重為主要終點，並非心血管或腎臟結果試驗。"
+  },
+  {
+    "journal": "NEJM",
+    "date": "2020-10",
+    "topic": "慢性腎臟病",
+    "zh": "Dapagliflozin 用於慢性腎臟病（DAPA-CKD）",
+    "en": "Dapagliflozin in Patients with Chronic Kidney Disease",
+    "cite": "N Engl J Med 2020;383:1436-1446｜DOI: 10.1056/NEJMoa2024816",
+    "url": "https://doi.org/10.1056/NEJMoa2024816",
+    "doi": "10.1056/NEJMoa2024816",
+    "q": "**不限糖尿病**的慢性腎臟病族群，SGLT2 抑制劑能不能延緩腎功能惡化？",
+    "f": "主要終點事件 9.2% 對安慰劑 14.5%，風險比 0.61（95% CI 0.51–0.72，p<0.001）；腎臟專屬複合終點風險比 0.56，心血管死亡／心衰竭住院風險比 0.71。",
+    "m": "**這是把 SGLT2 抑制劑寫進「所有慢性腎臟病」的關鍵一篇。** 在此之前它是糖尿病腎病變的藥，之後成為 CKD 的基礎用藥。",
+    "r": [
+      "慢性腎臟病病人，含糖尿病與非糖尿病者",
+      "主要終點為 eGFR 持續下降 ≥50%、末期腎病或腎臟／心血管死亡",
+      "中位追蹤 2.4 年，因效益明確提前中止",
+      "腎臟與心血管兩組終點皆顯著獲益"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2020-10",
+    "topic": "血脂與心血管",
+    "zh": "Empagliflozin 用於心衰竭的心血管與腎臟結果（EMPEROR-Reduced）",
+    "en": "Cardiovascular and Renal Outcomes with Empagliflozin in Heart Failure",
+    "cite": "N Engl J Med 2020;383:1413-1424｜DOI: 10.1056/NEJMoa2022190",
+    "url": "https://doi.org/10.1056/NEJMoa2022190",
+    "doi": "10.1056/NEJMoa2022190",
+    "q": "另一個 SGLT2 抑制劑在射血分數降低的心衰竭是否重現同樣的益處？",
+    "f": "降低心血管死亡或心衰竭住院，同時觀察到 eGFR 下降速率變慢。",
+    "m": "與 DAPA-HF 互相印證，確立此類藥物在 HFrEF 的地位；腎功能下降速率的次要結果，也把心與腎的關聯再次拉在一起。",
+    "r": [
+      "射血分數降低的心衰竭病人",
+      "主要終點為心血管死亡或心衰竭住院的複合",
+      "次要結果包含 eGFR 年下降速率"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2019-11",
+    "topic": "血脂與心血管",
+    "zh": "Dapagliflozin 用於射血分數降低的心衰竭（DAPA-HF）",
+    "en": "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+    "cite": "N Engl J Med 2019;381:1995-2008｜DOI: 10.1056/NEJMoa1911303",
+    "url": "https://doi.org/10.1056/NEJMoa1911303",
+    "doi": "10.1056/NEJMoa1911303",
+    "q": "SGLT2 抑制劑對**沒有糖尿病**的心衰竭病人也有效嗎？",
+    "f": "在射血分數降低的心衰竭族群中降低心衰竭惡化與心血管死亡，且不論有無糖尿病都觀察到一致的益處。",
+    "m": "把這類藥從糖尿病用藥擴大成心衰竭的基礎用藥之一。「不論有沒有糖尿病都有效」這一點，也預示了後來腎臟試驗的方向。",
+    "r": [
+      "射血分數降低（HFrEF）的心衰竭病人，含糖尿病與非糖尿病者",
+      "主要終點為心衰竭惡化或心血管死亡的複合",
+      "有無糖尿病的次族群結果一致"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2019-08",
+    "topic": "糖尿病腎病變",
+    "zh": "口服 semaglutide 對第二型糖尿病心血管結果的影響（PIONEER 6）",
+    "en": "Oral Semaglutide and Cardiovascular Outcomes in Patients with Type 2 Diabetes",
+    "cite": "N Engl J Med 2019;381:841-851｜DOI: 10.1056/NEJMoa1901118",
+    "url": "https://doi.org/10.1056/NEJMoa1901118",
+    "doi": "10.1056/NEJMoa1901118",
+    "q": "把 semaglutide 做成口服劑型之後，心血管安全性還過得了關嗎？",
+    "f": "達成心血管安全性的非劣性目標。",
+    "m": "讓不願意打針的病人也有選擇。這在腎臟科門診很實際——同時要洗腎、又要每天打針，順從度是很現實的問題。",
+    "r": [
+      "第二型糖尿病、心血管風險高的族群",
+      "設計為心血管安全性的非劣性試驗，非優越性試驗"
+    ],
+    "lim": "非劣性設計，不能據以宣稱口服劑型優於安慰劑或優於針劑。"
+  },
+  {
+    "journal": "NEJM",
+    "date": "2019-06",
+    "topic": "糖尿病腎病變",
+    "zh": "Canagliflozin 對糖尿病腎病變腎臟結果的影響（CREDENCE）",
+    "en": "Canagliflozin and Renal Outcomes in Type 2 Diabetes and Nephropathy",
+    "cite": "N Engl J Med 2019;380:2295-2306｜DOI: 10.1056/NEJMoa1811744",
+    "url": "https://doi.org/10.1056/NEJMoa1811744",
+    "doi": "10.1056/NEJMoa1811744",
+    "q": "**第一個以腎臟結果為主要終點**的 SGLT2 抑制劑試驗：它能不能延緩糖尿病腎病變？",
+    "f": "主要心血管不良事件為每千人年 38.7 對 48.7，相對風險下降約 20%；腎臟複合終點同步顯著下降，試驗因效益明確而提前中止。",
+    "m": "把 SGLT2 抑制劑從「糖尿病／心臟的藥」正式變成「腎臟的藥」。現行指引中糖尿病腎病變的用藥主軸，就是從這裡確立的。",
+    "r": [
+      "第二型糖尿病合併白蛋白尿性腎病變、已使用 RAS 抑制劑者",
+      "主要終點為末期腎病、血清肌酸酐倍增、腎臟或心血管死亡的複合",
+      "因期中分析已達效益標準而提前結束"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2019-01",
+    "topic": "糖尿病腎病變",
+    "zh": "Dapagliflozin 對第二型糖尿病心血管結果的影響（DECLARE-TIMI 58）",
+    "en": "Dapagliflozin and Cardiovascular Outcomes in Type 2 Diabetes",
+    "cite": "N Engl J Med 2019;380:347-357｜DOI: 10.1056/NEJMoa1812389",
+    "url": "https://doi.org/10.1056/NEJMoa1812389",
+    "doi": "10.1056/NEJMoa1812389",
+    "q": "在**心血管風險較低**的糖尿病族群，SGLT2 抑制劑還有沒有用？",
+    "f": "主要心血管不良事件為每千人年 22.6 對 24.2，相對風險下降約 7%；心衰竭住院與心血管死亡的複合終點下降較明顯。",
+    "m": "把適用族群從「已經有心血管疾病」往前推到「只有危險因子」。本試驗中僅約四成受試者有動脈硬化性心血管疾病，與 EMPA-REG 幾乎全部有病史的族群很不一樣。",
+    "r": [
+      "約四成受試者有動脈硬化性心血管疾病，其餘僅有危險因子",
+      "MACE 未達顯著優越，心衰竭住院／心血管死亡的複合終點顯著下降",
+      "腎臟複合終點亦顯示益處"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2017-08",
+    "topic": "糖尿病腎病變",
+    "zh": "Canagliflozin 對第二型糖尿病心血管與腎臟事件的影響（CANVAS）",
+    "en": "Canagliflozin and Cardiovascular and Renal Events in Type 2 Diabetes",
+    "cite": "N Engl J Med 2017;377:644-657｜DOI: 10.1056/NEJMoa1611925",
+    "url": "https://doi.org/10.1056/NEJMoa1611925",
+    "doi": "10.1056/NEJMoa1611925",
+    "q": "另一個 SGLT2 抑制劑是否也有同樣的心腎保護？安全性如何？",
+    "f": "主要心血管複合終點風險比 0.86（95% CI 0.75–0.97）；同時觀察到下肢截肢風險上升的訊號。",
+    "m": "確認心腎益處不是單一藥物的現象，但也第一次讓「這類藥的安全性」被認真檢視——後續試驗都把截肢與骨折列為重點監測項目。",
+    "r": [
+      "第二型糖尿病、心血管風險高的族群",
+      "主要終點為心血管死亡、非致死性心肌梗塞或中風",
+      "心血管終點獲益，腎臟終點亦有正向趨勢",
+      "下肢截肢風險上升為當時最受關注的安全性議題"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2016-11",
+    "topic": "糖尿病腎病變",
+    "zh": "Semaglutide 對第二型糖尿病心血管結果的影響（SUSTAIN-6）",
+    "en": "Semaglutide and Cardiovascular Outcomes in Patients with Type 2 Diabetes",
+    "cite": "N Engl J Med 2016;375:1834-1844｜DOI: 10.1056/NEJMoa1607141",
+    "url": "https://doi.org/10.1056/NEJMoa1607141",
+    "doi": "10.1056/NEJMoa1607141",
+    "q": "每週一次的 semaglutide 在心血管結果上表現如何？",
+    "f": "主要心血管複合終點顯著下降，其中以非致死性中風的減少最明顯；同時觀察到視網膜病變併發症增加的訊號。",
+    "m": "確立 semaglutide 的心血管地位，也是後來 SELECT 與 FLOW 的前身。視網膜病變的訊號則提醒：血糖下降太快本身也是風險。",
+    "r": [
+      "第二型糖尿病、心血管風險高的族群",
+      "主要終點為心血管死亡、非致死性心肌梗塞或中風",
+      "視網膜病變併發症增加為主要安全性發現"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2016-07",
+    "topic": "糖尿病腎病變",
+    "zh": "Liraglutide 對第二型糖尿病心血管結果的影響（LEADER）",
+    "en": "Liraglutide and Cardiovascular Outcomes in Type 2 Diabetes",
+    "cite": "N Engl J Med 2016;375:311-322｜DOI: 10.1056/NEJMoa1603827",
+    "url": "https://doi.org/10.1056/NEJMoa1603827",
+    "doi": "10.1056/NEJMoa1603827",
+    "q": "GLP-1 受體促效劑能不能降低糖尿病病人的心血管事件？",
+    "f": "主要心血管複合終點顯著下降，心血管死亡亦下降。",
+    "m": "**GLP-1 這一類藥的心血管故事從這裡開始。** 後續腎臟結果（如 FLOW）的探索，都是建立在這條線上。",
+    "r": [
+      "第二型糖尿病、心血管風險高的族群",
+      "主要終點為心血管死亡、非致死性心肌梗塞或中風的複合",
+      "次要結果含腎臟複合終點的正向訊號"
+    ]
+  },
+  {
+    "journal": "NEJM",
+    "date": "2015-11",
+    "topic": "糖尿病腎病變",
+    "zh": "Empagliflozin 對第二型糖尿病心血管結果與死亡率的影響（EMPA-REG OUTCOME）",
+    "en": "Empagliflozin, Cardiovascular Outcomes, and Mortality in Type 2 Diabetes",
+    "cite": "N Engl J Med 2015;373:2117-2128｜DOI: 10.1056/NEJMoa1504720",
+    "url": "https://doi.org/10.1056/NEJMoa1504720",
+    "doi": "10.1056/NEJMoa1504720",
+    "q": "一個降血糖藥，能不能同時降低心血管事件與死亡？",
+    "f": "主要心血管不良事件發生率為每千人年 37.4 對安慰劑 43.9，相對風險下降約 14%；心血管死亡的下降幅度更大。",
+    "m": "**這是整個 SGLT2 抑制劑故事的起點。** 在此之前，降血糖藥被期待的是「不要傷害心血管」；這篇第一次顯示它能主動降低心血管死亡，後來才有一連串腎臟結果的試驗。",
+    "r": [
+      "第二型糖尿病合併已確診心血管疾病者",
+      "主要終點為心血管死亡、非致死性心肌梗塞或非致死性中風的複合",
+      "心血管事件與死亡下降，同時觀察到腎臟終點的訊號"
+    ]
   }
 ]

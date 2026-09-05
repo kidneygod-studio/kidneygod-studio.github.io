@@ -837,6 +837,10 @@ letter-spacing:.08em;border-radius:4px;padding:3px 9px}
 .dgen{margin:6px 0 0;font-size:13.5px;line-height:1.6;color:var(--mut);
 font-style:italic}
 .dgcite{margin:6px 0 0;font-size:12.5px;color:var(--mut)}
+/* 視覺摘要。有圖才出現，沒有就整塊不渲染，不放佔位符。 */
+.dgfig{margin:16px 0 0;text-align:center}
+.dgfig img{max-width:100%;max-height:400px;width:auto;
+border:1px solid var(--line);border-radius:8px}
 .dgkp{background:var(--card);border-left:3px solid var(--accent);
 border-radius:0 10px 10px 0;padding:14px 16px;margin:14px 0 0}
 .dgkp>b{display:block;font-size:12px;letter-spacing:.14em;color:var(--accent2);
@@ -3230,6 +3234,18 @@ def digest_card(x: dict, compact: bool = False) -> str:
               f'<p>{inline(x["m"])}</p></div>' if x.get("m") else "")
         return f'<article class="dg compact">{head}{kp}</article>'
 
+    # 視覺摘要。**只放自有或有授權的圖**——每日摘要是傳給作者本人的私人檔案，
+    # 嵌入期刊的 graphical abstract 沒問題；這個站是公開的，
+    # 轉貼 NEJM、Lancet 的圖表是重製他人著作。
+    # 圖檔放 news_img/<doi 去掉斜線>.jpg，資料裡不必寫路徑。
+    img = ""
+    if x.get("doi"):
+        f = re.sub(r"[^a-z0-9]+", "-", x["doi"].lower()).strip("-")
+        if (ROOT / "news_img" / f"{f}.jpg").exists():
+            img = (f'<figure class="dgfig">'
+                   f'<img src="/news_img/{f}.jpg" alt="{esc(x["zh"])}的視覺摘要" '
+                   f'loading="lazy"></figure>')
+
     kp = ""
     if x.get("q") or x.get("f") or x.get("m"):
         rows = "".join(
@@ -3249,7 +3265,7 @@ def digest_card(x: dict, compact: bool = False) -> str:
         body += f'<p class="dgsig">{inline(x["sig"])}</p>'
     if x.get("lim"):
         body += f'<p class="dglim">限制：{inline(x["lim"])}</p>'
-    return f'<article class="dg">{head}{kp}{body}</article>'
+    return f'<article class="dg">{head}{img}{kp}{body}</article>'
 
 
 DISCLAIM_BOX = """
