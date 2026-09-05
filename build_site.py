@@ -1355,7 +1355,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
                      ("/articles/gallery.html", "衛教圖卡", "gallery")])
            + navgroup("upd", "新知&", "指引",
                       [(f"/{ALL_NEWS}", "醫學新知", "news"),
-                       (f"/{ALL_GUIDE}", "國際指引", "guide")])
+                       (f"/{ALL_GUIDE}", "臨床指引", "guide")])
            + navlink("/food.html", "", "食物", "food", suffix="查詢")
            + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
            + navlink("/about.html", "關於", "作者", "about")
@@ -1960,7 +1960,7 @@ def build_search_index(data: list[dict], md_pages: list[dict],
         ("醫學新知", f"/{ALL_NEWS}", "導覽",
          "NEJM、Lancet、JAMA 等主要期刊中真正改變腎臟病與三高處置的研究，"
          "結構化摘要：問題、發現、意義。"),
-        ("國際指引", f"/{ALL_GUIDE}", "導覽",
+        ("臨床指引", f"/{ALL_GUIDE}", "導覽",
          "KDIGO、KDOQI、ADA、AHA／ACC、ESC 目前實際被當成標準的"
          "腎臟病與三高臨床指引。"),
     ]:
@@ -3349,7 +3349,7 @@ def build_news_page() -> tuple[str, str]:
 <p class="neyebrow">Guidelines</p>
 <h2 class="sect">現行指引</h2>
 <div class="cats">
-  <a href="/{ALL_GUIDE}"><div class="t">國際指引</div>
+  <a href="/{ALL_GUIDE}"><div class="t">臨床指引</div>
     <div class="d">研究要累積很久才會變成指引。
     KDIGO、KDOQI、ADA、AHA／ACC、ESC 目前實際被當成標準的那幾份。</div></a>
 </div>
@@ -3436,7 +3436,7 @@ def build_guidelines_page() -> tuple[str, str]:
             "加上 KDIGO、KDOQI、ADA、AHA／ACC、ESC 的國際指引，"
             "每一份附白話說明、專業重點與正式出處。")
     body = f"""
-<h1>國際指引</h1>
+<h1>臨床指引</h1>
 <p class="lede">腎臟與三高領域<strong>目前實際被當成標準的臨床指引</strong>——
 台灣本土的排在前面，後面是 KDIGO、KDOQI、ADA、AHA／ACC、ESC 的國際指引。
 每一份先用一句話說明它對你的意義，再附上專業重點與正式出處——
@@ -3456,7 +3456,7 @@ def build_guidelines_page() -> tuple[str, str]:
 {CROSSLINK}
 """
     jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
-              "name": "國際指引", "description": desc, "inLanguage": "zh-Hant",
+              "name": "臨床指引", "description": desc, "inLanguage": "zh-Hant",
               "url": f"{BASE_URL}/{ALL_GUIDE}", "dateModified": UPDATES_REVIEWED,
               "author": author_ld()}
     return ALL_GUIDE, page(title, desc, ALL_GUIDE, body, jsonld)
@@ -3479,7 +3479,7 @@ def build_updates_redirect() -> tuple[str, str]:
   <a href="/{ALL_NEWS}"><div class="t">醫學新知</div>
     <div class="d">主要期刊的最新研究，結構化摘要。</div></a>
   <a href="/{ALL_GUIDE}"><div class="t">指引</div>
-    <div class="d">KDIGO、KDOQI、ADA、AHA／ACC、ESC 的現行國際指引。</div></a>
+    <div class="d">台灣腎臟醫學會與 KDIGO、KDOQI、ADA、AHA／ACC、ESC 的現行臨床指引。</div></a>
 </div>
 """
     extra = (f'<meta http-equiv="refresh" content="0; url=/{ALL_NEWS}">'
