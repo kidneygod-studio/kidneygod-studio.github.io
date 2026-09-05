@@ -89,6 +89,12 @@ TOPIC_RULES: list[tuple[str, tuple[str, ...]]] = [
 ]
 
 
+# 只收這三本。作者指定：新知區以頂尖綜合期刊為主，
+# 專科期刊（KI Reports、CJASN、NDT、AJKD…）不進網站。
+# 每日摘要本身照樣收各家，這裡只是網站端的篩子。
+ALLOWED_JOURNALS = {"NEJM", "THE LANCET", "JAMA"}
+
+
 def guess_topic(zh: str, en: str) -> str:
     hay = (zh + " " + en).lower()
     for topic, kws in TOPIC_RULES:
@@ -114,6 +120,9 @@ def convert(e: dict, filedate: str) -> dict | None:
     zh, doi = e["zh"], e["doi"]
     if not zh or not doi:
         return None
+    journal = JOURNAL.get(e["jtag"].upper().strip(), e["jtag"].upper().strip())
+    if journal not in ALLOWED_JOURNALS:
+        return None
     q = pd.pick_key(e["kp"], "問題", "Question")
     f = pd.pick_key(e["kp"], "發現", "Findings")
     m = pd.pick_key(e["kp"], "意義", "Meaning")
@@ -121,8 +130,7 @@ def convert(e: dict, filedate: str) -> dict | None:
     if not m:
         return None
     d = {
-        "journal": JOURNAL.get(e["jtag"].upper().strip(),
-                               e["jtag"].upper().strip()),
+        "journal": journal,
         "date": pub_date(e["byline"], filedate),
         "topic": guess_topic(zh, e["en"]),
         "zh": zh,

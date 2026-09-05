@@ -8,3 +8,8 @@ hero_src/
 # 血液透析中心那個站的原圖，理由同上。壓過的 dialysis/img/ 才進版控，
 # 換圖時把新原圖丟回去重跑 make_dialysis_img.py。
 dialysis/img_src/
+
+# 匯入時被期刊篩子刷掉的、以及過濾前的備份。想改主意時看這兩份，
+# 不需要進版控。
+articles_src/news_dropped.json
+articles_src/news_before_filter.json
