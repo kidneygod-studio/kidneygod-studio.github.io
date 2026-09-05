@@ -45,7 +45,14 @@ overflow-wrap:break-word}
 /* 字級與配色，緊接在頁首下方、靠右。
    桌機用文字按鈕列（三個選項一眼看完、直接點），手機用兩顆圖示鈕（省寬度）。
    斷點沿用頁首那條 700px，「手機」在這個站上一直是同一個定義。 */
-.prefbar{display:flex;justify-content:flex-end;gap:8px;margin:12px 0 -2px}
+.prefbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;
+gap:10px 8px;margin:12px 0 -2px}
+/* 首頁把分享圖示併進這一排的左邊。margin-right:auto 而不是 space-between：
+   沒有左側插槽的頁面（除了首頁的每一頁）要維持原本的靠右。
+   窄螢幕排不下時 flex-wrap 讓它自己掉一行，不會撐出橫向捲軸——七顆 44px
+   的圓鈕在 375px 手機上約需 364px，可用寬度只有 335px，本來就排不下。 */
+.prefshare{margin-right:auto}
+.prefshare .share{margin:0}
 .preficons{display:none;gap:8px}
 .preffull{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 16px}
 @media(max-width:700px){

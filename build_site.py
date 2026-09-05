@@ -571,7 +571,14 @@ overflow-wrap:break-word}
 /* 字級與配色，緊接在頁首下方、靠右。
    桌機用文字按鈕列（三個選項一眼看完、直接點），手機用兩顆圖示鈕（省寬度）。
    斷點沿用頁首那條 700px，「手機」在這個站上一直是同一個定義。 */
-.prefbar{display:flex;justify-content:flex-end;gap:8px;margin:12px 0 -2px}
+.prefbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;
+gap:10px 8px;margin:12px 0 -2px}
+/* 首頁把分享圖示併進這一排的左邊。margin-right:auto 而不是 space-between：
+   沒有左側插槽的頁面（除了首頁的每一頁）要維持原本的靠右。
+   窄螢幕排不下時 flex-wrap 讓它自己掉一行，不會撐出橫向捲軸——七顆 44px
+   的圓鈕在 375px 手機上約需 364px，可用寬度只有 335px，本來就排不下。 */
+.prefshare{margin-right:auto}
+.prefshare .share{margin:0}
 .preficons{display:none;gap:8px}
 .preffull{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 16px}
 @media(max-width:700px){
@@ -1083,7 +1090,8 @@ def social_links() -> str:
 
 
 def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None,
-         extra_head: str = "", after_disclaimer: str = "") -> str:
+         extra_head: str = "", after_disclaimer: str = "",
+         pref_left: str = "") -> str:
     """所有頁面共用的骨架。canonical 與 OG 是搜尋引擎與分享預覽的基本要求。"""
     # canonical 必須和 sitemap 宣告的網址逐字相同，否則等於叫 Google 索引兩個位址。
     # sitemap 用的是目錄形式（/articles/），這裡把 index.html 收掉對齊。
@@ -1177,7 +1185,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <nav>{nav}</nav>
 </div></header>
 <main class="wrap{wide_cls}">
-{FSBAR}
+{prefbar(pref_left)}
 <div class="zoomable">
 {body}
 <div class="author">
@@ -1822,7 +1830,6 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     <span class="hgo">遊戲場</span></a>
 </div>
 </div>
-{share_buttons("", HOME_SHARE_TITLE, top=True)}
 </div>
 
 {feat_sect}
@@ -1853,9 +1860,12 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         "url": f"{BASE_URL}/",
         "author": author_ld(),
     }
-    # 首頁的分享圖示放兩處：「這個網站怎麼用」下方，以及免責聲明下方。
+    # 首頁的分享圖示放兩處：最上面那一排（和字級／配色鈕併排），以及免責聲明下方。
+    # 原本上面那組在「這個網站怎麼用」下方，2026-09-05 移到頁首下方那一排——
+    # 那一排本來只有右邊兩顆控制項，左邊是空的。
     # 腳本只輸出一次，掛在後者——它在文件的後面，執行時兩組都已經存在。
     return page(title, desc, "", body, jsonld,
+                pref_left=share_buttons("", HOME_SHARE_TITLE, top=True),
                 after_disclaimer=share_buttons("", HOME_SHARE_TITLE, top=True)
                 + share_script() + search_script())
 
@@ -2020,8 +2030,7 @@ def _svg(key: str) -> str:
             f"{_TH_ICONS[key]}</svg>")
 
 
-FSBAR = (
-    '<div class="prefbar">'
+PREF_CONTROLS = (
     # 手機：兩顆圖示鈕
     '<div class="preficons">'
     '<button type="button" class="prefbtn fsbtn" id="fsBtn">'
@@ -2039,7 +2048,17 @@ FSBAR = (
     '<span aria-hidden="true">配色</span>'
     + "".join(f'<button type="button" data-th="{k}">{esc(n)}</button>'
               for k, n in zip(THEME_KEYS, THEME_NAMES))
-    + "</div></div></div>")
+    + "</div></div>")
+
+
+def prefbar(left: str = "") -> str:
+    """頁首下方那一排。left 是可選的左側插槽，目前只有首頁用（分享圖示）。
+
+    放在 .zoomable 外面，所以不吃 --fs 的 zoom，也不需要 --fsi 抵銷——
+    這一排是控制項不是內容，字級放大時它應該維持原樣。
+    """
+    slot = f'<div class="prefshare">{left}</div>' if left else ""
+    return f'<div class="prefbar">{slot}{PREF_CONTROLS}</div>'
 
 FS_SCRIPT = """<script>
 (function(){

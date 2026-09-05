@@ -39,6 +39,22 @@ python check_site.py      # 推之前對帳
 
 ## 2026-09-05
 
+### 首頁分享圖示併進頁首下方那一排
+
+原本在「這個網站怎麼用」下方自成一列，移到 `.prefbar` 的左側——那一排本來
+只有右邊的字級／配色控制項，左邊整片是空的。作者提的，理由就是那排有位置。
+
+`FSBAR` 常數改成 `prefbar(left="")` 函式，`page()` 多一個 `pref_left` 參數。
+靠 `.prefshare{margin-right:auto}` 而不是 `justify-content:space-between`：
+其餘三十頁沒有左插槽，用 space-between 會讓它們的控制項跑到左邊去。
+
+`.prefbar` 加 `flex-wrap:wrap`。四顆分享鈕（206px）＋兩顆控制鈕（96px）＋間距
+＝ 310px，**360px 以上的手機排得下，344px 以下會自己掉成兩行**——不縮按鈕，
+44px 的觸控下限比擠成一行重要。
+
+**這一排在 `.zoomable` 外面**，所以不吃 `--fs` 的 zoom，也就不需要 `--fsi`
+抵銷。原本那組在內容區裡，是靠 `.zoomable .share{zoom:var(--fsi)}` 抵銷的。
+
 ### 新增長文〈洗腎之後還能旅行嗎〉（第 14 篇）｜`37ac7a0`
 
 作者原本問的是「把旅遊段落加進既有文章就好，還是需要一篇長文」。選長文的
