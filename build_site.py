@@ -920,9 +920,16 @@ border-radius:99px;padding:1px 8px;flex:0 0 auto}
   .nlt{flex:1 1 100%}
 }
 /* 首頁那張只留「意義」一段 */
-.dg.compact{margin:0}
+.dg.compact{margin:0;position:relative;transition:border-color .15s}
+.dg.compact:hover{border-color:var(--accent)}
 .dg.compact h3{font-size:1.05rem}
 .dg.compact .dgkp p{margin:0;font-size:15px;line-height:1.8}
+/* 整張卡可點：用標題連結的 ::after 覆蓋整張卡（stretched link）。
+   不把 <article> 包進 <a> 是因為卡片裡還有其他要能選取的文字，
+   而且巢狀連結在 HTML 裡是無效的。 */
+.dg.compact h3 a::after{content:"";position:absolute;inset:0}
+.dgmore{display:block;margin:12px 0 0;text-align:right;font-size:14px;
+font-weight:600;color:var(--link)}
 /* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
    色票要能跟著深色模式走，不能寫死。 */
 :root{--wbg:#fff6f0;--wline:#c05621;--wttl:#9c4221}
@@ -3235,18 +3242,26 @@ def digest_card(x: dict, compact: bool = False) -> str:
     問題與發現留在新知頁——首頁的任務是讓人知道有這件事並判斷要不要點進去，
     不是在首頁把它讀完。三段全放的話這張卡約 700px 高，會把下面的區塊推很遠。
     """
-    head = (f'<div class="dgtop"><span class="dgj">{esc(x["journal"])}</span>'
-            f'<span class="dgd">{esc(x["date"])}</span>'
-            f'<span class="dgt">{esc(x["topic"])}</span></div>'
-            f'<h3><a href="{x["url"]}" target="_blank" rel="nofollow noopener">'
-            f'{esc(x["zh"])}</a></h3>'
-            f'<p class="dgen">{esc(x["en"])}</p>'
+    top = (f'<div class="dgtop"><span class="dgj">{esc(x["journal"])}</span>'
+           f'<span class="dgd">{esc(x["date"])}</span>'
+           f'<span class="dgt">{esc(x["topic"])}</span></div>')
+    tail = (f'<p class="dgen">{esc(x["en"])}</p>'
             f'<p class="dgcite">{esc(x["cite"])}</p>')
+    head = (f'{top}'
+            f'<h3><a href="{x["url"]}" target="_blank" rel="nofollow noopener">'
+            f'{esc(x["zh"])}</a></h3>{tail}')
 
     if compact:
+        # 首頁這張的標題連到站內的完整摘要，不是連到期刊。
+        # 讀者按下去是想看這篇在講什麼，不是想馬上讀原文——
+        # 原文連結在完整摘要那一頁上，少一次跳出站外。
+        slug = TOPIC2CAT.get(x.get("topic", ""))
+        href = f'/{news_cat_path(slug)}#{x["id"]}' if slug else f"/{ALL_NEWS}"
         kp = (f'<div class="dgkp"><b>意義 MEANING</b>'
               f'<p>{inline(x["m"])}</p></div>' if x.get("m") else "")
-        return f'<article class="dg compact">{head}{kp}</article>'
+        return (f'<article class="dg compact">{top}'
+                f'<h3><a href="{href}">{esc(x["zh"])}</a></h3>{tail}'
+                f'{kp}<span class="dgmore">看完整摘要 →</span></article>')
 
     # 視覺摘要。**只放自有或有授權的圖**——每日摘要是傳給作者本人的私人檔案，
     # 嵌入期刊的 graphical abstract 沒問題；這個站是公開的，

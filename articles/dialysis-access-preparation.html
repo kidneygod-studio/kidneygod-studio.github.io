@@ -378,9 +378,16 @@ border-radius:99px;padding:1px 8px;flex:0 0 auto}
   .nlt{flex:1 1 100%}
 }
 /* 首頁那張只留「意義」一段 */
-.dg.compact{margin:0}
+.dg.compact{margin:0;position:relative;transition:border-color .15s}
+.dg.compact:hover{border-color:var(--accent)}
 .dg.compact h3{font-size:1.05rem}
 .dg.compact .dgkp p{margin:0;font-size:15px;line-height:1.8}
+/* 整張卡可點：用標題連結的 ::after 覆蓋整張卡（stretched link）。
+   不把 <article> 包進 <a> 是因為卡片裡還有其他要能選取的文字，
+   而且巢狀連結在 HTML 裡是無效的。 */
+.dg.compact h3 a::after{content:"";position:absolute;inset:0}
+.dgmore{display:block;margin:12px 0 0;text-align:right;font-size:14px;
+font-weight:600;color:var(--link)}
 /* 警示方塊。食物查詢與醫師簡介都用得到，所以放在共用樣式裡。
    色票要能跟著深色模式走，不能寫死。 */
 :root{--wbg:#fff6f0;--wline:#c05621;--wttl:#9c4221}
