@@ -66,8 +66,13 @@ FACTS: dict[str, str] = {
     "staff":      TODO("專責護理人員數"),
     # 洗腎室服務專員的 LINE。給的是「找得到人」的窗口，不是院方的行銷帳號——
     # 這一頁的讀者多半是正在準備透析、或臨時需要安排透析的人。
-    "line":       TODO("洗腎室服務專員的 LINE ID 或加好友網址"),
-    "booking":    TODO("掛號系統網址"),
+    # 洗腎室服務專員。姓名、LINE、手機拆成三個欄位而不是塞成一句：
+    # 讀者要的是「打這支／加這個」，混在一行會看不出哪個是哪個。
+    "liaison":    "顏淑霞",
+    "line":       "0953101111",
+    "mobile":     "0953-101-111",
+    "booking":    "https://www.kgh.com.tw/Registered/",
+    "booking_tel": "(06)222-6677、(06)222-7766",
     "transit":    TODO("大眾運輸方式"),
     "parking":    TODO("停車資訊"),
 }
@@ -111,6 +116,46 @@ def fact(key: str) -> str:
 
 def has(key: str) -> bool:
     return not isinstance(FACTS[key], TODO)
+
+
+def _tel_href(v: str) -> str:
+    """把顯示用的電話轉成 tel: 連結。
+
+    手機上點一下就撥出去，是這類頁面最實際的一個功能——讀者多半是
+    正在安排就醫的人，抄號碼再切到撥號盤中間會斷掉。
+    分機用逗號接（tel: URI 裡的逗號是停頓，各家撥號盤都吃）。
+    國碼一律補 +886：從國外或用 LINE 通話時，沒有國碼撥不出去。
+    """
+    m = re.search(r"轉\s*(\d+)", v)
+    ext = m.group(1) if m else ""
+    body = re.sub(r"轉.*$", "", v)
+    digits = re.sub(r"\D", "", body)
+    if digits.startswith("0"):
+        digits = "+886" + digits[1:]
+    return digits + ("," + ext if ext else "")
+
+
+def tel_link() -> str:
+    if not has("tel"):
+        return fact("tel")
+    return f'<a href="tel:{_tel_href(FACTS["tel"])}">{esc(FACTS["tel"])}</a>'
+
+
+def mobile_link() -> str:
+    if not has("mobile"):
+        return fact("mobile")
+    return f'<a href="tel:{_tel_href(FACTS["mobile"])}">{esc(FACTS["mobile"])}</a>'
+
+
+def booking_link() -> str:
+    """線上掛號是外部網站，開新分頁並標 noopener。
+    顯示網域而不是整串網址——整串在手機上會折成兩三行。"""
+    if not has("booking"):
+        return fact("booking")
+    u = FACTS["booking"]
+    label = re.sub(r"^https?://", "", u).rstrip("/")
+    return (f'<a href="{esc(u)}" target="_blank" rel="noopener">'
+            f'{esc(label)}</a>')
 
 
 # 要不要讓搜尋引擎收錄這個站。
@@ -650,7 +695,7 @@ def shell(path: str, title: str, desc: str, body: str,
       {fhosp}
       <p class="fbrand">{fact('center')}</p>
       <p class="fl">地址：{fact('addr')}{addr_en}</p>
-      <p class="fl">電話：{fact('tel')}</p>
+      <p class="fl">電話：{tel_link()}</p>
       <p class="fl" style="margin:0">服務時間：{fact('tel_note')}</p>
     </div>
     <div><h4>認識我們</h4><ul>
@@ -1150,11 +1195,23 @@ def build_visit() -> str:
 <p>不論是想先了解透析、需要安排長期時段，或是外地就醫需要臨時透析，
 都可以直接聯絡我們。</p>
 <ul>
-  <li><strong>電話</strong>：{fact('tel')}（{fact('tel_note')}）</li>
+  <li><strong>透析室電話</strong>：{tel_link()}（{fact('tel_note')}）</li>
   <li><strong>地址</strong>：{fact('addr')}</li>
-  <li><strong>線上掛號</strong>：{fact('booking')}</li>
-  <li><strong>洗腎室服務專員 LINE</strong>：{fact('line')}</li>
+  <li><strong>線上掛號</strong>：{booking_link()}</li>
+  <li><strong>人工掛號專線</strong>：{fact('booking_tel')}</li>
 </ul>
+
+<h3>洗腎室服務專員</h3>
+<p>長期時段安排、臨時透析、旅遊透析這類需要一個一個確認的事，
+找專員最快。</p>
+<ul>
+  <li><strong>專員</strong>：{fact('liaison')}</li>
+  <li><strong>行動電話</strong>：{mobile_link()}</li>
+  <li><strong>LINE ID</strong>：{fact('line')}</li>
+</ul>
+<div class="disc">這個窗口是用來安排就醫與時段的。
+<strong>身體不舒服請直接就醫或撥 119</strong>，不要在訊息裡等回覆；
+專員也不會在 LINE 上提供診斷或用藥建議。</div>
 
 <h2>第一次來，請帶這些</h2>
 <ul>
