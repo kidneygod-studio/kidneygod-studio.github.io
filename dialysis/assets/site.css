@@ -228,6 +228,26 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp img{height:46px;width:auto;flex-shrink:0}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
+/* ---- 一週透析排班表 ---- */
+/* 外面包一層 overflow-x:auto：七欄在 320px 上排不下，讓表格自己橫向捲，
+   而不是把整頁撐出橫向捲軸。 */
+.tw{overflow-x:auto;margin:18px 0 20px;-webkit-overflow-scrolling:touch}
+.sched{border-collapse:collapse;width:100%;min-width:420px;font-size:15px}
+.sched th,.sched td{border:1px solid var(--line);padding:11px 8px;text-align:center}
+.sched thead th{background:var(--navy);color:#fff;font-family:var(--serif);
+font-weight:700;font-size:14.5px}
+/* 「週」字在窄螢幕收掉，只留一二三四五六日——七欄才排得下 */
+@media(max-width:560px){.sched .dw{display:none}}
+.sched tbody th{background:var(--mist);font-family:var(--serif);color:var(--navy);
+font-weight:700;white-space:nowrap;text-align:left;padding-left:14px}
+.sched .st{display:block;font-family:var(--sans);font-weight:400;
+font-size:12.5px;color:var(--mut);letter-spacing:0}
+.sched td.on{color:var(--teal);font-size:17px;background:rgba(20,128,122,.06)}
+.sched td.off{color:#b9c4cf}
+.sched td.q{color:#7a5b00;background:#fff3c4;font-weight:700}
+.tnote{margin:0 0 18px;font-size:14px;color:var(--mut)}
+.svisually{position:absolute;width:1px;height:1px;overflow:hidden;
+clip:rect(0 0 0 0);white-space:nowrap}
 .fl{margin:0 0 6px;line-height:1.75}
 /* 英文地址：給外籍病人與 Google 用的，不是給一般讀者讀的，所以壓小壓灰。
    overflow-wrap:anywhere 是因為它是一長串沒有中文斷點的英文，

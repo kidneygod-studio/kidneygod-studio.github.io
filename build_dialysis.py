@@ -85,6 +85,29 @@ DOCTORS: list[tuple[str, str, str]] = [
     # ("吳政哲", "腎臟科主治醫師", "慢性腎臟病、血液透析、腹膜透析、三高"),
 ]
 
+# 一週透析排班。就醫資訊頁的表格由這裡產生，FACTS["shifts"] 那句話則是
+# 同一件事的一行摘要（首頁的數據方塊與關於頁用）。**兩邊要一起改。**
+#
+# 值是那一天有排班的班別。空 tuple = 當天沒有排班。
+# 週日：作者給的服務時間只寫了一三五與二四六，沒有提到週日。
+# 沒有依據就不能寫「休診」——那是關於一間真實醫療機構的事實。
+# 用 None 表示「還沒確認」，表格會渲染成待填標記。
+SCHEDULE: dict[str, tuple[str, ...] | None] = {
+    "一": ("早", "中", "晚"),
+    "二": ("早", "中"),
+    "三": ("早", "中", "晚"),
+    "四": ("早", "中"),
+    "五": ("早", "中", "晚"),
+    "六": ("早", "中"),
+    "日": None,
+}
+SHIFT_ORDER = ("早", "中", "晚")
+# 各班別的實際時刻。院方確認後填進來，表格會在班別名稱下多一行時間。
+# 沒填就只顯示班別——寧可少講，不要猜一個時間掛在醫療機構的網站上。
+SHIFT_TIMES: dict[str, str] = {
+    # "早": "07:00–11:30", "中": "12:00–16:30", "晚": "17:00–21:30",
+}
+
 # 停診／代診公告。
 #
 # 這一區原本是寫死的「目前無停診公告」。一個永遠寫著「目前無停診」的公告欄，
@@ -418,6 +441,26 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp img{height:46px;width:auto;flex-shrink:0}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
+/* ---- 一週透析排班表 ---- */
+/* 外面包一層 overflow-x:auto：七欄在 320px 上排不下，讓表格自己橫向捲，
+   而不是把整頁撐出橫向捲軸。 */
+.tw{overflow-x:auto;margin:18px 0 20px;-webkit-overflow-scrolling:touch}
+.sched{border-collapse:collapse;width:100%;min-width:420px;font-size:15px}
+.sched th,.sched td{border:1px solid var(--line);padding:11px 8px;text-align:center}
+.sched thead th{background:var(--navy);color:#fff;font-family:var(--serif);
+font-weight:700;font-size:14.5px}
+/* 「週」字在窄螢幕收掉，只留一二三四五六日——七欄才排得下 */
+@media(max-width:560px){.sched .dw{display:none}}
+.sched tbody th{background:var(--mist);font-family:var(--serif);color:var(--navy);
+font-weight:700;white-space:nowrap;text-align:left;padding-left:14px}
+.sched .st{display:block;font-family:var(--sans);font-weight:400;
+font-size:12.5px;color:var(--mut);letter-spacing:0}
+.sched td.on{color:var(--teal);font-size:17px;background:rgba(20,128,122,.06)}
+.sched td.off{color:#b9c4cf}
+.sched td.q{color:#7a5b00;background:#fff3c4;font-weight:700}
+.tnote{margin:0 0 18px;font-size:14px;color:var(--mut)}
+.svisually{position:absolute;width:1px;height:1px;overflow:hidden;
+clip:rect(0 0 0 0);white-space:nowrap}
 .fl{margin:0 0 6px;line-height:1.75}
 /* 英文地址：給外籍病人與 Google 用的，不是給一般讀者讀的，所以壓小壓灰。
    overflow-wrap:anywhere 是因為它是一長串沒有中文斷點的英文，
@@ -639,9 +682,11 @@ def shell(path: str, title: str, desc: str, body: str,
     # 院徽：檔案沒放就整塊不出現，不留破圖也不留佔位。
     # 只放在頁尾與關於頁——頁首已經有腎臟標誌與中心名稱，再擠一個院徽
     # 會變成兩個標誌互相稀釋，而且院徽是橫式的，塞進 68px 的頁首會很小。
+    # 只放院徽，不加「隸屬於郭綜合醫院」——中心名稱本身就是
+    # 「郭綜合醫院血液透析中心」，再寫一次隸屬關係是同一件事講兩遍。
+    # 院徽留著：那是識別，不是說明文字。
     fhosp = (f'<p class="fhosp"><img src="img/KGH.png" '
-             f'alt="{esc(FACTS["hospital"])}" width="326" height="182">'
-             f'<span>隸屬於{esc(FACTS["hospital"])}</span></p>'
+             f'alt="{esc(FACTS["hospital"])}" width="326" height="182"></p>'
              if HOSP_LOGO.exists() else "")
     # 英文地址第二行。給的是給外籍病人與 Google 用的，壓小壓灰，
     # 沒填就整行不出現（不是空字串佔一行）。
@@ -980,18 +1025,45 @@ def doctors_html() -> str:
             + '</ul>')
 
 
-def hosp_band() -> str:
-    """關於頁最上面的「隸屬機構」帶。院徽沒放就整塊不出現。
+# 2026-09-07 移除關於頁的「隸屬機構」帶。原本是院徽＋「本中心隸屬於
+# 郭綜合醫院，為院內的血液透析專責單位。」——中心名稱本身就叫
+# 「郭綜合醫院血液透析中心」，隸屬關係在頁首、頁尾、標題裡各講過一次，
+# 關於頁再講第四次沒有加到任何資訊。院徽仍留在頁尾。
 
-    放在「我們是誰」之前：讀者點進關於頁第一個想確認的就是
-    「這是哪一家醫院的單位」，那個答案應該在第一眼就看得到。
+
+def schedule_table() -> str:
+    """一週透析排班表，做法比照門診時刻表。
+
+    橫軸是星期、縱軸是班別，有排班的格子打勾。
+    每格都給 aria-label：讀螢幕軟體念到一個孤零零的勾沒有意義，
+    要能念出「週一 早班 有」。
     """
-    if not HOSP_LOGO.exists():
-        return ""
-    return (f'<p class="hosp"><img src="img/KGH.png" '
-            f'alt="{esc(FACTS["hospital"])}" width="326" height="182">'
-            f'<span>本中心隸屬於<strong>{esc(FACTS["hospital"])}</strong>，'
-            f'為院內的血液透析專責單位。</span></p>')
+    days = list(SCHEDULE)
+    head = "".join(f'<th scope="col"><span class="dw">週</span>{d}</th>'
+                   for d in days)
+    rows = []
+    for sh in SHIFT_ORDER:
+        cells = []
+        for d in days:
+            v = SCHEDULE[d]
+            if v is None:
+                cells.append('<td class="q" aria-label="待確認">?</td>')
+            elif sh in v:
+                cells.append(f'<td class="on" aria-label="週{d}{sh}班有排班">'
+                             f'<span aria-hidden="true">●</span></td>')
+            else:
+                cells.append(f'<td class="off" aria-label="週{d}{sh}班無排班">'
+                             f'<span aria-hidden="true">–</span></td>')
+        t = SHIFT_TIMES.get(sh)
+        label = (f'{sh}班<span class="st">{esc(t)}</span>' if t else f"{sh}班")
+        rows.append(f'<tr><th scope="row">{label}</th>{"".join(cells)}</tr>')
+    note = ("" if all(v is not None for v in SCHEDULE.values())
+            else '<p class="tnote">「?」的欄位尚未確認，'
+                 '請直接來電或詢問洗腎室服務專員。</p>')
+    return (f'<div class="tw"><table class="sched">'
+            f'<caption class="svisually">一週透析排班表</caption>'
+            f'<thead><tr><th scope="col">班別</th>{head}</tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table></div>{note}')
 
 
 def build_about() -> str:
@@ -999,7 +1071,6 @@ def build_about() -> str:
                      "長期的治療需要一個穩定的地方——固定的團隊、固定的時段、"
                      "有問題找得到人。") + f"""
 <section><div class="wrap"><div class="prose reveal">
-{hosp_band()}
 <h2>我們是誰</h2>
 <p>{fact('center')}由腎臟科專科醫師與專責透析護理人員組成固定團隊，
 配合營養師與社工，提供血液透析與血液透析過濾治療。</p>
@@ -1222,8 +1293,8 @@ def build_visit() -> str:
 </ul>
 
 <h2>透析時段</h2>
-<p>{fact('shifts')}</p>
-<p>時段一旦排定就固定下來，方便安排工作與生活。
+{schedule_table()}
+<p>服務時間：{fact('tel_note')}。時段一旦排定就固定下來，方便安排工作與生活。
 臨時無法到院請盡早來電，我們會協助安排補洗。</p>
 
 <h2>臨時透析與旅遊透析</h2>
