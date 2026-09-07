@@ -17,6 +17,20 @@
 
     python import_digests.py            預覽會匯入什麼，不寫檔
     python import_digests.py --write    真的寫進 news.json
+
+2026-09-07 起作者的做法是**每日三篇一律上網站**，不再逐篇挑。
+所以這支變成每天要跑的一步，整套是：
+
+    python import_digests.py --write
+    python build_site.py
+    python bump_assets.py
+    python check_site.py
+    git add -A && git commit && git push
+
+要拿掉某一篇就從 news.json 刪掉它，再跑一次 build_site.py；
+刪掉之後這支會把它當成新的重新匯入，所以順手也要把那個 DOI
+留在 nephrology_digest/scripts/daily_covered.json 裡（別跑 sync_covered.py，
+那支會照網站重建帳本，等於允許它明天再被挑一次）。
 """
 from __future__ import annotations
 
@@ -80,8 +94,12 @@ TOPIC_RULES: list[tuple[str, tuple[str, ...]]] = [
 
 # 只收這三本。作者指定：新知區以頂尖綜合期刊為主，
 # 專科期刊（KI Reports、CJASN、NDT、AJKD…）不進網站。
-# 每日摘要本身照樣收各家，這裡只是網站端的篩子。
 ALLOWED_JOURNALS = {"NEJM", "THE LANCET", "JAMA"}
+
+# 每日摘要改成也只搜這三本的第一天（digest_prompt.txt 於 2026-09-05 晚間改，
+# 隔天的排程才是第一份照新規則產的）。這一天之後的摘要，三篇理應全部收得進來；
+# 收不進來會在報表最後單獨列出來。更早的檔案還混著專科期刊，被擋掉是正常的。
+NEW_RULES_FROM = "2026-09-06"
 
 
 def guess_topic(zh: str, en: str) -> str:
@@ -114,20 +132,25 @@ def pub_date(byline: str, fallback: str) -> str:
     return fallback
 
 
-def convert(e: dict, filedate: str) -> dict | None:
-    """一篇摘要 → 網站的資料結構。缺關鍵欄位就回 None。"""
+def convert(e: dict, filedate: str) -> dict | str:
+    """一篇摘要 → 網站的資料結構。不能收的回傳「原因」字串。
+
+    2026-09-07 起作者的做法是「每日三篇一律上網站」，所以「這篇沒進來」
+    變成一件需要被看見的事。原本兩種情況都回 None，在報表上混成同一堆
+    「欄位不全」，期刊不對被擋掉的看起來像解析失敗。
+    """
     zh, doi = e["zh"], e["doi"]
     if not zh or not doi:
-        return None
+        return "缺標題或 DOI"
     journal = JOURNAL.get(e["jtag"].upper().strip(), e["jtag"].upper().strip())
     if journal not in ALLOWED_JOURNALS:
-        return None
+        return f"期刊不收（{journal or '標籤空白'}）"
     q = pd.pick_key(e["kp"], "問題", "Question")
     f = pd.pick_key(e["kp"], "發現", "Findings")
     m = pd.pick_key(e["kp"], "意義", "Meaning")
     # 「意義」是網站上唯一會出現在首頁的那一段，沒有它這篇就沒有價值
     if not m:
-        return None
+        return "缺「意義 Meaning」"
     d = {
         "journal": journal,
         "date": pub_date(e["byline"], filedate),
@@ -168,8 +191,8 @@ def main() -> int:
         fd = f.stem[-10:]
         for e in pd.parse(f):
             d = convert(e, fd)
-            if d is None:
-                skipped.append((fd, e["jtag"], (e["zh"] or "（無標題）")[:34]))
+            if isinstance(d, str):
+                skipped.append((fd, d, (e["zh"] or "（無標題）")[:34]))
                 continue
             if d["doi"] in have:
                 dup += 1
@@ -178,13 +201,26 @@ def main() -> int:
             new.append(d)
 
     new.sort(key=lambda x: x["date"], reverse=True)
-    print(f"可匯入 {len(new)} 篇　已存在略過 {dup} 篇　"
-          f"欄位不全略過 {len(skipped)} 篇")
+    print(f"可匯入 {len(new)} 篇　已存在略過 {dup} 篇　收不了 {len(skipped)} 篇")
 
     if skipped:
-        print("\n略過的（缺標題／DOI／意義）")
-        for fd, j, t in skipped:
-            print(f"  {fd}　{j:<12}{t}")
+        from collections import Counter
+        print("\n收不了的，依原因分組")
+        for why, n in Counter(w for _fd, w, _t in skipped).most_common():
+            print(f"  ── {why}　{n} 篇")
+            for fd, w, t in skipped:
+                if w == why:
+                    print(f"       {fd}　{t}")
+
+    # 現在的做法是「每日三篇一律上網站」，所以有東西沒收進來就是要處理的事。
+    # 但只從新規則生效那天起算：更早的摘要還在收專科期刊（JASN、CJASN、
+    # KI Reports…），那些被擋掉是預期的，每次都跳出來喊只會變成雜訊。
+    hot = [(fd, w, t) for fd, w, t in skipped if fd >= NEW_RULES_FROM]
+    if hot:
+        print(f"\n⚠ {NEW_RULES_FROM} 之後有 {len(hot)} 篇沒收進來："
+              "現在的規則是每日三篇一律上網站，這幾篇要看一下")
+        for fd, w, t in hot:
+            print(f"    {fd}　{w}　{t}")
 
     from collections import Counter
     tc = Counter(x.get("topic") or "（未分類）" for x in new)
