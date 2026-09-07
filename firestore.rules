@@ -12,11 +12,18 @@ rules_version = '2';
 
    名稱是自由欄位（本來就允許取任何綽號），要守住的是分數。以下限制讓
    分數只能用「一輪一輪玩上去」的節奏累積：
-     ・只升不降，上限 100
+     ・只升不降，上限 200
      ・每次寫入最多 +10（一輪十題的上限），不能一次跳到滿分
      ・兩次寫入至少間隔 10 秒，十題不可能在十秒內答完
      ・分數不得超過「已完成輪數 × 10」
-   合計：要從零爬到 100 至少得寫入十次、耗時 90 秒以上。
+   合計：要從零爬到 200 至少得寫入二十次、耗時 190 秒以上。
+
+   2026-09-08 上限由 100／10 輪提高到 200／20 輪。
+   ⚠ 這兩個數字在 game.html（QUIZ_TOTAL、QUIZ_CHALLENGE）與 sync.js（LB_MAX_*）
+     也各有一份，三處必須一致。只改前端不改這裡的話，第 11 輪之後的寫入會被
+     這份規則拒絕，而前端的 catch 只寫 console.debug——畫面上完全看不出失敗。
+   ⚠ **改完這個檔案不會自動生效**：它只是版本控制裡的一份副本，
+     要到 Firebase console > Firestore > 規則貼上並發布才算數。
 
    ※ 誠實說明：這是提高成本，不是證明。安全規則只看得到單次寫入內容，
      無法驗證題目是否真的答對。要真正保證分數是玩出來的，必須把出題與
@@ -62,8 +69,8 @@ service cloud.firestore {
             && d.uid == request.auth.uid
             && d.week is string && d.week.matches('^[0-9]{8}$')
             && d.name is string && d.name.size() > 0 && d.name.size() <= 16
-            && d.score is int  && d.score  >= 0 && d.score  <= 100
-            && d.rounds is int && d.rounds >= 1 && d.rounds <= 10
+            && d.score is int  && d.score  >= 0 && d.score  <= 200
+            && d.rounds is int && d.rounds >= 1 && d.rounds <= 20
             && d.score <= d.rounds * 10        // 一輪十題，分數不能超過已玩輪數
             && d.at == request.time;           // 時間戳必須由伺服器產生
       }

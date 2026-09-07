@@ -13,6 +13,12 @@ const FIREBASE_CONFIG = {
   appId: "1:494753459903:web:281898dfc087dad416600a",
 };
 
+/* 排行榜的分數與輪數上限。2026-09-08 由 100／10 提高到 200／20。
+   ⚠ 這兩個數字在 game.html（QUIZ_TOTAL、QUIZ_CHALLENGE）與
+   firestore.rules（valid() 的 score／rounds 上限）也各有一份，三處必須一致。 */
+const LB_MAX_ROUNDS = 20;
+const LB_MAX_SCORE = LB_MAX_ROUNDS * 10;
+
 if (FIREBASE_CONFIG) {
   const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js");
   const { getAuth, onAuthStateChanged, signInAnonymously, GoogleAuthProvider,
@@ -279,7 +285,13 @@ if (FIREBASE_CONFIG) {
         return all;
       }catch(e){ console.debug("qstats read", e); return null; }
     },
-    /* 一人一週一筆，同一週內重複送出就更新那一筆，不會洗版排行榜。 */
+    /* 一人一週一筆，同一週內重複送出就更新那一筆，不會洗版排行榜。
+       ⚠ 上限有三個地方要一致，缺一個就會安靜地失效：
+           game.html      QUIZ_CHALLENGE / QUIZ_TOTAL（畫面顯示與累計邏輯）
+           sync.js        下面的 LB_MAX_*（送出前先夾住）
+           firestore.rules valid() 裡的 score / rounds 上限（伺服器端擋）
+       只改前兩處的話，第 11 輪之後的寫入會被安全規則拒絕，
+       而這裡的 catch 只會 console.debug，畫面上看不出任何錯誤。 */
     async submitScore(name, score, rounds){
       try{
         if(!auth.currentUser) await signInAnonymously(auth);   // 匿名身分即可，仍不需個資
@@ -288,8 +300,8 @@ if (FIREBASE_CONFIG) {
         // 文件 id 帶週次：換週就是新的一筆，不必和上週的分數比大小
         await setDoc(doc(db, "leaderboard", `${uid}_${week}`), {
           uid, week, name: clean,
-          score: Math.max(0, Math.min(100, score|0)),
-          rounds: Math.max(1, Math.min(10, rounds|0)),
+          score: Math.max(0, Math.min(LB_MAX_SCORE, score|0)),
+          rounds: Math.max(1, Math.min(LB_MAX_ROUNDS, rounds|0)),
           at: serverTimestamp(),
         });
         cDropWeek(week);          // 榜單已變動，快取作廢
