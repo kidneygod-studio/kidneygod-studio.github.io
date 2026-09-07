@@ -224,8 +224,27 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp img{height:46px;width:auto;flex-shrink:0}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
-.fnote{margin-top:34px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14);
+.fl{margin:0 0 6px;line-height:1.75}
+/* 英文地址：給外籍病人與 Google 用的，不是給一般讀者讀的，所以壓小壓灰。
+   overflow-wrap:anywhere 是因為它是一長串沒有中文斷點的英文，
+   在窄欄裡不斷行就會撐出容器。 */
+.fen{display:block;margin-top:3px;font-size:12.5px;color:#93a8bf;
+line-height:1.65;overflow-wrap:anywhere}
+/* padding-bottom 是給右下角那顆固定的浮動預約鈕讓位的。
+   它 position:fixed，捲到底時會壓在頁尾最後一行上面——實測 641～900px
+   會蓋掉「本頁最後更新於…」的後半。這一段對所有寬度都要留，
+   不是只有手機：1280px 沒事只是因為版面夠寬，字還沒長到鈕的位置。 */
+.fnote{margin-top:34px;padding-top:20px;padding-bottom:64px;
+border-top:1px solid rgba(255,255,255,.14);
 font-size:13px;color:#93a8bf;line-height:1.9}
+/* 手機直式：兩欄擠在 393px 只剩 163px，中心名稱被折成
+   「郭綜合醫院血液透／析中心」，第三欄還會掉到左下角、右邊留一大塊空白。
+   改單欄，一路往下讀。 */
+@media(max-width:640px){
+  .fgrid{grid-template-columns:1fr;gap:26px}
+  footer.site{padding:44px 0 26px}
+  .fnote{margin-top:26px}
+}
 
 /* ---- 浮動預約鈕 ---- */
 .float{position:fixed;right:20px;bottom:20px;z-index:55;display:flex;align-items:center;

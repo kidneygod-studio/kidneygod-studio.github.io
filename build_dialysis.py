@@ -50,9 +50,16 @@ class TODO(str):
 FACTS: dict[str, str] = {
     "center":     "郭綜合醫院血液透析中心",
     "hospital":   "郭綜合醫院",
-    "addr":       TODO("院區地址"),
-    "tel":        TODO("透析室電話"),
-    "tel_note":   TODO("服務時間，例如 週一至週六 07:00–21:00"),
+    # 地址與電話照作者給的原文照抄，不改寫格式——這是關於一間真實醫療機構
+    # 的事實，「二段」還是「2段」不是我該替它決定的事。
+    "addr":       "700002 台南市中西區民生路2段22號",
+    # 英文地址單獨一個欄位：頁尾把中英文串成一行會變成一大塊，
+    # 而且 JSON-LD 的 streetAddress 要的是單一語言，混在一起會髒。
+    # 有值才渲染成第二行，沒有就整行不出現。
+    "addr_en":    ("No. 22, Sec. 2, Minsheng Rd., West Central Dist., "
+                   "Tainan City 700002, Taiwan (R.O.C.)"),
+    "tel":        "(06)222-1111 轉 2500",
+    "tel_note":   "週一三五 07:00–21:00，週二四六 07:00–17:00",
     "shifts":     TODO("透析時段，例如 一三五／二四六，早中晚三班"),
     "beds":       TODO("透析床位數"),
     "machines":   TODO("透析機台數"),
@@ -362,8 +369,27 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp img{height:46px;width:auto;flex-shrink:0}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
-.fnote{margin-top:34px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14);
+.fl{margin:0 0 6px;line-height:1.75}
+/* 英文地址：給外籍病人與 Google 用的，不是給一般讀者讀的，所以壓小壓灰。
+   overflow-wrap:anywhere 是因為它是一長串沒有中文斷點的英文，
+   在窄欄裡不斷行就會撐出容器。 */
+.fen{display:block;margin-top:3px;font-size:12.5px;color:#93a8bf;
+line-height:1.65;overflow-wrap:anywhere}
+/* padding-bottom 是給右下角那顆固定的浮動預約鈕讓位的。
+   它 position:fixed，捲到底時會壓在頁尾最後一行上面——實測 641～900px
+   會蓋掉「本頁最後更新於…」的後半。這一段對所有寬度都要留，
+   不是只有手機：1280px 沒事只是因為版面夠寬，字還沒長到鈕的位置。 */
+.fnote{margin-top:34px;padding-top:20px;padding-bottom:64px;
+border-top:1px solid rgba(255,255,255,.14);
 font-size:13px;color:#93a8bf;line-height:1.9}
+/* 手機直式：兩欄擠在 393px 只剩 163px，中心名稱被折成
+   「郭綜合醫院血液透／析中心」，第三欄還會掉到左下角、右邊留一大塊空白。
+   改單欄，一路往下讀。 */
+@media(max-width:640px){
+  .fgrid{grid-template-columns:1fr;gap:26px}
+  footer.site{padding:44px 0 26px}
+  .fnote{margin-top:26px}
+}
 
 /* ---- 浮動預約鈕 ---- */
 .float{position:fixed;right:20px;bottom:20px;z-index:55;display:flex;align-items:center;
@@ -568,6 +594,10 @@ def shell(path: str, title: str, desc: str, body: str,
              f'alt="{esc(FACTS["hospital"])}" width="326" height="182">'
              f'<span>隸屬於{esc(FACTS["hospital"])}</span></p>'
              if HOSP_LOGO.exists() else "")
+    # 英文地址第二行。給的是給外籍病人與 Google 用的，壓小壓灰，
+    # 沒填就整行不出現（不是空字串佔一行）。
+    addr_en = (f'<span class="fen">{fact("addr_en")}</span>'
+               if has("addr_en") else "")
     # 還有待填欄位就擋搜尋引擎。這是一間真實醫療機構的頁面，
     # 帶著「待填：透析室電話」被索引，比晚一點上線糟糕得多。
     # 全部填完之後這一行會自己消失，不必記得回來改。
@@ -615,9 +645,9 @@ def shell(path: str, title: str, desc: str, body: str,
     <div>
       {fhosp}
       <p class="fbrand">{fact('center')}</p>
-      <p style="margin:0 0 6px">地址：{fact('addr')}</p>
-      <p style="margin:0 0 6px">電話：{fact('tel')}</p>
-      <p style="margin:0">服務時間：{fact('tel_note')}</p>
+      <p class="fl">地址：{fact('addr')}{addr_en}</p>
+      <p class="fl">電話：{fact('tel')}</p>
+      <p class="fl" style="margin:0">服務時間：{fact('tel_note')}</p>
     </div>
     <div><h4>認識我們</h4><ul>
       <li><a href="about.html">關於中心</a></li>
