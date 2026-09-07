@@ -101,6 +101,16 @@ def pub_date(byline: str, fallback: str) -> str:
     m = re.search(r"(20\d\d)[-/](\d{1,2})[-/](\d{1,2})", byline)
     if m:
         return f"{m.group(1)}-{int(m.group(2)):02d}-{int(m.group(3)):02d}"
+    # 只有年份的引用格式：N Engl J Med 2020;383:240-251。
+    # 回退到「摘要產生日」很危險——2020 年的 STARRT-AKI 會被標成今天，
+    # 排在最上面變成「最新研究」，首頁那張卡也會選到它。
+    # \b 兩側都要邊界，所以 PMID 42684836、DOI 裡的 NEJMoa2000741
+    # 這種夾在長數字或字母中間的四位數不會被誤認。
+    # 取第一個而不是最大的：引用格式裡發表年在最前面，後面的頁碼
+    # 可能長得像年份（…2015;372:2010-2020 的 2010、2020 都是頁碼）。
+    m = re.search(r"\b(19\d\d|20[0-3]\d)\b", byline)
+    if m:
+        return m.group(1)
     return fallback
 
 
