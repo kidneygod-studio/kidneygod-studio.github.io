@@ -331,8 +331,15 @@
 
 <div class="wrap">
 
+  <!-- 2026-09-08 小學堂移到第一個，並改成進頁面的預設遊戲。
+       id 刻意不動：tabN 的 N 就是 MODE 編號，程式各處都靠這個對應，
+       換了 id 等於要改十幾處 MODE 判斷。要換的是「排列順序」不是「編號」。 -->
   <div class="picker">
-    <button class="gcard on" id="tab1" onclick="pick(1)">
+    <button class="gcard on" id="tab3" onclick="pick(3)">
+      <span class="em">📖</span>
+      <span><b>護腎小學堂</b><span>問答闖關 ・ 每題都附醫學指引出處</span></span>
+    </button>
+    <button class="gcard" id="tab1" onclick="pick(1)">
       <span class="em">🏃</span>
       <span><b>小腎臟大冒險</b><span>跳躍閃避 ・ 躲開傷腎因子 +3、撿腎元 +5</span></span>
     </button>
@@ -340,19 +347,18 @@
       <span class="em">👾</span>
       <span><b>小腎臟吃豆人</b><span>迷宮吃腎元 ・ 躲開傷腎因子怪獸</span></span>
     </button>
-    <button class="gcard" id="tab3" onclick="pick(3)">
-      <span class="em">📖</span>
-      <span><b>護腎小學堂</b><span>問答闖關 ・ 每題都附醫學指引出處</span></span>
-    </button>
   </div>
 
   <section class="stage">
     <div class="shead">
-      <h2><img class="ki gki" alt=""><span id="gTitle">小腎臟大冒險</span></h2>
-      <div class="snote" id="gNote">按空白鍵或點擊畫面跳躍 — 躲開傷腎因子 +3 腎元，跳起來撿腎元 +5</div>
+      <h2><img class="ki gki" alt=""><span id="gTitle">護腎小學堂</span></h2>
+      <div class="snote" id="gNote">每輪 10 題，答對 +8 腎元，連續答對 3 題起有加成 — 每題都附醫學指引出處</div>
     </div>
-    <canvas id="cv"></canvas>
-    <div id="quizWrap" style="display:none"></div>
+    <!-- 預設是小學堂（DOM），所以畫布先藏起來、題目區先開著。
+         這兩個 inline style 必須和下面的 let MODE 的初始值一致，
+         不然會出現「標題寫小學堂、畫面卻在跑跑酷」。 -->
+    <canvas id="cv" style="display:none"></canvas>
+    <div id="quizWrap" style="display:block"></div>
     <div class="stats" id="statBar"></div>
     <div class="pad" id="pad">
       <button class="u" data-d="0,-1" aria-label="上">▲</button>
@@ -464,7 +470,11 @@ for(const n of [1, 2, 3]){
   if(!GAME_ON[n]) $("tab"+n).style.display = "none";
 }
 
-let MODE = 1, RAF = null;
+/* 進頁面的預設遊戲。2026-09-08 由跑酷（1）改成小學堂（3）——
+   小學堂是這個頁面真正想給的東西（每題附指引出處、連得到知識卡），
+   跑酷是玩法的入口。改這個值時，上面舞台區的 gTitle／gNote 與
+   canvas／quizWrap 的 inline style 都要跟著改成同一個模式的狀態。 */
+let MODE = 3, RAF = null;
 const isTouch = matchMedia("(pointer:coarse)").matches;
 if(isTouch) document.body.classList.add("touch");
 
@@ -1483,7 +1493,10 @@ function initViews(tries = 0){
 }
 initViews();
 fillCoinIcons(); syncCoinBar(); renderTips(); applyFontScale();
-fitCanvas(); statsRunner(); loopRunner();
+/* MODE 已經是 3，pick(3) 會被開頭那道「已經是這個模式」的守衛擋掉，
+   所以這裡直接做 pick(3) 會做的事：出題。fitCanvas 仍要跑一次，
+   之後切到跑酷或吃豆人時畫布尺寸才是對的。 */
+fitCanvas(); quizStart();
 function closeAll(){ ["account","shareBox"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
 </script>
 <script type="module" src="sync.js?v=496af080"></script>
