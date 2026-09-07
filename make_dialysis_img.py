@@ -55,7 +55,9 @@ SIZES: dict[str, tuple[int, int]] = {
     "col-travel":    (900, 506),
 }
 # 標誌保持 PNG：要去背，轉成 JPEG 會多一塊白底
-LOGOS = {"logo": 512, "logo-white": 512}
+# KGH 是郭綜合醫院的院徽（橫式）。thumbnail 不會放大，326x182 的原圖
+# 會原樣輸出——顯示高度約 34px，還有四倍餘裕，夠用。
+LOGOS = {"logo": 512, "logo-white": 512, "KGH": 512}
 OG = (1200, 630)   # 由 hero 裁出來，不必另外生圖
 
 

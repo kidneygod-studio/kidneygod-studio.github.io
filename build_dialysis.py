@@ -23,6 +23,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "dialysis"
 BASE_URL = "https://kidneygod.net/dialysis"
+# 郭綜合的院徽。原圖放 img_src/KGH.png，由 make_dialysis_img.py 壓過來。
+# 這是醫院的資產，不是這個站自己的——只用來標示隸屬關係，
+# 不放在頁首當主標誌（那會讀成「這是醫院官網」）。
+HOSP_LOGO = OUT / "img" / "KGH.png"
 TODAY = "2026-09-05"
 
 
@@ -333,6 +337,18 @@ gap:32px}
 .fgrid ul{list-style:none;margin:0;padding:0}
 .fgrid li+li{margin-top:8px}
 .fbrand{font-family:var(--serif);color:#fff;font-size:19px;margin:0 0 10px}
+/* 院徽：綠＋深藍的配色，深藍那半塊直接放在深藍頁尾上會整塊消失，
+   所以墊一塊白底。改的是它的底，醫院的識別色一個字都沒動。 */
+.fhosp{display:flex;align-items:center;gap:13px;margin:0 0 16px}
+.fhosp img{height:38px;width:auto;background:#fff;border-radius:8px;
+padding:6px 11px;box-sizing:content-box}
+.fhosp span{font-size:13px;color:#9fb4cc;letter-spacing:.04em}
+/* 隸屬機構：關於頁用，淺底不必墊白塊 */
+.hosp{display:flex;align-items:center;gap:16px;margin:0 0 26px;padding:15px 18px;
+background:var(--mist);border:1px solid var(--line);border-radius:12px}
+.hosp img{height:46px;width:auto;flex-shrink:0}
+.hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
+@media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
 .fnote{margin-top:34px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14);
 font-size:13px;color:#93a8bf;line-height:1.9}
 
@@ -528,6 +544,13 @@ def shell(path: str, title: str, desc: str, body: str,
             if (OUT / "img" / "logo-white.png").exists() else LOGO_SVG)
     icon = ('<link rel="icon" href="img/logo.png">'
             if (OUT / "img" / "logo.png").exists() else "")
+    # 院徽：檔案沒放就整塊不出現，不留破圖也不留佔位。
+    # 只放在頁尾與關於頁——頁首已經有腎臟標誌與中心名稱，再擠一個院徽
+    # 會變成兩個標誌互相稀釋，而且院徽是橫式的，塞進 68px 的頁首會很小。
+    fhosp = (f'<p class="fhosp"><img src="img/KGH.png" '
+             f'alt="{esc(FACTS["hospital"])}" width="326" height="182">'
+             f'<span>隸屬於{esc(FACTS["hospital"])}</span></p>'
+             if HOSP_LOGO.exists() else "")
     # 還有待填欄位就擋搜尋引擎。這是一間真實醫療機構的頁面，
     # 帶著「待填：透析室電話」被索引，比晚一點上線糟糕得多。
     # 全部填完之後這一行會自己消失，不必記得回來改。
@@ -573,6 +596,7 @@ def shell(path: str, title: str, desc: str, body: str,
 <div class="wrap">
   <div class="fgrid">
     <div>
+      {fhosp}
       <p class="fbrand">{fact('center')}</p>
       <p style="margin:0 0 6px">地址：{fact('addr')}</p>
       <p style="margin:0 0 6px">電話：{fact('tel')}</p>
@@ -823,6 +847,11 @@ def build_home() -> str:
         "url": f"{BASE_URL}/",
         "parentOrganization": {"@type": "Hospital", "name": FACTS["hospital"]},
     }
+    # 院徽掛在 parentOrganization 底下而不是 MedicalClinic 底下：
+    # 這是醫院的標誌，不是這個中心自己的。掛錯層級等於告訴搜尋引擎
+    # 「血液透析中心的 logo 長這樣」，之後院方要用自己的識別會打架。
+    if HOSP_LOGO.exists():
+        ld["parentOrganization"]["logo"] = f"{BASE_URL}/img/KGH.png"
     if has("addr"):
         ld["address"] = {"@type": "PostalAddress", "streetAddress": FACTS["addr"]}
     if has("tel"):
@@ -855,11 +884,26 @@ def doctors_html() -> str:
             + '</ul>')
 
 
+def hosp_band() -> str:
+    """關於頁最上面的「隸屬機構」帶。院徽沒放就整塊不出現。
+
+    放在「我們是誰」之前：讀者點進關於頁第一個想確認的就是
+    「這是哪一家醫院的單位」，那個答案應該在第一眼就看得到。
+    """
+    if not HOSP_LOGO.exists():
+        return ""
+    return (f'<p class="hosp"><img src="img/KGH.png" '
+            f'alt="{esc(FACTS["hospital"])}" width="326" height="182">'
+            f'<span>本中心隸屬於<strong>{esc(FACTS["hospital"])}</strong>，'
+            f'為院內的血液透析專責單位。</span></p>')
+
+
 def build_about() -> str:
     body = page_hero("About us", "關於中心",
                      "長期的治療需要一個穩定的地方——固定的團隊、固定的時段、"
                      "有問題找得到人。") + f"""
 <section><div class="wrap"><div class="prose reveal">
+{hosp_band()}
 <h2>我們是誰</h2>
 <p>{fact('center')}由腎臟科專科醫師與專責透析護理人員組成固定團隊，
 配合營養師與社工，提供血液透析與血液透析過濾治療。</p>

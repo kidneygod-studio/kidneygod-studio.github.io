@@ -199,6 +199,18 @@ gap:32px}
 .fgrid ul{list-style:none;margin:0;padding:0}
 .fgrid li+li{margin-top:8px}
 .fbrand{font-family:var(--serif);color:#fff;font-size:19px;margin:0 0 10px}
+/* 院徽：綠＋深藍的配色，深藍那半塊直接放在深藍頁尾上會整塊消失，
+   所以墊一塊白底。改的是它的底，醫院的識別色一個字都沒動。 */
+.fhosp{display:flex;align-items:center;gap:13px;margin:0 0 16px}
+.fhosp img{height:38px;width:auto;background:#fff;border-radius:8px;
+padding:6px 11px;box-sizing:content-box}
+.fhosp span{font-size:13px;color:#9fb4cc;letter-spacing:.04em}
+/* 隸屬機構：關於頁用，淺底不必墊白塊 */
+.hosp{display:flex;align-items:center;gap:16px;margin:0 0 26px;padding:15px 18px;
+background:var(--mist);border:1px solid var(--line);border-radius:12px}
+.hosp img{height:46px;width:auto;flex-shrink:0}
+.hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
+@media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
 .fnote{margin-top:34px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14);
 font-size:13px;color:#93a8bf;line-height:1.9}
 
