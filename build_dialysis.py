@@ -101,6 +101,11 @@ SCHEDULE: dict[str, tuple[str, ...] | None] = {
     "日": (),
 }
 SHIFT_ORDER = ("早", "中", "晚")
+# 沒有固定班別的那幾天，表頭要標什麼。留白本身讀不出意思，
+# 這個標籤就是讓留白讀得懂的那幾個字。
+# 2026-09-07 作者指定週日寫「僅急診」而不是「休診」——那是兩件事：
+# 休診是不開，僅急診是沒有固定班但臨時狀況有人處理。
+DAY_NOTE: dict[str, str] = {"日": "僅急診"}
 # 各班別的實際時刻。院方確認後填進來，表格會在班別名稱下多一行時間。
 # 沒填就只顯示班別——寧可少講，不要猜一個時間掛在醫療機構的網站上。
 SHIFT_TIMES: dict[str, str] = {
@@ -1044,14 +1049,15 @@ def schedule_table() -> str:
     要能念出「週一 早班 有」。
     """
     days = list(SCHEDULE)
-    # 整天都沒有排班的那一欄留白（作者指定）。但整欄空白會讓人分不出
-    # 「沒開」還是「表格壞了」，所以在表頭補一個「休診」小標——
-    # 這不是多餘的字，是讓留白讀得懂的那一個字。
+    # 整天都沒有固定班別的那一欄留白（作者指定）。但整欄空白會讓人分不出
+    # 「沒排班」還是「表格壞了」，所以表頭補一個小標，標什麼看 DAY_NOTE。
     closed = {d for d, v in SCHEDULE.items() if v is not None and not v}
+    def note_of(d: str) -> str:
+        return DAY_NOTE.get(d, "休診")
     head = "".join(
         f'<th scope="col"{" class=\"cl\"" if d in closed else ""}>'
         f'<span class="dw">週</span>{d}'
-        + ('<span class="cw">休診</span>' if d in closed else "")
+        + (f'<span class="cw">{esc(note_of(d))}</span>' if d in closed else "")
         + "</th>" for d in days)
     rows = []
     for sh in SHIFT_ORDER:
@@ -1065,8 +1071,9 @@ def schedule_table() -> str:
                              f'<span aria-hidden="true">●</span></td>')
             elif d in closed:
                 # 留白。aria-label 還是要講清楚——讀螢幕軟體念到一個空格
-                # 只會說「空白」，使用者不會知道那代表休診。
-                cells.append(f'<td class="cl" aria-label="週{d}休診"></td>')
+                # 只會說「空白」，使用者不會知道那一欄是什麼意思。
+                cells.append(f'<td class="cl" '
+                             f'aria-label="週{d}{esc(note_of(d))}"></td>')
             else:
                 cells.append(f'<td class="off" aria-label="週{d}{sh}班無排班">'
                              f'<span aria-hidden="true">–</span></td>')
