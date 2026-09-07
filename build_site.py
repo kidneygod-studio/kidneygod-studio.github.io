@@ -1134,21 +1134,35 @@ font-size:1.02rem;line-height:1.55}
   .doccred li{font-size:.98rem}
 }
 
-/* ── 首頁 ── */
-/* 開場白鋪水波底圖。做成一張圓角卡片而不是滿版橫幅：
-   滿版要用 left:50%;width:100vw 掙脫 .wrap，而 100vw 含捲軸寬度，
-   這個站已經為了幾 px 的橫向溢出修過三次，不值得為了視覺再冒一次。
-   遮罩用 color-mix 疊 --bg，所以淺色深色共用同一條規則：
-   淺色時是一層白紗、深色時是一層夜色，文字對比都由 --fg 自己保證。
+/* ── 首頁：一區一條滿版橫帶，底色深淺交替 ── */
+/* 結構是 <section class="band"> ＞ .wrap ＞ .zoomable。
+   section 本身就是滿版（它在 .wrap 外面），所以**不需要** 100vw 去掙脫容器——
+   100vw 含捲軸寬度，在有捲軸的桌機上會多出約 15px 的橫向溢出。 */
+main.banded{padding:0}
+.band{padding:34px 0}
+.band.tint{background:var(--card)}
+/* 深色帶上的卡片要翻成 --bg。卡片本來就是 --card，帶底也是 --card，
+   不翻的話整排卡片會和底同色、只剩一圈邊框，看起來像消失了。
+   （透析中心那邊 section.tint .facts li 也是同一個處理。） */
+.band.tint .cats a,.band.tint .mcard,.band.tint .feat,
+.band.tint .gamebtn,.band.tint .morelink{background:var(--bg)}
+.band.tint .morelink{background:none}
+/* 橫帶自己有內距，帶內第一個區塊標題不必再推一次 */
+.band .sect:first-child,.band .zoomable>*:first-child .sect:first-child{margin-top:0}
+.band>.wrap>.zoomable>:first-child{margin-top:0}
+/* 開場白帶：水波底圖鋪滿整條，包含最上面那排分享鈕與字級／配色鈕。
+   遮罩用 color-mix 疊 --bg，淺色深色共用同一條規則——淺色時是一層白紗、
+   深色時是一層夜色，文字對比都由 --fg 自己保證。
    圖在 hero/ 底下走快取優先且網址不帶 ?v=，換圖一定要跑 bump_assets.py。 */
-.hero{padding:32px 26px 24px;border-radius:20px;border:1px solid var(--line);
-border-color:color-mix(in srgb,var(--accent) 18%,var(--line));
+.band.opening{padding:0 0 30px;border-bottom:1px solid var(--line);
+border-bottom-color:color-mix(in srgb,var(--accent) 16%,var(--line));
 background:var(--card);
 background:
-linear-gradient(180deg,color-mix(in srgb,var(--bg) 76%,transparent),
-color-mix(in srgb,var(--bg) 94%,transparent)),
+linear-gradient(180deg,color-mix(in srgb,var(--bg) 74%,transparent),
+color-mix(in srgb,var(--bg) 93%,transparent)),
 url(/hero/home-bg.jpg) center/cover no-repeat}
-@media(max-width:560px){.hero{padding:26px 17px 20px;border-radius:16px}}
+.band.opening .prefbar{padding-top:14px}
+.hero{padding:26px 0 4px}
 .hero h1{font-size:2.1rem;margin:0 0 12px}
 .hero .sub{font-size:1.08rem;color:var(--mut);margin-bottom:6px}
 .hero .cred{font-size:14px;color:var(--mut)}
@@ -1303,9 +1317,26 @@ def social_links() -> str:
         for s in SOCIAL_LIVE)
 
 
+def band(inner: str, tint: bool = False, cls: str = "", zoom: bool = True) -> str:
+    """首頁的一條橫帶。
+
+    橫帶要滿版，內容要鎖在 --maxw——所以結構是
+    <section>（滿版、負責底色）＞ .wrap（限寬）＞ .zoomable（字級縮放）。
+
+    **刻意不用 100vw 去掙脫 .wrap。** 100vw 含捲軸寬度，在有捲軸的桌機上
+    會多出 15px 的橫向溢出；這個站為了幾 px 的溢出修過三次。改成把 section
+    放在 .wrap 外面，滿版是它本來就有的寬度，不必掙脫任何東西。
+    """
+    if not inner.strip():
+        return ""
+    z = f'<div class="zoomable">{inner}</div>' if zoom else inner
+    names = " ".join(x for x in ("band", "tint" if tint else "", cls) if x)
+    return f'<section class="{names}"><div class="wrap wide">{z}</div></section>'
+
+
 def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None,
          extra_head: str = "", after_disclaimer: str = "",
-         pref_left: str = "") -> str:
+         pref_left: str = "", banded: bool = False, opening: str = "") -> str:
     """所有頁面共用的骨架。canonical 與 OG 是搜尋引擎與分享預覽的基本要求。"""
     # canonical 必須和 sitemap 宣告的網址逐字相同，否則等於叫 Google 索引兩個位址。
     # sitemap 用的是目錄形式（/articles/），這裡把 index.html 收掉對齊。
@@ -1417,6 +1448,26 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
                    + VIEWS_SCRIPT)
 
     ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
+
+    # 兩種版面骨架。banded 目前只有首頁用：
+    #   一般頁　main 自己就是 .wrap（限寬），控制列與內容直接放進去
+    #   橫帶頁　main 滿版，內容切成一條一條 <section class="band">，
+    #           底色交替。控制列併進第一條「開場白帶」，和主視覺共用底圖。
+    if banded:
+        main_cls = "banded"
+        main_head = (f'<section class="band opening"><div class="wrap{wide_cls}">'
+                     f'{prefbar(pref_left)}'
+                     f'<div class="zoomable">{opening}</div>'
+                     f'</div></section>')
+        tail_open = (f'<section class="band"><div class="wrap{wide_cls}">'
+                     f'<div class="zoomable">')
+        tail_close = "</div></div></section>"
+    else:
+        main_cls = f"wrap{wide_cls}"
+        main_head = f'{prefbar(pref_left)}\n<div class="zoomable">'
+        tail_open = ""
+        tail_close = "</div>"
+
     return f"""<!doctype html>
 <html lang="zh-Hant">
 <head>
@@ -1444,10 +1495,10 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <a class="brand" href="/">{KIDNEY_SVG}<span>{SITE_NAME}</span></a>
 <nav>{nav}</nav>
 </div></header>
-<main class="wrap{wide_cls}">
-{prefbar(pref_left)}
-<div class="zoomable">
+<main class="{main_cls}">
+{main_head}
 {body}
+{tail_open}
 <div class="author">
   <div>
     <div class="n"><a href="/about.html">{esc(AUTHOR_NAME)}</a>　<span class="r">{esc(AUTHOR_TITLE)}</span></div>
@@ -1457,7 +1508,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 </div>
 <div class="disclaimer">{esc(DISCLAIMER)}</div>
 {after_disclaimer}
-</div>
+{tail_close}
 {FS_SCRIPT}{NAVMENU_SCRIPT}
 </main>
 <footer class="site"><div class="wrap{wide_cls}">
@@ -2114,7 +2165,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 </div>
 """ if HOWTO else "")
 
-    body = f"""
+    opening = f"""
 <div class="hero">
 <h1>護腎專家－{esc(AUTHOR_NAME)}醫師的護腎教室</h1>
 <p class="sub">把腎臟的事，講到你聽得懂。慢性腎臟病、高血壓、糖尿病、高血脂——
@@ -2135,28 +2186,37 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 
 {howto}
 </div>
-
-{news_sect}
-
-{feat_sect}
-
-<h2 class="sect" id="topics">主題衛教</h2>
-<div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>
-<div class="cats">{cards}</div>
-
-{calc_sect}
-{food_sect}
-{gal_sect}
-
-<!-- 商城放最後：衛教是主體，遊戲是其中一種學習方式。
-     順序與頁首下拉選單一致，避免導航與陳列互相矛盾。 -->
-<h2 class="sect" id="play">從免費遊戲學習</h2>
-<div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div>
-<a class="gamebtn" href="/shop.html">
-  <img src="/logo.png" alt="" aria-hidden="true"{logo_dims}>
-  <span class="cap">護腎知識卡片收集遊戲</span>
-</a>
 """
+
+    topics_sect = (
+        f'<h2 class="sect" id="topics">主題衛教</h2>'
+        f'<div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，'
+        f'分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>'
+        f'<div class="cats">{cards}</div>')
+
+    # 商城放最後：衛教是主體，遊戲是其中一種學習方式。
+    # 順序與頁首下拉選單一致，避免導航與陳列互相矛盾。
+    play_sect = (
+        f'<h2 class="sect" id="play">從免費遊戲學習</h2>'
+        f'<div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，'
+        f'唯一會出貨的是護腎知識</div>'
+        f'<a class="gamebtn" href="/shop.html">'
+        f'<img src="/logo.png" alt="" aria-hidden="true"{logo_dims}>'
+        f'<span class="cap">護腎知識卡片收集遊戲</span></a>')
+
+    # 一區一條橫帶，底色深淺交替。空的區塊（例如沒有圖卡時）band() 會回空字串，
+    # 所以交替是「實際排出來的順序」而不是「原始清單的順序」——
+    # 用固定的 i%2 會在某一區消失時出現兩條同色相鄰。
+    sections = [(news_sect, "新知"), (feat_sect, "長文"), (topics_sect, "主題"),
+                (calc_sect, "計算"), (food_sect, "食物"), (gal_sect, "圖卡"),
+                (play_sect, "遊戲")]
+    parts, tint = [], True
+    for html_, _name in sections:
+        if not html_.strip():
+            continue
+        parts.append(band(html_, tint=tint))
+        tint = not tint
+    body = "\n".join(parts)
     jsonld = {
         "@context": "https://schema.org",
         "@type": "WebSite",
@@ -2173,7 +2233,8 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     return page(title, desc, "", body, jsonld,
                 pref_left=share_buttons("", HOME_SHARE_TITLE, top=True),
                 after_disclaimer=share_buttons("", HOME_SHARE_TITLE, top=True)
-                + share_script() + search_script())
+                + share_script() + search_script(),
+                banded=True, opening=opening)
 
 
 def search_script() -> str:

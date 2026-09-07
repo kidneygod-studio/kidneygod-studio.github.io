@@ -592,21 +592,35 @@ font-size:1.02rem;line-height:1.55}
   .doccred li{font-size:.98rem}
 }
 
-/* ── 首頁 ── */
-/* 開場白鋪水波底圖。做成一張圓角卡片而不是滿版橫幅：
-   滿版要用 left:50%;width:100vw 掙脫 .wrap，而 100vw 含捲軸寬度，
-   這個站已經為了幾 px 的橫向溢出修過三次，不值得為了視覺再冒一次。
-   遮罩用 color-mix 疊 --bg，所以淺色深色共用同一條規則：
-   淺色時是一層白紗、深色時是一層夜色，文字對比都由 --fg 自己保證。
+/* ── 首頁：一區一條滿版橫帶，底色深淺交替 ── */
+/* 結構是 <section class="band"> ＞ .wrap ＞ .zoomable。
+   section 本身就是滿版（它在 .wrap 外面），所以**不需要** 100vw 去掙脫容器——
+   100vw 含捲軸寬度，在有捲軸的桌機上會多出約 15px 的橫向溢出。 */
+main.banded{padding:0}
+.band{padding:34px 0}
+.band.tint{background:var(--card)}
+/* 深色帶上的卡片要翻成 --bg。卡片本來就是 --card，帶底也是 --card，
+   不翻的話整排卡片會和底同色、只剩一圈邊框，看起來像消失了。
+   （透析中心那邊 section.tint .facts li 也是同一個處理。） */
+.band.tint .cats a,.band.tint .mcard,.band.tint .feat,
+.band.tint .gamebtn,.band.tint .morelink{background:var(--bg)}
+.band.tint .morelink{background:none}
+/* 橫帶自己有內距，帶內第一個區塊標題不必再推一次 */
+.band .sect:first-child,.band .zoomable>*:first-child .sect:first-child{margin-top:0}
+.band>.wrap>.zoomable>:first-child{margin-top:0}
+/* 開場白帶：水波底圖鋪滿整條，包含最上面那排分享鈕與字級／配色鈕。
+   遮罩用 color-mix 疊 --bg，淺色深色共用同一條規則——淺色時是一層白紗、
+   深色時是一層夜色，文字對比都由 --fg 自己保證。
    圖在 hero/ 底下走快取優先且網址不帶 ?v=，換圖一定要跑 bump_assets.py。 */
-.hero{padding:32px 26px 24px;border-radius:20px;border:1px solid var(--line);
-border-color:color-mix(in srgb,var(--accent) 18%,var(--line));
+.band.opening{padding:0 0 30px;border-bottom:1px solid var(--line);
+border-bottom-color:color-mix(in srgb,var(--accent) 16%,var(--line));
 background:var(--card);
 background:
-linear-gradient(180deg,color-mix(in srgb,var(--bg) 76%,transparent),
-color-mix(in srgb,var(--bg) 94%,transparent)),
+linear-gradient(180deg,color-mix(in srgb,var(--bg) 74%,transparent),
+color-mix(in srgb,var(--bg) 93%,transparent)),
 url(/hero/home-bg.jpg) center/cover no-repeat}
-@media(max-width:560px){.hero{padding:26px 17px 20px;border-radius:16px}}
+.band.opening .prefbar{padding-top:14px}
+.hero{padding:26px 0 4px}
 .hero h1{font-size:2.1rem;margin:0 0 12px}
 .hero .sub{font-size:1.08rem;color:var(--mut);margin-bottom:6px}
 .hero .cred{font-size:14px;color:var(--mut)}
@@ -811,6 +825,7 @@ letter-spacing:.4px;line-height:1.5}
 })();
 </script>
 <h2 class="backlink">延伸閱讀</h2><div class="cats"><a href="/articles/blood-pressure.html"><div class="t">血壓管理：完整整理</div><div class="d">血壓與腎臟是雙向的關係：高血壓會傷腎，腎功能變差又會讓血壓更難控制。這一頁整理血壓與腎臟之間…</div></a><a href="/articles/"><div class="t">全部衛教主題</div><div class="d">血壓、血糖、血脂、飲食、用藥安全…</div></a></div>
+
 <div class="author">
   <div>
     <div class="n"><a href="/about.html">吳政哲</a>　<span class="r">腎臟科醫師</span></div>
