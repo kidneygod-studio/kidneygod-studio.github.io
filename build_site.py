@@ -1134,8 +1134,11 @@ transition-delay:var(--d,0s)}
 /* 文末帶：和正文之間畫一條線，讓「文章結束了」這件事看得出來。
    第一個 .backlink 標題不要再往上推 34px——帶本身已經有 38px 內距。 */
 .band.tail{border-top:1px solid var(--line)}
-.band.tail .zoomable>.backlink:first-child,
 .band.tail .zoomable>:first-child{margin-top:0}
+/* 長文頁的文末帶：不上色、不畫線、上內距歸零，和正文帶連成一氣。
+   正文帶自己的下內距（38px）就是兩者之間的間隔。 */
+.band.tail.plain{background:none;border-top:0;padding-top:0}
+.band.tail.plain .zoomable>:first-child{margin-top:34px}
 /* 深色帶上的卡片要翻成 --bg。卡片本來就是 --card，帶底也是 --card，
    不翻的話整排卡片會和底同色、只剩一圈邊框，看起來像消失了。
    （透析中心那邊 section.tint .facts li 也是同一個處理。） */
@@ -1350,7 +1353,7 @@ def sect_head(anchor: str, zh: str, en: str, sub: str) -> str:
 def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None,
          extra_head: str = "", after_disclaimer: str = "",
          pref_left: str = "", banded: bool = False, opening: str = "",
-         tail_extra: str = "") -> str:
+         tail_extra: str = "", tail_tint: bool = True) -> str:
     """所有頁面共用的骨架。canonical 與 OG 是搜尋引擎與分享預覽的基本要求。"""
     # canonical 必須和 sitemap 宣告的網址逐字相同，否則等於叫 Google 索引兩個位址。
     # sitemap 用的是目錄形式（/articles/），這裡把 index.html 收掉對齊。
@@ -1479,8 +1482,14 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     #   banded=False  整個 body 就是一條帶（長文頁——一篇連續的文章不該被
     #                 切成深淺相間的橫紋，讀到一半底色一直換反而干擾閱讀）
     #
-    # 文末帶（參考來源／延伸閱讀／作者／免責聲明）一律上淺底：
-    # 那一段是「文章結束之後的東西」，換個底色正好標示出這條界線。
+    # 文末帶（作者／免責聲明，匯總頁另含延伸閱讀）上淺底：
+    # 那一段是「內容結束之後的東西」，換個底色正好標示出這條界線。
+    #
+    # **長文頁例外**（tail_tint=False）：2026-09-07 作者先要求文末上底色，
+    # 看過之後改變主意——長文最後是「參考來源→分享→延伸閱讀」一路收尾，
+    # 中間插一條變色的界線會把收尾切成兩截。那一頁本來就只有一個內容區塊，
+    # 讀者不需要被提醒「文章結束了」。這時文末帶不上色、不畫線、
+    # 上內距歸零，視覺上和正文帶連成一氣。
     wide = bool(wide_cls)
     main_cls = "banded"
     if banded:
@@ -1495,7 +1504,8 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
                      f'<div class="zoomable">{body}</div>'
                      f'</div></section>')
         body_html = ""
-    tail_open = (f'<section class="band tint tail"><div class="wrap{wide_cls}">'
+    tail_cls = "band tint tail" if tail_tint else "band tail plain"
+    tail_open = (f'<section class="{tail_cls}"><div class="wrap{wide_cls}">'
                  f'<div class="zoomable">{tail_extra}')
     tail_close = "</div></div></section>"
 
@@ -2028,7 +2038,8 @@ def build_markdown_articles() -> list[dict]:
 
         a["path"] = path
         a["html"] = page(f"{a['title']}｜{SITE_NAME}", desc, path, body, jsonld,
-                         extra_head=extra_ld, tail_extra=tail_extra)
+                         extra_head=extra_ld, tail_extra=tail_extra,
+                         tail_tint=False)
         a["faq_count"] = len(faqs)
         out.append(a)
 

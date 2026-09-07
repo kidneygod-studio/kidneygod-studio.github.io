@@ -595,8 +595,11 @@ transition-delay:var(--d,0s)}
 /* 文末帶：和正文之間畫一條線，讓「文章結束了」這件事看得出來。
    第一個 .backlink 標題不要再往上推 34px——帶本身已經有 38px 內距。 */
 .band.tail{border-top:1px solid var(--line)}
-.band.tail .zoomable>.backlink:first-child,
 .band.tail .zoomable>:first-child{margin-top:0}
+/* 長文頁的文末帶：不上色、不畫線、上內距歸零，和正文帶連成一氣。
+   正文帶自己的下內距（38px）就是兩者之間的間隔。 */
+.band.tail.plain{background:none;border-top:0;padding-top:0}
+.band.tail.plain .zoomable>:first-child{margin-top:34px}
 /* 深色帶上的卡片要翻成 --bg。卡片本來就是 --card，帶底也是 --card，
    不翻的話整排卡片會和底同色、只剩一圈邊框，看起來像消失了。
    （透析中心那邊 section.tint .facts li 也是同一個處理。） */
