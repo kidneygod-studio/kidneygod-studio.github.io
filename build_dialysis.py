@@ -169,10 +169,23 @@ white-space:normal;overflow-wrap:anywhere}
 transition:box-shadow .25s,background .25s}
 .hd.stuck{box-shadow:0 2px 18px rgba(15,32,58,.28)}
 .hd .wrap{display:flex;align-items:center;gap:18px;height:68px}
-.logo{display:flex;align-items:center;gap:10px;color:#fff;font-family:var(--serif);
+/* gap 只有 6px：標誌與名稱要讀成同一組東西，不是兩個並排的元件。
+   ⚠ .logo 是 flex，gap 會插進「每一個」子項之間——名稱一定要整包在
+   同一個 <span> 裡（院名的前綴再往內包一層），拆成兩個子項的話
+   gap 會跑到字中間，變成「郭綜合醫院 血液透析中心」。 */
+.logo{display:flex;align-items:center;gap:6px;color:#fff;font-family:var(--serif);
 font-size:19px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
 .logo:hover{text-decoration:none;color:#fff}
 .logo svg{flex-shrink:0}
+/* 44px：標誌四周有 27% 透明留白，實際筆畫 32px，和右邊那塊字對得起來。
+   頁首列高 68px，再大就開始擠。 */
+.logo img{height:44px;width:auto;flex-shrink:0}
+/* 加上院名之後標題變成 11 個字、19px 下實寬 213px。
+   360px 的手機只剩 7px 就撞到漢堡鈕，320px 直接疊上去 26px。
+   nowrap 的字會溢出盒子，所以 flex 把盒子壓小也擋不住——量的時候要用
+   Range 量「字畫到哪」，量盒子會以為還有空間。 */
+@media(max-width:430px){.logo{font-size:16.5px}.logo img{height:40px}}
+@media(max-width:365px){.logo{font-size:15px}.logo img{height:36px}}
 .hd nav{margin-left:auto;display:flex;align-items:center;gap:26px}
 .hd nav a{color:#dbe6f2;font-size:15px;padding:6px 0;position:relative}
 .hd nav a:hover{color:#fff;text-decoration:none}
@@ -540,8 +553,11 @@ def shell(path: str, title: str, desc: str, body: str,
     # 44px 讓筆畫實高到 32px，和旁邊 35px 高的中心名稱那一塊剛好對得起來。
     # 上限就在這附近：頁首列高 68px，48px 只剩 10px 上下留白會開始擠。
     # 換標誌時如果新檔沒有留白，這裡要跟著往回調。
+    # 高度寫在 CSS（.logo img）不寫成 style=""：行內樣式會壓過媒體查詢，
+    # 窄螢幕要縮小就得加 !important。width/height 屬性留著是給瀏覽器算比例，
+    # 避免載入時的版面跳動。
     mark = ('<img src="img/logo-white.png" alt="" aria-hidden="true" '
-            'width="44" height="44" style="height:44px;width:auto">'
+            'width="44" height="44">'
             if (OUT / "img" / "logo-white.png").exists() else LOGO_SVG)
     icon = ('<link rel="icon" href="img/logo.png">'
             if (OUT / "img" / "logo.png").exists() else "")
@@ -584,7 +600,7 @@ def shell(path: str, title: str, desc: str, body: str,
 <body>
 <header class="hd">
 <div class="wrap">
-  <a class="logo" href="index.html">{mark}<span>血液透析中心</span></a>
+  <a class="logo" href="index.html">{mark}<span><span class="hn">{esc(FACTS['hospital'])}</span>血液透析中心</span></a>
   <button class="burger" type="button" aria-expanded="false" aria-label="選單">
     <span></span><span></span><span></span></button>
   <nav>{nav}<a class="cta" href="visit.html#booking">預約與諮詢</a></nav>
