@@ -402,7 +402,7 @@
 <div class="toast" id="toast"></div>
 
 <script src="shared.js?v=a66e3dfc"></script>
-<script src="quiz.js?v=1d5418d1"></script>
+<script src="quiz.js?v=de90da7f"></script>
 <script>
 "use strict";
 
@@ -524,18 +524,18 @@ function pick(m){
 
 function renderTips(){
   if(MODE === 3){
-    $("tips").innerHTML = `<b>玩法</b>　題庫共 <b>200 題</b>，每輪隨機抽 10 題，涵蓋血壓、血糖、
+    $("tips").innerHTML = `<b>玩法</b>　題庫共 <b>${QUIZ.length} 題</b>，每輪隨機抽 ${QUIZ_LEN} 題，涵蓋血壓、血糖、
       血脂、用藥、飲食、檢查與生活習慣七類。答對 +8 腎元，連續答對 3 題起每題再 +4。<br>
       <b>為什麼每題都附出處</b>　衛教內容若沒有來源就只是說法。這裡的每一題與解說都標明
       依據的臨床指引（2022 台灣高血壓治療指引、2022 台灣血脂指引、KDIGO 2024、
       KDOQI 2020、國健署調查、台灣腎病年報等），答完可直接點進卡片區看完整知識卡。<br>
       <b>答錯不扣分</b>　結算時會把答錯的題目與解說再列一次 —— 這個遊戲的目的是記住，不是考倒你。<br>
-      <b>排行榜</b>　每輪結束都會結算一次累計答對題數 —— <b>不必打滿十輪，中途的總分一樣能上榜</b>。
+      <b>排行榜</b>　每輪結束都會結算一次累計答對題數 —— <b>不必打滿 ${QUIZ_CHALLENGE} 輪，中途的總分一樣能上榜</b>。
       成績進得了前十名，畫面就會邀請你留下代號或綽號；留空顯示為「匿名者」。
       同意上榜後不會再問第二次，之後每輪成績提高都自動更新你那一筆，不會洗版。
-      <b>累計最多算十輪</b>（100 題，一次挑戰內題目不重複，全對就是滿分 100）。
-      題庫共 200 題，每次挑戰是從中洗牌抽出的 100 題，所以每一輪挑戰的題目組合都不一樣。
-      第十輪一結算，累計就歸零、重新洗牌 —— 分數不會無限往上疊。
+      <b>累計最多算 ${QUIZ_CHALLENGE} 輪</b>（${QUIZ_TOTAL} 題，一次挑戰內題目不重複，全對就是滿分 ${QUIZ_TOTAL}）。
+      題庫共 ${QUIZ.length} 題，每次挑戰是從中洗牌抽出的 ${QUIZ_TOTAL} 題，所以每一輪挑戰的題目組合都不一樣。
+      第 ${QUIZ_CHALLENGE} 輪一結算，累計就歸零、重新洗牌 —— 分數不會無限往上疊。
       <b>排行榜每週日晚上 12:00 結算</b>，該週前三名可獲得獎金：🥇 2000、🥈 1000、🥉 500 腎元
       —— 下次進來小學堂時自動入帳。第一名的名字會出現在首頁的跑馬燈上。
       <div id="qStats" class="qstats"></div>
@@ -974,9 +974,16 @@ function loopMaze(){
    每題答對 +8 腎元，連續答對有加成；每題附醫學指引出處。
    ═══════════════════════════════════════════ */
 const QUIZ_LEN = 10, QUIZ_REWARD = 8;
+/* 一次挑戰的輪數與總題數。2026-09-08 由十輪 100 題改為二十輪 200 題——
+   作者要拉開排名差距。QUIZ_TOTAL 由兩者相乘導出，文案一律引用它，
+   不要再任何地方寫死「100 題」：上一版就是因為寫死，改動時漏了好幾處。
+   題庫必須 ≥ QUIZ_TOTAL，否則一次挑戰會把整個題庫用完、每次組合都一樣
+   （這也是這次同步把題庫從 200 補到 300 題的原因）。 */
+const QUIZ_CHALLENGE = 20;
+const QUIZ_TOTAL = QUIZ_CHALLENGE * QUIZ_LEN;
 const Q = {list:[], ids:[], log:[], i:0, right:0, streak:0, best:0, earned:0, answered:false, wrong:[]};
 
-/* 一次挑戰＝把 100 題洗牌後分成 10 輪，每輪 10 題且全程不重複。
+/* 一次挑戰＝把 QUIZ_TOTAL 題洗牌後分成 QUIZ_CHALLENGE 輪，每輪 QUIZ_LEN 題且全程不重複。
    洗好的順序存在 sessionStorage，中途離開再回來仍接得下去。 */
 function quizDeck(){
   try{
@@ -1065,13 +1072,12 @@ function quizAnswer(n){
   $("qnext").addEventListener("click", () => { Q.i++; Q.answered = false; quizRender(); });
   quizStats();
 }
-const QUIZ_CHALLENGE = 10;          // 十輪 100 題為一次完整挑戰
 
 function quizEnd(){
   store.coins = store.coins + Q.earned;
   if(Q.right > store.best3) store.best3 = Q.right;
 
-  // 累計進度（中途總分即可進榜，不必等十輪打完）
+  // 累計進度（中途總分即可進榜，不必等整輪挑戰打完）
   store.qRounds  = store.qRounds + 1;
   store.qCorrect = store.qCorrect + Q.right;
   if(store.qCorrect > store.qBestTotal) store.qBestTotal = store.qCorrect;
@@ -1106,7 +1112,7 @@ function quizEnd(){
   quizStats();
   if(window.site && window.site.logQuiz) window.site.logQuiz(Q.log);
   rankCheck(store.qCorrect, store.qRounds, done);
-  if(done){                       // 十輪打完：歸零，下次重新洗牌出題
+  if(done){                       // 整輪挑戰打完：歸零，下次重新洗牌出題
     store.qRounds = 0; store.qCorrect = 0;
     delete sessionStorage.kg_deck;
   }
@@ -1119,8 +1125,8 @@ function quizEnd(){
 const SHARE_W = 1080, SHARE_H = 1350;
 const SHARE_FONT = '"Microsoft JhengHei","PingFang TC","Noto Sans TC","Heiti TC",sans-serif';
 let shareBlob = null, myRank = null;
-/* 十輪打完時 quizEnd 會把累計歸零，而分享按鈕就在同一個畫面上 ——
-   直接讀 store 會畫出「累計 0 / 100」。結算當下先把數字留下來。 */
+/* 挑戰打完時 quizEnd 會把累計歸零，而分享按鈕就在同一個畫面上 ——
+   直接讀 store 會畫出「累計 0」。結算當下先把數字留下來。 */
 let lastTotals = {total: 0, rounds: QUIZ_CHALLENGE};
 
 function rrect(d, x, y, w, h, r){
@@ -1178,8 +1184,8 @@ function drawShareCard(){
   d.strokeStyle = "#d9cdae"; d.lineWidth = 2;
   d.beginPath(); d.moveTo(180, 662); d.lineTo(900, 662); d.stroke();
 
-  txt(d, "十輪挑戰累計", M, 716, 30, "#6e5f4c", 700);
-  txt(d, lastTotals.total + " / 100 題", M, 796, 62, "#2b221d", 900);
+  txt(d, QUIZ_CHALLENGE + "輪挑戰累計", M, 716, 30, "#6e5f4c", 700);
+  txt(d, lastTotals.total + " / " + QUIZ_TOTAL + " 題", M, 796, 62, "#2b221d", 900);
   txt(d, "已完成 " + lastTotals.rounds + " / " + QUIZ_CHALLENGE + " 輪",
       M, 846, 28, "#6e5f4c", 400);
 
@@ -1226,9 +1232,9 @@ async function openShare(){
 async function rankCheck(total, rounds, done){
   const box = document.createElement("div");
   box.className = "qchallenge";
-  box.innerHTML = `<div class="ct">${done ? "🏆 十輪挑戰完成" : "📊 目前累計成績"}</div>
-     <div class="cs">總成績 <b>${total}</b> / 100 題　<span class="dimtxt">（已完成 ${rounds} / ${QUIZ_CHALLENGE} 輪）</span></div>
-     ${done ? `<div class="dimtxt">累計最多算十輪，這次已結算完畢；再玩就是新的一輪挑戰，
+  box.innerHTML = `<div class="ct">${done ? `🏆 ${QUIZ_CHALLENGE} 輪挑戰完成` : "📊 目前累計成績"}</div>
+     <div class="cs">總成績 <b>${total}</b> / ${QUIZ_TOTAL} 題　<span class="dimtxt">（已完成 ${rounds} / ${QUIZ_CHALLENGE} 輪）</span></div>
+     ${done ? `<div class="dimtxt">累計最多算 ${QUIZ_CHALLENGE} 輪，這次已結算完畢；再玩就是新的一輪挑戰，
        累計從零重新開始。排行榜保留你最好的那次成績。</div>` : ""}
      <div class="cw" id="cwrap">查詢排行榜中…</div>`;
   $("qend").insertBefore(box, $("qend").querySelector(".qnav"));
@@ -1260,7 +1266,7 @@ async function rankCheck(total, rounds, done){
       wrap.innerHTML = full
         ? `<span class="dimtxt">成績已記錄 ${total} 題。目前第 10 名為 ${others[9].score} 題，
            還差 ${others[9].score - total + 1} 題就能進榜。</span>` + board()
-        : `<div class="inrank">✅ 排行榜已更新：<b>${escapeHTML(saved)}</b>　${total} / 100 題　目前第 ${rank} 名</div>` + board();
+        : `<div class="inrank">✅ 排行榜已更新：<b>${escapeHTML(saved)}</b>　${total} / ${QUIZ_TOTAL} 題　目前第 ${rank} 名</div>` + board();
     }else{
       wrap.innerHTML = `<span class="dimtxt">排行榜暫時無法連線，成績已保留在本機。</span>`;
     }
@@ -1292,7 +1298,7 @@ async function rankCheck(total, rounds, done){
     if(saved){
       if(nm) store.qName = nm;
       store.qOptIn = true; store.qSubmitted = total;
-      wrap.innerHTML = `<div class="inrank">✅ 已登上排行榜：<b>${escapeHTML(saved)}</b>　${total} / 100 題　第 ${rank} 名</div>` + board();
+      wrap.innerHTML = `<div class="inrank">✅ 已登上排行榜：<b>${escapeHTML(saved)}</b>　${total} / ${QUIZ_TOTAL} 題　第 ${rank} 名</div>` + board();
     }else{
       $("lbOk").disabled = false; $("lbOk").textContent = "送出";
       toast("排行榜暫時無法連線，請稍後再試");
@@ -1411,7 +1417,7 @@ function quizStats(){
     `<span>本輪腎元：${Q.earned}</span>` +
     `<span>最佳紀錄：${store.best3}/${QUIZ_LEN}</span>` +
     `<span>挑戰進度：${store.qRounds}/${QUIZ_CHALLENGE} 輪</span>` +
-    `<span>總成績最佳：${store.qBestTotal}/100</span>`;
+    `<span>總成績最佳：${store.qBestTotal}/${QUIZ_TOTAL}</span>`;
 }
 
 /* ═══════════ 輸入 ═══════════ */
