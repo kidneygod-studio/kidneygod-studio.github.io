@@ -647,10 +647,20 @@ transition:border-color .15s,color .15s}
 /* 錨點跳轉時要扣掉固定頁首的高度，否則標題會被壓在頁首下面。
    頁首約 60px，再加一點餘裕才不會貼著邊。 */
 html{scroll-padding-top:78px}
+/* 頁首帶一點主色。用 color-mix 疊在 --bg 上，而不是各主題各寫一組色票——
+   淺色、深色、自動三層共用同一條規則，不會有「改一份忘了改另一份」。
+   第一行 background 是不支援 color-mix 的舊瀏覽器的退路。 */
 header.site{position:sticky;top:0;z-index:50;background:var(--bg);
-background:color-mix(in srgb,var(--bg) 86%,transparent);
+background:color-mix(in srgb,var(--accent) 7%,var(--bg));
+background:color-mix(in srgb,color-mix(in srgb,var(--accent) 7%,var(--bg)) 86%,transparent);
 backdrop-filter:saturate(150%) blur(10px);-webkit-backdrop-filter:saturate(150%) blur(10px);
-border-bottom:1px solid var(--line);margin-bottom:8px}
+border-bottom:1px solid var(--line);
+border-bottom-color:color-mix(in srgb,var(--accent) 24%,var(--line));
+margin-bottom:8px}
+/* 頂端那條彩線。sticky 本身就是 positioned，absolute 會以頁首為基準。
+   收尾用商城那顆金色 #e8c65a，和頁首右邊的「護腎遊戲」按鈕呼應。 */
+header.site::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;
+background:linear-gradient(90deg,var(--accent),var(--accent2) 58%,#e8c65a)}
 header.site .wrap{display:flex;align-items:center;justify-content:space-between;
 gap:14px;padding-top:11px;padding-bottom:11px}
 .brand{display:inline-flex;align-items:center;gap:9px;text-decoration:none;
@@ -1125,7 +1135,20 @@ font-size:1.02rem;line-height:1.55}
 }
 
 /* ── 首頁 ── */
-.hero{padding:34px 0 8px}
+/* 開場白鋪水波底圖。做成一張圓角卡片而不是滿版橫幅：
+   滿版要用 left:50%;width:100vw 掙脫 .wrap，而 100vw 含捲軸寬度，
+   這個站已經為了幾 px 的橫向溢出修過三次，不值得為了視覺再冒一次。
+   遮罩用 color-mix 疊 --bg，所以淺色深色共用同一條規則：
+   淺色時是一層白紗、深色時是一層夜色，文字對比都由 --fg 自己保證。
+   圖在 hero/ 底下走快取優先且網址不帶 ?v=，換圖一定要跑 bump_assets.py。 */
+.hero{padding:32px 26px 24px;border-radius:20px;border:1px solid var(--line);
+border-color:color-mix(in srgb,var(--accent) 18%,var(--line));
+background:var(--card);
+background:
+linear-gradient(180deg,color-mix(in srgb,var(--bg) 76%,transparent),
+color-mix(in srgb,var(--bg) 94%,transparent)),
+url(/hero/home-bg.jpg) center/cover no-repeat}
+@media(max-width:560px){.hero{padding:26px 17px 20px;border-radius:16px}}
 .hero h1{font-size:2.1rem;margin:0 0 12px}
 .hero .sub{font-size:1.08rem;color:var(--mut);margin-bottom:6px}
 .hero .cred{font-size:14px;color:var(--mut)}
