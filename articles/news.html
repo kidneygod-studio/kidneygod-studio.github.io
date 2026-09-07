@@ -592,6 +592,11 @@ transition-delay:var(--d,0s)}
   .reveal{opacity:1;transform:none;transition:none}
 }
 .band.tint{background:var(--card)}
+/* 文末帶：和正文之間畫一條線，讓「文章結束了」這件事看得出來。
+   第一個 .backlink 標題不要再往上推 34px——帶本身已經有 38px 內距。 */
+.band.tail{border-top:1px solid var(--line)}
+.band.tail .zoomable>.backlink:first-child,
+.band.tail .zoomable>:first-child{margin-top:0}
 /* 深色帶上的卡片要翻成 --bg。卡片本來就是 --card，帶底也是 --card，
    不翻的話整排卡片會和底同色、只剩一圈邊框，看起來像消失了。
    （透析中心那邊 section.tint .facts li 也是同一個處理。） */
@@ -756,10 +761,9 @@ letter-spacing:.4px;line-height:1.5}
 <button class="burger" type="button" aria-expanded="false" aria-controls="sitenav"
         aria-label="選單"><span></span><span></span><span></span></button>
 </div><nav id="sitenav"><div class="nsec"><span class="nsl">衛教文章</span><a href="/articles/long-form.html">深入文章</a><a href="/articles/topics.html">主題衛教</a><a href="/articles/gallery.html">衛教圖卡</a></div><div class="nsec"><span class="nsl">新知 &amp; 指引</span><a href="/articles/news.html" aria-current="page">醫學新知</a><a href="/articles/guidelines.html">臨床指引</a></div><div class="nsec"><span class="nsl">工具</span><a href="/food.html">食物查詢</a><a href="/calc.html">腎功能計算</a></div><a href="/about.html">關於作者</a><a href="/shop.html" class="shoplink">護腎遊戲</a></nav></header>
-<main class="wrap">
-<div class="prefbar"><div class="preficons"><button type="button" class="prefbtn fsbtn" id="fsBtn"><span class="fsglyph" aria-hidden="true">A</span></button><button type="button" class="prefbtn thbtn" id="thBtn"><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="auto" aria-hidden="true" hidden><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 000 17z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="light" aria-hidden="true" hidden><circle cx="12" cy="12" r="4.4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></g></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="dark" aria-hidden="true" hidden><path d="M20 14.2A8.4 8.4 0 019.8 4 8.6 8.6 0 1020 14.2z" fill="currentColor"/></svg></button></div><div class="preffull"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div></div>
-<div class="zoomable">
-
+<main class="banded">
+<section class="band opening"><div class="wrap"><div class="prefbar"><div class="preficons"><button type="button" class="prefbtn fsbtn" id="fsBtn"><span class="fsglyph" aria-hidden="true">A</span></button><button type="button" class="prefbtn thbtn" id="thBtn"><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="auto" aria-hidden="true" hidden><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 000 17z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="light" aria-hidden="true" hidden><circle cx="12" cy="12" r="4.4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></g></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="dark" aria-hidden="true" hidden><path d="M20 14.2A8.4 8.4 0 019.8 4 8.6 8.6 0 1020 14.2z" fill="currentColor"/></svg></button></div><div class="preffull"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div></div><div class="zoomable"></div></div></section>
+<section class="band"><div class="wrap wide"><div class="zoomable">
 <div class="nhero">
   <p class="neyebrow">Latest Research</p>
   <h1>醫學新知</h1>
@@ -778,17 +782,20 @@ letter-spacing:.4px;line-height:1.5}
   <strong>請不要拿這一頁的內容自行調整用藥。</strong></p>
 </div>
 
-
+</div></div></section>
+<section class="band tint"><div class="wrap wide"><div class="zoomable">
 <p class="neyebrow">Browse by topic</p>
 <h2 class="sect">依主題瀏覽</h2>
 <div class="sd">點主題看該主題的全部研究</div>
 <div class="ncats"><a class="ncat" href="/articles/news-kidney.html"><span class="nczh">腎臟疾病</span><span class="ncen">KIDNEY DISEASE</span><span class="ncn">12 篇</span></a><a class="ncat" href="/articles/news-dm.html"><span class="nczh">糖尿病</span><span class="ncen">DIABETES</span><span class="ncn">8 篇</span></a><a class="ncat" href="/articles/news-cvd.html"><span class="nczh">心血管疾病</span><span class="ncen">CARDIOVASCULAR DISEASE</span><span class="ncn">4 篇</span></a><a class="ncat" href="/articles/news-ckm.html"><span class="nczh">心腎糖肝代謝症候群</span><span class="ncen">CKM SYNDROME</span><span class="ncn">3 篇</span></a></div>
-
+</div></div></section>
+<section class="band"><div class="wrap wide"><div class="zoomable">
 <p class="neyebrow">All research</p>
 <h2 class="sect">全部研究</h2>
 <div class="sd">依主題分組，每組內新的排在前面</div>
 <h3 class="ngh" id="g-kidney">腎臟疾病<a href="/articles/news-kidney.html">12 篇　全部 →</a></h3><ul class="nlist"><li><a href="/articles/news-kidney.html#2026-nejm"><span class="nld">2026</span><span class="nlj">NEJM</span><span class="nlt">Sibeprenlimab 治療 IgA 腎病變：第三期試驗期中分析</span></a></li><li><a href="/articles/news-kidney.html#2026-the-lancet"><span class="nld">2026</span><span class="nlj">THE LANCET</span><span class="nlt">Atrasentan 治療 IgA 腎病變（ALIGN）：2.5 年最終結果</span></a></li><li><a href="/articles/news-kidney.html#2026-09-03-the-lancet"><span class="nld">2026-09-03</span><span class="nlj">THE LANCET</span><span class="nlt">豬腎異種移植作為橋接同種移植之首例人體研究</span></a></li><li><a href="/articles/news-kidney.html#2026-07-30-jama"><span class="nld">2026-07-30</span><span class="nlj">JAMA</span><span class="nlt">心臟手術後之達格列淨與急性腎損傷：一項隨機臨床試驗（MERCURI-2）</span></a></li><li><a href="/articles/news-kidney.html#2026-06-nejm"><span class="nld">2026-06</span><span class="nlj">NEJM</span><span class="nlt">Finerenone 用於非糖尿病的慢性腎臟病（FIND-CKD）</span></a></li><li><a href="/articles/news-kidney.html#2025-02-nejm"><span class="nld">2025-02</span><span class="nlj">NEJM</span><span class="nlt">Empagliflozin 用於慢性腎臟病的長期效果（EMPA-KIDNEY 試驗後追蹤）</span></a></li><li><a href="/articles/news-kidney.html#2023-nejm"><span class="nld">2023</span><span class="nlj">NEJM</span><span class="nlt">高劑量血液透析過濾對比高流量血液透析對腎衰竭病人死亡率之影響：CONVINCE試驗</span></a></li><li><a href="/articles/news-kidney.html#2023-12-02-the-lancet"><span class="nld">2023-12-02</span><span class="nlj">THE LANCET</span><span class="nlt">Sparsentan對比Irbesartan治療IgA腎病：PROTECT試驗兩年期結果</span></a></li><li><a href="/articles/news-kidney.html#2023-01-nejm"><span class="nld">2023-01</span><span class="nlj">NEJM</span><span class="nlt">Empagliflozin 用於慢性腎臟病（EMPA-KIDNEY）</span></a></li><li><a href="/articles/news-kidney.html#2020-nejm"><span class="nld">2020</span><span class="nlj">NEJM</span><span class="nlt">急性腎損傷腎替代治療啟動時機：STARRT-AKI試驗</span></a></li><li><a href="/articles/news-kidney.html#2020-10-nejm"><span class="nld">2020-10</span><span class="nlj">NEJM</span><span class="nlt">Dapagliflozin 用於慢性腎臟病（DAPA-CKD）</span></a></li><li><a href="/articles/news-kidney.html#2019-06-nejm"><span class="nld">2019-06</span><span class="nlj">NEJM</span><span class="nlt">Canagliflozin 對糖尿病腎病變腎臟結果的影響（CREDENCE）</span></a></li></ul><h3 class="ngh" id="g-dm">糖尿病<a href="/articles/news-dm.html">8 篇　全部 →</a></h3><ul class="nlist"><li><a href="/articles/news-dm.html#2024-nejm"><span class="nld">2024</span><span class="nlj">NEJM</span><span class="nlt">Semaglutide 對第二型糖尿病合併慢性腎臟病的影響（FLOW）</span></a></li><li><a href="/articles/news-dm.html#2021-08-nejm"><span class="nld">2021-08</span><span class="nlj">NEJM</span><span class="nlt">Efpeglenatide 對第二型糖尿病心血管與腎臟結果的影響（AMPLITUDE-O）</span></a></li><li><a href="/articles/news-dm.html#2019-08-nejm"><span class="nld">2019-08</span><span class="nlj">NEJM</span><span class="nlt">口服 semaglutide 對第二型糖尿病心血管結果的影響（PIONEER 6）</span></a></li><li><a href="/articles/news-dm.html#2019-01-nejm"><span class="nld">2019-01</span><span class="nlj">NEJM</span><span class="nlt">Dapagliflozin 對第二型糖尿病心血管結果的影響（DECLARE-TIMI 58）</span></a></li><li><a href="/articles/news-dm.html#2017-08-nejm"><span class="nld">2017-08</span><span class="nlj">NEJM</span><span class="nlt">Canagliflozin 對第二型糖尿病心血管與腎臟事件的影響（CANVAS）</span></a></li><li><a href="/articles/news-dm.html#2016-11-nejm"><span class="nld">2016-11</span><span class="nlj">NEJM</span><span class="nlt">Semaglutide 對第二型糖尿病心血管結果的影響（SUSTAIN-6）</span></a></li><li><a href="/articles/news-dm.html#2016-07-nejm"><span class="nld">2016-07</span><span class="nlj">NEJM</span><span class="nlt">Liraglutide 對第二型糖尿病心血管結果的影響（LEADER）</span></a></li><li><a href="/articles/news-dm.html#2015-11-nejm"><span class="nld">2015-11</span><span class="nlj">NEJM</span><span class="nlt">Empagliflozin 對第二型糖尿病心血管結果與死亡率的影響（EMPA-REG OUTCOME）</span></a></li></ul><h3 class="ngh" id="g-cvd">心血管疾病<a href="/articles/news-cvd.html">4 篇　全部 →</a></h3><ul class="nlist"><li><a href="/articles/news-cvd.html#2022-09-nejm"><span class="nld">2022-09</span><span class="nlj">NEJM</span><span class="nlt">Dapagliflozin 用於射血分數輕度降低或保留的心衰竭（DELIVER）</span></a></li><li><a href="/articles/news-cvd.html#2021-10-nejm"><span class="nld">2021-10</span><span class="nlj">NEJM</span><span class="nlt">Empagliflozin 用於射血分數保留的心衰竭（EMPEROR-Preserved）</span></a></li><li><a href="/articles/news-cvd.html#2020-10-nejm-2"><span class="nld">2020-10</span><span class="nlj">NEJM</span><span class="nlt">Empagliflozin 用於心衰竭的心血管與腎臟結果（EMPEROR-Reduced）</span></a></li><li><a href="/articles/news-cvd.html#2019-11-nejm"><span class="nld">2019-11</span><span class="nlj">NEJM</span><span class="nlt">Dapagliflozin 用於射血分數降低的心衰竭（DAPA-HF）</span></a></li></ul><h3 class="ngh" id="g-ckm">心腎糖肝代謝症候群<a href="/articles/news-ckm.html">3 篇　全部 →</a></h3><ul class="nlist"><li><a href="/articles/news-ckm.html#2023-12-nejm"><span class="nld">2023-12</span><span class="nlj">NEJM</span><span class="nlt">Semaglutide 對肥胖但無糖尿病者心血管結果的影響（SELECT）</span></a></li><li><a href="/articles/news-ckm.html#2022-07-nejm"><span class="nld">2022-07</span><span class="nlj">NEJM</span><span class="nlt">每週一次 tirzepatide 用於肥胖治療（SURMOUNT-1）</span></a></li><li><a href="/articles/news-ckm.html#2021-03-nejm"><span class="nld">2021-03</span><span class="nlj">NEJM</span><span class="nlt">每週一次 semaglutide 用於體重過重或肥胖成人（STEP 1）</span></a></li></ul>
-
+</div></div></section>
+<section class="band tint"><div class="wrap wide"><div class="zoomable">
 <p class="neyebrow">Guidelines</p>
 <h2 class="sect">現行指引</h2>
 <div class="cats">
@@ -796,7 +803,8 @@ letter-spacing:.4px;line-height:1.5}
     <div class="d">研究要累積很久才會變成指引。
     KDIGO、KDOQI、ADA、AHA／ACC、ESC 目前實際被當成標準的那幾份。</div></a>
 </div>
-
+</div></div></section>
+<section class="band tint tail"><div class="wrap"><div class="zoomable">
 <h2 class="backlink">延伸閱讀</h2>
 <div class="cats">
   <a href="/articles/long-form.html"><div class="t">全部深入文章</div>
@@ -804,8 +812,6 @@ letter-spacing:.4px;line-height:1.5}
   <a href="/articles/faq.html"><div class="t">常見問題</div>
     <div class="d">門診最常被問到的問題，每題連到回答它的那篇文章。</div></a>
 </div>
-
-
 
 <div class="author">
   <div>
@@ -816,7 +822,7 @@ letter-spacing:.4px;line-height:1.5}
 </div>
 <div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
 
-</div>
+</div></div></section>
 <script>
 (function(){
   var S=[1,1.2,1.45], FN=["標準","大字","特大"], TK=["auto","light","dark"], TF=["跟隨系統","淺色","深色"];

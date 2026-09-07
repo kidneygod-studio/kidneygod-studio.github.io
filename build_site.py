@@ -1131,6 +1131,11 @@ transition-delay:var(--d,0s)}
   .reveal{opacity:1;transform:none;transition:none}
 }
 .band.tint{background:var(--card)}
+/* 文末帶：和正文之間畫一條線，讓「文章結束了」這件事看得出來。
+   第一個 .backlink 標題不要再往上推 34px——帶本身已經有 38px 內距。 */
+.band.tail{border-top:1px solid var(--line)}
+.band.tail .zoomable>.backlink:first-child,
+.band.tail .zoomable>:first-child{margin-top:0}
 /* 深色帶上的卡片要翻成 --bg。卡片本來就是 --card，帶底也是 --card，
    不翻的話整排卡片會和底同色、只剩一圈邊框，看起來像消失了。
    （透析中心那邊 section.tint .facts li 也是同一個處理。） */
@@ -1311,7 +1316,8 @@ def social_links() -> str:
         for s in SOCIAL_LIVE)
 
 
-def band(inner: str, tint: bool = False, cls: str = "", zoom: bool = True) -> str:
+def band(inner: str, tint: bool = False, cls: str = "", zoom: bool = True,
+         wide: bool = True) -> str:
     """首頁的一條橫帶。
 
     橫帶要滿版，內容要鎖在 --maxw——所以結構是
@@ -1325,7 +1331,8 @@ def band(inner: str, tint: bool = False, cls: str = "", zoom: bool = True) -> st
         return ""
     z = f'<div class="zoomable">{inner}</div>' if zoom else inner
     names = " ".join(x for x in ("band", "tint" if tint else "", cls) if x)
-    return f'<section class="{names}"><div class="wrap wide">{z}</div></section>'
+    w = "wrap wide" if wide else "wrap"
+    return f'<section class="{names}"><div class="{w}">{z}</div></section>'
 
 
 def sect_head(anchor: str, zh: str, en: str, sub: str) -> str:
@@ -1342,7 +1349,8 @@ def sect_head(anchor: str, zh: str, en: str, sub: str) -> str:
 
 def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None,
          extra_head: str = "", after_disclaimer: str = "",
-         pref_left: str = "", banded: bool = False, opening: str = "") -> str:
+         pref_left: str = "", banded: bool = False, opening: str = "",
+         tail_extra: str = "") -> str:
     """所有頁面共用的骨架。canonical 與 OG 是搜尋引擎與分享預覽的基本要求。"""
     # canonical 必須和 sitemap 宣告的網址逐字相同，否則等於叫 Google 索引兩個位址。
     # sitemap 用的是目錄形式（/articles/），這裡把 index.html 收掉對齊。
@@ -1465,24 +1473,31 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 
     ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
 
-    # 兩種版面骨架。banded 目前只有首頁用：
-    #   一般頁　main 自己就是 .wrap（限寬），控制列與內容直接放進去
-    #   橫帶頁　main 滿版，內容切成一條一條 <section class="band">，
-    #           底色交替。控制列併進第一條「開場白帶」，和主視覺共用底圖。
+    # 全站統一用橫帶骨架：main 滿版，內容切成一條一條 <section class="band">。
+    #
+    #   banded=True   呼叫端自己把 body 切成多條帶（首頁與各匯總頁）
+    #   banded=False  整個 body 就是一條帶（長文頁——一篇連續的文章不該被
+    #                 切成深淺相間的橫紋，讀到一半底色一直換反而干擾閱讀）
+    #
+    # 文末帶（參考來源／延伸閱讀／作者／免責聲明）一律上淺底：
+    # 那一段是「文章結束之後的東西」，換個底色正好標示出這條界線。
+    wide = bool(wide_cls)
+    main_cls = "banded"
     if banded:
-        main_cls = "banded"
         main_head = (f'<section class="band opening"><div class="wrap{wide_cls}">'
                      f'{prefbar(pref_left)}'
                      f'<div class="zoomable">{opening}</div>'
                      f'</div></section>')
-        tail_open = (f'<section class="band"><div class="wrap{wide_cls}">'
-                     f'<div class="zoomable">')
-        tail_close = "</div></div></section>"
+        body_html = body
     else:
-        main_cls = f"wrap{wide_cls}"
-        main_head = f'{prefbar(pref_left)}\n<div class="zoomable">'
-        tail_open = ""
-        tail_close = "</div>"
+        main_head = (f'<section class="band"><div class="wrap{wide_cls}">'
+                     f'{prefbar(pref_left)}'
+                     f'<div class="zoomable">{body}</div>'
+                     f'</div></section>')
+        body_html = ""
+    tail_open = (f'<section class="band tint tail"><div class="wrap{wide_cls}">'
+                 f'<div class="zoomable">{tail_extra}')
+    tail_close = "</div></div></section>"
 
     return f"""<!doctype html>
 <html lang="zh-Hant">
@@ -1517,7 +1532,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 </div><nav id="sitenav">{nav}</nav></header>
 <main class="{main_cls}">
 {main_head}
-{body}
+{body_html}
 {tail_open}
 <div class="author">
   <div>
@@ -1708,18 +1723,26 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
                   f'<div class="d">原本發表在社群上的衛教圖，'
                   f'整理後收在這裡方便回頭查找。</div></a>'))
 
-    body = f"""
+    intro = f"""
 <h1>腎臟與三高衛教文章</h1>
 <p class="lede">這裡整理慢性腎臟病、高血壓、糖尿病與高血脂相關的衛教內容，
 依據國際指引與期刊文獻撰寫，目的是讓一般人也能看懂自己的身體與檢查報告。</p>
-{extra}
-
-<h2>主題衛教</h2>
-<div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>
-<div class="cats">{cards}</div>
-{faq_html}
-{gal}
 """
+    topics_html = (f'<h2>主題衛教</h2>'
+                   f'<div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，'
+                   f'分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>'
+                   f'<div class="cats">{cards}</div>')
+
+    # 這一頁有四個實質區塊，切成橫帶底色交替（和首頁同一套）。
+    # 交替照「實際排出來的順序」——空的區塊 band() 回空字串，
+    # 用固定的 i%2 會在某一區消失時出現兩條同色相鄰。
+    parts, tint = [], False
+    for html_ in (intro, extra, topics_html, faq_html, gal):
+        if not html_.strip():
+            continue
+        parts.append(band(html_, tint=tint))
+        tint = not tint
+    body = "\n".join(parts)
     jsonld = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
@@ -1729,7 +1752,7 @@ def build_index(by_cat: dict[str, list[dict]], extra_pages: list[dict],
         "url": f"{BASE_URL}/{path}",
         "author": author_ld(),
     }
-    return path, page(title, desc, path, body, jsonld)
+    return path, page(title, desc, path, body, jsonld, banded=True)
 
 
 def inline(s: str) -> str:
@@ -1971,8 +1994,12 @@ def build_markdown_articles() -> list[dict]:
         body += (f"<p class='meta'>作者：<a href='/about.html'>{esc(AUTHOR_NAME)}</a>"
                  f"（{esc(AUTHOR_TITLE)}）　·　{datestr}</p>"
                  + share_buttons(path, a["title"], top=True) + toc
-                 + "".join(paras) + interview_html(itv) + sources_html(refs)
-                 + share_buttons(path, a["title"]) + share_script() + related)
+                 + "".join(paras))
+        # 專家訪談、參考來源、分享、延伸閱讀——這些是「文章結束之後的東西」，
+        # 移到文末那條淺底帶裡（作者選的做法：正文維持單欄不切帶，
+        # 只有文末區塊換底色標示界線）。
+        tail_extra = (interview_html(itv) + sources_html(refs)
+                      + share_buttons(path, a["title"]) + share_script() + related)
 
         jsonld = {
             "@context": "https://schema.org", "@type": "MedicalWebPage",
@@ -2001,7 +2028,7 @@ def build_markdown_articles() -> list[dict]:
 
         a["path"] = path
         a["html"] = page(f"{a['title']}｜{SITE_NAME}", desc, path, body, jsonld,
-                         extra_head=extra_ld)
+                         extra_head=extra_ld, tail_extra=tail_extra)
         a["faq_count"] = len(faqs)
         out.append(a)
 
@@ -3487,7 +3514,7 @@ def build_news_page() -> tuple[str, str]:
     desc = ("NEJM、Lancet、JAMA 等主要期刊中真正改變腎臟病與三高處置的研究，"
             "依慢性腎臟病、糖尿病腎病變、IgA 腎病變、透析、腎臟移植等主題分類，"
             "每篇附結構化摘要與正式出處。")
-    body = f"""
+    intro = f"""
 <div class="nhero">
   <p class="neyebrow">Latest Research</p>
   <h1>醫學新知</h1>
@@ -3498,17 +3525,20 @@ def build_news_page() -> tuple[str, str]:
   分成 {len(cats)} 個主題</p>
 </div>
 {DISCLAIM_BOX}
-
+"""
+    by_topic = f"""
 <p class="neyebrow">Browse by topic</p>
 <h2 class="sect">依主題瀏覽</h2>
 <div class="sd">點主題看該主題的全部研究</div>
 <div class="ncats">{cards}</div>
-
+"""
+    all_res = f"""
 <p class="neyebrow">All research</p>
 <h2 class="sect">全部研究</h2>
 <div class="sd">依主題分組，每組內新的排在前面</div>
 {grouped}
-
+"""
+    guide_link = f"""
 <p class="neyebrow">Guidelines</p>
 <h2 class="sect">現行指引</h2>
 <div class="cats">
@@ -3516,13 +3546,20 @@ def build_news_page() -> tuple[str, str]:
     <div class="d">研究要累積很久才會變成指引。
     KDIGO、KDOQI、ADA、AHA／ACC、ESC 目前實際被當成標準的那幾份。</div></a>
 </div>
-{CROSSLINK}
 """
+    parts, tint = [], False
+    for html_ in (intro, by_topic, all_res, guide_link):
+        if not html_.strip():
+            continue
+        parts.append(band(html_, tint=tint))
+        tint = not tint
+    body = "\n".join(parts)
     jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
               "name": "醫學新知", "description": desc, "inLanguage": "zh-Hant",
               "url": f"{BASE_URL}/{ALL_NEWS}", "dateModified": UPDATES_REVIEWED,
               "author": author_ld()}
-    return ALL_NEWS, page(title, desc, ALL_NEWS, body, jsonld)
+    return ALL_NEWS, page(title, desc, ALL_NEWS, body, jsonld,
+                          banded=True, tail_extra=CROSSLINK)
 
 
 def build_news_cat_pages() -> list[tuple[str, str]]:

@@ -592,6 +592,11 @@ transition-delay:var(--d,0s)}
   .reveal{opacity:1;transform:none;transition:none}
 }
 .band.tint{background:var(--card)}
+/* 文末帶：和正文之間畫一條線，讓「文章結束了」這件事看得出來。
+   第一個 .backlink 標題不要再往上推 34px——帶本身已經有 38px 內距。 */
+.band.tail{border-top:1px solid var(--line)}
+.band.tail .zoomable>.backlink:first-child,
+.band.tail .zoomable>:first-child{margin-top:0}
 /* 深色帶上的卡片要翻成 --bg。卡片本來就是 --card，帶底也是 --card，
    不翻的話整排卡片會和底同色、只剩一圈邊框，看起來像消失了。
    （透析中心那邊 section.tint .facts li 也是同一個處理。） */
@@ -756,10 +761,8 @@ letter-spacing:.4px;line-height:1.5}
 <button class="burger" type="button" aria-expanded="false" aria-controls="sitenav"
         aria-label="選單"><span></span><span></span><span></span></button>
 </div><nav id="sitenav"><div class="nsec"><span class="nsl">衛教文章</span><a href="/articles/long-form.html">深入文章</a><a href="/articles/topics.html">主題衛教</a><a href="/articles/gallery.html">衛教圖卡</a></div><div class="nsec"><span class="nsl">新知 &amp; 指引</span><a href="/articles/news.html">醫學新知</a><a href="/articles/guidelines.html" aria-current="page">臨床指引</a></div><div class="nsec"><span class="nsl">工具</span><a href="/food.html">食物查詢</a><a href="/calc.html">腎功能計算</a></div><a href="/about.html">關於作者</a><a href="/shop.html" class="shoplink">護腎遊戲</a></nav></header>
-<main class="wrap">
-<div class="prefbar"><div class="preficons"><button type="button" class="prefbtn fsbtn" id="fsBtn"><span class="fsglyph" aria-hidden="true">A</span></button><button type="button" class="prefbtn thbtn" id="thBtn"><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="auto" aria-hidden="true" hidden><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 000 17z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="light" aria-hidden="true" hidden><circle cx="12" cy="12" r="4.4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></g></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="dark" aria-hidden="true" hidden><path d="M20 14.2A8.4 8.4 0 019.8 4 8.6 8.6 0 1020 14.2z" fill="currentColor"/></svg></button></div><div class="preffull"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div></div>
-<div class="zoomable">
-
+<main class="banded">
+<section class="band"><div class="wrap"><div class="prefbar"><div class="preficons"><button type="button" class="prefbtn fsbtn" id="fsBtn"><span class="fsglyph" aria-hidden="true">A</span></button><button type="button" class="prefbtn thbtn" id="thBtn"><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="auto" aria-hidden="true" hidden><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 000 17z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="light" aria-hidden="true" hidden><circle cx="12" cy="12" r="4.4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></g></svg><svg viewBox="0 0 24 24" width="21" height="21" data-th-icon="dark" aria-hidden="true" hidden><path d="M20 14.2A8.4 8.4 0 019.8 4 8.6 8.6 0 1020 14.2z" fill="currentColor"/></svg></button></div><div class="preffull"><div class="fsbar" role="group" aria-label="調整字級"><span aria-hidden="true">字級</span><button type="button" data-fs="0">標準</button><button type="button" data-fs="1">大字</button><button type="button" data-fs="2">特大</button></div><div class="fsbar thbar" role="group" aria-label="切換配色"><span aria-hidden="true">配色</span><button type="button" data-th="auto">自動</button><button type="button" data-th="light">淺色</button><button type="button" data-th="dark">深色</button></div></div></div><div class="zoomable">
 <h1>臨床指引</h1>
 <p class="lede">腎臟與三高領域<strong>目前實際被當成標準的臨床指引</strong>——
 台灣本土的排在前面，後面是 KDIGO、KDOQI、ADA、AHA／ACC、ESC 的國際指引。
@@ -794,8 +797,9 @@ letter-spacing:.4px;line-height:1.5}
     <div class="d">門診最常被問到的問題，每題連到回答它的那篇文章。</div></a>
 </div>
 
+</div></div></section>
 
-
+<section class="band tint tail"><div class="wrap"><div class="zoomable">
 <div class="author">
   <div>
     <div class="n"><a href="/about.html">吳政哲</a>　<span class="r">腎臟科醫師</span></div>
@@ -805,7 +809,7 @@ letter-spacing:.4px;line-height:1.5}
 </div>
 <div class="disclaimer">本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。若您有健康疑慮或正在服藥，請與您的醫師或藥師討論後再做決定。</div>
 
-</div>
+</div></div></section>
 <script>
 (function(){
   var S=[1,1.2,1.45], FN=["標準","大字","特大"], TK=["auto","light","dark"], TF=["跟隨系統","淺色","深色"];

@@ -592,6 +592,11 @@ transition-delay:var(--d,0s)}
   .reveal{opacity:1;transform:none;transition:none}
 }
 .band.tint{background:var(--card)}
+/* 文末帶：和正文之間畫一條線，讓「文章結束了」這件事看得出來。
+   第一個 .backlink 標題不要再往上推 34px——帶本身已經有 38px 內距。 */
+.band.tail{border-top:1px solid var(--line)}
+.band.tail .zoomable>.backlink:first-child,
+.band.tail .zoomable>:first-child{margin-top:0}
 /* 深色帶上的卡片要翻成 --bg。卡片本來就是 --card，帶底也是 --card，
    不翻的話整排卡片會和底同色、只剩一圈邊框，看起來像消失了。
    （透析中心那邊 section.tint .facts li 也是同一個處理。） */
@@ -786,7 +791,7 @@ letter-spacing:.4px;line-height:1.5}
 <section class="band tint"><div class="wrap wide"><div class="zoomable"><div class="shead reveal"><span class="en" aria-hidden="true">FOOD DATABASE</span><h2 class="sect" id="food">食物查詢</h2><div class="sd">腎臟病飲食最需要注意的是鈉、鉀、磷、蛋白質，而該注意哪一項取決於你的分期</div></div><a class="feat reveal" style="--d:.08s" href="/food.html"><div class="t">查 1,728 種食物的鈉、鉀、磷、蛋白質含量</div><div class="d">資料來自衛福部食藥署食品營養成分資料庫。</div></a></div></div></section>
 <section class="band"><div class="wrap wide"><div class="zoomable"><div class="shead reveal"><span class="en" aria-hidden="true">CARD GALLERY</span><h2 class="sect" id="gallery">衛教圖卡</h2><div class="sd">社群上發表過的圖解，依主題整理並附上完整說明</div></div><a class="feat reveal" style="--d:.08s" href="/articles/gallery.html"><div class="t">107 張衛教圖卡</div><div class="d">血壓、血糖、血脂、飲食、用藥安全、檢查數值…點主題可跳到該區。</div></a></div></div></section>
 <section class="band tint"><div class="wrap wide"><div class="zoomable"><div class="shead reveal"><span class="en" aria-hidden="true">LEARN BY PLAYING</span><h2 class="sect" id="play">從免費遊戲學習</h2><div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div></div><a class="gamebtn reveal" style="--d:.08s" href="/shop.html"><img src="/logo.png" alt="" aria-hidden="true" width="684" height="370"><span class="cap">護腎知識卡片收集遊戲</span></a></div></div></section>
-<section class="band"><div class="wrap wide"><div class="zoomable">
+<section class="band tint tail"><div class="wrap wide"><div class="zoomable">
 <div class="author">
   <div>
     <div class="n"><a href="/about.html">吳政哲</a>　<span class="r">腎臟科醫師</span></div>
