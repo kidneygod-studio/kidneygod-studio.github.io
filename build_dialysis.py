@@ -519,8 +519,12 @@ def shell(path: str, title: str, desc: str, body: str,
           f'{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else "")
     # 標誌：img/logo-white.png 放進去就自動換掉內建的線條 SVG。
     # 頁首與頁尾都是深藍底，所以用白色那版；navy 那版留給 favicon。
+    # 34 而不是內建 SVG 那個 26：生成的標誌四周有 27% 的透明留白，
+    # 26px 時筆畫實高只剩 19px，在深藍底上看起來像一個淺色小記號。
+    # 34px 讓筆畫實高回到 25px，和原本那個線條 SVG 的視覺份量一致。
+    # 換標誌時如果新檔沒有留白，記得把這裡改回 26。
     mark = ('<img src="img/logo-white.png" alt="" aria-hidden="true" '
-            'width="26" height="26" style="height:26px;width:auto">'
+            'width="34" height="34" style="height:34px;width:auto">'
             if (OUT / "img" / "logo-white.png").exists() else LOGO_SVG)
     icon = ('<link rel="icon" href="img/logo.png">'
             if (OUT / "img" / "logo.png").exists() else "")
