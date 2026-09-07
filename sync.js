@@ -13,10 +13,10 @@ const FIREBASE_CONFIG = {
   appId: "1:494753459903:web:281898dfc087dad416600a",
 };
 
-/* 排行榜的分數與輪數上限。2026-09-08 由 100／10 提高到 200／20。
+/* 排行榜的分數與輪數上限。2026-09-08 曾提高到 200／20，同日改回 100／10。
    ⚠ 這兩個數字在 game.html（QUIZ_TOTAL、QUIZ_CHALLENGE）與
    firestore.rules（valid() 的 score／rounds 上限）也各有一份，三處必須一致。 */
-const LB_MAX_ROUNDS = 20;
+const LB_MAX_ROUNDS = 10;
 const LB_MAX_SCORE = LB_MAX_ROUNDS * 10;
 
 if (FIREBASE_CONFIG) {

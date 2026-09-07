@@ -974,12 +974,20 @@ function loopMaze(){
    每題答對 +8 腎元，連續答對有加成；每題附醫學指引出處。
    ═══════════════════════════════════════════ */
 const QUIZ_LEN = 10, QUIZ_REWARD = 8;
-/* 一次挑戰的輪數與總題數。2026-09-08 由十輪 100 題改為二十輪 200 題——
-   作者要拉開排名差距。QUIZ_TOTAL 由兩者相乘導出，文案一律引用它，
-   不要再任何地方寫死「100 題」：上一版就是因為寫死，改動時漏了好幾處。
-   題庫必須 ≥ QUIZ_TOTAL，否則一次挑戰會把整個題庫用完、每次組合都一樣
-   （這也是這次同步把題庫從 200 補到 300 題的原因）。 */
-const QUIZ_CHALLENGE = 20;
+/* 一次挑戰的輪數與總題數。
+   2026-09-08 曾改為二十輪 200 題，同日改回十輪 100 題（作者決定再觀察）。
+   要再調整時記住：**上限有三份，必須一起改**——
+       game.html       這裡的 QUIZ_CHALLENGE（畫面與累計邏輯）
+       sync.js         LB_MAX_ROUNDS / LB_MAX_SCORE（送出前夾值）
+       firestore.rules valid() 的 score / rounds 上限（伺服器端擋，要手動貼到
+                       Firebase console 才生效）
+   只改前兩份的話，超過上限的寫入會被安全規則拒絕，而 submitScore 的 catch
+   只寫 console.debug——畫面上完全看不出失敗，玩家會以為是自己不夠好。
+
+   QUIZ_TOTAL 由兩者相乘導出，文案一律引用它，不要在任何地方寫死題數。
+   題庫必須 ≥ QUIZ_TOTAL，否則一次挑戰會把整個題庫用完、每次組合都一樣；
+   目前題庫 300 題，一次挑戰抽 100 題，組合空間很充裕。 */
+const QUIZ_CHALLENGE = 10;
 const QUIZ_TOTAL = QUIZ_CHALLENGE * QUIZ_LEN;
 const Q = {list:[], ids:[], log:[], i:0, right:0, streak:0, best:0, earned:0, answered:false, wrong:[]};
 
@@ -1478,7 +1486,7 @@ fillCoinIcons(); syncCoinBar(); renderTips(); applyFontScale();
 fitCanvas(); statsRunner(); loopRunner();
 function closeAll(){ ["account","shareBox"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
 </script>
-<script type="module" src="sync.js?v=deb4bd60"></script>
+<script type="module" src="sync.js?v=496af080"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e44b1d39221d4a5085336497dbff3ce4"}'></script>
 </body>
 </html>
