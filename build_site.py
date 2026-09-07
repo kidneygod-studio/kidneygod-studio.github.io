@@ -560,13 +560,19 @@ KIDNEY_SVG = (
 )
 
 CSS = """
-:root{--bg:#fdfcfa;--fg:#22201d;--mut:#5a544b;--line:#e6e1d8;--card:#f6f3ed;
---accent:#0f766e;--accent2:#0d5f59;--link:#0d5f59;--warn:#8a5a00;--maxw:720px}
+/* 2026-09-07 全站改成透析中心那套藍色調。
+   對照：navy #1e3a63／blue #2e7fb8／teal #14807a／mist #f3f7fa／ink #333a44。
+   ⚠ --link 不直接用 blue #2e7fb8：它在白底上只有 3.6:1，達不到 AA。
+   內文連結用壓深的 #175c8e（約 6.3:1）；#2e7fb8 留給圖示、色條這類
+   不需要達到文字對比的視覺錨點。 */
+:root{--bg:#fdfeff;--fg:#28313d;--mut:#5c6774;--line:#dbe5ee;--card:#f2f7fb;
+--accent:#2e7fb8;--accent2:#1e3a63;--link:#175c8e;--warn:#8a5a00;--maxw:720px;
+--serif:"Noto Serif TC",Georgia,"Songti TC","MingLiU",serif}
 /* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
---line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--link:#5eead4;--warn:#fbbf24}}
-:root[data-theme="dark"]{--bg:#16140f;--fg:#eae5dc;--mut:#ada393;
---line:#332e26;--card:#1e1b15;--accent:#5eead4;--accent2:#2dd4bf;--link:#5eead4;--warn:#fbbf24}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1620;--fg:#e6edf5;--mut:#9fb2c6;
+--line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24}}
+:root[data-theme="dark"]{--bg:#0e1620;--fg:#e6edf5;--mut:#9fb2c6;
+--line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
@@ -647,124 +653,83 @@ transition:border-color .15s,color .15s}
 /* 錨點跳轉時要扣掉固定頁首的高度，否則標題會被壓在頁首下面。
    頁首約 60px，再加一點餘裕才不會貼著邊。 */
 html{scroll-padding-top:78px}
-/* 頁首帶一點主色。用 color-mix 疊在 --bg 上，而不是各主題各寫一組色票——
-   淺色、深色、自動三層共用同一條規則，不會有「改一份忘了改另一份」。
-   第一行 background 是不支援 color-mix 的舊瀏覽器的退路。 */
-header.site{position:sticky;top:0;z-index:50;background:var(--bg);
-background:color-mix(in srgb,var(--accent) 7%,var(--bg));
-background:color-mix(in srgb,color-mix(in srgb,var(--accent) 7%,var(--bg)) 86%,transparent);
-backdrop-filter:saturate(150%) blur(10px);-webkit-backdrop-filter:saturate(150%) blur(10px);
-border-bottom:1px solid var(--line);
-border-bottom-color:color-mix(in srgb,var(--accent) 24%,var(--line));
-margin-bottom:8px}
-/* 頂端那條彩線。sticky 本身就是 positioned，absolute 會以頁首為基準。
-   收尾用商城那顆金色 #e8c65a，和頁首右邊的「護腎遊戲」按鈕呼應。 */
-header.site::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;
-background:linear-gradient(90deg,var(--accent),var(--accent2) 58%,#e8c65a)}
-header.site .wrap{display:flex;align-items:center;justify-content:space-between;
-gap:14px;padding-top:11px;padding-bottom:11px}
+/* 頁首：深藍實心，和透析中心同一套。所有寬度都收成漢堡選單——
+   作者指定「把按鈕都集中在裡面」。這一改把原本 700/450/390/330 四階
+   斷點梯全部拿掉了：那整套是為了「六個標籤要排進一行」而存在的，
+   收成漢堡之後導覽不再和標題搶頁首寬度，梯子沒有存在的理由。
+   深藍底在淺色與深色主題下都成立，所以這一塊不吃主題色票。 */
+header.site{position:sticky;top:0;z-index:60;background:#1e3a63;
+transition:box-shadow .25s}
+header.site.stuck{box-shadow:0 2px 18px rgba(15,32,58,.28)}
+header.site .wrap{display:flex;align-items:center;gap:16px;
+height:64px;padding-top:0;padding-bottom:0}
 .brand{display:inline-flex;align-items:center;gap:9px;text-decoration:none;
-color:var(--fg);font-weight:800;font-size:1.04rem;letter-spacing:.3px;white-space:nowrap}
-.brand svg{color:var(--accent);flex-shrink:0}
-.brand:hover{color:var(--accent2)}
-header.site nav{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:flex-end}
-header.site nav a{font-size:14px;color:var(--mut);text-decoration:none;font-weight:500;
-padding:6px 11px;border-radius:8px;white-space:nowrap;
-transition:color .15s,background .15s}
-header.site nav a:hover{color:var(--fg);background:var(--card)}
-header.site nav a[aria-current="page"]{color:var(--accent2);background:var(--card);font-weight:700}
-/* ── 頁首的次階層（目前只有「新知&指引」用）──
-   父項是 <button> 不是 <a>：它不導向任何地方，只負責展開。
-   面板用 absolute 掛在群組上，所以不會把導覽列撐高、也不影響斷點計算。 */
-.ngrp{position:relative;display:inline-flex}
-/* 不要用 gap 來推箭頭：按鈕裡是 <span class="np">衛教</span>文章，
-   「文章」是匿名文字節點、在 flex 裡自成一個項目，gap 會插在標籤中間，
-   變成「衛教 文章」。間距改掛在箭頭上，才只作用於該作用的地方。 */
-.ngbtn{display:inline-flex;align-items:center;font-family:inherit;
-font-size:14px;color:var(--mut);font-weight:500;padding:6px 11px;border-radius:8px;
-white-space:nowrap;border:0;background:none;cursor:pointer;line-height:inherit;
-transition:color .15s,background .15s}
-.ngbtn:hover{color:var(--fg);background:var(--card)}
-.ngbtn[data-on]{color:var(--accent2);background:var(--card);font-weight:700}
-.ngbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.ngcaret{flex-shrink:0;margin-left:4px;transition:transform .2s}
-.ngbtn[aria-expanded="true"] .ngcaret{transform:rotate(180deg)}
-/* right:0 讓面板往左長：父項在導覽列偏右，往右長會衝出視窗 */
-.ngmenu{position:absolute;top:calc(100% + 8px);right:0;z-index:60;min-width:132px;
-background:var(--bg);border:1px solid var(--line);border-radius:12px;
-box-shadow:0 12px 30px rgba(0,0,0,.14);padding:6px;overflow:hidden}
-/* hidden 要壓過上面的 display——作者樣式優先於瀏覽器預設，
-   少了這行面板會一直開著。這個坑這個站踩過三次了（分享鈕、主題圖示）。 */
-.ngmenu[hidden]{display:none}
-.ngmenu a{display:block;padding:10px 14px;border-radius:8px;font-size:14.5px;
-white-space:nowrap}
-@media(max-width:450px){.ngbtn{padding:9px 5px;font-size:13.5px}.ngcaret{margin-left:3px}}
-@media(max-width:390px){.ngbtn{padding:9px 2px;font-size:13px}.ngcaret{margin-left:2px}}
+color:#fff;font-family:var(--serif);font-weight:700;font-size:1.12rem;
+letter-spacing:.02em;white-space:nowrap}
+.brand svg{color:#fff;flex-shrink:0}
+.brand:hover{color:#fff;text-decoration:none}
+/* 漢堡鈕。44px 是觸控目標下限，這個站的讀者有不少是長輩。 */
+.burger{display:block;margin-left:auto;width:44px;height:44px;border:0;padding:0;
+background:none;color:#fff;cursor:pointer;flex-shrink:0}
+.burger span{display:block;width:22px;height:2px;background:#fff;margin:5px auto;
+transition:transform .25s,opacity .2s}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.burger:focus-visible{outline:2px solid #fff;outline-offset:-4px;border-radius:8px}
+/* 抽屜。max-height 過場而不是 display：display 沒有過場，
+   而且 max-height:0 + overflow:hidden 時裡面的連結不會被 Tab 走到。 */
+header.site nav{position:fixed;left:0;right:0;top:64px;z-index:59;
+display:block;background:#162c4b;padding:0;
+max-height:0;overflow:hidden;transition:max-height .3s ease}
+header.site nav.open{max-height:calc(100vh - 64px);overflow:auto;
+padding:10px 0 18px}
+header.site nav a{display:block;color:#dbe6f2;font-size:15.5px;
+padding:13px 22px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.07)}
+header.site nav a:hover{color:#fff;background:rgba(255,255,255,.06);text-decoration:none}
+header.site nav a[aria-current="page"]{color:#fff;font-weight:700;
+box-shadow:inset 3px 0 0 #2e7fb8}
+/* 抽屜裡的分組標籤。原本「衛教文章」「新知&指引」是兩個下拉按鈕，
+   收進抽屜之後不需要展開這個動作了——次項直接列出來，
+   少一次點擊，也少一整套 aria-expanded 的狀態要維護。 */
+.nsec{padding:6px 0 2px}
+.nsl{display:block;padding:10px 22px 6px;font-size:12px;letter-spacing:.22em;
+text-transform:uppercase;color:#8fb3d6;font-weight:700}
+.nsec a{padding-left:34px}
 /* 商城是另一個世界，用它自己的金色標示，一眼看得出不同 */
-header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700}
-header.site nav a.shoplink:hover{color:#2b2115;filter:brightness(1.07)}
-/* 斷點是 700 不是 600：六個四字標籤加上品牌需要約 600px，
-   在 640px 的視窗就會擠成兩行、頁首從 60px 變 101px。
-   **六項是這個頁首的上限**：2026-09-04 加到七項時，這裡與下面兩個斷點
-   全部得收緊才排得下，而收緊之後手機看起來就是一排擠滿字。
-   要再加項目，得先想清楚拿掉哪一項，不是繼續縮間距。 */
-@media(max-width:700px){
-  header.site .wrap{padding-top:8px;padding-bottom:8px;gap:8px}
-  .brand{font-size:.95rem;gap:7px}
+header.site nav a.shoplink{color:#2b2115;background:#e8c65a;font-weight:700;
+margin:14px 22px 0;border-radius:999px;text-align:center;border-bottom:0;
+padding:13px 20px}
+header.site nav a.shoplink:hover{color:#2b2115;background:#e8c65a;
+filter:brightness(1.07)}
+/* 桌機：抽屜收成靠右的面板，不要拉滿整個寬度——1600px 上滿版抽屜
+   右邊會空掉一大片，看起來像版面壞了。手機維持滿版（那裡本來就窄）。 */
+@media(min-width:700px){
+  header.site nav{left:auto;width:min(400px,100%);
+    border-bottom-left-radius:16px;box-shadow:0 18px 44px rgba(15,32,58,.34)}
+}
+@media(max-width:430px){
+  .brand{font-size:1rem;gap:7px}
   .brand svg{width:22px;height:22px}
-  header.site nav{gap:2px}
-  /* 隱藏「衛教／關於／知識」前綴，只留兩個字，才排得下一行 */
-  header.site nav .np{display:none}
-  /* 五個項目時，10px 的水平內距會讓總寬超出約 1px 而換行，頁首從 66px 變 105px。
-     縮到 8px 就排得下。垂直內距不動，點擊區高度不受影響。 */
-  header.site nav a{padding:9px 8px;font-size:13.5px}
 }
-/* 門檻 410 不是 380：380 只顧到 iPhone SE，381–410 這段（iPhone 13/14 的 390、
-   14/15 Pro 的 393）落回上一階的寬鬆間距就會換行。
-   2026-09-04 逐寬度掃描才發現這是既有問題，與當天加減導覽項目無關——
-   斷點是「一階一階往下收」的設計，只在幾個測試過的寬度正確，
-   兩階之間的區段沒人量過就會漏掉。改斷點後一定要整段掃，不能只看幾個點。 */
-/* 中間階。門檻 2026-09-05 從 410 提高到 450：「衛教文章」也做成下拉之後，
-   兩個下拉箭頭各佔約 15px，411–450px 這段就排不下了。
-   **標誌與導覽的門檻必須對齊**：一度把導覽切在 401、標誌切在 410，
-   402–410 這段標誌落回大的一階、多出 8px 剛好讓導覽換行。 */
-@media(max-width:450px){
-  .brand{font-size:.88rem;gap:5px}
+@media(max-width:340px){
+  .brand{font-size:.9rem;gap:6px}
   .brand svg{width:20px;height:20px}
-  header.site nav a{padding:9px 5px;font-size:13.5px}
 }
-/* 最緊的一階。**門檻 359 是量出來的，不要憑感覺調。**
-   實測各組合的導覽實寬與最低可用寬度（六個項目）：
-       內距 8／字 13.5／間距 2 → 268px，402px 以上可用
-       內距 5／字 13.5／間距 2 → 232px，360px 以上可用
-       內距 2／字 13  ／間距 0 → 180px，320px 以上可用
-   加上標誌各階的寬度（91／83／74）與兩個下拉箭頭，門檻是 390。
-
-   ⚠ 2026-09-05 我一度把這一階套到 ≤440，讓所有手機都吃最緊的設定——
-   六項確實排得下了，但 393px 時空著 90px、430px 時空著 119px，
-   字卻縮到 13px、間距歸零。作者反映「頁首特別小且擁擠」，是對的。
-   排得下不等於排得好，能用的空間要用掉。 */
-@media(max-width:390px){
-  .brand{font-size:.8rem;gap:4px}
-  .brand svg{width:18px;height:18px}
-  header.site nav a{padding:9px 2px;font-size:13px}
-  header.site nav{gap:0}
-}
-/* 最後一道。330px 以下連最緊的設定都排不下，把下拉箭頭收掉再省 30px。
-   按鈕本身照常可以按，只是少了「這裡會展開」的視覺提示——
-   在這個寬度下，排成兩排的代價比少一個箭頭大。 */
-@media(max-width:330px){
-  .ngcaret{display:none}
-}
-h1{font-size:1.85rem;line-height:1.35;margin:28px 0 10px;letter-spacing:-.01em}
+/* 標題改襯線（Noto Serif TC），和透析中心同一套。
+   內文維持無襯線——長篇衛教內容在螢幕上用襯線讀起來吃力，
+   透析中心那邊也只有標題用襯線。 */
+h1,h2,h3,.sect,.shead h2,.docname,.mcard .t,.cats .t,.feat .t,.dg h3{
+font-family:var(--serif);letter-spacing:.01em}
+h1{font-size:1.95rem;line-height:1.38;margin:28px 0 10px;color:var(--accent2)}
 /* 區塊標題左側的主色錨點。長文有 10–12 個 h2，這條線提供滑動時的節奏感，
    讓讀者知道換段了。用 flex-start 而非 center：標題換行時錨點對齊第一行，
    否則它會浮在整段的垂直中央，看起來像被漏掉。 */
-h2{font-size:1.28rem;line-height:1.45;margin:38px 0 10px;padding-top:6px;
-display:flex;align-items:flex-start;gap:10px}
+h2{font-size:1.34rem;line-height:1.45;margin:38px 0 10px;padding-top:6px;
+color:var(--accent2);display:flex;align-items:flex-start;gap:10px}
 h2::before{content:"";flex:0 0 auto;width:4px;height:1.05em;margin-top:.22em;
 border-radius:2px;background:var(--accent)}
-h3{font-size:1.05rem;margin:26px 0 8px;color:var(--mut)}
+h3{font-size:1.08rem;margin:26px 0 8px;color:var(--mut)}
 p{margin:0 0 18px}
 /* 連結用比較深的 --accent2 而不是 --accent：#0f766e 對背景只有 5.34、
    在卡片底上只有 4.94（全站最低，只比 AA 門檻 4.5 高一點）；--accent2 是
@@ -1139,7 +1104,32 @@ font-size:1.02rem;line-height:1.55}
    section 本身就是滿版（它在 .wrap 外面），所以**不需要** 100vw 去掙脫容器——
    100vw 含捲軸寬度，在有捲軸的桌機上會多出約 15px 的橫向溢出。 */
 main.banded{padding:0}
-.band{padding:34px 0}
+/* overflow-x:clip 是給淡入動畫的安全網：.reveal 起始狀態帶 translateY，
+   若日後改成左右進場，那段位移會伸到視窗外造成橫向捲軸。
+   用 clip 不用 hidden——hidden 會建立捲動容器，把裡面的 sticky 弄壞。 */
+.band{padding:38px 0;overflow-x:clip}
+/* 區塊標題：英文小標在上、中文大標在下（透析中心那套的識別）。
+   英文小標刻意用 aria-hidden——它是視覺節奏，不是要念出來的內容。 */
+.shead{margin:0 0 22px}
+.shead .en{display:block;font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+color:var(--accent);font-weight:700;margin-bottom:7px}
+/* 有了英文小標就不再需要 h2 左邊那條色條——兩個做同一件事（標記區塊起點），
+   疊在一起反而雜。長文內頁的 h2 維持色條，那裡沒有英文小標。 */
+.shead .sect{margin:0;padding-top:0;display:block}
+.shead .sect::before{content:none}
+.shead .sd{margin:10px 0 0;padding-left:0}
+@media(max-width:560px){.shead .en{letter-spacing:.22em;font-size:11.5px}}
+/* ── 捲動淡入（移植自透析中心）──
+   只播一次；重複播放在長頁面上會讓人暈。沒有 JS 時 .no-js 直接顯示。 */
+.reveal{opacity:0;transform:translateY(24px);
+transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1);
+transition-delay:var(--d,0s)}
+.reveal.in{opacity:1;transform:none}
+.no-js .reveal{opacity:1;transform:none}
+/* 使用者要求減少動態就整組關掉——這個站的讀者有相當比例是長輩 */
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+}
 .band.tint{background:var(--card)}
 /* 深色帶上的卡片要翻成 --bg。卡片本來就是 --card，帶底也是 --card，
    不翻的話整排卡片會和底同色、只剩一圈邊框，看起來像消失了。
@@ -1161,7 +1151,11 @@ background:
 linear-gradient(180deg,color-mix(in srgb,var(--bg) 74%,transparent),
 color-mix(in srgb,var(--bg) 93%,transparent)),
 url(/hero/home-bg.jpg) center/cover no-repeat}
-.band.opening .prefbar{padding-top:14px}
+/* margin 改成 padding。.prefbar 原本是 margin-top:12px，而開場白帶的
+   padding-top 是 0——外邊距會**穿過** section 與 .wrap 一路往上collapse，
+   把整個 main 往下推 12px，在頁首與水波帶之間留出一條白縫。
+   （作者看到的就是這條。）換成 padding 就不會外溢。 */
+.band.opening .prefbar{margin-top:0;padding-top:16px}
 .hero{padding:26px 0 4px}
 .hero h1{font-size:2.1rem;margin:0 0 12px}
 .hero .sub{font-size:1.08rem;color:var(--mut);margin-bottom:6px}
@@ -1334,6 +1328,18 @@ def band(inner: str, tint: bool = False, cls: str = "", zoom: bool = True) -> st
     return f'<section class="{names}"><div class="wrap wide">{z}</div></section>'
 
 
+def sect_head(anchor: str, zh: str, en: str, sub: str) -> str:
+    """區塊標題：英文小標在上、中文大標在下（透析中心那套）。
+
+    英文小標是視覺節奏，不是內容——aria-hidden 讓讀螢幕軟體跳過，
+    否則每一區都會先念一次無意義的英文再念中文標題。
+    """
+    return (f'<div class="shead reveal">'
+            f'<span class="en" aria-hidden="true">{esc(en)}</span>'
+            f'<h2 class="sect" id="{anchor}">{esc(zh)}</h2>'
+            f'<div class="sd">{sub}</div></div>')
+
+
 def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None,
          extra_head: str = "", after_disclaimer: str = "",
          pref_left: str = "", banded: bool = False, opening: str = "") -> str:
@@ -1424,20 +1430,30 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
                 f'<path d="M5 9l7 7 7-7"/></svg></button>'
                 f'<div class="ngmenu" id="ngm-{gid}" hidden>{links}</div></div>')
 
-    # 2026-09-05 加回第六項「新知&指引」（手機只顯示「指引」）。
-    # 六項在 375–430px 原本會換行，靠三階斷點 700/410/365 才排得下——
-    # 加第七項之前一定要重跑 scratchpad 的 nav 掃描。
-    nav = (navgroup("edu", "衛教", "文章",
-                    [(f"/{ALL_ARTICLES}", "深入文章", "longform"),
-                     (f"/{ALL_TOPICS}", "主題衛教", "topics"),
-                     ("/articles/gallery.html", "衛教圖卡", "gallery")])
-           + navgroup("upd", "新知&", "指引",
-                      [(f"/{ALL_NEWS}", "醫學新知", "news"),
-                       (f"/{ALL_GUIDE}", "臨床指引", "guide")])
-           + navlink("/food.html", "", "食物", "food", suffix="查詢")
-           + (navlink("/calc.html", "腎功能", "計算", "calc") if CALC_PUBLISHED else "")
-           + navlink("/about.html", "關於", "作者", "about")
-           + navlink("/shop.html", "護腎", "遊戲", "shop", "shoplink"))
+    def navsec(label: str, items: list[tuple[str, str, str]]) -> str:
+        """抽屜裡的一個分組：小標＋縮排的次項。
+
+        2026-09-07 收成漢堡選單之後，原本「衛教文章」「新知&指引」那兩個
+        下拉按鈕就沒有意義了——抽屜本來就是展開的狀態，再包一層展開只是
+        多一次點擊。次項直接列出來，同時省掉一整套 aria-expanded 的狀態。
+        """
+        links = "".join(
+            f'<a href="{h}"{" aria-current=\"page\"" if cur.get(k) else ""}>'
+            f'{esc(t)}</a>' for h, t, k in items)
+        return f'<div class="nsec"><span class="nsl">{esc(label)}</span>{links}</div>'
+
+    nav = (navsec("衛教文章",
+                  [(f"/{ALL_ARTICLES}", "深入文章", "longform"),
+                   (f"/{ALL_TOPICS}", "主題衛教", "topics"),
+                   ("/articles/gallery.html", "衛教圖卡", "gallery")])
+           + navsec("新知 & 指引",
+                    [(f"/{ALL_NEWS}", "醫學新知", "news"),
+                     (f"/{ALL_GUIDE}", "臨床指引", "guide")])
+           + navsec("工具",
+                    [("/food.html", "食物查詢", "food")]
+                    + ([("/calc.html", "腎功能計算", "calc")] if CALC_PUBLISHED else []))
+           + navlink("/about.html", "", "關於作者", "about")
+           + navlink("/shop.html", "", "護腎遊戲", "shop", "shoplink"))
     # 每一頁都掛：要的是全站瀏覽數，只算首頁會漏掉從搜尋直接進到某篇文章
     # 就離開的人——而那正是這個站大部分的流量。
     views_block = ('<p class="views" id="siteViews" style="display:none">'
@@ -1487,14 +1503,18 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <meta property="og:image:alt" content="{esc(title)}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&display=swap">
 <style>{CSS}</style>{FS_BOOT}{extra_head}
 {ld}
 </head>
 <body>
 <header class="site"><div class="wrap{wide_cls}">
 <a class="brand" href="/">{KIDNEY_SVG}<span>{SITE_NAME}</span></a>
-<nav>{nav}</nav>
-</div></header>
+<button class="burger" type="button" aria-expanded="false" aria-controls="sitenav"
+        aria-label="選單"><span></span><span></span><span></span></button>
+</div><nav id="sitenav">{nav}</nav></header>
 <main class="{main_cls}">
 {main_head}
 {body}
@@ -2092,20 +2112,21 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     # 不是把整個書目攤開——雜誌卡片一張很高，全部列出來會把下面的區塊推到很遠。
     feat_more = more_link(ALL_ARTICLES, f"閱讀更多（全部 {len(feed)} 篇）") \
         if len(feed) > len(shown) else ""
-    feat_sect = (f'<h2 class="sect" id="deep">深入文章</h2>'
-                 f'<div class="sd">完整長文，適合想把一個主題徹底搞懂的人</div>'
-                 f'<div class="mag">{feats}</div>{feat_more}'
+    feat_sect = (sect_head("deep", "深入文章", "IN-DEPTH ARTICLES",
+                           "完整長文，適合想把一個主題徹底搞懂的人")
+                 + f'<div class="mag reveal">{feats}</div>{feat_more}'
                  if feats else "")
 
     # 新知：只放最新一篇，右下角進新知頁。排在深入文章之前——
     # 長文隨時可讀，新知是「這陣子才有的」，會過期的東西要放前面。
     news_sect = ""
     if PAPERS:
-        news_sect = (f'<h2 class="sect" id="news">醫學新知</h2>'
-                     f'<div class="sd">主要期刊的最新研究，'
-                     f'結構化摘要：問題、發現、意義</div>'
+        news_sect = (sect_head("news", "醫學新知", "MEDICAL UPDATES",
+                               "主要期刊的最新研究，結構化摘要：問題、發現、意義")
+                     + f'<div class="reveal" style="--d:.08s">'
                      f'{digest_card(PAPERS[0], compact=True)}'
-                     + more_link(ALL_NEWS, f"閱讀更多（全部 {len(PAPERS)} 篇）"))
+                     + more_link(ALL_NEWS, f"閱讀更多（全部 {len(PAPERS)} 篇）")
+                     + '</div>')
 
     # 直接讀 logo 實際尺寸，換圖時不必再手改寫死的數字（換過一次比例就變了）
     lw = img_size(ROOT / "logo.png")
@@ -2115,25 +2136,25 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     food_sect = ""
     if FOOD_DB.exists():
         n_food = len(json.loads(FOOD_DB.read_text(encoding="utf-8"))["rows"])
-        food_sect = (f'<h2 class="sect" id="food">食物查詢</h2>'
-                     f'<div class="sd">腎臟病飲食最需要注意的是鈉、鉀、磷、蛋白質，'
-                     f'而該注意哪一項取決於你的分期</div>'
-                     f'<a class="feat" href="/food.html">'
+        food_sect = (sect_head("food", "食物查詢", "FOOD DATABASE",
+                               "腎臟病飲食最需要注意的是鈉、鉀、磷、蛋白質，"
+                               "而該注意哪一項取決於你的分期")
+                     + f'<a class="feat reveal" style="--d:.08s" href="/food.html">'
                      f'<div class="t">查 {n_food:,} 種食物的鈉、鉀、磷、蛋白質含量</div>'
                      f'<div class="d">資料來自衛福部食藥署食品營養成分資料庫。</div></a>')
 
     calc_sect = ""
     if CALC_PUBLISHED:
-        calc_sect = ('<h2 class="sect" id="calc">腎功能計算</h2>'
-                     '<div class="sd">把報告上已經有的數值換算成 eGFR 與分期</div>'
-                     '<a class="feat" href="/calc.html">'
+        calc_sect = (sect_head("calc", "腎功能計算", "eGFR CALCULATOR",
+                               "把報告上已經有的數值換算成 eGFR 與分期")
+                     + '<a class="feat reveal" style="--d:.08s" href="/calc.html">'
                      '<div class="t">eGFR 與腎衰竭風險計算</div>'
                      '<div class="d">CKD-EPI 2021 公式，填了胱抑素 C 會自動改用較準確的合併式；'
                      '第 3–5 期另可用 KFRE 估算腎衰竭風險。</div></a>')
 
-    gal_sect = (f'<h2 class="sect" id="gallery">衛教圖卡</h2>'
-                f'<div class="sd">社群上發表過的圖解，依主題整理並附上完整說明</div>'
-                f'<a class="feat" href="/articles/gallery.html">'
+    gal_sect = (sect_head("gallery", "衛教圖卡", "CARD GALLERY",
+                          "社群上發表過的圖解，依主題整理並附上完整說明")
+                + f'<a class="feat reveal" style="--d:.08s" href="/articles/gallery.html">'
                 f'<div class="t">{n_gallery} 張衛教圖卡</div>'
                 f'<div class="d">血壓、血糖、血脂、飲食、用藥安全、檢查數值…'
                 f'點主題可跳到該區。</div></a>' if n_gallery else "")
@@ -2189,18 +2210,18 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
 """
 
     topics_sect = (
-        f'<h2 class="sect" id="topics">主題衛教</h2>'
-        f'<div class="sd">{sum(len(v) for v in by_cat.values())} 則衛教內容，'
-        f'分成 {len(by_cat)} 個主題，適合想直接找答案的人</div>'
-        f'<div class="cats">{cards}</div>')
+        sect_head("topics", "主題衛教", "BROWSE BY TOPIC",
+                  f'{sum(len(v) for v in by_cat.values())} 則衛教內容，'
+                  f'分成 {len(by_cat)} 個主題，適合想直接找答案的人')
+        + f'<div class="cats reveal" style="--d:.08s">{cards}</div>')
 
     # 商城放最後：衛教是主體，遊戲是其中一種學習方式。
     # 順序與頁首下拉選單一致，避免導航與陳列互相矛盾。
     play_sect = (
-        f'<h2 class="sect" id="play">從免費遊戲學習</h2>'
-        f'<div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，'
-        f'唯一會出貨的是護腎知識</div>'
-        f'<a class="gamebtn" href="/shop.html">'
+        sect_head("play", "從免費遊戲學習", "LEARN BY PLAYING",
+                  "邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，"
+                  "唯一會出貨的是護腎知識")
+        + f'<a class="gamebtn reveal" style="--d:.08s" href="/shop.html">'
         f'<img src="/logo.png" alt="" aria-hidden="true"{logo_dims}>'
         f'<span class="cap">護腎知識卡片收集遊戲</span></a>')
 
@@ -2427,57 +2448,70 @@ def prefbar(left: str = "") -> str:
     slot = f'<div class="prefshare">{left}</div>' if left else ""
     return f'<div class="prefbar">{slot}{PREF_CONTROLS}</div>'
 
-# 頁首次階層的開關。
+# 頁首漢堡選單。抽屜用 max-height 過場，收起來時 overflow:hidden，
+# 裡面的連結不會被 Tab 走到，不必另外處理 aria-hidden。
 #
-# 沒有 JS 時面板打不開——所以次階層裡的兩頁**一定要有別的路徑到得了**，
-# 目前兩頁互相有連結、首頁的新知區也連得到新知頁，不會變成孤島。
-#
-# 用 hidden 屬性而不是 class：面板在 DOM 裡預設是關的，
-# 讀螢幕軟體與鍵盤 Tab 都不會走進去，不必另外處理 aria-hidden。
+# 沒有 JS 時抽屜打不開——所以每一頁的頁尾都要有到得了各處的連結，
+# 而頁尾本來就有「全部文章／主站」，加上首頁各區塊自己互相連得到，
+# 不會有頁面變成孤島。
 NAVMENU_SCRIPT = """<script>
 (function(){
-  var grps=[].slice.call(document.querySelectorAll('.ngrp'));
-  if(!grps.length) return;
-
-  function set(g, on){
-    var b=g.querySelector('.ngbtn'), m=g.querySelector('.ngmenu');
+  var b=document.querySelector('.burger'), nav=document.getElementById('sitenav');
+  if(!b||!nav) return;
+  function set(on){
     b.setAttribute('aria-expanded', String(on));
-    m.hidden = !on;
+    nav.classList.toggle('open', on);
   }
-  function closeAll(except){
-    grps.forEach(function(g){ if(g !== except) set(g, false); });
-  }
-  grps.forEach(function(g){
-    var btn=g.querySelector('.ngbtn'), menu=g.querySelector('.ngmenu');
-    if(!btn||!menu) return;
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      var on = btn.getAttribute('aria-expanded') === 'true';
-      closeAll(g);              /* 一次只開一個，兩個面板疊在一起沒人看得懂 */
-      set(g, !on);
-    });
-    btn.addEventListener('keydown', function(e){
-      if(e.key === 'ArrowDown'){
-        e.preventDefault();
-        closeAll(g);
-        set(g, true);
-        var a = menu.querySelector('a');
-        if(a) a.focus();
-      }
-    });
+  b.addEventListener('click', function(){
+    set(b.getAttribute('aria-expanded') !== 'true');
   });
-  /* 點面板外面就收起來。用 document 的 click，不是 blur——
-     blur 在點面板裡的連結時會先觸發，連結就按不到了。 */
-  document.addEventListener('click', function(e){
-    if(!e.target.closest('.ngrp')) closeAll(null);
-  });
+  /* 點了連結就收起來，不然跳到錨點之後抽屜還蓋在上面 */
+  nav.addEventListener('click', function(e){ if(e.target.closest('a')) set(false); });
   document.addEventListener('keydown', function(e){
-    if(e.key !== 'Escape') return;
-    var open = grps.filter(function(g){
-      return g.querySelector('.ngbtn').getAttribute('aria-expanded') === 'true';
-    })[0];
-    if(open){ set(open, false); open.querySelector('.ngbtn').focus(); }
+    if(e.key === 'Escape' && b.getAttribute('aria-expanded') === 'true'){
+      set(false); b.focus();
+    }
   });
+  /* 捲動之後加陰影，讓頁首和內容分開 */
+  var on=false;
+  addEventListener('scroll', function(){
+    var want = scrollY > 8;
+    if(want !== on){ on = want; document.querySelector('header.site').classList.toggle('stuck', on); }
+  }, {passive:true});
+})();
+
+/* 捲動淡入。只播一次。
+ *
+ * **刻意不用 IntersectionObserver。** 整個版面靠 .reveal 的 opacity:0 起始，
+ * 只要觀察器因為任何理由沒回呼，整頁就是全白——它在內嵌式預覽視窗裡實測
+ * 一次都沒觸發過。自己量 getBoundingClientRect 沒有這個風險，元素數量只有
+ * 幾十個，rAF 節流之後成本可以忽略。最後再加一道三秒保險：
+ * 動畫沒播只是可惜，內容看不到是災難。 */
+(function(){
+  var els = [].slice.call(document.querySelectorAll('.reveal'));
+  if(!els.length) return;
+  function showAll(){ els.forEach(function(el){ el.classList.add('in'); }); els=[]; teardown(); }
+  function teardown(){ removeEventListener('scroll', onScroll); removeEventListener('resize', onScroll); }
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ showAll(); return; }
+  var ticking=false;
+  function check(){
+    ticking=false;
+    /* 進到畫面下緣往上 12% 才播。已經捲過去的元素 top 也小於這條線，
+       所以往回捲不會看到空白。 */
+    var line=(innerHeight||document.documentElement.clientHeight)*0.88, left=[];
+    for(var i=0;i<els.length;i++){
+      if(els[i].getBoundingClientRect().top < line) els[i].classList.add('in');
+      else left.push(els[i]);
+    }
+    els=left;
+    if(!els.length) teardown();
+  }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(check); } }
+  addEventListener('scroll', onScroll, {passive:true});
+  addEventListener('resize', onScroll);
+  check();
+  addEventListener('load', check);
+  setTimeout(showAll, 3000);
 })();
 </script>"""
 
