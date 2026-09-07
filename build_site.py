@@ -279,6 +279,7 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "警訊與迷思": ["kdigo_ckd", "tsn", "hpa_kidney"],
     # 四篇長文（用 slug 當 key）
     "egfr-meaning-ckd-stages": ["kdigo_ckd", "tsn", "niddk"],
+    "cystatin-c-egfr": ["kdigo_ckd", "tsn", "niddk"],
     "creatinine-high-what-to-do": ["kdigo_ckd", "tsn", "niddk"],
     "foamy-urine-proteinuria": ["kdigo_ckd", "tsn", "niddk"],
     "taiwan-eating-out-sodium": ["kdigo_ckd", "fda_tfnd", "hpa_kidney"],

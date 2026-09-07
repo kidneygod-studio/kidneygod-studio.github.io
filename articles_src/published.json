@@ -12,5 +12,6 @@
   "kidney-replacement-therapy": "2026-09-03",
   "dialysis-access-preparation": "2026-09-03",
   "no-dialysis-therapy-claims": "2026-09-03",
-  "dialysis-travel": "2026-09-05"
+  "dialysis-travel": "2026-09-05",
+  "cystatin-c-egfr": "2026-09-08"
 }
