@@ -245,6 +245,12 @@ font-size:12.5px;color:var(--mut);letter-spacing:0}
 .sched td.on{color:var(--teal);font-size:17px;background:rgba(20,128,122,.06)}
 .sched td.off{color:#b9c4cf}
 .sched td.q{color:#7a5b00;background:#fff3c4;font-weight:700}
+/* 休診那一欄：格子留白，表頭壓灰並標「休診」 */
+.sched thead th.cl{background:#33517d;color:#c2d2e6}
+.sched .cw{display:block;font-family:var(--sans);font-weight:400;
+font-size:11.5px;letter-spacing:.06em;margin-top:2px}
+.sched td.cl{background:repeating-linear-gradient(135deg,
+transparent,transparent 7px,rgba(120,140,165,.09) 7px,rgba(120,140,165,.09) 14px)}
 .tnote{margin:0 0 18px;font-size:14px;color:var(--mut)}
 .svisually{position:absolute;width:1px;height:1px;overflow:hidden;
 clip:rect(0 0 0 0);white-space:nowrap}

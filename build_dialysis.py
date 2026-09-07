@@ -88,10 +88,9 @@ DOCTORS: list[tuple[str, str, str]] = [
 # 一週透析排班。就醫資訊頁的表格由這裡產生，FACTS["shifts"] 那句話則是
 # 同一件事的一行摘要（首頁的數據方塊與關於頁用）。**兩邊要一起改。**
 #
-# 值是那一天有排班的班別。空 tuple = 當天沒有排班。
-# 週日：作者給的服務時間只寫了一三五與二四六，沒有提到週日。
-# 沒有依據就不能寫「休診」——那是關於一間真實醫療機構的事實。
-# 用 None 表示「還沒確認」，表格會渲染成待填標記。
+# 值是那一天有排班的班別。空 tuple = 當天沒有排班（2026-09-07 作者確認週日沒開）。
+# None 保留給「還沒確認」，會渲染成黃底的「?」——日後若有哪一天不確定，
+# 填 None 而不要憑推測填班別。
 SCHEDULE: dict[str, tuple[str, ...] | None] = {
     "一": ("早", "中", "晚"),
     "二": ("早", "中"),
@@ -99,7 +98,7 @@ SCHEDULE: dict[str, tuple[str, ...] | None] = {
     "四": ("早", "中"),
     "五": ("早", "中", "晚"),
     "六": ("早", "中"),
-    "日": None,
+    "日": (),
 }
 SHIFT_ORDER = ("早", "中", "晚")
 # 各班別的實際時刻。院方確認後填進來，表格會在班別名稱下多一行時間。
@@ -458,6 +457,12 @@ font-size:12.5px;color:var(--mut);letter-spacing:0}
 .sched td.on{color:var(--teal);font-size:17px;background:rgba(20,128,122,.06)}
 .sched td.off{color:#b9c4cf}
 .sched td.q{color:#7a5b00;background:#fff3c4;font-weight:700}
+/* 休診那一欄：格子留白，表頭壓灰並標「休診」 */
+.sched thead th.cl{background:#33517d;color:#c2d2e6}
+.sched .cw{display:block;font-family:var(--sans);font-weight:400;
+font-size:11.5px;letter-spacing:.06em;margin-top:2px}
+.sched td.cl{background:repeating-linear-gradient(135deg,
+transparent,transparent 7px,rgba(120,140,165,.09) 7px,rgba(120,140,165,.09) 14px)}
 .tnote{margin:0 0 18px;font-size:14px;color:var(--mut)}
 .svisually{position:absolute;width:1px;height:1px;overflow:hidden;
 clip:rect(0 0 0 0);white-space:nowrap}
@@ -1039,8 +1044,15 @@ def schedule_table() -> str:
     要能念出「週一 早班 有」。
     """
     days = list(SCHEDULE)
-    head = "".join(f'<th scope="col"><span class="dw">週</span>{d}</th>'
-                   for d in days)
+    # 整天都沒有排班的那一欄留白（作者指定）。但整欄空白會讓人分不出
+    # 「沒開」還是「表格壞了」，所以在表頭補一個「休診」小標——
+    # 這不是多餘的字，是讓留白讀得懂的那一個字。
+    closed = {d for d, v in SCHEDULE.items() if v is not None and not v}
+    head = "".join(
+        f'<th scope="col"{" class=\"cl\"" if d in closed else ""}>'
+        f'<span class="dw">週</span>{d}'
+        + ('<span class="cw">休診</span>' if d in closed else "")
+        + "</th>" for d in days)
     rows = []
     for sh in SHIFT_ORDER:
         cells = []
@@ -1051,6 +1063,10 @@ def schedule_table() -> str:
             elif sh in v:
                 cells.append(f'<td class="on" aria-label="週{d}{sh}班有排班">'
                              f'<span aria-hidden="true">●</span></td>')
+            elif d in closed:
+                # 留白。aria-label 還是要講清楚——讀螢幕軟體念到一個空格
+                # 只會說「空白」，使用者不會知道那代表休診。
+                cells.append(f'<td class="cl" aria-label="週{d}休診"></td>')
             else:
                 cells.append(f'<td class="off" aria-label="週{d}{sh}班無排班">'
                              f'<span aria-hidden="true">–</span></td>')
