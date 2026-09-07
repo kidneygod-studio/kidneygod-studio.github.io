@@ -1403,7 +1403,7 @@ async function showBoard(){
     `<li class="${i<3?"medal m"+(i+1):""}">
        <span class="rk">${["🥇","🥈","🥉"][i] || (i+1)}</span>
        <span class="nm">${escapeHTML(t.name || "匿名者")}</span>
-       <span class="sv">${t.score} / 100${t.rounds ? `<small class="dimtxt">　${t.rounds} 輪</small>` : ""}</span>
+       <span class="sv">${t.score} / ${QUIZ_TOTAL}${t.rounds ? `<small class="dimtxt">　${t.rounds} 輪</small>` : ""}</span>
      </li>`).join("") + `</ol>`;
 }
 function escapeHTML(s){
