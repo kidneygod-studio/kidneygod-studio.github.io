@@ -546,7 +546,7 @@ function renderTips(){
       <b>累計最多算 ${QUIZ_CHALLENGE} 輪</b>（${QUIZ_TOTAL} 題，一次挑戰內題目不重複，全對就是滿分 ${QUIZ_TOTAL}）。
       題庫共 ${QUIZ.length} 題，每次挑戰是從中洗牌抽出的 ${QUIZ_TOTAL} 題，所以每一輪挑戰的題目組合都不一樣。
       第 ${QUIZ_CHALLENGE} 輪一結算，累計就歸零、重新洗牌 —— 分數不會無限往上疊。
-      <b>排行榜每週日晚上 12:00 結算</b>，該週前三名可獲得獎金：🥇 2000、🥈 1000、🥉 500 腎元
+      <b>排行榜每週日晚上 12:00 結算</b>，該週前 ${WEEK_PRIZE.length} 名可獲得獎金：🥇 4000、🥈 2000、🥉 1000、第 4–10 名各 500 腎元
       —— 下次進來小學堂時自動入帳。第一名的名字會出現在首頁的跑馬燈上。
       <div id="qStats" class="qstats"></div>
       <div style="margin-top:10px"><button class="qbtn ghost" onclick="showBoard()">🏆 看排行榜</button></div>`;
@@ -1210,7 +1210,7 @@ function drawShareCard(){
   if(myRank){
     d.fillStyle = "#7a5c0a";
     rrect(d, M - 170, 878, 340, 52, 26); d.fill();
-    txt(d, (["🥇","🥈","🥉"][myRank - 1] || "🏅") + " 本週第 " + myRank + " 名",
+    txt(d, medalOf(myRank - 1) + " 本週第 " + myRank + " 名",
         M, 913, 28, "#fff7e2", 900);
   }
 
@@ -1327,7 +1327,14 @@ async function rankCheck(total, rounds, done){
 /* 週賽獎金。腎元存在各人自己的雲端文件裡，安全規則只允許本人寫入，
    所以獎金不可能由別人替得獎者加值 —— 只能等本人回來時自己領。
    已領的週次記在 wkClaimed，避免重複領。 */
-const WEEK_PRIZE = [2000, 1000, 500];
+/* 週賽獎金，索引 0 起算＝第一名。2026-09-08 由前三名擴到前十名：
+   4000 / 2000 / 1000，第 4–10 名各 500。
+   陣列長度就是「發到第幾名」，要調整名額改這一行即可——
+   下面所有地方都用 WEEK_PRIZE.length 推算，沒有另外寫死名次。 */
+const WEEK_PRIZE = [4000, 2000, 1000, 500, 500, 500, 500, 500, 500, 500];
+/* 前三名有獎牌，第四名之後用名次數字。 */
+const MEDALS = ["🥇", "🥈", "🥉"];
+const medalOf = r => MEDALS[r] || "🏅";
 /* 重入防護：wkClaimed 是在 await 之後才寫入的，兩次呼叫同時在飛時
    會雙雙通過「已領過」檢查而發兩次獎（實測快速切換模式就會觸發）。
    共用同一個 promise，確保一個載入週期內只真正結算一次。 */
@@ -1342,18 +1349,22 @@ async function doClaimWeeklyPrize(){
   if(!window.site || !window.site.myId) return;
   const wk = prevWeekId();
   if(store.wkClaimed.includes(wk)) return;          // 這一週領過了
-  const top3 = await window.site.lastWeekTop3();
-  if(!top3 || !top3.length) return;
+  /* 取的筆數要涵蓋所有有獎的名次。舊版只取三筆，第 4–10 名就算榜上有名
+     也會因為「不在這三筆裡」而找不到自己，靜靜地不發獎。 */
+  const top = window.site.lastWeekTop10
+      ? await window.site.lastWeekTop10()
+      : await window.site.lastWeekTop3();     // 快取到舊 sync.js 時的退路
+  if(!top || !top.length) return;
   const me = window.site.myId();
-  const rank = top3.findIndex(t => (t.uid || t.id) === me);
+  const rank = top.findIndex(t => (t.uid || t.id) === me);
   // 不論有沒有得獎都記下來，避免每次進來都重查一次上週榜
   const claimed = store.wkClaimed.concat(wk);
   store.wkClaimed = claimed.slice(-8);
-  if(rank < 0) return;
+  if(rank < 0 || rank >= WEEK_PRIZE.length) return;
   const prize = WEEK_PRIZE[rank];
   store.coins = store.coins + prize;
   syncCoinBar();
-  const medal = ["🥇","🥈","🥉"][rank];
+  const medal = medalOf(rank);
   $("quizWrap").insertAdjacentHTML("afterbegin",
     `<div class="qchallenge"><div class="ct">${medal} 上週第 ${rank+1} 名</div>
        <div class="cs">獎金 <b>${prize}</b> 腎元已入帳</div>
@@ -1375,7 +1386,7 @@ function fillWeekInfo(){
   const when = `${t.getMonth()+1}/${t.getDate()}（日）晚上 12:00`;
   const left = d > 0 ? `${d} 天 ${h} 小時` : (h > 0 ? `${h} 小時 ${m} 分` : `${m} 分`);
   el.innerHTML = `🗓️ 本週於 <b>${when}</b> 結算，倒數 <b>${left}</b><br>`
-    + `前三名獎金 🥇 2000・🥈 1000・🥉 500 腎元，下次進來自動入帳`;
+    + `前 ${WEEK_PRIZE.length} 名有獎金 🥇 4000・🥈 2000・🥉 1000・第 4–10 名各 500 腎元，下次進來自動入帳`;
 }
 
 /* 挑戰人數。排行榜一人一筆，所以文件數就是人數；只在有數字時才顯示，
@@ -1419,7 +1430,7 @@ async function showBoard(){
   if(!top.length){ el.innerHTML = `<span class="dimtxt">還沒有人上榜，第一名等你來拿。</span>`; return; }
   el.innerHTML = `<ol class="board">` + top.map((t, i) =>
     `<li class="${i<3?"medal m"+(i+1):""}">
-       <span class="rk">${["🥇","🥈","🥉"][i] || (i+1)}</span>
+       <span class="rk">${MEDALS[i] || (i+1)}</span>
        <span class="nm">${escapeHTML(t.name || "匿名者")}</span>
        <span class="sv">${t.score} / ${QUIZ_TOTAL}${t.rounds ? `<small class="dimtxt">　${t.rounds} 輪</small>` : ""}</span>
      </li>`).join("") + `</ol>`;
@@ -1499,7 +1510,7 @@ fillCoinIcons(); syncCoinBar(); renderTips(); applyFontScale();
 fitCanvas(); quizStart();
 function closeAll(){ ["account","shareBox"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
 </script>
-<script type="module" src="sync.js?v=496af080"></script>
+<script type="module" src="sync.js?v=214de851"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e44b1d39221d4a5085336497dbff3ce4"}'></script>
 </body>
 </html>

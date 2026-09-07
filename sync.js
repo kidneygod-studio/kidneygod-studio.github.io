@@ -247,6 +247,10 @@ if (FIREBASE_CONFIG) {
       }catch(e){ console.debug("player count", e); return null; }
     },
     /* 上週前三名，用來發週賽獎金 */
+    /* 2026-09-08 獎金擴到前十名，所以要取十筆而不是三筆。
+       舊名字 lastWeekTop3 留成別名：使用者的瀏覽器可能還在用快取的
+       game.html，那一版只認得舊名字，改名會讓它整段拿不到資料而靜靜不發獎。 */
+    async lastWeekTop10(){ return this.getTop(10, prevWeekId()); },
     async lastWeekTop3(){ return this.getTop(3, prevWeekId()); },
     /* 每題的作答統計。記的是「第 N 題被答對了幾次」這種聚合數字，
        不附帶任何身分，也回推不到個人 —— 用途是讓站長知道民眾最常錯哪個觀念。
