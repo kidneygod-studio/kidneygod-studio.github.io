@@ -143,6 +143,10 @@ padding:16px 18px}
 section.tint .facts li{background:#fff}
 .facts b{display:block;font-family:var(--serif);font-size:23px;color:var(--navy);
 line-height:1.3}
+/* 23px 是為「24 台」這種短數字設計的。透析時段是一句排班（17 個字），
+   用同一個字級會佔三行、讀起來像標題而不是一項數據。
+   長字串的格子單獨降到 16.5px。 */
+.facts li.txt b{font-size:16.5px;line-height:1.65}
 .facts span{font-size:13.5px;color:var(--mut)}
 
 /* ---- 卡片格線 ---- */

@@ -60,7 +60,7 @@ FACTS: dict[str, str] = {
                    "Tainan City 700002, Taiwan (R.O.C.)"),
     "tel":        "(06)222-1111 轉 2500",
     "tel_note":   "週一三五 07:00–21:00，週二四六 07:00–17:00",
-    "shifts":     TODO("透析時段，例如 一三五／二四六，早中晚三班"),
+    "shifts":     "一三五早中晚三班／二四六早中二班",
     "beds":       TODO("透析床位數"),
     "machines":   TODO("透析機台數"),
     "staff":      TODO("專責護理人員數"),
@@ -288,6 +288,10 @@ padding:16px 18px}
 section.tint .facts li{background:#fff}
 .facts b{display:block;font-family:var(--serif);font-size:23px;color:var(--navy);
 line-height:1.3}
+/* 23px 是為「24 台」這種短數字設計的。透析時段是一句排班（17 個字），
+   用同一個字級會佔三行、讀起來像標題而不是一項數據。
+   長字串的格子單獨降到 16.5px。 */
+.facts li.txt b{font-size:16.5px;line-height:1.65}
 .facts span{font-size:13.5px;color:var(--mut)}
 
 /* ---- 卡片格線 ---- */
@@ -837,7 +841,7 @@ def build_home() -> str:
          href="about.html">認識我們的團隊</a>
       <ul class="facts">
         <li><b>{fact('machines')}</b><span>透析機台</span></li>
-        <li><b>{fact('shifts')}</b><span>透析時段</span></li>
+        <li class="txt"><b>{fact('shifts')}</b><span>透析時段</span></li>
         <li><b>{fact('staff')}</b><span>專責護理人員</span></li>
       </ul>
     </div>
