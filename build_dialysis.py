@@ -1043,6 +1043,7 @@ def build_home() -> str:
         <li><b>{fact('docs_n')}</b><span>腎臟專科醫師</span></li>
         <li><b>{fact('staff')}</b><span>專責透析護理人員</span></li>
         <li><b>{fact('tech')}</b><span>醫療工程技師</span></li>
+        <li><b>{fact('machines')}</b><span>透析機台</span></li>
         <li class="txt"><b>{fact('shifts')}</b><span>透析時段</span></li>
       </ul>
     </div>
