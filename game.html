@@ -77,14 +77,19 @@
      省寬度（header 的 sticky top 寫死 34px，橫幅一換行就會對不齊）。同一天
      把 header 的「回主頁」按鈕拿掉了，回衛教站首頁就只剩這一個入口——只留
      一個看不出是什麼的圖示不合理，所以改成一律顯示文字，窄螢幕縮字級補回寬度。 */
+  /* 2026-09-08 放大：原本沒有自己的字級、直接繼承橫幅的 13px，
+     和旁邊的說明文一樣大，看起來不像一個「回首頁」的入口。
+     ⚠ 這一排必須維持一行（下面的 header sticky 才對得齊），
+     所以每一階都是量過剩餘寬度才決定的——320px 只剩 20px 餘裕。 */
   .hbrand{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;
-          text-decoration:none;color:#e6d9c2;font-weight:700;}
+          text-decoration:none;color:#e6d9c2;font-weight:700;font-size:16px;}
+  .hbrand svg{width:1.3em;height:1.3em;}
   /* 光學補償：SVG 的腎臟圖形在 24 的畫布裡從 x=4.4 才開始，換算成顯示尺寸
      左邊有 3.5px 空白，而 logo.png 只有 0.5px。外框對齊時看起來反而是歪的，
      所以把標誌往左推 3px 讓「看得見的邊」對齊。 */
   .hbrand svg{color:#5eead4;flex-shrink:0;margin-left:-3px;}
   .hbrand:hover span{text-decoration:underline;}
-  @media(max-width:640px){ .hbrand{font-size:12px;gap:4px;} }
+  @media(max-width:640px){ .hbrand{font-size:14.5px;gap:5px;} }
   /* 窄螢幕把誠實橫幅壓成一行。橫幅換行不會產生橫向捲軸，所以掃「溢出」
      抓不到——要量「文字不換行需要多寬」對「扣掉品牌連結後剩多少」。
      實測 393px 差 67px、375px 差 85px、360px 差 100px，
@@ -92,9 +97,14 @@
   @media(max-width:430px){
     .honest{font-size:11.5px;}
     .hnwrap{padding:7px 10px;gap:6px;}
+    .hbrand{font-size:13.5px;gap:4px;}
     .bki{display:none;}
   }
-  @media(max-width:365px){ .honest{font-size:10.5px;} .hnwrap{padding:7px 8px;} }
+  @media(max-width:365px){
+    .honest{font-size:10.5px;}
+    .hnwrap{padding:7px 8px;}
+    .hbrand{font-size:12.5px;}
+  }
   .ki{width:1.15em;height:1.15em;border-radius:50%;vertical-align:-.24em;
       margin-right:.18em;object-fit:cover;box-shadow:0 0 0 1px rgba(61,44,41,.13);background:#fff;}
   .bki{box-shadow:0 0 0 1.5px rgba(255,233,214,.7);margin-right:.4em;

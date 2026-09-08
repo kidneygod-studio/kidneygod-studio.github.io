@@ -664,10 +664,13 @@ transition:box-shadow .25s}
 header.site.stuck{box-shadow:0 2px 18px rgba(15,32,58,.28)}
 header.site .wrap{display:flex;align-items:center;gap:16px;
 height:64px;padding-top:0;padding-bottom:0}
+/* 2026-09-08 字級由 1.12rem 放大到 1.34rem。導覽收成漢堡之後，
+   頁首右邊只剩一顆 44px 的鈕，寬度非常鬆——320px 下品牌只佔約 1/3。
+   圖示也跟著放大（1.32em）才不會變成大字配小圖。 */
 .brand{display:inline-flex;align-items:center;gap:9px;text-decoration:none;
-color:#fff;font-family:var(--serif);font-weight:700;font-size:1.12rem;
+color:#fff;font-family:var(--serif);font-weight:700;font-size:1.4rem;
 letter-spacing:.02em;white-space:nowrap}
-.brand svg{color:#fff;flex-shrink:0}
+.brand svg{color:#fff;flex-shrink:0;width:1.32em;height:1.32em}
 .brand:hover{color:#fff;text-decoration:none}
 /* 漢堡鈕。44px 是觸控目標下限，這個站的讀者有不少是長輩。 */
 .burger{display:block;margin-left:auto;width:44px;height:44px;border:0;padding:0;
@@ -709,13 +712,10 @@ filter:brightness(1.07)}
   header.site nav{left:auto;width:min(400px,100%);
     border-bottom-left-radius:16px;box-shadow:0 18px 44px rgba(15,32,58,.34)}
 }
-@media(max-width:430px){
-  .brand{font-size:1rem;gap:7px}
-  .brand svg{width:22px;height:22px}
-}
+/* 430px 那一階拿掉了：實測 393px 下品牌只佔 107px，離漢堡鈕還有 202px，
+   收成漢堡之後根本不需要在這個寬度縮字。只保留最窄的一階當安全網。 */
 @media(max-width:340px){
-  .brand{font-size:.9rem;gap:6px}
-  .brand svg{width:20px;height:20px}
+  .brand{font-size:1.2rem;gap:6px}
 }
 /* 標題改襯線（Noto Serif TC），和透析中心同一套。
    內文維持無襯線——長篇衛教內容在螢幕上用襯線讀起來吃力，
