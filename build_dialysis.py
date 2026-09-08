@@ -136,12 +136,14 @@ SHIFT_TIMES: dict[str, str] = {
     # "早": "07:00–11:30", "中": "12:00–16:30", "晚": "17:00–21:30",
 }
 
-# 停診／代診公告。
+# 特殊公告。2026-09-08 由「停診與代診公告」改成這個名字——
+# 停診只是其中一種，颱風、國定假日、機器維護、水質檢測、臨時調班
+# 都屬於「病友需要事先知道」的事，用停診當標題會漏掉其他情況。
 #
-# 這一區原本是寫死的「目前無停診公告」。一個永遠寫著「目前無停診」的公告欄，
+# 這一區原本是寫死的「目前無停診公告」。一個永遠寫著「目前無公告」的公告欄，
 # 比沒有公告欄更糟——讀者會相信它，然後白跑一趟。所以改成：
 #   有公告 → 條列出來
-#   沒公告 → 寫「目前無停診公告」，並附上最後確認日期
+#   沒公告 → 寫「目前無特殊公告」，並附上最後確認日期
 #
 # NOTICE_CHECKED 要手動改。刻意不用 TODAY 自動帶入：那會變成每次建置
 # 都宣稱「今天確認過」，但其實沒有人確認，等於用日期說謊。
@@ -973,14 +975,14 @@ def build_home() -> str:
         for i, (q, a) in enumerate(FAQ))
 
     # 沒有公告時附上最後確認日期。少了這個日期，讀者沒辦法分辨
-    # 「今天確認過沒有停診」和「三年前寫上去就沒人管過」。
+    # 「今天確認過沒有公告」和「三年前寫上去就沒人管過」。
     if NOTICES:
         notice = ('<h3>近期公告</h3><ul>'
                   + "".join(f'<li><strong>{esc(w)}</strong>：{esc(t)}</li>'
                             for w, t in NOTICES)
                   + '</ul>')
     else:
-        notice = (f'<h3>目前無停診公告</h3>'
+        notice = (f'<h3>目前無特殊公告</h3>'
                   f'<p class="sd" style="margin:0 0 10px">'
                   f'最後確認：{esc(NOTICE_CHECKED)}</p><ul>')
         notice += (
@@ -1041,7 +1043,7 @@ def build_home() -> str:
 </div></section>
 
 <section class="tint"><div class="wrap">
-  <div class="shead reveal"><span class="en">Notice</span><h2>停診與代診公告</h2></div>
+  <div class="shead reveal"><span class="en">Notice</span><h2>特殊公告</h2></div>
   <div{rv("notice", "", .08)}>{notice}</div>
 </div></section>
 
@@ -1499,9 +1501,9 @@ def main() -> None:
     if not DOCTORS:
         print("  還缺　DOCTORS　醫師陣容（姓名, 職稱, 專長）")
     if NOTICES:
-        print(f"\n停診公告：{len(NOTICES)} 則")
+        print(f"\n特殊公告：{len(NOTICES)} 則")
     else:
-        print(f"\n停診公告：無，頁面顯示「最後確認：{NOTICE_CHECKED}」"
+        print(f"\n特殊公告：無，頁面顯示「最後確認：{NOTICE_CHECKED}」"
               f"（確認過記得改 NOTICE_CHECKED）")
 
     missing = [n for _t, n, _d in SERVICES + COLUMNS] + ["hero", "about-center",
