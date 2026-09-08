@@ -1015,7 +1015,7 @@ def build_home() -> str:
     body = f"""
 <section class="hero">{hero_img}<div class="wrap">
   <p{rv("eyebrow")}>Hemodialysis Center</p>
-  <h1{rv("", "", .08)}>把透析放進生活裡，<br>而不是讓生活被透析綁著</h1>
+  <h1{rv("", "", .08)}>把透析放進生活裡，<br>而不是讓生活繞著透析走</h1>
   <p{rv("", "", .16)}>{fact('center')}提供血液透析、血液透析過濾與完整的
   血管通路照護。固定的醫療團隊、固定的時段，讓長期治療能被安排進日常。</p>
   <div{rv("hbtns", "", .24)}>
