@@ -15,8 +15,13 @@
 以 DOI 當唯一鍵：重跑不會產生重複，已經在 news.json 裡的不會被覆寫
 （手改過的內容不會被機器蓋掉）。要強制更新某篇就先從 news.json 刪掉它。
 
-    python import_digests.py            預覽會匯入什麼，不寫檔
-    python import_digests.py --write    真的寫進 news.json
+    python import_digests.py                  預覽會匯入什麼，不寫檔
+    python import_digests.py --write          真的寫進 news.json
+    python import_digests.py --only 2026-09-07 [--only …]
+                                              只看指定日期的摘要檔
+
+`--only` 是給 Telegram 那條「某月某日可上線」用的：作者審過哪一天就上哪一天，
+不要一次把所有還沒上的都掃進去。沒給 --only 就是全部（原本的行為）。
 
 2026-09-07 起作者的做法是**每日三篇一律上網站**，不再逐篇挑。
 所以這支變成每天要跑的一步，整套是：
@@ -170,8 +175,21 @@ def convert(e: dict, filedate: str) -> dict | str:
     return {k: v for k, v in d.items() if v}
 
 
+def wanted_dates(argv: list[str]) -> set[str]:
+    """--only 2026-09-07 可重複。空集合＝不限制。"""
+    out = set()
+    for i, a in enumerate(argv):
+        if a == "--only" and i + 1 < len(argv):
+            d = argv[i + 1].strip()
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", d):
+                sys.exit(f"--only 的日期要寫成 YYYY-MM-DD，收到：{d}")
+            out.add(d)
+    return out
+
+
 def main() -> int:
     write = "--write" in sys.argv
+    only = wanted_dates(sys.argv)
     if not DIGEST.is_dir():
         sys.exit(f"找不到 {DIGEST}")
 
@@ -182,8 +200,18 @@ def main() -> int:
 
     files = [f for f in sorted(DIGEST.glob("nephrology_daily_*.html"))
              if 'class="paper"' in f.read_text("utf-8", "replace")]
+    if only:
+        files = [f for f in files if f.stem[-10:] in only]
+        missing = only - {f.stem[-10:] for f in files}
+        if missing:
+            # 檔案不存在、或存在但是舊版型（沒有 class="paper"）——
+            # 兩種都不能默默當成「那天沒東西」，會讓人以為已經上線了。
+            sys.exit("這些日期沒有可解析的摘要檔：" + "、".join(sorted(missing)))
+    if not files:
+        sys.exit("沒有符合條件的摘要檔")
     print(f"最新格式的檔案 {len(files)} 份"
-          f"（{files[0].stem[-10:]} … {files[-1].stem[-10:]}）")
+          f"（{files[0].stem[-10:]} … {files[-1].stem[-10:]}）"
+          + ("　※ 只看 " + "、".join(sorted(only)) if only else ""))
     print(f"news.json 現有 {len(old)} 篇\n")
 
     new, skipped, dup = [], [], 0
