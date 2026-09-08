@@ -91,16 +91,37 @@
      省寬度（header 的 sticky top 寫死 34px，橫幅一換行就會對不齊）。同一天
      把 header 的「回主頁」按鈕拿掉了，回衛教站首頁就只剩這一個入口——只留
      一個看不出是什麼的圖示不合理，所以改成一律顯示文字，窄螢幕縮字級補回寬度。 */
+  /* 2026-09-08 放大：原本沒有自己的字級、直接繼承橫幅的 13px，
+     和旁邊的說明文一樣大，看起來不像一個「回首頁」的入口。
+     ⚠ 這一排要維持一行——header 的 sticky top 跟著橫幅高度走。 */
   .hbrand{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;
-          text-decoration:none;color:#e6d9c2;font-weight:700;}
+          text-decoration:none;color:#e6d9c2;font-weight:700;font-size:16px;}
+  .hbrand svg{width:1.3em;height:1.3em;}
   /* 光學補償：SVG 的腎臟圖形在 24 的畫布裡從 x=4.4 才開始，換算成顯示尺寸
      左邊有 3.5px 空白，而 logo.png 只有 0.5px。外框對齊時看起來反而是歪的，
      所以把標誌往左推 3px 讓「看得見的邊」對齊。 */
   .hbrand svg{color:#5eead4;flex-shrink:0;margin-left:-3px;}
   .hbrand:hover span{text-decoration:underline;}
-  @media(max-width:640px){ .hbrand{font-size:12px;gap:4px;} }
+  @media(max-width:640px){ .hbrand{font-size:14.5px;gap:5px;} }
+  /* 窄螢幕把橫幅壓成一行。和 game.html 同一套：拿掉裝飾用的腎臟圖示、
+     縮字級、縮內距與間隔。library 的文案最長（26 字），改動前在 430px
+     以下本來就會換行，這一段順便把它救回來。 */
+  @media(max-width:430px){
+    .honest{font-size:11.5px;}
+    .hnwrap{padding:7px 10px;gap:6px;}
+    .hbrand{font-size:13.5px;gap:4px;}
+    .bki{display:none;}
+  }
+  @media(max-width:365px){
+    .honest{font-size:10.5px;}
+    .hnwrap{padding:7px 8px;}
+    .hbrand{font-size:12.5px;}
+  }
 
-  header{position:sticky;top:34px;z-index:50;background:rgba(23,18,16,.92);
+  /* top 跟著誠實橫幅的實際高度走（--hnh 由下方腳本量測後設定）。
+     原本寫死 34px：橫幅只要換行或字級變動就對不齊，而 34px 連當時
+     單行的高度都不準（實測 36px）。 */
+  header{position:sticky;top:var(--hnh,36px);z-index:50;background:rgba(23,18,16,.92);
          backdrop-filter:blur(8px);border-bottom:1px solid var(--edge);}
   .hwrap{max-width:1180px;margin:0 auto;display:flex;align-items:center;
          gap:10px;padding:10px 20px;flex-wrap:wrap;}
@@ -1144,6 +1165,21 @@ syncBadge(); syncCoins();
 </script>
 
 
+<script>
+/* 誠實橫幅的實際高度餵給 header 的 sticky top。橫幅在很窄的螢幕上
+   仍可能換行，寫死高度就會對不齊——量一次、resize 時再量。 */
+(function(){
+  var hn = document.querySelector('.honest');
+  if(!hn) return;
+  var set = function(){
+    document.documentElement.style.setProperty(
+      '--hnh', Math.round(hn.getBoundingClientRect().height) + 'px');
+  };
+  set();
+  addEventListener('resize', set, {passive:true});
+  addEventListener('load', set);
+})();
+</script>
 <script type="module" src="sync.js?v=214de851"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e44b1d39221d4a5085336497dbff3ce4"}'></script>
 </body>
