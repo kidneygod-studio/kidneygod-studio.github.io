@@ -85,12 +85,25 @@
   .hbrand svg{color:#5eead4;flex-shrink:0;margin-left:-3px;}
   .hbrand:hover span{text-decoration:underline;}
   @media(max-width:640px){ .hbrand{font-size:12px;gap:4px;} }
+  /* 窄螢幕把誠實橫幅壓成一行。橫幅換行不會產生橫向捲軸，所以掃「溢出」
+     抓不到——要量「文字不換行需要多寬」對「扣掉品牌連結後剩多少」。
+     實測 393px 差 67px、375px 差 85px、360px 差 100px，
+     所以三個地方一起省：拿掉裝飾用的腎臟圖示（-24）、縮字級、縮內距與間隔。 */
+  @media(max-width:430px){
+    .honest{font-size:11.5px;}
+    .hnwrap{padding:7px 10px;gap:6px;}
+    .bki{display:none;}
+  }
+  @media(max-width:365px){ .honest{font-size:10.5px;} .hnwrap{padding:7px 8px;} }
   .ki{width:1.15em;height:1.15em;border-radius:50%;vertical-align:-.24em;
       margin-right:.18em;object-fit:cover;box-shadow:0 0 0 1px rgba(61,44,41,.13);background:#fff;}
   .bki{box-shadow:0 0 0 1.5px rgba(255,233,214,.7);margin-right:.4em;
        width:1.45em;height:1.45em;vertical-align:-.38em;}
 
-  header{position:sticky;top:34px;z-index:50;background:rgba(23,18,16,.92);
+  /* top 跟著誠實橫幅的實際高度走（--hnh 由下方腳本量測後設定）。
+     原本寫死 34px：橫幅只要換行就變成兩行高，header 會壓上去或留一條縫。
+     34px 是當時單行的高度，而現在單行實測是 36px——寫死的數字連當下都不準。 */
+  header{position:sticky;top:var(--hnh,36px);z-index:50;background:rgba(23,18,16,.92);
          backdrop-filter:blur(8px);border-bottom:1px solid var(--edge);}
   .hwrap{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:10px;
          padding:10px 16px;flex-wrap:wrap;}
@@ -311,7 +324,7 @@
 <body>
 <h1 class="vh">護腎教室遊戲場</h1>
 
-<div class="honest"><div class="hnwrap"><a class="hbrand" href="/" title="回護腎教室衛教首頁"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 4.6 13.6 4.6Z"/></svg><span>護腎教室</span></a><span class="htext"><img class="ki bki" alt="">這裡的腎元只能在<b>護腎教室</b>換知識與貼圖 — 不是真錢，也換不了真錢</span></div></div>
+<div class="honest"><div class="hnwrap"><a class="hbrand" href="/" title="回護腎教室衛教首頁"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M13.6 2.6C8.4 2.6 4.4 6.7 4.4 12s4 9.4 9.2 9.4c2.9 0 5-1.6 5-3.8 0-1.9-1.4-2.9-2.8-3.6-.9-.5-1.5-.9-1.5-2s.6-1.5 1.5-2c1.4-.7 2.8-1.7 2.8-3.6 0-2.2-2.1-3.8-5-3.8Zm0 2c1.9 0 3 .8 3 1.8 0 .8-.7 1.3-1.7 1.8-1.3.7-2.6 1.6-2.6 3.8s1.3 3.1 2.6 3.8c1 .5 1.7 1 1.7 1.8 0 1-1.1 1.8-3 1.8-4 0-7.2-3.3-7.2-7.4S9.6 4.6 13.6 4.6Z"/></svg><span>護腎教室</span></a><span class="htext"><img class="ki bki" alt="">腎元只能在<b>護腎教室</b>換知識與貼圖，不能換錢</span></div></div>
 
 <header>
   <div class="hwrap">
@@ -1507,6 +1520,20 @@ fillCoinIcons(); syncCoinBar(); renderTips(); applyFontScale();
 /* MODE 已經是 3，pick(3) 會被開頭那道「已經是這個模式」的守衛擋掉，
    所以這裡直接做 pick(3) 會做的事：出題。fitCanvas 仍要跑一次，
    之後切到跑酷或吃豆人時畫布尺寸才是對的。 */
+/* 誠實橫幅的實際高度餵給 header 的 sticky top。橫幅在很窄的螢幕上
+   仍可能換行，寫死高度就會對不齊——量一次、resize 時再量。 */
+(function(){
+  var hn = document.querySelector('.honest');
+  if(!hn) return;
+  var set = function(){
+    document.documentElement.style.setProperty(
+      '--hnh', Math.round(hn.getBoundingClientRect().height) + 'px');
+  };
+  set();
+  addEventListener('resize', set, {passive:true});
+  addEventListener('load', set);
+})();
+
 fitCanvas(); quizStart();
 function closeAll(){ ["account","shareBox"].forEach(id=>$(id).classList.remove("on")); $("veil").classList.remove("on"); }
 </script>
