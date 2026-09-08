@@ -86,18 +86,27 @@ transition:transform .25s,opacity .2s}
 display:flex;align-items:center;color:#fff;overflow:hidden;
 background:linear-gradient(115deg,#4b7fae 0%,#7fa8c9 42%,#cfe0ec 100%)}
 .hero .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* 主視覺的遮罩。2026-09-08 加重：換上新的水波主視覺之後整張圖偏亮，
+   原本的 .72→.34→.06 在文字區只剩 .34，白色說明文實測只有 3.0–3.9:1，
+   達不到 AA 的 4.5。加重之後右側仍看得到圖，左側文字區才夠暗。
+   ⚠ 換主視覺一定要重量一次對比——遮罩是配著某一張圖調的，換圖就失效。 */
 .hero::after{content:"";position:absolute;inset:0;
-background:linear-gradient(90deg,rgba(20,40,72,.72) 0%,rgba(20,40,72,.34) 55%,rgba(20,40,72,.06) 100%)}
+background:linear-gradient(90deg,rgba(16,34,62,.86) 0%,rgba(16,34,62,.72) 38%,
+rgba(16,34,62,.42) 72%,rgba(16,34,62,.16) 100%)}
 /* width:100% 是必要的：.hero 是 flex 容器，.wrap 當 flex item 時寬度由內容
    決定，不會填滿——標題會縮成 598px 並被 margin:0 auto 推到畫面中間，
    和頁首、頁尾、下面各區塊的左緣差 281px（1280px 下實測）。 */
 .hero .wrap{position:relative;z-index:2;width:100%;
 padding-top:60px;padding-bottom:60px}
+/* 小標與說明文原本是 #bfd8ec／#e7f0f8，配上加重的遮罩仍偏灰。
+   提亮並補一層與 h1 同樣的字影——字影在漸層底上特別有效，
+   因為它讓字的邊緣不論壓在亮處或暗處都有一圈暗邊。 */
 .hero .eyebrow{font-size:13px;letter-spacing:.28em;text-transform:uppercase;
-color:#bfd8ec;margin:0 0 14px}
+color:#d8e9f8;margin:0 0 14px;text-shadow:0 1px 8px rgba(10,25,48,.5)}
 .hero h1{font-family:var(--serif);font-size:clamp(28px,5.2vw,50px);line-height:1.32;
 margin:0 0 18px;max-width:16em;text-shadow:0 2px 14px rgba(10,25,48,.35)}
-.hero p{max-width:30em;font-size:clamp(15px,1.9vw,18px);color:#e7f0f8;margin:0 0 28px}
+.hero p{max-width:30em;font-size:clamp(15px,1.9vw,18px);color:#f2f7fc;margin:0 0 28px;
+text-shadow:0 1px 10px rgba(10,25,48,.55)}
 .hbtns{display:flex;flex-wrap:wrap;gap:12px}
 .btn{display:inline-block;border-radius:999px;padding:13px 30px;font-weight:700;
 font-size:15.5px;transition:transform .18s,box-shadow .18s,background .18s}
