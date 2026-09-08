@@ -81,8 +81,32 @@ FACTS: dict[str, str] = {
 # 分開放而不是塞進 FACTS，是因為它是「一份清單」不是「一個值」——
 # 塞成一個字串的話，兩位以上就只能用頓號硬串，排版很難看。
 #   ("姓名", "職稱", "專長")
-DOCTORS: list[tuple[str, str, str]] = [
-    # ("吳政哲", "腎臟科主治醫師", "慢性腎臟病、血液透析、腹膜透析、三高"),
+# 每位醫師一個 dict。欄位：
+#   name   姓名
+#   title  職稱（這是院內的頁面，不必再寫一次「郭綜合醫院」）
+#   photo  img/<檔名>.jpg，沒有就不放照片、版面自動變成單欄
+#   spec   臨床專長（一句話，用頓號分隔）
+#   cred   資歷，[(分組名, [項目, ...]), ...]；空清單就整區不出現
+#
+# ⚠ 這裡寫的是一位真實醫師的公開資歷。內容取自護腎教室的簡介頁
+#   （build_site.py 的 CREDENTIAL_GROUPS），兩邊要一致——改了一邊記得改另一邊。
+#   不要在這裡加上簡介頁沒有的頭銜。
+DOCTORS: list[dict] = [
+    {
+        "name": "吳政哲",
+        "title": "腎臟內科主治醫師",
+        "photo": "img/doc-wu.jpg",
+        "spec": ("三高（高血壓、糖尿病、高血脂）、慢性腎臟病、急性腎衰竭、"
+                 "血液透析／腹膜透析、多囊腎、電解質異常、痛風、代謝症候群、"
+                 "戒菸治療"),
+        "cred": [
+            ("學歷與經歷", ["國立成功大學醫學系畢業", "前成大醫院主治醫師"]),
+            ("專科執照與認證", ["腎臟科專科醫師", "內科專科醫師",
+                                "糖尿病共照網醫師", "戒菸治療醫師"]),
+            ("學術參與", ["台灣慢性腎臟病臨床診療指引編撰委員",
+                          "台灣腎臟醫學會會員", "美國腎臟醫學會會員"]),
+        ],
+    },
 ]
 
 # 一週透析排班。就醫資訊頁的表格由這裡產生，FACTS["shifts"] 那句話則是
@@ -466,6 +490,41 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp img{height:46px;width:auto;flex-shrink:0}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
+/* ---- 醫師介紹卡 ---- */
+/* 左照片右資歷。沒有照片時（.nophoto）自動變成單欄——版面不會留一個空框。 */
+.doccard{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);
+gap:clamp(20px,3vw,32px);align-items:start;
+background:#fff;border:1px solid var(--line);border-radius:14px;
+padding:clamp(20px,3vw,30px);margin:0 0 20px}
+.doccard.nophoto{grid-template-columns:1fr}
+section.tint .doccard{background:#fff}
+/* 3:4 直式並把構圖重心往上移，取到頭部與上半身。
+   height:auto 不可省略——HTML 的 height 屬性會被當成呈現提示而固定高度，
+   那樣 aspect-ratio 就不會生效。 */
+.doccard .docphoto{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;
+object-position:center 12%;border-radius:12px;display:block;
+box-shadow:0 10px 26px rgba(23,48,84,.16)}
+.doccard .docname{font-family:var(--serif);font-size:clamp(20px,2.6vw,25px);
+color:var(--navy);margin:0 0 12px;line-height:1.4}
+.doccard .docname .r{display:block;font-family:var(--sans);font-size:14.5px;
+font-weight:400;color:var(--mut);margin-top:4px}
+.docspec{margin:0 0 18px;font-size:15px;line-height:1.85}
+.docspec b{display:block;font-size:12px;letter-spacing:.14em;color:var(--blue);
+margin-bottom:4px}
+.credgrp + .credgrp{margin-top:16px}
+.credgrp h4{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--mut);
+margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.credgrp ul{list-style:none;margin:0;padding:0}
+.credgrp li{position:relative;padding-left:18px;margin:0 0 6px;font-size:14.5px;
+line-height:1.7}
+.credgrp li::before{content:"";position:absolute;left:2px;top:.62em;
+width:6px;height:6px;border-radius:50%;background:var(--blue)}
+@media(max-width:620px){
+  .doccard{grid-template-columns:1fr}
+  .doccard .docphoto{max-width:220px;margin:0 auto 4px}
+  .doccard .docname{text-align:center}
+}
+
 /* ---- 一週透析排班表 ---- */
 /* 外面包一層 overflow-x:auto：七欄在 320px 上排不下，讓表格自己橫向捲，
    而不是把整頁撐出橫向捲軸。 */
@@ -1048,14 +1107,32 @@ def page_hero(en: str, h1: str, lead: str = "") -> str:
 
 
 def doctors_html() -> str:
+    """醫師介紹卡。照片沒放就自動變成單欄，不會出現破圖或空框。"""
     if not DOCTORS:
         return ('<p><span class="todo">待填：醫師陣容——'
-                '在 build_dialysis.py 的 DOCTORS 加上（姓名, 職稱, 專長）</span></p>')
-    return ('<ul class="docs">'
-            + "".join(f'<li><b>{esc(n)}</b><span class="r">{esc(t)}</span>'
-                      f'<span class="s">{esc(s)}</span></li>'
-                      for n, t, s in DOCTORS)
-            + '</ul>')
+                '在 build_dialysis.py 的 DOCTORS 加上醫師資料</span></p>')
+    cards = []
+    for d in DOCTORS:
+        photo = d.get("photo") or ""
+        has_photo = bool(photo) and (OUT / photo).exists()
+        img = (f'<img class="docphoto" src="{esc(photo)}" '
+               f'alt="{esc(d["name"])}醫師" loading="lazy">'
+               if has_photo else "")
+        cred = "".join(
+            f'<div class="credgrp"><h4>{esc(label)}</h4><ul>'
+            + "".join(f"<li>{esc(x)}</li>" for x in rows)
+            + "</ul></div>"
+            for label, rows in d.get("cred", []) if rows)
+        spec = (f'<p class="docspec"><b>臨床專長</b>{esc(d["spec"])}</p>'
+                if d.get("spec") else "")
+        cards.append(
+            f'<article class="doccard{"" if has_photo else " nophoto"}">'
+            f'{img}'
+            f'<div class="docbody">'
+            f'<h3 class="docname">{esc(d["name"])}'
+            f'<span class="r">{esc(d.get("title", ""))}</span></h3>'
+            f'{spec}{cred}</div></article>')
+    return "".join(cards)
 
 
 # 2026-09-07 移除關於頁的「隸屬機構」帶。原本是院徽＋「本中心隸屬於

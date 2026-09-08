@@ -249,6 +249,41 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp img{height:46px;width:auto;flex-shrink:0}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
+/* ---- 醫師介紹卡 ---- */
+/* 左照片右資歷。沒有照片時（.nophoto）自動變成單欄——版面不會留一個空框。 */
+.doccard{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);
+gap:clamp(20px,3vw,32px);align-items:start;
+background:#fff;border:1px solid var(--line);border-radius:14px;
+padding:clamp(20px,3vw,30px);margin:0 0 20px}
+.doccard.nophoto{grid-template-columns:1fr}
+section.tint .doccard{background:#fff}
+/* 3:4 直式並把構圖重心往上移，取到頭部與上半身。
+   height:auto 不可省略——HTML 的 height 屬性會被當成呈現提示而固定高度，
+   那樣 aspect-ratio 就不會生效。 */
+.doccard .docphoto{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;
+object-position:center 12%;border-radius:12px;display:block;
+box-shadow:0 10px 26px rgba(23,48,84,.16)}
+.doccard .docname{font-family:var(--serif);font-size:clamp(20px,2.6vw,25px);
+color:var(--navy);margin:0 0 12px;line-height:1.4}
+.doccard .docname .r{display:block;font-family:var(--sans);font-size:14.5px;
+font-weight:400;color:var(--mut);margin-top:4px}
+.docspec{margin:0 0 18px;font-size:15px;line-height:1.85}
+.docspec b{display:block;font-size:12px;letter-spacing:.14em;color:var(--blue);
+margin-bottom:4px}
+.credgrp + .credgrp{margin-top:16px}
+.credgrp h4{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--mut);
+margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.credgrp ul{list-style:none;margin:0;padding:0}
+.credgrp li{position:relative;padding-left:18px;margin:0 0 6px;font-size:14.5px;
+line-height:1.7}
+.credgrp li::before{content:"";position:absolute;left:2px;top:.62em;
+width:6px;height:6px;border-radius:50%;background:var(--blue)}
+@media(max-width:620px){
+  .doccard{grid-template-columns:1fr}
+  .doccard .docphoto{max-width:220px;margin:0 auto 4px}
+  .doccard .docname{text-align:center}
+}
+
 /* ---- 一週透析排班表 ---- */
 /* 外面包一層 overflow-x:auto：七欄在 320px 上排不下，讓表格自己橫向捲，
    而不是把整頁撐出橫向捲軸。 */

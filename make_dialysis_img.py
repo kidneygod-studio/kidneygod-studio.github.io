@@ -53,6 +53,8 @@ SIZES: dict[str, tuple[int, int]] = {
     "col-fluid":     (900, 506),
     "col-fistula":   (900, 506),
     "col-travel":    (900, 506),
+    # 醫師照：直式 3:4。卡片上最寬 180px，360 是兩倍視網膜所需再多一點。
+    "doc-wu":        (600, 800),
 }
 # 標誌保持 PNG：要去背，轉成 JPEG 會多一塊白底
 # KGH 是郭綜合醫院的院徽（橫式）。thumbnail 不會放大，326x182 的原圖
