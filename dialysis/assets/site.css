@@ -41,13 +41,25 @@ font-size:19px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
 .logo svg{flex-shrink:0}
 /* 44px：標誌四周有 27% 透明留白，實際筆畫 32px，和右邊那塊字對得起來。
    頁首列高 68px，再大就開始擠。 */
+/* 院徽墊白底：深藍那半塊在深藍頁首上會消失。padding 用 content-box，
+   height 才是圖本身的高度，不會被內距吃掉。 */
+.logo img.hdlogo{height:30px;width:auto;flex-shrink:0;background:#fff;
+border-radius:7px;padding:5px 9px;box-sizing:content-box}
 .logo img{height:44px;width:auto;flex-shrink:0}
 /* 加上院名之後標題變成 11 個字、19px 下實寬 213px。
    360px 的手機只剩 7px 就撞到漢堡鈕，320px 直接疊上去 26px。
    nowrap 的字會溢出盒子，所以 flex 把盒子壓小也擋不住——量的時候要用
    Range 量「字畫到哪」，量盒子會以為還有空間。 */
-@media(max-width:430px){.logo{font-size:16.5px}.logo img{height:40px}}
-@media(max-width:365px){.logo{font-size:15px}.logo img{height:36px}}
+/* ⚠ 窄螢幕的縮小規則必須「同時」寫 .logo img 與 .logo img.hdlogo。
+   .logo img.hdlogo 的特異度是 (0,2,1)，比 .logo img 的 (0,1,1) 高，
+   而媒體查詢不會增加特異度——只寫 .logo img 的話院徽完全不會縮，
+   實測 320px 會壓到漢堡鈕 13px（而且不會有橫向捲軸，看不出來）。
+   院徽是橫式 326x182，高度每縮 1px 就省下約 1.8px 的寬度。 */
+@media(max-width:430px){.logo{font-size:16.5px}.logo img{height:40px}
+  .logo img.hdlogo{height:26px;padding:4px 7px}}
+@media(max-width:365px){.logo{font-size:15px}.logo img{height:36px}
+  .logo img.hdlogo{height:22px;padding:4px 6px}}
+@media(max-width:340px){.logo img.hdlogo{height:19px;padding:3px 5px}}
 .hd nav{margin-left:auto;display:flex;align-items:center;gap:26px}
 .hd nav a{color:#dbe6f2;font-size:15px;padding:6px 0;position:relative}
 .hd nav a:hover{color:#fff;text-decoration:none}

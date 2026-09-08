@@ -258,13 +258,25 @@ font-size:19px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
 .logo svg{flex-shrink:0}
 /* 44px：標誌四周有 27% 透明留白，實際筆畫 32px，和右邊那塊字對得起來。
    頁首列高 68px，再大就開始擠。 */
+/* 院徽墊白底：深藍那半塊在深藍頁首上會消失。padding 用 content-box，
+   height 才是圖本身的高度，不會被內距吃掉。 */
+.logo img.hdlogo{height:30px;width:auto;flex-shrink:0;background:#fff;
+border-radius:7px;padding:5px 9px;box-sizing:content-box}
 .logo img{height:44px;width:auto;flex-shrink:0}
 /* 加上院名之後標題變成 11 個字、19px 下實寬 213px。
    360px 的手機只剩 7px 就撞到漢堡鈕，320px 直接疊上去 26px。
    nowrap 的字會溢出盒子，所以 flex 把盒子壓小也擋不住——量的時候要用
    Range 量「字畫到哪」，量盒子會以為還有空間。 */
-@media(max-width:430px){.logo{font-size:16.5px}.logo img{height:40px}}
-@media(max-width:365px){.logo{font-size:15px}.logo img{height:36px}}
+/* ⚠ 窄螢幕的縮小規則必須「同時」寫 .logo img 與 .logo img.hdlogo。
+   .logo img.hdlogo 的特異度是 (0,2,1)，比 .logo img 的 (0,1,1) 高，
+   而媒體查詢不會增加特異度——只寫 .logo img 的話院徽完全不會縮，
+   實測 320px 會壓到漢堡鈕 13px（而且不會有橫向捲軸，看不出來）。
+   院徽是橫式 326x182，高度每縮 1px 就省下約 1.8px 的寬度。 */
+@media(max-width:430px){.logo{font-size:16.5px}.logo img{height:40px}
+  .logo img.hdlogo{height:26px;padding:4px 7px}}
+@media(max-width:365px){.logo{font-size:15px}.logo img{height:36px}
+  .logo img.hdlogo{height:22px;padding:4px 6px}}
+@media(max-width:340px){.logo img.hdlogo{height:19px;padding:3px 5px}}
 .hd nav{margin-left:auto;display:flex;align-items:center;gap:26px}
 .hd nav a{color:#dbe6f2;font-size:15px;padding:6px 0;position:relative}
 .hd nav a:hover{color:#fff;text-decoration:none}
@@ -685,17 +697,19 @@ def shell(path: str, title: str, desc: str, body: str,
           f'{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else "")
     # 標誌：img/logo-white.png 放進去就自動換掉內建的線條 SVG。
     # 頁首與頁尾都是深藍底，所以用白色那版；navy 那版留給 favicon。
-    # 44 而不是內建 SVG 那個 26：生成的標誌四周有 27% 的透明留白，
-    # 26px 時筆畫實高只剩 19px，在深藍底上看起來像一個淺色小記號。
-    # 44px 讓筆畫實高到 32px，和旁邊 35px 高的中心名稱那一塊剛好對得起來。
-    # 上限就在這附近：頁首列高 68px，48px 只剩 10px 上下留白會開始擠。
-    # 換標誌時如果新檔沒有留白，這裡要跟著往回調。
+    # 2026-09-08 頁首左邊改用院徽 KGH.png（原本是白色的腎臟線條標誌）。
+    #
+    # 院徽是綠＋深藍，深藍那半塊直接放在深藍頁首上會整塊消失，
+    # 所以要墊一塊白底——和頁尾同一個處理。改的是它的底，
+    # 醫院的識別色一個字都沒動。
+    #
     # 高度寫在 CSS（.logo img）不寫成 style=""：行內樣式會壓過媒體查詢，
     # 窄螢幕要縮小就得加 !important。width/height 屬性留著是給瀏覽器算比例，
-    # 避免載入時的版面跳動。
-    mark = ('<img src="img/logo-white.png" alt="" aria-hidden="true" '
-            'width="44" height="44">'
-            if (OUT / "img" / "logo-white.png").exists() else LOGO_SVG)
+    # 避免載入時的版面跳動。院徽是橫式 326x182，會比原本的方形標誌寬，
+    # 窄螢幕的餘裕變少——改高度時一定要重跑寬度掃描。
+    mark = ('<img class="hdlogo" src="img/KGH.png" alt="" aria-hidden="true" '
+            'width="326" height="182">'
+            if HOSP_LOGO.exists() else LOGO_SVG)
     icon = ('<link rel="icon" href="img/logo.png">'
             if (OUT / "img" / "logo.png").exists() else "")
     # 院徽：檔案沒放就整塊不出現，不留破圖也不留佔位。
