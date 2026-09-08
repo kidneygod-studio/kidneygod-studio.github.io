@@ -68,7 +68,10 @@ FACTS: dict[str, str] = {
     # 機台數官網沒有寫。透析床通常一床一台，但那是慣例不是官方說法，
     # 不能替一間真實醫療機構推算數字——留 TODO，由院方確認。
     "machines":   TODO("透析機台數"),
-    "staff":      "34 位專業透析護理師，另有 3 位技師",
+    "staff":      "34 位",
+    # 官網寫的是「3 位技師」，2026-09-08 作者指定改成 2 位醫療工程技師。
+    # 以作者的說法為準——他在這間中心工作，官網頁面不一定是最新的。
+    "tech":       "2 位",
     # 洗腎室服務專員的 LINE。給的是「找得到人」的窗口，不是院方的行銷帳號——
     # 這一頁的讀者多半是正在準備透析、或臨時需要安排透析的人。
     # 洗腎室服務專員。姓名、LINE、手機拆成三個欄位而不是塞成一句：
@@ -85,6 +88,9 @@ FACTS: dict[str, str] = {
     "floor":      "B 棟大樓 3 樓",
     "since":      "民國 80 年 8 月",
     "doctors_n":  "4 位腎臟專科醫師（另有兼任指導教授 1 位）",
+    # 首頁那三格數據方塊用的是純數字版：方塊底下已經有「腎臟專科醫師」
+    # 這個標籤，格子裡再寫一次會變成「4 位腎臟專科醫師／腎臟專科醫師」。
+    "docs_n":     "4 位",
 }
 
 # 醫師陣容。空的時候頁面顯示待填標記；填了就渲染成一張一張的介紹。
@@ -1034,9 +1040,10 @@ def build_home() -> str:
       <a class="btn solid" style="background:var(--navy);color:#fff"
          href="about.html">認識我們的團隊</a>
       <ul class="facts">
-        <li><b>{fact('machines')}</b><span>透析機台</span></li>
+        <li><b>{fact('docs_n')}</b><span>腎臟專科醫師</span></li>
+        <li><b>{fact('staff')}</b><span>專責透析護理人員</span></li>
+        <li><b>{fact('tech')}</b><span>醫療工程技師</span></li>
         <li class="txt"><b>{fact('shifts')}</b><span>透析時段</span></li>
-        <li><b>{fact('staff')}</b><span>專責護理人員</span></li>
       </ul>
     </div>
   </div>
@@ -1217,7 +1224,8 @@ def build_about() -> str:
   <li>透析床位：{fact('beds')}</li>
   <li>透析機台：{fact('machines')}</li>
   <li>醫師：{fact('doctors_n')}</li>
-  <li>護理與技術人員：{fact('staff')}</li>
+  <li>專責透析護理人員：{fact('staff')}</li>
+  <li>醫療工程技師：{fact('tech')}</li>
   <li>透析時段：{fact('shifts')}</li>
   <li>成立於 {fact('since')}</li>
 </ul>
