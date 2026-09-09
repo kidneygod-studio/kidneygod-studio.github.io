@@ -37,6 +37,34 @@ python check_site.py      # 推之前對帳
 
 ---
 
+## 2026-09-09
+
+### 每日新知自動發佈上線 + 新知區開放 Nature／Nature Medicine
+
+改了什麼：
+- 新增 `publish_daily.py`：每日摘要 runner 生成報告成功後自動呼叫它，跑
+  `import_digests.py --write` → `build_site.py` → `bump_assets.py` →
+  `check_site.py` → `git push`。以前這幾步是手動跑的，現在自動。
+- `import_digests.py` 的 `ALLOWED_JOURNALS` 加入 `NATURE`、`NATURE MEDICINE`
+  （JOURNAL 正規化表也補上 Nature Medicine 的別名）。每日摘要 prompt 同步
+  把 Nature／Nature Medicine 加進搜尋（限臨床／轉譯型，過濾純基礎科學）。
+
+為什麼：作者要求每日三篇一律自動上網站、不再手動審核逐日 `--only`；並希望
+搜尋範圍擴及 Nature。匯入器若不同步開放 Nature，摘要挑到的 Nature 論文會被
+「期刊不收」默默擋掉。
+
+踩到的坑：
+- `publish_daily.py` 刻意**不帶 --only**、改用「git 有無變動」判斷要不要 build/push。
+  好處是自我修復（某天 push 失敗，隔天成功會一起補上）。但第一次跑會和先前用
+  `--only` 產生的 news.json 排序不同 → 多出一個一次性對齊 commit；第二次起就穩定
+  「沒有新東西不 push」。這是預期的，不是 bug。
+- git push 走無人值守，設 `GIT_TERMINAL_PROMPT=0` 讓沒憑證時快速失敗、不卡互動提示。
+- `check_site.py` 沒過就不 push——不發佈壞掉的站。
+
+（相關：nephrology_digest 那邊因醫院網路封 Telegram，改用 ntfy 推播，見該專案紀錄）
+
+---
+
 ## 2026-09-08
 
 ### 遊戲區三頁：放大「回首頁」品牌，順手修掉寫死的 sticky 位置
