@@ -396,6 +396,13 @@ color:#a9cbe8;font-weight:700;display:block;margin-bottom:8px}
 line-height:1.4}
 .page-hero p{margin:14px 0 0;color:#d8e6f2;max-width:40em}
 .prose{max-width:44em}
+/* 區塊裡第一個元素不要再帶自己的上緣 margin。
+   section 的 padding-top 已經是「和上一區的距離」了，h2 的 44px 是
+   「和上一段內文的距離」，兩個疊在一起就多出一截——about.html 開頭
+   正好是 h2，量到 140px，其他頁都是 96px，多的 44 就是這個。
+   （原本是在 education／services 用 style="margin-top:0" 各補一次，
+   改成一條規則，新加的區塊不必記得補。） */
+.prose>:first-child{margin-top:0}
 .prose h2{font-family:var(--serif);color:var(--navy);font-size:clamp(21px,2.8vw,27px);
 margin:44px 0 14px;line-height:1.5}
 .prose h3{font-family:var(--serif);color:var(--navy);font-size:19px;margin:28px 0 10px}
