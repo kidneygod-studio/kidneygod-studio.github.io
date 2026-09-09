@@ -61,6 +61,8 @@ spec.loader.exec_module(pd)
 JOURNAL = {
     "THE LANCET": "THE LANCET", "LANCET": "THE LANCET",
     "NEJM": "NEJM", "JAMA": "JAMA", "BMJ": "BMJ", "NATURE": "NATURE",
+    "NATURE MEDICINE": "NATURE MEDICINE", "NATURE MED": "NATURE MEDICINE",
+    "NAT MED": "NATURE MEDICINE",
     "KI": "KIDNEY INT", "KIDNEY INT": "KIDNEY INT",
     "KIDNEY INTERNATIONAL": "KIDNEY INT",
     "KI REPORTS": "KI REPORTS", "KIDNEY INT REPORTS": "KI REPORTS",
@@ -97,9 +99,10 @@ TOPIC_RULES: list[tuple[str, tuple[str, ...]]] = [
 ]
 
 
-# 只收這三本。作者指定：新知區以頂尖綜合期刊為主，
-# 專科期刊（KI Reports、CJASN、NDT、AJKD…）不進網站。
-ALLOWED_JOURNALS = {"NEJM", "THE LANCET", "JAMA"}
+# 頂尖綜合期刊才進網站；專科期刊（KI Reports、CJASN、NDT、AJKD…）不進。
+# 2026-09-09 加入 Nature／Nature Medicine（每日摘要同步加入搜尋這兩本，
+# 限臨床／轉譯型研究）。
+ALLOWED_JOURNALS = {"NEJM", "THE LANCET", "JAMA", "NATURE", "NATURE MEDICINE"}
 
 # 每日摘要改成也只搜這三本的第一天（digest_prompt.txt 於 2026-09-05 晚間改，
 # 隔天的排程才是第一份照新規則產的）。這一天之後的摘要，三篇理應全部收得進來；
