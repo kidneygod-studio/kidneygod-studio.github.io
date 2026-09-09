@@ -49,7 +49,8 @@ SIZES: dict[str, tuple[int, int]] = {
     "svc-hdf":       (900, 675),
     "svc-access":    (900, 675),
     "svc-care":      (900, 675),
-    "col-diet":      (900, 506),     # 16:9
+    "col-first":     (900, 506),     # 16:9
+    "col-diet":      (900, 506),
     "col-fluid":     (900, 506),
     "col-fistula":   (900, 506),
     "col-travel":    (900, 506),
