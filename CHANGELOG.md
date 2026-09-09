@@ -60,6 +60,11 @@ python check_site.py      # 推之前對帳
   「沒有新東西不 push」。這是預期的，不是 bug。
 - git push 走無人值守，設 `GIT_TERMINAL_PROMPT=0` 讓沒憑證時快速失敗、不卡互動提示。
 - `check_site.py` 沒過就不 push——不發佈壞掉的站。
+- **最大的坑：一開始用 `git add -A`，會把作者其他還在編輯的 WIP 一起掃上線**
+  （當天正在改 dialysis/ 透析中心頁）。無人值守的自動發佈**絕不能 git add -A**。
+  改成白名單 `PUBLISH_PATHS`（news.json / articles / index.html / sitemap /
+  sw.js / search_index.json），且「有沒有新東西」只看 `news.json` 有無變動、
+  不看整個工作區（否則作者的 WIP 會誤觸發 build/push）。
 
 （相關：nephrology_digest 那邊因醫院網路封 Telegram，改用 ntfy 推播，見該專案紀錄）
 
