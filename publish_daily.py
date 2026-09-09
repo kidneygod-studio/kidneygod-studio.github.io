@@ -13,6 +13,10 @@ r"""每日新知自動發佈到護腎教室網站（kidneygod.net / GitHub Pages
 刻意不加 --only：import 以 DOI 去重，跑全部＝自動補上前幾天沒發佈成功的。
 所以某天 push 失敗，隔天成功時會一起補上，具自我修復性。
 
+**只 commit 每日新知管線產生的檔案**（PUBLISH_PATHS），不用 git add -A——
+否則會把作者其他還在編輯的 WIP（例如 dialysis/ 透析中心頁）一起掃上線。
+「有沒有新東西」也只看 news.json 有無變動，不看整個工作區。
+
 Exit 0 = 已發佈或沒有新東西；非 0 = 某一步失敗（呼叫端會警報）。
 """
 import subprocess, sys, os, datetime
@@ -21,6 +25,11 @@ ROOT = r'C:\Users\user\dopamine_shop'
 PY   = sys.executable
 # 讓 git 在無憑證時「快速失敗」而非卡在互動提示（無人值守必備）
 ENV  = dict(os.environ, GIT_TERMINAL_PROMPT='0')
+
+# 每日新知管線會動到的檔案（import_digests + build_site + bump_assets 的產出）。
+# 只 stage 這些，其餘一律不碰。
+PUBLISH_PATHS = ['articles_src/news.json', 'articles', 'index.html',
+                 'sitemap.xml', 'robots.txt', 'sw.js', 'search_index.json']
 
 
 def run_py(args):
@@ -40,8 +49,9 @@ def main():
     if r.returncode != 0:
         print('IMPORT FAILED:', (r.stderr or '')[-500:]); return 1
 
-    # 2. 沒有任何檔案變動 → 沒有新研究，收工
-    if not git(['status', '--porcelain']).stdout.strip():
+    # 2. news.json 沒變動 → 沒有新研究，收工（只看 news.json，不看整個工作區，
+    #    才不會被作者其他 WIP 檔案誤觸發）
+    if not git(['status', '--porcelain', 'articles_src/news.json']).stdout.strip():
         print('nothing new to publish.'); return 0
 
     # 3. 重建網站
@@ -55,8 +65,10 @@ def main():
     if c.returncode != 0:
         print('CHECK FAILED — not pushing:\n' + (c.stdout or '')[-1000:]); return 2
 
-    # 5. 發佈
-    git(['add', '-A'])
+    # 5. 發佈——只 stage 每日新知的產出檔，不碰其他 WIP
+    git(['add', '--'] + PUBLISH_PATHS)
+    if git(['diff', '--cached', '--quiet']).returncode == 0:
+        print('nothing staged to publish.'); return 0
     date = datetime.date.today().strftime('%Y-%m-%d')
     msg = (f'每日新知自動發佈 {date}\n\n'
            f'Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>')
