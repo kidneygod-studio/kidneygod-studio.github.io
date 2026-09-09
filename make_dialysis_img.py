@@ -56,6 +56,14 @@ SIZES: dict[str, tuple[int, int]] = {
     # 醫師照：直式 3:4。卡片上最寬 180px，360 是兩倍視網膜所需再多一點。
     "doc-wu":        (600, 800),
 }
+# 等比縮進一個方框、不裁切的照片。
+#
+# 上面 SIZES 那批全是置中裁切（cover），因為那些是照 prompt 生出來的圖，
+# 構圖是可控的。機器照片不一樣：不知道拍出來是直式還是橫式，
+# 裁成固定比例會把機器的頭或腳切掉。所以只限制最長邊，比例照原圖。
+PHOTOS: dict[str, int] = {
+    "machine-ncu18": 1200,
+}
 # 標誌保持 PNG：要去背，轉成 JPEG 會多一塊白底
 # KGH 是郭綜合醫院的院徽（橫式）。thumbnail 不會放大，326x182 的原圖
 # 會原樣輸出——顯示高度約 34px，還有四倍餘裕，夠用。
@@ -100,7 +108,7 @@ def main() -> int:
     if not files:
         sys.exit(f"{SRC} 裡沒有圖")
 
-    known = set(SIZES) | set(LOGOS)
+    known = set(SIZES) | set(LOGOS) | set(PHOTOS)
     before = after = 0
     done, skipped, unknown, small = [], [], [], []
     print(f"{'檔名':<24}{'尺寸':>12}{'原始':>10}{'輸出':>10}")
@@ -122,6 +130,16 @@ def main() -> int:
                 im.thumbnail((side, side), Image.LANCZOS)
                 dst = OUT / f"{name}.png"
                 im.save(dst, "PNG", optimize=True)
+                dim = f"{im.width}x{im.height}"
+            elif name in PHOTOS:
+                # 等比縮進方框，不裁切也不放大（thumbnail 本來就不放大）
+                if im.mode not in ("RGB", "L"):
+                    im = im.convert("RGB")
+                side = PHOTOS[name]
+                im.thumbnail((side, side), Image.LANCZOS)
+                dst = OUT / f"{name}.jpg"
+                im.save(dst, "JPEG", quality=QUALITY, optimize=True,
+                        progressive=True)
                 dim = f"{im.width}x{im.height}"
             else:
                 ideal = SIZES[name]

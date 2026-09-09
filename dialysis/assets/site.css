@@ -249,6 +249,16 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp img{height:46px;width:auto;flex-shrink:0}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
+/* ---- 機器照片 ---- */
+/* 不知道會拿到直式還是橫式：寬度收在 420、高度收在 460，兩種都不會撐版。
+   object-fit 用 contain 不用 cover——機器的頭或腳被裁掉就失去意義了。 */
+.mfig{margin:0 0 22px;max-width:420px}
+.mfig img{display:block;width:100%;max-height:460px;object-fit:contain;
+background:#f4f8fb;border:1px solid var(--line);border-radius:12px}
+.mfig figcaption{margin-top:8px;font-size:.86rem;color:var(--mut)}
+/* 刻意不用 float 讓文字繞圖：下面緊接著是一串 <ul>，清單的項目符號
+   碰到浮動元素時會被推開或疊在圖上，各家瀏覽器表現還不一致。
+   多花一點垂直空間換版面穩定，划算。 */
 /* ---- 醫師介紹卡 ---- */
 /* 左照片右資歷。沒有照片時（.nophoto）自動變成單欄——版面不會留一個空框。 */
 .doccard{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);

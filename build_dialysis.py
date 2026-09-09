@@ -516,6 +516,16 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp img{height:46px;width:auto;flex-shrink:0}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
+/* ---- 機器照片 ---- */
+/* 不知道會拿到直式還是橫式：寬度收在 420、高度收在 460，兩種都不會撐版。
+   object-fit 用 contain 不用 cover——機器的頭或腳被裁掉就失去意義了。 */
+.mfig{margin:0 0 22px;max-width:420px}
+.mfig img{display:block;width:100%;max-height:460px;object-fit:contain;
+background:#f4f8fb;border:1px solid var(--line);border-radius:12px}
+.mfig figcaption{margin-top:8px;font-size:.86rem;color:var(--mut)}
+/* 刻意不用 float 讓文字繞圖：下面緊接著是一串 <ul>，清單的項目符號
+   碰到浮動元素時會被推開或疊在圖上，各家瀏覽器表現還不一致。
+   多花一點垂直空間換版面穩定，划算。 */
 /* ---- 醫師介紹卡 ---- */
 /* 左照片右資歷。沒有照片時（.nophoto）自動變成單欄——版面不會留一個空框。 */
 .doccard{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);
@@ -1218,6 +1228,21 @@ def schedule_table() -> str:
 
 
 def build_about() -> str:
+    # 機器照片。檔案沒放就整塊不出現——不留破圖也不留佔位框。
+    #
+    # ⚠ 這一張**不能用 AI 生圖**。其他圖是示意的空間與情境，畫錯了頂多是
+    # 氣氛不對；這張要拍的是一台實際存在、型號寫在旁邊的機器，畫出來的
+    # 東西掛上去就是錯誤資訊。要嘛拍中心裡的實機，要嘛用原廠授權的產品照。
+    # 不寫 width/height：這支是純標準函式庫，不為了量一張圖的尺寸引入
+    # Pillow。照片是直式還是橫式由 CSS 的 max-height 收住，不會撐版。
+    mimg = OUT / "img" / "machine-ncu18.jpg"
+    machine_img = (
+        f'<figure class="mfig">'
+        f'<img src="img/machine-ncu18.jpg" '
+        f'alt="{esc(FACTS["machine"])} 血液透析機" loading="lazy">'
+        f'<figcaption>{esc(FACTS["machine"])}</figcaption></figure>'
+        if mimg.exists() else "")
+
     body = page_hero("About us", "關於中心",
                      "長期的治療需要一個穩定的地方——固定的團隊、固定的時段、"
                      "有問題找得到人。") + f"""
@@ -1253,22 +1278,28 @@ def build_about() -> str:
 </ul>
 
 <h3>透析機</h3>
+{machine_img}
 <p>本中心使用的血液透析機為{fact('machine')}。與治療比較有關的功能是這幾項：</p>
 <ul>
   <li><b>血液透析與血液透析過濾（HDF）都能執行</b>——支援單針與雙針模式，
   HDF 可選前稀釋或後稀釋。用哪一種由醫師依個別狀況決定，
   不需要換到另一台機器。</li>
+  <li><b>自動預充與自動返血</b>：上機前的管路預充一鍵完成，機器會自動拍打
+  人工腎臟排掉裡面的空氣，並把腔室的液面調到定位。下機時搭配專屬返血套件，
+  可以不必先拔針就完成返血。</li>
   <li><b>透析中可計算 Kt/V</b>：透析劑量的估計值在當次治療就看得到，
   不必等下一次抽血報告出來才知道這次洗得夠不夠。</li>
-  <li><b>自動預充與自動返血</b>：上機前的管路預充、下機時的返血，
-  可用生理食鹽水或線上透析液由機器執行。</li>
+  <li><b>重碳酸粉罐（BICART）直接裝在機器上</b>：透析液現配現用，
+  不必事先人工泡製——少了一道在開放環境下調配的步驟，
+  也就少了一個受污染的機會。</li>
+  <li><b>透析液過濾器的洩漏檢測與預充組件</b>：機器會自己測試過濾器有沒有
+  阻塞或洩漏。過濾器一旦出問題，影響的不只是透析液的品質，
+  連脫水量的準確度都會跟著跑掉——這一項不必等人發現，機器會主動檢查。
+  預充組件則讓更換過濾器時的預充比較好處理。</li>
   <li><b>透析處方可以存起來</b>：重碳酸與鈉濃度、脫水量各有 8 組程式化設定，
   同一個人固定的處方不必每次重設。</li>
   <li><b>消毒</b>：可執行 85°C 以上熱消毒與循環消毒，內建六組自動消毒程序，
   並可與 RO 系統的熱消毒連動；全機身為防鏽材質。</li>
-  <li><b>可加裝內毒素過濾器</b>（CF-609N）：機器會累計使用時間、提醒更換期限，
-  並執行密閉洩漏測試。</li>
-  <li><b>可接中央供液系統</b>（A 液、B 液分別供應），也可搭載重碳酸粉罐（BICART）。</li>
   <li><b>IC 晶片卡與網路連線</b>：治療參數與紀錄可直接進資訊系統。</li>
 </ul>
 <p class="tnote">以上機器功能出自原廠公開的產品規格；
@@ -1580,8 +1611,11 @@ def main() -> None:
         print(f"\n特殊公告：無，頁面顯示「最後確認：{NOTICE_CHECKED}」"
               f"（確認過記得改 NOTICE_CHECKED）")
 
-    missing = [n for _t, n, _d in SERVICES + COLUMNS] + ["hero", "about-center",
-                                                         "band-process"]
+    missing = ([n for _t, n, _d in SERVICES + COLUMNS]
+               + ["hero", "about-center", "band-process",
+                  # 機器照片還沒放。列進來才看得到還缺，不然它會安靜地
+                  # 不出現在頁面上，而頁面看起來完全正常。
+                  "machine-ncu18"])
     absent = [n for n in missing if not (OUT / "img" / f"{n}.jpg").exists()]
     print(f"\n圖片：{len(missing) - len(absent)}/{len(missing)} 已放"
           + (f"（缺 {', '.join(absent)}）" if absent else ""))
