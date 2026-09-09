@@ -250,15 +250,30 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
 /* ---- 機器照片 ---- */
-/* 不知道會拿到直式還是橫式：寬度收在 420、高度收在 460，兩種都不會撐版。
+/* 原廠產品照是 1:3 的直長比例（機器實際就是 480 寬 x 1470 高 mm）。
+   單獨一張擺在文字上方會佔掉整個螢幕高度，所以做成左圖右文。
+   底色用純白不是 --card：那張圖本身是白底去背，襯灰會看到一圈邊界。
    object-fit 用 contain 不用 cover——機器的頭或腳被裁掉就失去意義了。 */
-.mfig{margin:0 0 22px;max-width:420px}
-.mfig img{display:block;width:100%;max-height:460px;object-fit:contain;
-background:#f4f8fb;border:1px solid var(--line);border-radius:12px}
-.mfig figcaption{margin-top:8px;font-size:.86rem;color:var(--mut)}
+.mrow{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);
+gap:clamp(18px,3vw,30px);align-items:start;margin:0 0 4px}
+.mfig{margin:0}
+.mfig img{display:block;width:100%;max-height:580px;object-fit:contain;
+background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}
+.mfig figcaption{margin-top:8px;font-size:.84rem;color:var(--mut);
+line-height:1.5}
+.mfig .src{font-size:.78rem;opacity:.8}
+/* 窄螢幕改成上圖下文，並把圖收窄——1:3 的圖佔滿寬度會高得離譜 */
+@media(max-width:560px){
+  .mrow{grid-template-columns:1fr}
+  .mfig{max-width:170px;margin:0 auto 6px}
+}
 /* 刻意不用 float 讓文字繞圖：下面緊接著是一串 <ul>，清單的項目符號
    碰到浮動元素時會被推開或疊在圖上，各家瀏覽器表現還不一致。
-   多花一點垂直空間換版面穩定，划算。 */
+   用 grid 把圖與文分成兩欄，清單維持整寬，版面才穩。 */
+.prose h4{margin:26px 0 8px;font-size:1.02rem;color:var(--navy)}
+/* 右欄第一個標題不要再往下推——它要和照片的頂端對齊 */
+.mtxt>:first-child{margin-top:0}
+.mtxt h4{margin-top:20px}
 /* ---- 醫師介紹卡 ---- */
 /* 左照片右資歷。沒有照片時（.nophoto）自動變成單欄——版面不會留一個空框。 */
 .doccard{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);

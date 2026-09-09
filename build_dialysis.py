@@ -517,15 +517,30 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
 /* ---- 機器照片 ---- */
-/* 不知道會拿到直式還是橫式：寬度收在 420、高度收在 460，兩種都不會撐版。
+/* 原廠產品照是 1:3 的直長比例（機器實際就是 480 寬 x 1470 高 mm）。
+   單獨一張擺在文字上方會佔掉整個螢幕高度，所以做成左圖右文。
+   底色用純白不是 --card：那張圖本身是白底去背，襯灰會看到一圈邊界。
    object-fit 用 contain 不用 cover——機器的頭或腳被裁掉就失去意義了。 */
-.mfig{margin:0 0 22px;max-width:420px}
-.mfig img{display:block;width:100%;max-height:460px;object-fit:contain;
-background:#f4f8fb;border:1px solid var(--line);border-radius:12px}
-.mfig figcaption{margin-top:8px;font-size:.86rem;color:var(--mut)}
+.mrow{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);
+gap:clamp(18px,3vw,30px);align-items:start;margin:0 0 4px}
+.mfig{margin:0}
+.mfig img{display:block;width:100%;max-height:580px;object-fit:contain;
+background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}
+.mfig figcaption{margin-top:8px;font-size:.84rem;color:var(--mut);
+line-height:1.5}
+.mfig .src{font-size:.78rem;opacity:.8}
+/* 窄螢幕改成上圖下文，並把圖收窄——1:3 的圖佔滿寬度會高得離譜 */
+@media(max-width:560px){
+  .mrow{grid-template-columns:1fr}
+  .mfig{max-width:170px;margin:0 auto 6px}
+}
 /* 刻意不用 float 讓文字繞圖：下面緊接著是一串 <ul>，清單的項目符號
    碰到浮動元素時會被推開或疊在圖上，各家瀏覽器表現還不一致。
-   多花一點垂直空間換版面穩定，划算。 */
+   用 grid 把圖與文分成兩欄，清單維持整寬，版面才穩。 */
+.prose h4{margin:26px 0 8px;font-size:1.02rem;color:var(--navy)}
+/* 右欄第一個標題不要再往下推——它要和照片的頂端對齊 */
+.mtxt>:first-child{margin-top:0}
+.mtxt h4{margin-top:20px}
 /* ---- 醫師介紹卡 ---- */
 /* 左照片右資歷。沒有照片時（.nophoto）自動變成單欄——版面不會留一個空框。 */
 .doccard{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);
@@ -1240,7 +1255,8 @@ def build_about() -> str:
         f'<figure class="mfig">'
         f'<img src="img/machine-ncu18.jpg" '
         f'alt="{esc(FACTS["machine"])} 血液透析機" loading="lazy">'
-        f'<figcaption>{esc(FACTS["machine"])}</figcaption></figure>'
+        f'<figcaption>{esc(FACTS["machine"])}<br>'
+        f'<span class="src">圖：原廠產品照</span></figcaption></figure>'
         if mimg.exists() else "")
 
     body = page_hero("About us", "關於中心",
@@ -1278,8 +1294,10 @@ def build_about() -> str:
 </ul>
 
 <h3>透析機</h3>
-{machine_img}
-<p>本中心使用的血液透析機為{fact('machine')}。與治療比較有關的功能是這幾項：</p>
+<div class="mrow">{machine_img}<div class="mtxt">
+<p>本中心使用的血液透析機為{fact('machine')}，是給單一病患使用的機型。
+機身寬 30 公分，配 10.4 吋可旋轉的彩色觸控螢幕，介面支援繁體中文。</p>
+<h4>治療上做得到什麼</h4>
 <ul>
   <li><b>血液透析與血液透析過濾（HDF）都能執行</b>——支援單針與雙針模式，
   HDF 可選前稀釋或後稀釋。用哪一種由醫師依個別狀況決定，
@@ -1292,17 +1310,35 @@ def build_about() -> str:
   <li><b>重碳酸粉罐（BICART）直接裝在機器上</b>：透析液現配現用，
   不必事先人工泡製——少了一道在開放環境下調配的步驟，
   也就少了一個受污染的機會。</li>
-  <li><b>透析液過濾器的洩漏檢測</b>：機器會自己測試過濾器有沒有
-  阻塞或洩漏。過濾器一旦出問題，影響的不只是透析液的品質，
-  連脫水量的準確度都會跟著跑掉——這一項不必等人發現，機器會主動檢查。</li>
   <li><b>透析處方可以存起來</b>：重碳酸與鈉濃度、脫水量各有 8 組程式化設定，
   同一個人固定的處方不必每次重設。</li>
-  <li><b>消毒</b>：可執行 85°C 以上熱消毒與循環消毒，內建六組自動消毒程序，
-  並可與 RO 系統的熱消毒連動；全機身為防鏽材質。</li>
-  <li><b>IC 晶片卡與網路連線</b>：治療參數與紀錄可直接進資訊系統。</li>
+  <li><b>IC 晶片卡與網路連線</b>：治療參數可以先在電腦上設定好，
+  再經由晶片卡或網路寫進機器，不必到機器前面一項一項輸入。</li>
 </ul>
-<p class="tnote">以上機器功能出自原廠公開的產品規格；
-實際上機時採用哪些設定，由醫師依個別狀況決定。</p>
+</div></div>
+
+<h4>出狀況時的防護</h4>
+<ul>
+  <li><b>停電時撐得住</b>：機器會自動備份當次資料，並以內建電力維持
+  血液幫浦、肝素泵、動靜脈壓與氣泡偵測運作 30 分鐘以上。
+  （中心本身另有緊急供電系統，見下一節。）</li>
+  <li><b>脫水量的準確度</b>：以活塞泵做體積控制，誤差在每小時 30 公克以內。
+  脫水抓不準，人下機時會不舒服——這是透析機最基本、也最重要的一件事。</li>
+  <li><b>氣泡與漏血偵測</b>：氣泡用超音波偵測，單顆達 10 微升即警報；
+  人工腎臟破損導致的漏血則用光學偵測。</li>
+  <li><b>每次上機前自我檢測</b>，透析過程中持續做密閉迴路洩漏測試，
+  並檢查透析液過濾器有沒有阻塞或洩漏。過濾器一旦出問題，
+  影響的不只是透析液的品質，連脫水量的準確度都會跟著跑掉。</li>
+  <li><b>緊急處置按鈕</b>：需要時可立即把生理食鹽水或透析液補進血液迴路，
+  並同時接管脫水速度、血流速度與透析液的旁路。</li>
+  <li><b>四色警示燈號</b>：機器頂端的燈遠遠就看得到，
+  護理人員不必走到機器前面才知道哪一台在叫。</li>
+  <li><b>消毒</b>：可執行 85°C 以上熱消毒、循環消毒與熱酸消毒，
+  內建六組自動消毒程序，並可與 RO 系統的熱消毒連動；全機身為防鏽材質。</li>
+</ul>
+<p class="tnote">以上出自原廠產品目錄（台灣總代理華江醫療儀器，
+衛部醫器輸字第 025316 號）。實際上機時採用哪些設定，
+由醫師依個別狀況決定。</p>
 
 <h3>設備與安全</h3>
 <ul>
