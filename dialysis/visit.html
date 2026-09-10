@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap">
-<link rel="stylesheet" href="assets/site.css?v=cf19395d">
+<link rel="stylesheet" href="assets/site.css?v=b32660ea">
 <link rel="icon" href="img/logo.png">
 
 </head>
@@ -74,6 +74,84 @@
 <a href="education.html#col-travel">旅遊透析那一篇</a>。</p>
 
 <h2>交通</h2>
+
+<div class="mapwrap">
+<svg viewBox="0 0 600 344" class="tmap" role="img"
+     aria-labelledby="mapt mapd" xmlns="http://www.w3.org/2000/svg">
+  <title id="mapt">郭綜合醫院周邊簡化地圖</title>
+  <desc id="mapd">郭綜合醫院位於民生路二段北側、西門路二段以西。
+  102 公車停在院區旁的「郭綜合醫院」站；其餘路線停在東北邊
+  西門路與民權路交口的「西門、民權路口」站，下車後沿西門路往南、
+  再沿民生路二段往西即可抵達。機車停車場在院區西側，
+  汽車停車場在民生路二段南側。</desc>
+
+  <!-- 只留三條路。海安路、府前路對「怎麼走過來」沒有幫助，
+       畫上去只會讓路名互相打架。 -->
+  <g stroke="#cfe0ee" fill="none" stroke-linecap="round">
+    <path d="M20 240 H580" stroke-width="20"/>
+    <path d="M420 90 V330" stroke-width="20"/>
+    <path d="M300 100 H580" stroke-width="14"/>
+  </g>
+
+  <g class="rd">
+    <text x="140" y="266">民生路二段</text>
+    <text x="466" y="266">民生路一段</text>
+    <text x="310" y="140">民權路</text>
+    <text x="438" y="318">西門路二段</text>
+  </g>
+
+  <!-- 停車場 -->
+  <g class="pk">
+    <rect x="240" y="198" width="42" height="38" rx="7" fill="#14807a"/>
+    <text x="261" y="224" class="pl"
+          text-anchor="middle">P</text>
+    <text x="261" y="190" class="rd"
+          text-anchor="middle">機車</text>
+
+    <rect x="270" y="272" width="52" height="38" rx="7" fill="#14807a"/>
+    <text x="296" y="298" class="pl"
+          text-anchor="middle">P</text>
+    <text x="296" y="328" class="rd"
+          text-anchor="middle">汽車</text>
+  </g>
+
+  <!-- 本院 -->
+  <rect x="300" y="192" width="92" height="44" rx="6" fill="#1e3a63"/>
+  <text x="346" y="220" class="bl" text-anchor="middle">本院</text>
+
+  <!-- 站牌。實心圓＋外白圈，壓在路上也看得清楚。
+       路線清單不放進圖裡——七條寫成一行一定會超出畫布，
+       而且那份清單本文已經有了，圖上只要說「還有其他路線」。 -->
+  <g class="stp">
+    <circle cx="150" cy="240" r="11" fill="#fff"/>
+    <circle cx="150" cy="240" r="7.5" fill="#1e3a63"/>
+    <text x="150" y="226" class="sn" text-anchor="middle">郭綜合醫院站</text>
+    <text x="150" y="192" class="rd" text-anchor="middle">102</text>
+
+    <circle cx="420" cy="100" r="11" fill="#fff"/>
+    <circle cx="420" cy="100" r="7.5" fill="#1e3a63"/>
+    <text x="420" y="38" class="sn" text-anchor="middle">西門、民權路口站</text>
+    <text x="420" y="70" class="rd" text-anchor="middle">其餘 7 條路線</text>
+  </g>
+
+  <!-- 從路口走過來：沿西門路往南、再沿民生路往西 -->
+  <path d="M420 116 V214 H406" stroke="#14807a" stroke-width="3"
+        fill="none" stroke-dasharray="7 6" stroke-linecap="round"/>
+  <path d="M404 214 l13 -5.5 v11 z" fill="#14807a"/>
+
+  <!-- 指北。擺左上角，那一區沒有其他東西 -->
+  <g transform="translate(48,58)">
+    <path d="M0 20 L0 -10 M0 -10 l-5 8 M0 -10 l5 8" stroke="#6b7480"
+          stroke-width="2" fill="none" stroke-linecap="round"/>
+    <text x="0" y="38" class="rd" text-anchor="middle">北</text>
+  </g>
+</svg>
+</div>
+<p class="mapkey"><span class="k kd"></span>公車站牌
+<span class="k kb"></span>本院（透析中心在 B 棟 3 樓）
+<span class="k kp"></span>停車場
+<span class="k kw"></span>從路口下車後的步行方向</p>
+
 
 <h3>公車</h3>
 <p><strong>102 直接停「郭綜合醫院」站</strong>，站牌就在民生路二段、
@@ -137,7 +215,7 @@ rel="noopener">大台南公車</a>查即時動態。</p>
 </footer>
 
 <a class="float" href="visit.html#booking">預約與諮詢</a>
-<script src="assets/site.js?v=cf19395d"></script>
+<script src="assets/site.js?v=b32660ea"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e44b1d39221d4a5085336497dbff3ce4"}'></script>
 </body>
 </html>

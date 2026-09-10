@@ -249,6 +249,37 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp img{height:46px;width:auto;flex-shrink:0}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
+/* ---- 交通簡圖 ---- */
+/* SVG 會等比縮放，字也會跟著縮：600 寬的 viewBox 到了 393px 螢幕只剩
+   0.58 倍，15px 的路名變成不到 9px。
+   第一版的做法是窄螢幕橫向捲動，但那樣最重要的「西門、民權路口站」
+   會被切到畫面外——要看公車資訊的人反而看不到。
+   改成把字級交給 CSS：窄螢幕把 SVG 裡的字放大，整張圖照樣縮得下，
+   縮完的實際字級仍有 11px 以上。 */
+.mapwrap{margin:0 0 10px}
+.tmap{display:block;width:100%;max-width:600px;height:auto;
+background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px;
+font-family:var(--sans)}
+.tmap .rd{fill:var(--mut);font-size:15px}
+.tmap .sn{fill:var(--navy);font-size:15px;font-weight:700}
+.tmap .pl{fill:#fff;font-size:20px;font-weight:700}
+.tmap .bl{fill:#fff;font-size:18px;font-weight:700}
+@media(max-width:620px){
+  .tmap .rd{font-size:19px}
+  .tmap .sn{font-size:20px}
+  .tmap .pl{font-size:24px}
+  .tmap .bl{font-size:22px}
+}
+.mapkey{margin:0 0 22px;font-size:13.5px;color:var(--mut);line-height:2.2}
+.mapkey .k{display:inline-block;width:13px;height:13px;border-radius:3px;
+vertical-align:-2px;margin:0 5px 0 14px}
+.mapkey .k:first-child{margin-left:0}
+.mapkey .kd{background:var(--navy);border-radius:50%;
+box-shadow:0 0 0 2px #fff,0 0 0 3px var(--line)}
+.mapkey .kb{background:var(--navy)}
+.mapkey .kp{background:var(--teal)}
+.mapkey .kw{width:22px;height:0;border-top:3px dashed var(--teal);border-radius:0;
+vertical-align:4px}
 /* ---- 機器照片 ---- */
 /* 原廠產品照是 1:3 的直長比例（機器實際就是 480 寬 x 1470 高 mm）。
    單獨一張擺在文字上方會佔掉整個螢幕高度，所以做成左圖右文。

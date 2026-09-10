@@ -538,6 +538,37 @@ background:var(--mist);border:1px solid var(--line);border-radius:12px}
 .hosp img{height:46px;width:auto;flex-shrink:0}
 .hosp span{font-size:14.5px;color:var(--mut);line-height:1.7}
 @media(max-width:420px){.hosp{gap:12px;padding:13px 14px}.hosp img{height:38px}}
+/* ---- 交通簡圖 ---- */
+/* SVG 會等比縮放，字也會跟著縮：600 寬的 viewBox 到了 393px 螢幕只剩
+   0.58 倍，15px 的路名變成不到 9px。
+   第一版的做法是窄螢幕橫向捲動，但那樣最重要的「西門、民權路口站」
+   會被切到畫面外——要看公車資訊的人反而看不到。
+   改成把字級交給 CSS：窄螢幕把 SVG 裡的字放大，整張圖照樣縮得下，
+   縮完的實際字級仍有 11px 以上。 */
+.mapwrap{margin:0 0 10px}
+.tmap{display:block;width:100%;max-width:600px;height:auto;
+background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px;
+font-family:var(--sans)}
+.tmap .rd{fill:var(--mut);font-size:15px}
+.tmap .sn{fill:var(--navy);font-size:15px;font-weight:700}
+.tmap .pl{fill:#fff;font-size:20px;font-weight:700}
+.tmap .bl{fill:#fff;font-size:18px;font-weight:700}
+@media(max-width:620px){
+  .tmap .rd{font-size:19px}
+  .tmap .sn{font-size:20px}
+  .tmap .pl{font-size:24px}
+  .tmap .bl{font-size:22px}
+}
+.mapkey{margin:0 0 22px;font-size:13.5px;color:var(--mut);line-height:2.2}
+.mapkey .k{display:inline-block;width:13px;height:13px;border-radius:3px;
+vertical-align:-2px;margin:0 5px 0 14px}
+.mapkey .k:first-child{margin-left:0}
+.mapkey .kd{background:var(--navy);border-radius:50%;
+box-shadow:0 0 0 2px #fff,0 0 0 3px var(--line)}
+.mapkey .kb{background:var(--navy)}
+.mapkey .kp{background:var(--teal)}
+.mapkey .kw{width:22px;height:0;border-top:3px dashed var(--teal);border-radius:0;
+vertical-align:4px}
 /* ---- 機器照片 ---- */
 /* 原廠產品照是 1:3 的直長比例（機器實際就是 480 寬 x 1470 高 mm）。
    單獨一張擺在文字上方會佔掉整個螢幕高度，所以做成左圖右文。
@@ -1276,6 +1307,96 @@ def schedule_table() -> str:
             f'<tbody>{"".join(rows)}</tbody></table></div>{note}')
 
 
+def map_svg() -> str:
+    """交通用的簡化地圖。
+
+    **刻意畫成 SVG 而不是生一張圖**：地圖上全是路名與站名，AI 生圖的中文
+    幾乎必定變成亂碼（長文大圖那份 prompt 開頭就寫了這件事）。SVG 的字是
+    真的字——螢幕閱讀器讀得到、任何解析度都銳利、路線改號只要改一行。
+
+    示意圖不是比例尺。目的只有一個：讓人看懂「在哪一站下車、往哪個方向走」。
+    所以只留兩個站牌、兩個停車場、四條路，其餘全部拿掉。
+    """
+    return """
+<div class="mapwrap">
+<svg viewBox="0 0 600 344" class="tmap" role="img"
+     aria-labelledby="mapt mapd" xmlns="http://www.w3.org/2000/svg">
+  <title id="mapt">郭綜合醫院周邊簡化地圖</title>
+  <desc id="mapd">郭綜合醫院位於民生路二段北側、西門路二段以西。
+  102 公車停在院區旁的「郭綜合醫院」站；其餘路線停在東北邊
+  西門路與民權路交口的「西門、民權路口」站，下車後沿西門路往南、
+  再沿民生路二段往西即可抵達。機車停車場在院區西側，
+  汽車停車場在民生路二段南側。</desc>
+
+  <!-- 只留三條路。海安路、府前路對「怎麼走過來」沒有幫助，
+       畫上去只會讓路名互相打架。 -->
+  <g stroke="#cfe0ee" fill="none" stroke-linecap="round">
+    <path d="M20 240 H580" stroke-width="20"/>
+    <path d="M420 90 V330" stroke-width="20"/>
+    <path d="M300 100 H580" stroke-width="14"/>
+  </g>
+
+  <g class="rd">
+    <text x="140" y="266">民生路二段</text>
+    <text x="466" y="266">民生路一段</text>
+    <text x="310" y="140">民權路</text>
+    <text x="438" y="318">西門路二段</text>
+  </g>
+
+  <!-- 停車場 -->
+  <g class="pk">
+    <rect x="240" y="198" width="42" height="38" rx="7" fill="#14807a"/>
+    <text x="261" y="224" class="pl"
+          text-anchor="middle">P</text>
+    <text x="261" y="190" class="rd"
+          text-anchor="middle">機車</text>
+
+    <rect x="270" y="272" width="52" height="38" rx="7" fill="#14807a"/>
+    <text x="296" y="298" class="pl"
+          text-anchor="middle">P</text>
+    <text x="296" y="328" class="rd"
+          text-anchor="middle">汽車</text>
+  </g>
+
+  <!-- 本院 -->
+  <rect x="300" y="192" width="92" height="44" rx="6" fill="#1e3a63"/>
+  <text x="346" y="220" class="bl" text-anchor="middle">本院</text>
+
+  <!-- 站牌。實心圓＋外白圈，壓在路上也看得清楚。
+       路線清單不放進圖裡——七條寫成一行一定會超出畫布，
+       而且那份清單本文已經有了，圖上只要說「還有其他路線」。 -->
+  <g class="stp">
+    <circle cx="150" cy="240" r="11" fill="#fff"/>
+    <circle cx="150" cy="240" r="7.5" fill="#1e3a63"/>
+    <text x="150" y="226" class="sn" text-anchor="middle">郭綜合醫院站</text>
+    <text x="150" y="192" class="rd" text-anchor="middle">102</text>
+
+    <circle cx="420" cy="100" r="11" fill="#fff"/>
+    <circle cx="420" cy="100" r="7.5" fill="#1e3a63"/>
+    <text x="420" y="38" class="sn" text-anchor="middle">西門、民權路口站</text>
+    <text x="420" y="70" class="rd" text-anchor="middle">其餘 7 條路線</text>
+  </g>
+
+  <!-- 從路口走過來：沿西門路往南、再沿民生路往西 -->
+  <path d="M420 116 V214 H406" stroke="#14807a" stroke-width="3"
+        fill="none" stroke-dasharray="7 6" stroke-linecap="round"/>
+  <path d="M404 214 l13 -5.5 v11 z" fill="#14807a"/>
+
+  <!-- 指北。擺左上角，那一區沒有其他東西 -->
+  <g transform="translate(48,58)">
+    <path d="M0 20 L0 -10 M0 -10 l-5 8 M0 -10 l5 8" stroke="#6b7480"
+          stroke-width="2" fill="none" stroke-linecap="round"/>
+    <text x="0" y="38" class="rd" text-anchor="middle">北</text>
+  </g>
+</svg>
+</div>
+<p class="mapkey"><span class="k kd"></span>公車站牌
+<span class="k kb"></span>本院（透析中心在 B 棟 3 樓）
+<span class="k kp"></span>停車場
+<span class="k kw"></span>從路口下車後的步行方向</p>
+"""
+
+
 def build_about() -> str:
     # 機器照片。檔案沒放就整塊不出現——不留破圖也不留佔位框。
     #
@@ -1723,6 +1844,7 @@ def build_visit() -> str:
 <a href="education.html#col-travel">旅遊透析那一篇</a>。</p>
 
 <h2>交通</h2>
+{map_svg()}
 
 <h3>公車</h3>
 <p><strong>102 直接停「郭綜合醫院」站</strong>，站牌就在民生路二段、
