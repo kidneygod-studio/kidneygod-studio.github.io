@@ -455,6 +455,13 @@ footer.site a{color:var(--mut)}
    失去「這是可以按的東西」的視覺提示 */
 footer.site .fcontact > a{font-weight:700;color:var(--fg)}
 footer.site .fcontact .note{font-size:12.5px;color:var(--mut)}
+/* 著作權那一行：© 與站名同一行，說明文字另起一行壓小。
+   .note 用 block 而不是換行標籤——窄螢幕上讓它自己斷行比較穩。 */
+footer.site .legal{margin-top:18px;padding-top:16px;
+border-top:1px solid var(--line);font-size:13px;color:var(--mut)}
+footer.site .legal .sep{margin:0 8px;opacity:.5}
+footer.site .legal .note{display:block;margin-top:6px;font-size:12.5px;
+line-height:1.75;max-width:46em}
 .views{margin:10px 0 0;font-size:12.5px;color:var(--mut);
 font-variant-numeric:tabular-nums}
 .views b{color:var(--fg);font-weight:700}
@@ -1151,6 +1158,12 @@ DASH 是美國國家心肺血液研究所（NHLBI）發展的飲食，證據明�
 <p class="fcontact"><a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a>
 <span class="note">媒體、轉載、演講、勘誤；<a href="/about.html#lian-luo">不提供個人醫療諮詢</a></span></p>
 <p class="social"><a href="https://www.threads.com/@kidney.godreborn" rel="me noopener" target="_blank">Threads<span class="nt">@kidney.godreborn</span></a><a href="https://www.instagram.com/kidney.god/" rel="me noopener" target="_blank">Instagram<span class="nt">@kidney.god</span></a><a href="https://www.instagram.com/kidney.godreborn/" rel="me noopener" target="_blank">Instagram<span class="nt">@kidney.godreborn</span></a><a href="https://www.facebook.com/kidneygod" rel="me noopener" target="_blank">Facebook<span class="nt">粉絲專頁</span></a><a href="https://line.me/R/ti/p/%40511dxhiz" rel="me noopener" target="_blank">LINE<span class="nt">@511dxhiz</span></a></p>
+<!-- 著作權與法律聲明。只放一行帶連結——完整版一千多字，塞在每一頁的
+     底部會把真正重要的東西（免責聲明、聯絡方式）擠掉。 -->
+<p class="legal">© 2026 吳政哲．護腎教室　保留所有權利
+<span class="sep">·</span><a href="/legal.html">智慧財產權與法律聲明</a>
+<span class="note">歡迎分享連結；完整轉載、改作或商業使用請先來信取得同意。
+本站內容為一般衛教資訊，不構成醫療建議，亦不建立醫病關係。</span></p>
 <p class="views" id="siteViews" style="display:none">累計瀏覽 <b>–</b> 次</p><script>const VIEWS_URL="https://firestore.googleapis.com/v1/projects/kidneygod-ea61e/databases/(default)/documents/stats/site?key=AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU&mask.fieldPaths=views";const VIEWS_COMMIT="https://firestore.googleapis.com/v1/projects/kidneygod-ea61e/databases/(default)/documents:commit?key=AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU";const VIEWS_PATH="projects/kidneygod-ea61e/databases/(default)/documents/stats/site";</script>
 <script>
 (async () => {

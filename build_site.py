@@ -1001,6 +1001,13 @@ footer.site a{color:var(--mut)}
    失去「這是可以按的東西」的視覺提示 */
 footer.site .fcontact > a{font-weight:700;color:var(--fg)}
 footer.site .fcontact .note{font-size:12.5px;color:var(--mut)}
+/* 著作權那一行：© 與站名同一行，說明文字另起一行壓小。
+   .note 用 block 而不是換行標籤——窄螢幕上讓它自己斷行比較穩。 */
+footer.site .legal{margin-top:18px;padding-top:16px;
+border-top:1px solid var(--line);font-size:13px;color:var(--mut)}
+footer.site .legal .sep{margin:0 8px;opacity:.5}
+footer.site .legal .note{display:block;margin-top:6px;font-size:12.5px;
+line-height:1.75;max-width:46em}
 .views{margin:10px 0 0;font-size:12.5px;color:var(--mut);
 font-variant-numeric:tabular-nums}
 .views b{color:var(--fg);font-weight:700}
@@ -1570,6 +1577,12 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 <p class="fcontact"><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>
 <span class="note">媒體、轉載、演講、勘誤；<a href="/about.html#lian-luo">不提供個人醫療諮詢</a></span></p>
 <p class="social">{social_links()}</p>
+<!-- 著作權與法律聲明。只放一行帶連結——完整版一千多字，塞在每一頁的
+     底部會把真正重要的東西（免責聲明、聯絡方式）擠掉。 -->
+<p class="legal">© {TODAY[:4]} {AUTHOR_NAME}．{SITE_NAME}　保留所有權利
+<span class="sep">·</span><a href="/legal.html">智慧財產權與法律聲明</a>
+<span class="note">歡迎分享連結；完整轉載、改作或商業使用請先來信取得同意。
+本站內容為一般衛教資訊，不構成醫療建議，亦不建立醫病關係。</span></p>
 {views_block}
 </div></footer>{analytics_tag()}
 </body>
@@ -3749,6 +3762,111 @@ def mag_card(a: dict, cover: bool = False) -> str:
             f'<div class="d">{esc(a["summary"][:88])}…</div></div></a>')
 
 
+def build_legal() -> str:
+    """智慧財產權與法律聲明。
+
+    做成獨立一頁而不是塞進頁尾，理由是長度：完整寫下來一千多字，
+    塞在每一頁的底部會把真正重要的東西（免責聲明、聯絡方式）擠掉。
+    頁尾只放一行帶連結。
+
+    ⚠ 這是一般性的聲明範本，不是律師擬的。真的要拿來主張權利
+    （例如發存證信函、談授權合約）之前，建議先給律師看過。
+    """
+    body = f"""
+<section><div class="wrap"><div class="prose reveal">
+
+<h1>智慧財產權與法律聲明</h1>
+<p class="lead">最後更新：{TODAY}</p>
+
+<h2>一、著作權</h2>
+<p>本站（{SITE_NAME}，{BASE_URL}）的<strong>文字內容、圖解卡片、插圖、
+版面設計與程式碼</strong>，除另有標示者外，著作權均屬 {AUTHOR_NAME} 所有。</p>
+<p>這包括但不限於：深入文章、主題衛教、常見問答、圖解卡片、
+每日醫學新知的中文摘要與整理，以及網站本身的設計與程式。</p>
+
+<h2>二、可以怎麼使用</h2>
+<p><strong>個人閱讀、分享連結、轉傳給親友——完全歡迎，不必問我。</strong>
+把文章連結貼給正在煩惱腎功能報告的家人，本來就是這個網站存在的目的。</p>
+<p>以下用途<strong>需要事先取得書面同意</strong>：</p>
+<ul>
+  <li>完整或大幅轉載文章內容到其他網站、社群平台、出版品或內部教材</li>
+  <li>將內容重製、改作、翻譯後發布</li>
+  <li>任何形式的商業使用，包含用於推廣產品或服務</li>
+  <li>將圖解卡片、插圖單獨取出使用</li>
+</ul>
+<p>在教學、演講或衛教場合引用少量內容並註明出處，一般屬於合理使用；
+不確定的話寫信問我，通常會答應。授權洽詢：
+<a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p>
+<p><strong>請不要做的事</strong>：把內容整篇搬走而不註明來源、
+移除或竄改出處與作者資訊、或是用本站內容為特定商品背書。</p>
+
+<h2>三、第三方內容與資料來源</h2>
+<ul>
+  <li><strong>醫學文獻</strong>：新知區引用的研究，著作權屬原期刊與作者。
+  本站提供的是中文摘要與整理，並附上 DOI 連結；要看原文請點連結前往原始出處。</li>
+  <li><strong>食物營養資料</strong>：食品營養成分查詢的資料來自
+  衛生福利部食品藥物管理署的食品營養成分資料庫，依政府資料開放授權條款使用，
+  著作權屬原機關所有。查詢結果僅供參考，實際數值請以原資料庫為準。</li>
+  <li><strong>臨床指引</strong>：站上引用的 KDIGO、各醫學會指引，
+  著作權屬各該組織。本站僅作引用與說明，不代表這些組織的立場。</li>
+</ul>
+
+<h2>四、醫療免責聲明</h2>
+<div class="disc">{esc(DISCLAIMER)}</div>
+<p>更具體地說：</p>
+<ul>
+  <li>本站內容是<strong>一般性的衛教資訊</strong>，不是針對任何特定個人的
+  醫療建議，也<strong>不構成醫病關係</strong>。</li>
+  <li>閱讀本站內容、寄信給作者、或使用站上的計算與查詢工具，
+  <strong>都不會建立醫病關係</strong>。</li>
+  <li>網站上的計算工具（如 eGFR、BMI）是<strong>衛教用的估算</strong>，
+  結果不能取代檢驗報告與醫師判讀。</li>
+  <li><strong>不要因為本站的內容而自行調整或停用任何藥物。</strong>
+  這是最常見、也最危險的誤用方式。</li>
+  <li>醫學會進步、指引會改版。本站會定期檢視更新，
+  但無法保證每一頁在每一刻都反映最新的共識。</li>
+  <li>如果您有緊急症狀，請直接就醫或撥打 119，不要在網路上找答案。</li>
+</ul>
+
+<h2>五、外部連結</h2>
+<p>本站為了佐證與延伸閱讀，會連到期刊、學會、政府機關等外部網站。
+那些網站的內容由各自的經營者負責，本站無法控制也不為其內容背書。
+連結不代表本站與對方有任何合作或商業關係。</p>
+
+<h2>六、沒有商業贊助</h2>
+<p>本站不接受藥廠、保健食品或醫療器材業者的贊助，
+內容中出現的任何產品或治療方式都不是業配。
+若未來有任何合作關係，會在相關頁面明確標示。</p>
+
+<h2>七、資料收集</h2>
+<p>護腎遊戲區的排行榜功能會記錄暱稱與分數，用於顯示排名。
+除此之外，本站不主動蒐集可識別個人身分的資料。
+網站使用第三方服務（如流量統計、字型與資料庫服務），
+這些服務可能依其自身的政策記錄技術性資訊。</p>
+<p>如需刪除您在排行榜上的紀錄，請來信告知。</p>
+
+<h2>八、責任限制</h2>
+<p>本站以「現況」提供內容與工具，
+不保證內容完全無誤、隨時可用或完全符合您的個別需求。
+在法律允許的範圍內，因使用或無法使用本站內容所生的任何損害，
+本站與作者不負賠償責任。</p>
+
+<h2>九、勘誤與聯絡</h2>
+<p>發現內容有錯誤、過時，或有授權需求，歡迎來信：
+<a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p>
+<p><strong>本信箱不提供個人醫療諮詢</strong>，
+相關說明見<a href="/about.html#lian-luo">關於作者</a>。</p>
+
+<h2>十、本聲明的變更</h2>
+<p>本聲明可能隨網站功能調整而修改，修改後即於本頁公告，
+不另行個別通知。頁首標示的日期即為最後更新日。</p>
+
+</div></div></section>
+"""
+    return page("智慧財產權與法律聲明", "護腎教室的著作權、內容轉載規則、"
+                "醫療免責聲明與資料來源說明。", "legal.html", body)
+
+
 def build_about() -> str:
     """關於作者頁。
 
@@ -4610,6 +4728,9 @@ def main() -> int:
     (ROOT / "about.html").write_text(build_about(), encoding="utf-8")
     print("  about.html　(關於作者，E-E-A-T 權威訊號)")
 
+    (ROOT / "legal.html").write_text(build_legal(), encoding="utf-8")
+    print("  legal.html　(智慧財產權與法律聲明)")
+
     # 兩個「完整清單」頁：首頁與總覽頁只列一部分，這裡是全部。
     # 不進導覽列——導覽項目愈少手機頁首愈鬆，這兩頁從內容區進去就夠了。
     for path, html in ([build_longform_page(md_pages), build_faq_page(md_pages),
@@ -4669,7 +4790,7 @@ def main() -> int:
     # 排除轉址頁——它自己帶 noindex，收進 sitemap 等於一邊叫 Google 別收、
     # 一邊把網址遞給它，自相矛盾。
     NO_SITEMAP = {ALL_UPDATES}
-    urls = ["", "articles/", "about.html", "shop.html"] + (
+    urls = ["", "articles/", "about.html", "legal.html", "shop.html"] + (
         ["food.html"] if food_html else []) + (
         ["calc.html"] if CALC_PUBLISHED else []) + [
         p for p in written
