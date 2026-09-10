@@ -280,9 +280,12 @@ def check_generator_sources():
                      ("貓咪貼圖（make_stickers.py）", A.asset(A.STICKERS))):
         if not p.exists():
             bad.append(f"{label} 不存在：{p}")
-        elif p.is_dir() and not any(p.iterdir()):
+        elif p.is_dir() and not any(f.is_file() for f in p.rglob("*")):
             # 空資料夾要當成沒有。雲端同步資料夾會先出現空殼、檔案才慢慢
             # 到位；只查 exists() 的話這段空窗期會回報成「通過」。
+            # 要遞迴數「檔案」，不能用 any(p.iterdir())：知識卡插圖 底下就
+            # 巢狀著 知識卡插圖2，只有空殼時 iterdir() 仍然非空，整個資料夾
+            # 一張圖都沒有卻會報成通過——正是這支腳本要抓的那種假通過。
             bad.append(f"{label} 是空的：{p}")
         elif VERBOSE:
             print(f"    {label} → {p}")
