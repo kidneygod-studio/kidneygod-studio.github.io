@@ -48,7 +48,7 @@ from pathlib import Path
 sys.stdout.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).resolve().parent
-DIGEST = Path(r"C:\Users\user\nephrology_digest")
+DIGEST = Path.home() / "nephrology_digest"
 OUT = ROOT / "articles_src" / "news.json"
 
 spec = importlib.util.spec_from_file_location("pd", ROOT / "pick_digest.py")

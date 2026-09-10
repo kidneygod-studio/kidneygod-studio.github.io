@@ -21,7 +21,9 @@ Exit 0 = 已發佈或沒有新東西；非 0 = 某一步失敗（呼叫端會警
 """
 import subprocess, sys, os, datetime
 
-ROOT = r'C:\Users\user\dopamine_shop'
+# 從腳本自身位置推導，換機器/換平台都不用改（原本寫死舊 Windows 機的路徑，
+# 搬到 macOS 後整個發佈步驟都在 subprocess 的 cwd 上就地失敗）
+ROOT = os.path.dirname(os.path.abspath(__file__))
 PY   = sys.executable
 # 讓 git 在無憑證時「快速失敗」而非卡在互動提示（無人值守必備）
 ENV  = dict(os.environ, GIT_TERMINAL_PROMPT='0')

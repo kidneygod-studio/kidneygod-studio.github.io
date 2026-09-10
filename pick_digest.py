@@ -27,7 +27,7 @@ from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-DIGEST = Path(r"C:\Users\user\nephrology_digest")
+DIGEST = Path.home() / "nephrology_digest"
 
 # 期刊縮寫 → 顯示用標籤。查不到就用原文的 jtag。
 JTAG = {

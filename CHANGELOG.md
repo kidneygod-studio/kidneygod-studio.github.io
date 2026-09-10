@@ -37,6 +37,49 @@ python check_site.py      # 推之前對帳
 
 ---
 
+## 2026-09-11　長文大圖的原圖改走 Google Drive 同步
+
+### 問題：原圖散在各台機器，最後就拿不回來了
+
+`hero_src/` 在 .gitignore 裡（原圖 26 MB，進 git 歷史就永遠拿不掉），
+所以它**只存在於當初做圖的那一台機器**。作者會在醫院電腦與這台 Mac
+交替工作，久了原圖就會一半在這邊、一半在那邊。
+
+這不是假想的風險，是**已經發生過一次的事**：`cards/`（224 張）、
+`gallery/`（214 張）、`gi/`（100 張）、`stickers/`（304 張）、`logo.png`
+的原始素材全在舊 Windows 機器的 `Downloads\`，換到 Mac 之後一個都找不到。
+那 800 多張圖現在只剩壓過的產出，重產不了——`check_site.py` 那三項
+「產生器的來源檔不存在」就是這件事的殘影。
+
+### 作法：資料夾放雲端，repo 裡放符號連結
+
+    ~/Google Drive/我的雲端硬碟/kidneygod_hero_src/   ← 原圖實際位置
+    ~/dopamine_shop/hero_src  →  上面那個          ← 符號連結
+
+好處是三邊都不用改：原圖自動在機器之間同步、`.gitignore` 照樣擋著、
+`make_hero.py` 寫死的 `SRC = ROOT / "hero_src"` 也不必動。
+
+**在另一台機器上要做的事**（repo 本身不帶任何設定，連結是每台各自建的）：
+
+```bash
+rmdir ~/dopamine_shop/hero_src 2>/dev/null
+ln -s ~/"Google Drive/我的雲端硬碟/kidneygod_hero_src" ~/dopamine_shop/hero_src
+```
+
+### 踩到的坑：.gitignore 的尾斜線擋不住符號連結
+
+`hero_src/` 這條規則帶著尾斜線，而 **git 把符號連結當檔案、不當目錄**，
+所以連結一建立，`git status` 立刻冒出 `?? hero_src`——差一點就把連結
+commit 進去，而它的目標路徑每台機器都不一樣（而且含帳號 email）。
+
+改成沒有尾斜線的 `hero_src` 就同時匹配目錄與符號連結。`dialysis/img_src`
+同一個型態，一併改掉，免得哪天同樣處理透析中心的原圖時再踩一次。
+
+驗證過：`git check-ignore` 擋得下、`git status` 乾淨、`make_hero.py`
+透過連結讀得到原圖且輸出與已 commit 的那份**位元組相同**（沒有多餘變更）。
+
+---
+
 ## 2026-09-10（五）　新長文：高血磷；指引補上 KDIGO CKD-MBD
 
 ### 長文〈磷太高，問題常常不在蛋黃，而在成分表〉
