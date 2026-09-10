@@ -2305,12 +2305,30 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         f'<img src="/logo.png" alt="" aria-hidden="true"{logo_dims}>'
         f'<span class="cap">護腎知識卡片收集遊戲</span></a>')
 
+    # LINE 放在最後一區：讀完整頁之後才問要不要訂閱，比一進站就攔人合理。
+    # 圖檔與 about.html 共用同一份 /line-qr.svg（make_line_qr.py 產生，
+    # 那支會用 OpenCV 反向解碼確認掃出來的網址正確才輸出），樣式也共用 .lineqr，
+    # 所以這裡只是把同一個區塊搬到首頁，沒有第二套要維護。
+    line_sect = (
+        sect_head("line", "LINE 官方帳號", "LINE OFFICIAL ACCOUNT",
+                  "新文章與衛教圖卡發布時，直接送到你的 LINE")
+        + f"""<div class="lineqr reveal" style="--d:.08s">
+  <img src="/line-qr.svg" alt="{esc(SITE_NAME)} LINE 官方帳號的 QR code"
+       width="37" height="37" loading="lazy">
+  <div class="qtx">
+    <b>加入{esc(SITE_NAME)}</b>
+    <p>用手機相機掃描 QR code 即可加入好友；
+    在手機上看這一頁的話，直接點<a href="{LINE_URL}">加入好友</a>比較快。</p>
+    <p class="qid">帳號代號 <code>{esc(LINE_ID)}</code></p>
+  </div>
+</div>""")
+
     # 一區一條橫帶，底色深淺交替。空的區塊（例如沒有圖卡時）band() 會回空字串，
     # 所以交替是「實際排出來的順序」而不是「原始清單的順序」——
     # 用固定的 i%2 會在某一區消失時出現兩條同色相鄰。
     sections = [(news_sect, "新知"), (feat_sect, "長文"), (topics_sect, "主題"),
                 (calc_sect, "計算"), (food_sect, "食物"), (gal_sect, "圖卡"),
-                (play_sect, "遊戲")]
+                (play_sect, "遊戲"), (line_sect, "LINE")]
     parts, tint = [], True
     for html_, _name in sections:
         if not html_.strip():
