@@ -12,8 +12,16 @@
 共同點都是「產生器與它產生的資產各自演進，沒有人對帳」。這類錯誤沒有
 例外訊息、沒有破圖，只有使用者看到舊的或錯的東西，所以只能主動去查。
 
+有一類例外：**只提醒、不擋發佈**（WARN_ONLY）。判準是「這一項出問題時，
+線上的站是不是仍然正確」。素材來源檔不見了，代表的是「以後重新產生不了」，
+不是「使用者現在看到錯的東西」——線上要的是已經壓好、已經進版控的產出。
+
+這個區分不是潔癖，是被咬過：搬到 macOS 之後三個素材來源（都在舊 Windows 機
+的 Downloads）失效，check_site 因此回傳 1，而 publish_daily.py 看到非 0 就
+拒絕發佈——**每日新知從搬機那天起一次都沒上線過，而網站本身完全正常**。
+
 用法：
-    python check_site.py          全部檢查，有問題回傳 1
+    python check_site.py          有「會擋發佈」的問題時回傳 1
     python check_site.py -v       連通過的細節也印出來
 """
 import contextlib
@@ -255,30 +263,31 @@ def check_sw_version():
     return []
 
 
-# ── 7. 產生器的來源檔還在不在 ────────────────────────────────────────
-# 來源放在 repo 外（Downloads），搬機或整理檔案時會消失；等到要重跑
-# 產生器才發現就太晚了。
-SRC_PATTERNS = {
-    "make_logo.py": r'^SRC = r?"([^"]+)"',
-    "make_og.py": r'^LOGO = pathlib\.Path\(r?"([^"]+)"\)',
-    "import_gi_art2.py": r'^SRC = r?"([^"]+)"',
-}
-
-
+# ── 7. 產生器的來源檔還在不在（WARN_ONLY，不擋發佈）─────────────────
+# 來源不進版控（太大，進了 git 歷史就拿不掉），放在雲端同步資料夾，
+# 搬機或整理檔案時會消失；等到要重跑產生器才發現就太晚了。
+#
+# 改用 asset_paths 解析，不再用正規表示式去刮腳本裡的路徑字串——
+# 那種寫法在腳本改成用變數組路徑的當下就會失效，而且失效時報的是
+# 「找不到來源設定」，看起來像檢查壞了，不像素材不見了。
 def check_generator_sources():
+    import asset_paths as A
+
     bad = []
-    for fname, pat in SRC_PATTERNS.items():
-        f = ROOT / fname
-        if not f.exists():
-            continue
-        m = re.search(pat, f.read_text("utf-8", "replace"), re.M)
-        if not m:
-            bad.append(f"{fname} 找不到來源設定（檢查規則可能過期了）")
-            continue
-        if not pathlib.Path(m.group(1)).exists():
-            bad.append(f"{fname} 的來源不存在：{m.group(1)}")
+    for label, p in (("logo 原圖（make_logo.py／make_og.py）", A.asset(A.LOGO_PNG)),
+                     ("知識卡插圖（import_gi_art.py）", A.asset(A.GI_ART)),
+                     ("知識卡插圖2（import_gi_art2.py）", A.asset(*A.GI_ART2)),
+                     ("貓咪貼圖（make_stickers.py）", A.asset(A.STICKERS))):
+        if not p.exists():
+            bad.append(f"{label} 不存在：{p}")
+        elif p.is_dir() and not any(p.iterdir()):
+            # 空資料夾要當成沒有。雲端同步資料夾會先出現空殼、檔案才慢慢
+            # 到位；只查 exists() 的話這段空窗期會回報成「通過」。
+            bad.append(f"{label} 是空的：{p}")
         elif VERBOSE:
-            print(f"    {fname} → {m.group(1)}")
+            print(f"    {label} → {p}")
+    if bad:
+        bad.append("以上只影響「重新產生」，線上的站用的是已進版控的產出。")
     return bad
 
 
@@ -331,9 +340,12 @@ CHECKS = [
     ("專家訪談稿的鍵", check_interviews),
 ]
 
+# 只提醒、不擋發佈。判準見檔頭：這一項出問題時線上的站仍然是正確的。
+WARN_ONLY = frozenset({"產生器的來源檔"})
+
 
 def main() -> int:
-    fails = 0
+    fails = warns = 0
     for name, fn in CHECKS:
         # 檢查函式在 -v 時會自己印細節，但那會跑在 ✓/✗ 標題之前、看起來像
         # 掛在上一項底下。先把它的輸出接住，等標題印完再放出來。
@@ -344,8 +356,12 @@ def main() -> int:
         except Exception as e:
             problems = [f"檢查本身出錯：{type(e).__name__} {e}"]
         if problems:
-            fails += 1
-            print(f"✗ {name}（{len(problems)} 項）")
+            if name in WARN_ONLY:
+                warns += 1
+                print(f"⚠ {name}（{len(problems)} 項　僅提醒，不擋發佈）")
+            else:
+                fails += 1
+                print(f"✗ {name}（{len(problems)} 項）")
             for x in problems[:12]:
                 print(f"    {x}")
             if len(problems) > 12:
@@ -358,7 +374,10 @@ def main() -> int:
     if fails:
         print(f"有 {fails} 項沒過。上面每一項都是「不會噴錯但使用者看到錯的」那一類。")
     else:
-        print("全部通過。")
+        print("會擋發佈的項目全部通過。")
+    if warns:
+        print(f"另有 {warns} 項提醒（不擋發佈）——線上的站是正確的，"
+              f"但某些素材以後重新產生不了。")
     return 1 if fails else 0
 
 

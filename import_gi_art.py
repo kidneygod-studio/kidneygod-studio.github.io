@@ -14,7 +14,8 @@ from PIL import Image
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-SRC = r"C:\Users\user\Downloads\知識卡插圖"
+from asset_paths import GI_ART, asset            # 路徑集中在 asset_paths.py
+SRC = str(asset(GI_ART))
 DST = "gi/art"
 LONG_EDGE = 1560          # 插圖區 780 寬的兩倍
 QUALITY = 88

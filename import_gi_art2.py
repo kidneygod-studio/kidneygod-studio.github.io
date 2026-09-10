@@ -22,7 +22,8 @@ from PIL import Image
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-SRC = r"C:\Users\user\Downloads\知識卡插圖\知識卡插圖2"
+from asset_paths import GI_ART2, asset           # 路徑集中在 asset_paths.py
+SRC = str(asset(*GI_ART2))
 PROMPT = "GI插圖_新增40張_Prompt.txt"
 ART_DIR = "gi/art"
 SIZE = (1560, 871)          # 與既有 60 張相同

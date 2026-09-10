@@ -18,6 +18,10 @@ hero_src
 # 換圖時把新原圖丟回去重跑 make_dialysis_img.py。
 dialysis/img_src
 
+# 原始素材的單機備援位置（asset_paths.py 的最後一個候選）。正常情況下素材
+# 放在雲端同步資料夾，這裡只是沒有雲端時的退路——同樣不能進版控。
+assets_src
+
 # 匯入時被期刊篩子刷掉的、以及過濾前的備份。想改主意時看這兩份，
 # 不需要進版控。
 articles_src/news_dropped.json

@@ -33,7 +33,8 @@ sys.stdout.reconfigure(encoding="utf-8")
 # KIDNEYGOD.STUDIO。2026-08-27 換成 .NET 版時，logo.png 是直接放進倉庫的，
 # 這裡的 SRC 沒有跟著更新，等於留了一顆地雷——只要有人跑一次這支腳本，
 # 頁首的標誌就會被悄悄換回不存在的舊網域，而且不會有任何錯誤訊息。
-SRC = r"C:\Users\user\Downloads\kidneygod.png"
+from asset_paths import LOGO_PNG, asset          # 路徑集中在 asset_paths.py
+SRC = str(asset(LOGO_PNG))
 OUT = "logo.png"
 FLOOD_T = 215      # 這個亮度以上、且與邊緣連通者視為背景
 FADE_LO = 215      # alpha 漸變的下限（比這暗就是完全不透明）

@@ -35,7 +35,8 @@ OUT = ROOT / "og"
 
 W, H = 1200, 630
 
-LOGO = pathlib.Path(r"C:\Users\user\Downloads\kidneygod.png")   # 1678×937 白底
+from asset_paths import LOGO_PNG, asset, describe    # 路徑集中在 asset_paths.py
+LOGO = asset(LOGO_PNG)                               # 1678×937 白底
 
 # logo 只放在「中央正方形」裡，不橫跨滿版。
 #
@@ -52,16 +53,19 @@ HERO_EXTS = (".jpg", ".jpeg", ".png", ".webp")
 
 
 def hero_file(slug: str):
-    """og slug 形如 articles-<文章slug>；反查對應的大圖原檔。"""
+    """og slug 形如 articles-<文章slug>；反查對應的大圖原檔。
+
+    回傳 (路徑, 是不是原圖)。原圖在 hero_src/，壓過的在 hero/。
+    """
     if not slug.startswith("articles-"):
-        return None
+        return None, False
     name = slug[len("articles-"):]
-    for d in (HERO_SRC, HERO_OUT):
+    for d, pristine in ((HERO_SRC, True), (HERO_OUT, False)):
         for ext in HERO_EXTS:
             p = d / (name + ext)
             if p.exists():
-                return p
-    return None
+                return p, pristine
+    return None, False
 
 
 def make_photo(path: pathlib.Path) -> Image.Image:
@@ -115,18 +119,50 @@ def main():
         slugs.add(re.sub(r"[^a-z0-9]+", "-",
                          rel.replace(".html", "").replace("/", "-")).strip("-"))
 
-    card = make_card()
-    n_photo = 0
+    # logo 原圖不在時**不要整支當掉**。有大圖的長文（新增一篇長文就多一張）
+    # 完全不需要 logo，卻會被這一步擋住——搬到 macOS 之後每加一篇長文就得
+    # 手動補一張 og，就是因為這裡無條件開檔。
+    # 沒有 logo 時：只產大圖版，既有的 logo 版原封不動留著。
+    card = make_card() if LOGO.exists() else None
+    if card is None:
+        print(f"⚠ 找不到 logo 原圖，這次只產大圖版的 og。\n{describe()}\n")
+
+    n_photo = n_card = n_keep_hero = n_keep_card = 0
     for slug in sorted(slugs):
-        hp = hero_file(slug)
-        im = make_photo(hp) if hp else card
+        dst = OUT / f"{slug}.jpg"
+        hp, pristine = hero_file(slug)
         if hp:
+            # ⚠ 已經有 og、而手上只剩壓過的 hero/ 時**不要重做**。
+            # hero_src/ 不進版控，所以在沒做過那張圖的機器上只找得到
+            # hero/ 的 1600×900——拿它再壓一次是二次壓縮，會讓既有的 og
+            # 悄悄變差。第一次在 macOS 上跑就這樣一口氣改掉了 16 張。
+            if dst.exists() and not pristine:
+                n_keep_hero += 1
+                continue
+            im = make_photo(hp)
             n_photo += 1
+        elif card is not None:
+            im = card
+            n_card += 1
+        else:
+            # 沒有大圖也沒有 logo：保留既有那張，什麼都不動
+            if not dst.exists():
+                print(f"    ✗ {slug} 既沒有大圖、也沒有既有的 og")
+            n_keep_card += 1
+            continue
         # 用 JPEG 不用 PNG：連續色調的照片與插畫，同畫質下 JPEG 小得多。
         # 預覽圖是別人滑手機時才載入的，小一點就是多一點機會在滑過去之前顯示。
-        im.save(OUT / f"{slug}.jpg", quality=88, optimize=True, progressive=True)
-    print(f"產生 {len(slugs)} 張（{W}×{H}）："
-          f"{n_photo} 張用長文大圖，{len(slugs) - n_photo} 張用 logo")
+        im.save(dst, quality=88, optimize=True, progressive=True)
+    parts = [f"產生 {n_photo + n_card} 張（{W}×{H}）"]
+    if n_photo:
+        parts.append(f"{n_photo} 張用長文大圖")
+    if n_card:
+        parts.append(f"{n_card} 張用 logo")
+    print("：".join(parts[:1]) + ("　" + "、".join(parts[1:]) if len(parts) > 1 else ""))
+    if n_keep_hero:
+        print(f"  保留 {n_keep_hero} 張長文 og（本機只有壓過的 hero/，重做會二次壓縮）")
+    if n_keep_card:
+        print(f"  保留 {n_keep_card} 張 logo 版 og（本機沒有 logo 原圖）")
 
     # 反查：HTML 引用的每一張 og:image 都要真的存在
     missing = []

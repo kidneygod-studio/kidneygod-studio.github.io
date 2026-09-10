@@ -21,7 +21,8 @@ from PIL import Image
 from scipy import ndimage
 
 sys.stdout.reconfigure(encoding="utf-8")
-SRC = r"C:\Users\user\Downloads\貓咪貼圖"
+from asset_paths import STICKERS, asset          # 路徑集中在 asset_paths.py
+SRC = str(asset(STICKERS))
 GROUP_RADIUS_FRAC = 0.045
 
 SHEETS = {
