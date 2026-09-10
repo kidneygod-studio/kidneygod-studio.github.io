@@ -155,6 +155,11 @@ SOCIAL = [
      "note": "@kidney.godreborn"},
     {"label": "Facebook", "url": "https://www.facebook.com/kidneygod",
      "note": "粉絲專頁"},
+    # LINE 官方帳號（2026-09-10 開通）。用 line.me/R/ti/p/ 這個「加入好友」
+    # 深層連結，@ 要 percent-encode 成 %40，不然部分環境會把它吃掉。
+    # 手機開會直接跳進 LINE，桌機會落到網頁版的帳號頁。
+    {"label": "LINE", "url": "https://line.me/R/ti/p/%40511dxhiz",
+     "note": "@511dxhiz"},
 ]
 SOCIAL_LIVE = [s for s in SOCIAL if s["url"]]
 
