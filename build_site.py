@@ -146,6 +146,12 @@ AUTHOR_BIO = ("腎臟科專科醫師，臨床工作以三高、慢性腎臟病�
 # note 顯示帳號代號而不是「現用／原帳號」之類的說明：兩個 IG 只差在代號，
 # 直接把代號寫出來讀者自己分得出來，也不必在專業網站上交代帳號的來龍去脈。
 # url 為 None 的項目會被自動略過，方便先留位置之後再補。
+# LINE 官方帳號。集中成常數是因為它出現在三個地方：頁尾的社群膠囊、
+# 關於頁的 QR 區塊、以及 make_line_qr.py 產 QR 時編進去的網址。
+# 改代號的時候三處要一起改，散著寫遲早會漏掉一個。
+LINE_ID = "@511dxhiz"
+LINE_URL = f"https://line.me/R/ti/p/%40{LINE_ID.lstrip('@')}"
+
 SOCIAL = [
     {"label": "Threads", "url": "https://www.threads.com/@kidney.godreborn",
      "note": "@kidney.godreborn"},
@@ -158,8 +164,7 @@ SOCIAL = [
     # LINE 官方帳號（2026-09-10 開通）。用 line.me/R/ti/p/ 這個「加入好友」
     # 深層連結，@ 要 percent-encode 成 %40，不然部分環境會把它吃掉。
     # 手機開會直接跳進 LINE，桌機會落到網頁版的帳號頁。
-    {"label": "LINE", "url": "https://line.me/R/ti/p/%40511dxhiz",
-     "note": "@511dxhiz"},
+    {"label": "LINE", "url": LINE_URL, "note": LINE_ID},
 ]
 SOCIAL_LIVE = [s for s in SOCIAL if s["url"]]
 
@@ -1003,6 +1008,23 @@ footer.site .fcontact > a{font-weight:700;color:var(--fg)}
 footer.site .fcontact .note{font-size:12.5px;color:var(--mut)}
 /* 著作權那一行：© 與站名同一行，說明文字另起一行壓小。
    .note 用 block 而不是換行標籤——窄螢幕上讓它自己斷行比較穩。 */
+/* LINE QR 區塊：左圖右文，窄螢幕改成上下。
+   QR 的 viewBox 只有 37x37（一個模組一格），所以一定要用
+   image-rendering:pixelated，不然瀏覽器會把邊緣做平滑，
+   模組之間糊在一起會掃不到。 */
+.lineqr{display:flex;gap:20px;align-items:center;margin:22px 0 0;
+padding:18px;border:1px solid var(--line);border-radius:14px;
+background:var(--card)}
+.lineqr img{width:132px;height:132px;flex:none;background:#fff;
+padding:8px;border-radius:10px;image-rendering:pixelated}
+.lineqr .qtx b{display:block;font-size:16px;margin-bottom:6px}
+.lineqr .qtx p{margin:0 0 4px;font-size:14.5px;line-height:1.8}
+.lineqr .qid{color:var(--mut);font-size:13.5px}
+.lineqr code{background:var(--bg);border:1px solid var(--line);
+border-radius:5px;padding:1px 7px;font-size:13.5px}
+@media(max-width:520px){
+  .lineqr{flex-direction:column;align-items:flex-start;gap:14px}
+}
 footer.site .legal{margin-top:18px;padding-top:16px;
 border-top:1px solid var(--line);font-size:13px;color:var(--mut)}
 footer.site .legal .sep{margin:0 8px;opacity:.5}
@@ -3985,7 +4007,21 @@ def build_about() -> str:
 <h2 id="she-qun">社群帳號</h2>
 <p>以下是我本人經營的帳號。日常的衛教圖卡與短文會先發在社群，
 完整的長文與整理過的內容放在這個網站。</p>
-<p class="social sociallist">{social_links()}</p>{dialysis}
+<p class="social sociallist">{social_links()}</p>
+
+<!-- LINE 的 QR。用 SVG 不用 PNG：1.5 KB、任何螢幕都銳利。
+     圖檔由 make_line_qr.py 產生（帳號代號改了就重跑），
+     那支會用 OpenCV 反向解碼、確認掃出來的網址正確才輸出。 -->
+<div class="lineqr">
+  <img src="/line-qr.svg" alt="護腎教室 LINE 官方帳號的 QR code"
+       width="37" height="37" loading="lazy">
+  <div class="qtx">
+    <b>LINE 官方帳號</b>
+    <p>用手機相機掃描 QR code 即可加入好友；
+    在手機上看這一頁的話，直接點<a href="{LINE_URL}">加入好友</a>比較快。</p>
+    <p class="qid">帳號代號 <code>{LINE_ID}</code></p>
+  </div>
+</div>{dialysis}
 """
 
     jsonld = {
