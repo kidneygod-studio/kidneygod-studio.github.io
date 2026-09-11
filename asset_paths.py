@@ -104,4 +104,15 @@ if __name__ == "__main__":
                      ("知識卡插圖", asset(GI_ART)),
                      ("知識卡插圖2", asset(*GI_ART2)),
                      ("貓咪貼圖", asset(STICKERS))):
-        print(f"  {'✓' if p.exists() else '✗'} {label:<12} {p}")
+        # 資料夾要遞迴數「檔案」才算數：雲端同步先建空殼是常態，而
+        # 知識卡插圖 底下還巢狀著 知識卡插圖2——只看 exists() 的話，
+        # 一張圖都沒有也會顯示 ✓，讓人以為素材已經到位。
+        # （判準與 check_site.py 的 check_generator_sources 一致。）
+        if not p.exists():
+            mark, note = "✗", "（不存在）"
+        elif p.is_dir() and not any(f.is_file() for f in p.rglob("*")):
+            mark, note = "✗", "（空的）"
+        else:
+            n = sum(1 for f in p.rglob("*") if f.is_file()) if p.is_dir() else 1
+            mark, note = "✓", f"（{n} 個檔案）"
+        print(f"  {mark} {label:<12} {p} {note}")
