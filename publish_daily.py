@@ -30,7 +30,13 @@ ENV  = dict(os.environ, GIT_TERMINAL_PROMPT='0')
 
 # 每日新知管線會動到的檔案（import_digests + build_site + bump_assets 的產出）。
 # 只 stage 這些，其餘一律不碰。
+# build_site.py 會重建的每一個產出都要列進來。漏掉的那些永遠不會被提交，
+# 於是**每天都留在工作區裡是髒的**——而 git rebase 只要工作區有未暫存變更
+# 就拒絕執行，所以漏一個就足以讓下面那個 rebase 每天失敗。
+# 2026-09-14 就是這樣：about/calc/food/legal.html 不在清單裡，rebase 天天卡。
+# （刻意不放進來的是作者還在編輯的 WIP，例如 dialysis/。）
 PUBLISH_PATHS = ['articles_src/news.json', 'articles', 'index.html',
+                 'about.html', 'calc.html', 'food.html', 'legal.html',
                  'sitemap.xml', 'robots.txt', 'sw.js', 'search_index.json']
 
 
@@ -76,6 +82,22 @@ def main():
            f'Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>')
     if git(['commit', '-q', '-m', msg]).returncode != 0:
         print('COMMIT FAILED'); return 1
+    # 推之前先跟遠端對齊。醫院那台現在**只做網站編輯**，白天隨時可能推新的
+    # commit；不先 rebase 的話這裡會 non-fast-forward 失敗，而且會一直失敗到
+    # 有人手動處理（自我修復性就沒了）。
+    # 本地只有上面那個剛做的 commit，rebase 很乾淨；真的衝突就中止不推，
+    # 交給人處理——自動解衝突比推不上去更危險。
+    git(['fetch', '--quiet', 'origin', 'main'])
+    # --autostash：工作區只要有任何未暫存變更，rebase 就整個拒絕執行，即使
+    # 那些檔案跟這次要 rebase 的東西毫無關係（作者正在編輯的 WIP 就是這樣）。
+    # autostash 會先收起來、rebase 完再放回去，這支腳本才不會被無關的髒檔擋住。
+    rb = git(['rebase', '--autostash', 'origin/main'])
+    if rb.returncode != 0:
+        git(['rebase', '--abort'])
+        print('REBASE CONFLICT — not pushing, 需要人工處理:\n'
+              + ((rb.stdout or '') + (rb.stderr or ''))[-500:])
+        return 4
+
     p = git(['push', 'origin', 'main'])
     if p.returncode != 0:
         print('PUSH FAILED:', (p.stderr or '')[-500:]); return 3
