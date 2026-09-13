@@ -47,7 +47,8 @@ LOGO = asset(LOGO_PNG)                               # 1678×937 白底
 # 底色，看起來像刻意的留白而不是破圖。
 SAFE = 0.92                      # 佔中央方形的比例，留一點呼吸空間
 
-HERO_SRC = ROOT / "hero_src"     # 原圖（2752×1536），沒有的話退回壓過的 hero/
+from asset_paths import hero_src_dir
+HERO_SRC = hero_src_dir()        # 原圖（2752×1536），沒有的話退回壓過的 hero/
 HERO_OUT = ROOT / "hero"
 HERO_EXTS = (".jpg", ".jpeg", ".png", ".webp")
 

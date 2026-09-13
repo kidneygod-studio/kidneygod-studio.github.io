@@ -37,6 +37,81 @@ python check_site.py      # 推之前對帳
 
 ---
 
+## 2026-09-14　素材位置收斂成一個資料夾，長文大圖不再需要符號連結
+
+### 合併：雲端上本來有兩個資料夾
+
+2026-09-11 那兩則各自建了一個——`kidneygod_hero_src/`（長文大圖）與
+`kidneygod_assets/`（logo、插圖、貼圖）。結果是「圖要放哪」有兩個答案，
+而這是作者最常問的問題之一。合併成一個：
+
+    ~/Google Drive/我的雲端硬碟/kidneygod_assets/
+        hero_src/              ← 長文大圖的原圖
+        kidneygod.png          ← logo 原圖
+        知識卡插圖/
+        知識卡插圖/知識卡插圖2/
+        貓咪貼圖/
+
+### 長文大圖改走 asset_paths，符號連結不再是必要步驟
+
+`make_hero.py` 與 `make_og.py` 原本寫死 `ROOT / "hero_src"`，所以每台機器
+都得先建一個指向雲端的符號連結。新增 `asset_paths.hero_src_dir()`：
+
+  1. repo 內的 `hero_src` 若存在就用它（實體資料夾或符號連結都算）
+  2. 否則用雲端素材根目錄底下的 `hero_src`
+
+兩種作法因此並存：已經建過連結的機器照舊，**新機器什麼都不用設定**。
+這台的連結已經移除，實測解析得到雲端路徑、`make_hero.py` 正常、產出位元組
+與先前相同。
+
+所以「在家裡或在醫院做長文，圖片放哪」現在只有一個答案：
+**丟進雲端的 `kidneygod_assets/hero_src/`，檔名用文章 slug。** 兩台都一樣。
+
+### ⚠ 自己踩的坑：擋建置的檢查不可以對雲端資料夾做無界 I/O
+
+素材搬到 Google Drive 之後，`check_generator_sources()` 用
+`any(f.is_file() for f in p.rglob("*"))` 判斷資料夾是不是空的。**在 FUSE
+掛載的雲端檔案系統上，這會卡在核心的 `open()`——不是回錯誤，是不回。**
+
+2026-09-14 早上 07:05 的排程就這樣停住：`publish_daily.py` 等 `check_site.py`
+等了十幾分鐘，`sample` 抓到的堆疊底部是
+`builtin_any → gen_iternext → os_scandir → open$NOCANCEL`。
+
+**這比它原本要修的問題更糟。** 原本是「檢查失敗、擋下發佈」——會失敗，但會
+結束、會留下訊息；變成「檢查不會結束」，整條管線無聲卡死。
+
+修法：把探查丟到 daemon 執行緒，5 秒逾時就當作「不知道」並照常往下走。
+這一項本來就是 WARN_ONLY，不知道也不會擋發佈——**寧可少報一次，不可卡住
+整條管線**。順便把長文大圖原圖也納入這一項的檢查範圍。
+
+修完實測 0.9 秒、離開碼 0。當時卡住的行程已終止，git 沒有留下鎖檔。
+
+教訓寫在函式的 docstring 裡：這個 repo 的素材現在都在雲端，**任何會擋建置
+的檢查，碰到雲端路徑都必須有逾時**。
+
+### 補記：cff9779 那次 commit 夾帶了未描述的改動
+
+那次用 `git add -A` 提交「長文大圖改走 Google Drive 同步」時，把當時還在
+工作區、與該主題無關的改動一起掃了進去，而 commit 訊息完全沒提到它們。
+補記於此：
+
+- **`import_digests.py`、`pick_digest.py`**：`DIGEST` 由寫死的
+  `C:\Users\user\nephrology_digest` 改成 `Path.home() / "nephrology_digest"`
+- **`publish_daily.py`**：`ROOT` 由寫死的 `C:\Users\user\dopamine_shop`
+  改成從 `__file__` 推導（原本在 macOS 上整個發佈步驟都在 subprocess 的
+  cwd 上就地失敗）
+- **`articles_src/news.json` 與 6 個 `news-*.html`**：每日新知匯入的內容。
+  它們當時積在工作區沒被提交，正是因為發佈管線壞了（見 09-11 那則）
+
+這些改動本身都是對的，只是歷史裡沒有描述。已推送的 main 不改寫。
+
+⚠ **教訓：這個 repo 不要用 `git add -A`。** `publish_daily.py` 的說明
+第 16 行本來就寫著「只 commit 每日新知管線產生的檔案，不用 git add -A——
+否則會把作者其他還在編輯的 WIP 一起掃上線」。先看 `git status`、再逐一
+指定檔案。
+
+---
+
 ## 2026-09-11（二）　修好每日新知：它從搬到 macOS 之後就沒發佈成功過
 
 ### 病灶

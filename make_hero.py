@@ -34,7 +34,8 @@ except ImportError:
     sys.exit("需要 Pillow：python -m pip install Pillow")
 
 ROOT = Path(__file__).resolve().parent
-SRC = ROOT / "hero_src"
+from asset_paths import hero_src_dir     # repo 內的 hero_src 優先，否則雲端素材資料夾
+SRC = hero_src_dir()
 OUT = ROOT / "hero"
 
 W, H = 1600, 900          # 16:9

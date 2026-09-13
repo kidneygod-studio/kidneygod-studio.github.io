@@ -36,6 +36,22 @@ LOGO_PNG = "kidneygod.png"          # 1678×937 白底 .NET 版
 GI_ART = "知識卡插圖"                # 知識卡插圖（第一批）
 GI_ART2 = ("知識卡插圖", "知識卡插圖2")   # 第二批，原本就是巢狀在第一批底下
 STICKERS = "貓咪貼圖"
+HERO_SRC = "hero_src"               # 長文大圖的原圖
+
+
+def hero_src_dir() -> pathlib.Path:
+    """長文大圖原圖的所在。
+
+    先看 repo 內的 hero_src——它可能是實體資料夾，也可能是指向雲端的
+    符號連結（早期的作法）。都沒有才用雲端素材根目錄底下的 hero_src。
+
+    這個順序讓兩種作法並存：已經建好符號連結的機器照舊，新機器什麼都
+    不用設定，直接把圖丟進雲端資料夾就會被找到。
+    """
+    local = ROOT / HERO_SRC
+    if local.exists():
+        return local
+    return assets_root() / HERO_SRC
 
 
 def _candidates() -> list[pathlib.Path]:
