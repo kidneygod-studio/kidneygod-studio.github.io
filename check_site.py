@@ -271,40 +271,14 @@ def check_sw_version():
 # 那種寫法在腳本改成用變數組路徑的當下就會失效，而且失效時報的是
 # 「找不到來源設定」，看起來像檢查壞了，不像素材不見了。
 def _probe_asset(p, timeout=5.0):
-    """回傳 "ok" / "missing" / "empty" / "timeout"。
+    """委派給 asset_paths.probe()——逾時保護只留一份實作。
 
-    ⚠ **整段探查一定要有逾時。** 素材放在 Google Drive 的掛載點上，而雲端
-    檔案系統可能在 open()／scandir() 上無限期阻塞——不是回錯誤，是不回。
-
-    2026-09-14 就是這樣：這一項用 rglob 遞迴走訪 Drive 資料夾，卡在核心的
-    open() 十幾分鐘，publish_daily.py 整條管線跟著停住。那比它原本要修的
-    問題更糟：原本是「檢查失敗、擋下發佈」，變成「檢查不會結束」。
-
-    所以這裡把探查丟到 daemon 執行緒，逾時就當作「不知道」。這一項本來就是
-    WARN_ONLY，不知道也不會擋發佈——**寧可少報一次，不可卡住整條管線**。
+    原本這裡自己有一份（2026-09-14 為了修 rglob 卡死而加的）。同一份逾時
+    邏輯抄成兩處，總有一處會在改動時被漏掉，然後又在雲端上卡住；而
+    asset_paths 是被 import 的那一端，放那裡不會有循環。
     """
-    import threading
-
-    box = {}
-
-    def work():
-        try:
-            if not p.exists():
-                box["r"] = "missing"
-            elif not p.is_dir():
-                box["r"] = "ok"
-            else:
-                # 遞迴數「檔案」，但看到第一個就停（any 會短路）：知識卡插圖
-                # 底下巢狀著 知識卡插圖2，只有空殼時 iterdir() 仍然非空，
-                # 一張圖都沒有卻會報成通過——正是這支腳本要抓的那種假通過。
-                box["r"] = "ok" if any(f.is_file() for f in p.rglob("*")) else "empty"
-        except OSError as e:
-            box["r"] = f"error:{e.strerror}"
-
-    t = threading.Thread(target=work, daemon=True)
-    t.start()
-    t.join(timeout)
-    return box.get("r", "timeout")
+    import asset_paths as A
+    return A.probe(p, timeout)
 
 
 def check_generator_sources():

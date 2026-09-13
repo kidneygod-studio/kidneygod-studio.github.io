@@ -104,6 +104,47 @@ def asset(*parts: str) -> pathlib.Path:
     return assets_root().joinpath(*parts)
 
 
+def probe(p, timeout=5.0):
+    """素材存在狀態：回傳 "ok" / "missing" / "empty" / "timeout" / "error:…"。
+
+    ⚠ **整段探查一定要有逾時。** 素材放在 Google Drive 的掛載點上，而雲端
+    檔案系統可能在 open()／scandir() 上無限期阻塞——不是回錯誤，是不回。
+
+    2026-09-14 就是這樣：check_site 這一項用 rglob 遞迴走訪 Drive 資料夾，
+    卡在核心的 open() 十幾分鐘，publish_daily.py 整條管線跟著停住。那比它
+    原本要修的問題更糟：原本是「檢查失敗、擋下發佈」，變成「檢查不會結束」。
+    sample 堆疊底部是 builtin_any → gen_iternext → os_scandir → open$NOCANCEL。
+
+    所以把探查丟到 daemon 執行緒，逾時就當作「不知道」。素材這一項在
+    check_site.py 裡本來就是 WARN_ONLY——**寧可少報一次，不可卡住整條管線**。
+
+    放在這裡而不是 check_site.py：凡是要碰雲端素材路徑的都該走這一支。
+    同樣的逾時保護抄成兩份，總有一份會在改動時被漏掉，然後又卡住。
+    """
+    import threading
+
+    box = {}
+
+    def work():
+        try:
+            if not p.exists():
+                box["r"] = "missing"
+            elif not p.is_dir():
+                box["r"] = "ok"
+            else:
+                # 遞迴數「檔案」，但看到第一個就停（any 會短路）：知識卡插圖
+                # 底下巢狀著 知識卡插圖2，只有空殼時 iterdir() 仍然非空，
+                # 一張圖都沒有卻會報成通過。
+                box["r"] = "ok" if any(f.is_file() for f in p.rglob("*")) else "empty"
+        except OSError as e:
+            box["r"] = f"error:{e.strerror}"
+
+    t = threading.Thread(target=work, daemon=True)
+    t.start()
+    t.join(timeout)
+    return box.get("r", "timeout")
+
+
 def describe() -> str:
     """給錯誤訊息用的一句話。"""
     root = assets_root()
@@ -120,15 +161,13 @@ if __name__ == "__main__":
                      ("知識卡插圖", asset(GI_ART)),
                      ("知識卡插圖2", asset(*GI_ART2)),
                      ("貓咪貼圖", asset(STICKERS))):
-        # 資料夾要遞迴數「檔案」才算數：雲端同步先建空殼是常態，而
-        # 知識卡插圖 底下還巢狀著 知識卡插圖2——只看 exists() 的話，
-        # 一張圖都沒有也會顯示 ✓，讓人以為素材已經到位。
-        # （判準與 check_site.py 的 check_generator_sources 一致。）
-        if not p.exists():
-            mark, note = "✗", "（不存在）"
-        elif p.is_dir() and not any(f.is_file() for f in p.rglob("*")):
-            mark, note = "✗", "（空的）"
-        else:
-            n = sum(1 for f in p.rglob("*") if f.is_file()) if p.is_dir() else 1
-            mark, note = "✓", f"（{n} 個檔案）"
+        # 走 probe()：它有逾時保護。這支的用途之一就是讓人在拿回素材後
+        # 自己驗收（PICKUP_FROM_HOSPITAL.md 叫使用者跑這一行），所以絕不能
+        # 因為雲端沒回應就整個卡住。
+        mark, note = {
+            "ok":      ("✓", ""),
+            "missing": ("✗", "（不存在）"),
+            "empty":   ("✗", "（空的）"),
+            "timeout": ("?", "（雲端沒回應，逾時）"),
+        }.get(r := probe(p), ("?", f"（{r}）"))
         print(f"  {mark} {label:<12} {p} {note}")
