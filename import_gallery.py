@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 from pathlib import Path
@@ -21,7 +22,11 @@ from pathlib import Path
 from PIL import Image, ImageOps
 
 ROOT = Path(__file__).resolve().parent
-BACKUP = Path(r"C:\Users\user\kidneygod_social\data\threads")
+# 2026-09-14：原本寫死醫院那台的路徑。這個 repo 是搬機的路徑改寫之後才
+# clone 的，所以當時沒被掃到。改成以家目錄推導，兩台都能跑；
+# 需要時可用 KIDNEYGOD_SOCIAL 覆寫。
+BACKUP = Path(os.environ.get("KIDNEYGOD_SOCIAL",
+                             Path.home() / "kidneygod_social")) / "data" / "threads"
 SRC_MEDIA = BACKUP / "media"
 
 OUT = ROOT / "gallery"
