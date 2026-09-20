@@ -37,6 +37,31 @@ python check_site.py      # 推之前對帳
 
 ---
 
+## 2026-09-20　新增 /tainanfood/：台南美食通（與護腎教室無關的獨立站）
+
+雜誌風格的台南餐廳／小吃導覽，89 家店（含台南米其林必比登 2024–2026 全 35 家、
+20 家社群口碑「隱藏美食」），每家一頁：美食評論、招牌菜、網友評價歸納、
+編輯評分、地圖、IG/Threads 貼文嵌入。掛在這個網域只是借 Pages 空間，
+**內容與護腎教室無關，不共用樣式、不互相連結**。
+
+- **來源在 `C:\Users\user\Desktop\台南美食通`**，這裡的 `tainanfood/` 是產出。
+  改內容要改那邊的 `data/raw/*.json`，再 `py deploy.py --push`。
+  直接改 `tainanfood/` 下的檔案，下次 deploy 會被整個刪掉重建（deploy 會 rmtree）
+- **`sw.js` 必須排除 `/tainanfood/`**（本次已加，作法同 `/dialysis/`）：
+  主站 SW 對 `.js` 是快取優先且不看查詢字串，不排除的話逛過本站的人
+  會永遠拿到舊的 `restaurants.js`，而且不會有任何錯誤訊息
+- 照片授權：料理照取自 Wikimedia Commons 開放授權（頁面標「示意圖」並列作者），
+  店家實拍只收 Flickr/Commons 上授權相符者（目前僅 6 家找得到）。
+  **Google 評論／IG／FB 上網友的照片一律不下載、不修圖使用**——修圖不會讓
+  著作權消失。要放網友照片只有兩條合法路：平台官方嵌入（本站作法，100 則）
+  或 Google Places API
+- IG/Threads 嵌入直接用 `/embed` iframe，不用 `embed.js`：embed.js 在
+  Browser pane 裡會卡在 90px 空白，iframe 版穩定。**醫院網路擋 fbcdn.net，
+  貼文會整塊空白**，所以每則下方都留「在 IG 開啟」連結
+- 貼文網址靠 `check_embeds.py` 驗證：IG 只對 `facebookexternalhit` UA 吐
+  og:description，用一般 UA 抓 /embed/ 頁時**假的貼文代碼也會回 200**，
+  照那樣驗會全部誤判為有效。順便比對內文有沒有提到店名，抓到 6 則掛錯店／失效
+
 ## 2026-09-14　素材位置收斂成一個資料夾，長文大圖不再需要符號連結
 
 ### 合併：雲端上本來有兩個資料夾

@@ -49,6 +49,10 @@ self.addEventListener("fetch", e => {
      交給瀏覽器自己的 HTTP 快取處理。 */
   if(url.pathname.startsWith("/dialysis/")) return;
 
+  /* /tainanfood/（台南美食通）同理：它有自己的 SW 與 data/restaurants.js，
+     這裡對 .js 是快取優先，接管的話店家資料會永遠停在舊版。 */
+  if(url.pathname.startsWith("/tainanfood/")) return;
+
   /* 網頁：連線優先。拿不到（離線）才退回快取，最後退回商城首頁
      （安裝成 App 的使用者是為了商城與遊戲而來，退回那裡比退回文章首頁有用）。 */
   if(req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")){

@@ -1,0 +1,14 @@
+{
+  "name": "台南美食通",
+  "short_name": "台南美食通",
+  "description": "府城餐廳與小吃的雜誌式美食導覽",
+  "lang": "zh-Hant-TW",
+  "start_url": "./#/",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f1e7",
+  "theme_color": "#b3261e",
+  "icons": [
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
