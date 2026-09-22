@@ -2238,9 +2238,16 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     feat_sect = ('<div class="home-section-head"><h2 id="deep">精選衛教文章</h2>'
                  f'<a href="/{ALL_ARTICLES}">查看全部 {len(extra)} 篇 →</a></div>'
                  f'<div class="home-featured">{feats}</div>')
-    news_sect = (f'<a class="home-news" id="news" href="/{ALL_NEWS}">'
-                 '<span><strong>醫學新知</strong><span>研究摘要與臨床指引</span></span>'
-                 '<span>閱讀最新整理 →</span></a>' if PAPERS else "")
+    news_sect = ""
+    if PAPERS:
+        # 首頁依資料日期選最新一篇；只有年份的條目不視為當年年底。
+        latest = max(PAPERS, key=lambda x: x.get("date", "") +
+                     "-01" * (2 - x.get("date", "").count("-")))
+        news_sect = ('<section aria-labelledby="news">'
+                     '<div class="home-section-head"><h2 id="news">醫學新知</h2>'
+                     f'<a href="/{ALL_NEWS}">查看全部 {len(PAPERS)} 篇 →</a></div>'
+                     + digest_card(latest, compact=True) + '</section>')
+
 
     # 直接讀 logo 實際尺寸，換圖時不必再手改寫死的數字（換過一次比例就變了）
     lw = img_size(ROOT / "logo.png")
