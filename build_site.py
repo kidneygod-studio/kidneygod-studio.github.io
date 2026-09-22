@@ -2169,6 +2169,54 @@ def build_search_index(data: list[dict], md_pages: list[dict],
     return len(idx)
 
 
+# 首頁專用樣式：不改動文章與工具頁的共用 CSS。
+HOME_LAYOUT_CSS = """<style>
+.band.opening .prefbar{padding-top:8px;min-height:0}
+.hero{padding:8px 0 4px}.hero h1{font-size:clamp(1.65rem,3.2vw,2.6rem);line-height:1.45}
+.home-eyebrow{font-size:.92rem;letter-spacing:.08em;color:var(--accent2);margin:0 0 10px}
+.hero .sub{color:var(--fg);margin:0 0 8px}.hero .cred{margin:0 0 14px}
+.hero .ssearch{margin:16px 0 0}.band.opening{padding-bottom:24px}
+.home-shortcuts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.home-shortcut{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;
+padding:24px 12px;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--fg);
+background:color-mix(in srgb,var(--accent) 9%,var(--bg));scroll-margin-top:90px}
+.home-shortcut:nth-child(2){background:color-mix(in srgb,#14807a 9%,var(--bg))}
+.home-shortcut:nth-child(3){background:color-mix(in srgb,#b98b44 10%,var(--bg))}
+.home-shortcut:nth-child(4){background:color-mix(in srgb,#14807a 7%,var(--bg))}
+.home-shortcut svg{width:46px;height:46px;color:var(--accent2);margin-bottom:8px}
+.home-shortcut strong{font-family:var(--serif);font-size:1.15rem}.home-shortcut span{font-size:.85rem;color:var(--mut)}
+.home-shortcut:hover{border-color:var(--link);box-shadow:0 4px 14px #16395712}
+.home-shortcut:focus-visible,.home-questions a:focus-visible,.home-news:focus-visible{outline:3px solid var(--link);outline-offset:4px}
+.home-questions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:24px 0;border-bottom:1px solid var(--line)}
+.home-questions strong{font-size:1rem}.home-questions>div{display:flex;flex-wrap:wrap;gap:10px}
+.home-questions a{padding:7px 22px;border-radius:24px;background:var(--card);color:var(--link);text-decoration:none;font-size:.94rem}
+.home-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:24px 0 16px}
+.home-section-head h2{margin:0;font-size:1.4rem}.home-section-head>a{font-size:.9rem;flex-shrink:0}
+.home-featured{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.home-featured .mcard img{aspect-ratio:16/9;object-fit:cover;width:100%;height:auto}
+.home-featured .mcard .t{font-size:1.04rem;line-height:1.65}.home-featured .mcard .d{display:none}
+.home-featured .mcard .b{padding:14px}.home-featured .mcard .k{font-size:.78rem}
+.home-news{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:24px;
+padding:18px 22px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--link);text-decoration:none}
+.home-news>span:first-child{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.home-news strong{font-family:var(--serif);font-size:1.2rem}
+.home-news span span,.home-news>span:last-child{font-size:.9rem}
+@media(max-width:700px){
+.hero{padding-top:4px}.home-eyebrow{font-size:.82rem;letter-spacing:.03em}.hero .sub{font-size:1rem}
+.hero .cred{font-size:.8rem}.home-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.home-shortcut{padding:16px 8px}.home-shortcut svg{width:36px;height:36px;margin-bottom:2px}
+.home-shortcut strong{font-size:1rem}.home-shortcut span{font-size:.76rem}
+.home-questions{gap:10px;padding:18px 0}.home-questions>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:8px}
+.home-questions a{text-align:center;padding:7px 8px}.home-featured{grid-template-columns:1fr;gap:12px}
+.home-featured .mcard{display:grid;grid-template-columns:100px minmax(0,1fr);align-items:center}
+.home-featured .mcard img{height:100%;min-height:100px;aspect-ratio:auto;object-fit:cover}
+.home-featured .mcard .b{padding:10px 12px}.home-featured .mcard .t{font-size:.95rem}
+.home-section-head{gap:8px}.home-section-head h2{font-size:1.15rem}.home-section-head>a{font-size:.8rem}
+.home-news{padding:14px;align-items:flex-start;flex-direction:column;gap:8px}
+.home-news>span:first-child{gap:6px 12px}
+}
+</style>"""
+
+
 def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int = 0) -> str:
     """網站首頁：以衛教內容為主，商城與遊戲收在一個明顯的大按鈕後面。"""
     title = f"護腎教室｜腎臟與三高衛教．{AUTHOR_NAME}{AUTHOR_TITLE}"
@@ -2181,56 +2229,22 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         f'<div class="d">{esc(CAT_INTRO.get(c, "")[:50])}…</div></a>'
         for c, v in by_cat.items())
 
-    # 新的排前面，最新一篇當封面。原本沿用檔名排序（build_markdown_articles
-    # 是 sorted glob），雜誌式陳列用字母序沒有意義——讀者期待的是「最新的在最上面」。
-    # 只影響首頁的呈現順序，其他地方用到的 md_pages 不動。
-    feed = sorted(extra, key=lambda a: (a.get("published", ""), a["path"]), reverse=True)
-    shown = feed[:HOME_FEAT_MAX]
-    feats = "".join(mag_card(a, i == 0) for i, a in enumerate(shown))
-
-    # 首頁只放最新的幾篇，其餘在完整頁。首頁的任務是「讓人看到有東西」，
-    # 不是把整個書目攤開——雜誌卡片一張很高，全部列出來會把下面的區塊推到很遠。
-    feat_more = more_link(ALL_ARTICLES, f"閱讀更多（全部 {len(feed)} 篇）") \
-        if len(feed) > len(shown) else ""
-    feat_sect = (sect_head("deep", "深入文章", "IN-DEPTH ARTICLES",
-                           "完整長文，適合想把一個主題徹底搞懂的人")
-                 + f'<div class="mag reveal">{feats}</div>{feat_more}'
-                 if feats else "")
-
-    # 新知：只放最新一篇，右下角進新知頁。排在深入文章之前——
-    # 長文隨時可讀，新知是「這陣子才有的」，會過期的東西要放前面。
-    news_sect = ""
-    if PAPERS:
-        news_sect = (sect_head("news", "醫學新知", "MEDICAL UPDATES",
-                               "主要期刊的最新研究，結構化摘要：問題、發現、意義")
-                     + f'<div class="reveal" style="--d:.08s">'
-                     f'{digest_card(PAPERS[0], compact=True)}'
-                     + more_link(ALL_NEWS, f"閱讀更多（全部 {len(PAPERS)} 篇）")
-                     + '</div>')
+    # 首頁固定精選三篇入門文章；完整列表保留所有文章。
+    featured_paths = ["articles/creatinine-high-what-to-do.html",
+                      "articles/taiwan-eating-out-sodium.html",
+                      "articles/home-blood-pressure-measurement.html"]
+    selected = [next(a for a in extra if a["path"] == path) for path in featured_paths]
+    feats = "".join(mag_card(a) for a in selected)
+    feat_sect = ('<div class="home-section-head"><h2 id="deep">精選衛教文章</h2>'
+                 f'<a href="/{ALL_ARTICLES}">查看全部 {len(extra)} 篇 →</a></div>'
+                 f'<div class="home-featured">{feats}</div>')
+    news_sect = (f'<a class="home-news" id="news" href="/{ALL_NEWS}">'
+                 '<span><strong>醫學新知</strong><span>研究摘要與臨床指引</span></span>'
+                 '<span>閱讀最新整理 →</span></a>' if PAPERS else "")
 
     # 直接讀 logo 實際尺寸，換圖時不必再手改寫死的數字（換過一次比例就變了）
     lw = img_size(ROOT / "logo.png")
     logo_dims = f' width="{lw[0]}" height="{lw[1]}"' if lw else ""
-
-    # 食物查詢：唯一的工具型內容，值得一個獨立入口。沒有 food_db.json 時整段消失。
-    food_sect = ""
-    if FOOD_DB.exists():
-        n_food = len(json.loads(FOOD_DB.read_text(encoding="utf-8"))["rows"])
-        food_sect = (sect_head("food", "食物查詢", "FOOD DATABASE",
-                               "腎臟病飲食最需要注意的是鈉、鉀、磷、蛋白質，"
-                               "而該注意哪一項取決於你的分期")
-                     + f'<a class="feat reveal" style="--d:.08s" href="/food.html">'
-                     f'<div class="t">查 {n_food:,} 種食物的鈉、鉀、磷、蛋白質含量</div>'
-                     f'<div class="d">資料來自衛福部食藥署食品營養成分資料庫。</div></a>')
-
-    calc_sect = ""
-    if CALC_PUBLISHED:
-        calc_sect = (sect_head("calc", "腎功能計算", "eGFR CALCULATOR",
-                               "把報告上已經有的數值換算成 eGFR 與分期")
-                     + '<a class="feat reveal" style="--d:.08s" href="/calc.html">'
-                     '<div class="t">eGFR 與腎衰竭風險計算</div>'
-                     '<div class="d">CKD-EPI 2021 公式，填了胱抑素 C 會自動改用較準確的合併式；'
-                     '第 3–5 期另可用 KFRE 估算腎衰竭風險。</div></a>')
 
     gal_sect = (sect_head("gallery", "衛教圖卡", "CARD GALLERY",
                           "社群上發表過的圖解，依主題整理並附上完整說明")
@@ -2239,45 +2253,44 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
                 f'<div class="d">血壓、血糖、血脂、飲食、用藥安全、檢查數值…'
                 f'點主題可跳到該區。</div></a>' if n_gallery else "")
 
-    # 「這個網站怎麼用」——2026-09-06 作者要求移除，但保留可還原。
-    # 用開關而不是刪掉：原始碼留在這裡就是備份，把 HOWTO 改成 True
-    # 重跑一次就完全回來，不必去翻 git 歷史或憑記憶重打。
-    #
-    # 這一區當初的用途是把入口從「網站有什麼」翻成「你想做什麼」。
-    # 現在頁首的兩個下拉已經涵蓋深入文章／主題衛教／衛教圖卡，
-    # 首頁本身也依序陳列了各區塊，重複性確實變高了。
-    howto = ("""
-<div class="howto">
-<b>這個網站怎麼用</b>
-<div class="hgrid">
-  <a class="htile" href="#deep"><span class="hq">想徹底弄懂一件事</span>
-    <span class="hgo">深入文章</span></a>
-  <a class="htile" href="#topics"><span class="hq">有明確想查的問題</span>
-    <span class="hgo">主題衛教</span></a>
-  <a class="htile" href="/calc.html"><span class="hq">拿到報告想換算</span>
-    <span class="hgo">腎功能計算</span></a>
-  <a class="htile" href="/food.html"><span class="hq">想查某個食物</span>
-    <span class="hgo">食物查詢</span></a>
-  <a class="htile" href="#gallery"><span class="hq">只想快速看重點</span>
-    <span class="hgo">衛教圖卡</span></a>
-  <a class="htile" href="/shop.html"><span class="hq">不知道從哪開始</span>
-    <span class="hgo">遊戲場</span></a>
-</div>
-</div>
-""" if HOWTO else "")
+    # SVG 裝飾圖示不取代文字；入口沿用已存在的工具與衛教內容。
+    icons = [
+        '<path d="M7 3h11l7 7v23H7zM18 3v8h7M11 17h10M11 23h10M11 28h7"/>',
+        '<path d="M5 19h26c0 9-5 14-13 14S5 28 5 19zM18 18V8M18 13C7 13 8 4 8 4s10-1 10 9zM18 16C29 16 29 5 29 5s-11 0-11 11z"/>',
+        '<rect x="7" y="3" width="22" height="30" rx="2"/><path d="M11 8h14v6H11zM11 20h2m5 0h2m5 0h1M11 25h2m5 0h2m5 0h1M11 29h2m5 0h2m5 0h1"/>',
+        '<path d="M18 7C12 3 5 5 3 6v25c5-2 10-2 15 1 5-3 10-3 15-1V6c-5-2-10-2-15 1zM18 7v25"/>',
+    ]
+    shortcuts = [
+        ("/articles/lab-values.html", "看懂檢驗報告", "肌酸酐・eGFR・蛋白尿", "reports"),
+        ("/food.html", "查食物營養", "鈉・鉀・磷・蛋白質", "food"),
+        ("/calc.html", "計算腎功能", "eGFR 與腎衰竭風險", "calc"),
+        ("/articles/egfr-meaning-ckd-stages.html", "護腎入門", "第一次來，從這裡開始", "start"),
+    ]
+    quick = ''.join(
+        f'<a class="home-shortcut" id="{anchor}" href="{href}">'
+        f'<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" '
+        f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{icon}</svg>'
+        f'<strong>{label}</strong><span>{hint}</span></a>'
+        for (href, label, hint, anchor), icon in zip(shortcuts, icons))
+    questions = ''.join(f'<a href="/articles/{slug}.html">{label}</a>' for label, slug in [
+        ("檢查紅字", "creatinine-high-what-to-do"), ("飲食怎麼吃", "diet"),
+        ("用藥安全", "medication-safety"), ("準備透析", "kidney-replacement-therapy")])
+    quick_sect = (f'<nav class="home-shortcuts" aria-label="常用工具與護腎入門">{quick}</nav>'
+                  '<nav class="home-questions" aria-label="常見問題入口">'
+                  f'<strong>你現在最想了解什麼？</strong><div>{questions}</div></nav>')
 
     opening = f"""
 <div class="hero">
-<h1>護腎專家－{esc(AUTHOR_NAME)}醫師的護腎教室</h1>
-<p class="sub">把腎臟的事，講到你聽得懂。慢性腎臟病、高血壓、糖尿病、高血脂——
-這裡用一般人看得懂的方式，說明檢查數字代表什麼、哪些習慣真的有影響、哪些說法沒有根據。</p>
+<p class="home-eyebrow">{esc(AUTHOR_NAME)}醫師的腎臟與三高衛教</p>
+<h1>把腎臟的事，講到你聽得懂。</h1>
+<p class="sub">從看懂檢驗報告，到每天的飲食與用藥。</p>
 <p class="cred">內容依據國際指引與期刊文獻撰寫，持續更新。
 <a href="/about.html">關於{esc(AUTHOR_NAME)}醫師 →</a></p>
 
 <div class="ssearch">
   <label class="svisually" for="sq">搜尋站內衛教內容</label>
   <input id="sq" type="search" autocomplete="off" spellcheck="false"
-         placeholder="搜尋衛教內容，例如：蛋白尿、止痛藥、香蕉">
+         placeholder="想了解什麼？搜尋蛋白尿、血壓、飲食…">
   <!-- 放在 input 後面才能用 input:focus ~ .sicon 換色；位置靠 absolute 拉到左邊 -->
   <svg class="sicon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
        stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -2285,7 +2298,6 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
   <div id="sres" class="sres" hidden></div>
 </div>
 
-{howto}
 </div>
 """
 
@@ -2326,10 +2338,10 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     # 一區一條橫帶，底色深淺交替。空的區塊（例如沒有圖卡時）band() 會回空字串，
     # 所以交替是「實際排出來的順序」而不是「原始清單的順序」——
     # 用固定的 i%2 會在某一區消失時出現兩條同色相鄰。
-    sections = [(news_sect, "新知"), (feat_sect, "長文"), (topics_sect, "主題"),
-                (calc_sect, "計算"), (food_sect, "食物"), (gal_sect, "圖卡"),
+    sections = [(quick_sect + feat_sect + news_sect, "快捷入口與精選"),
+                (topics_sect, "主題"), (gal_sect, "圖卡"),
                 (play_sect, "遊戲"), (line_sect, "LINE")]
-    parts, tint = [], True
+    parts, tint = [], False
     for html_, _name in sections:
         if not html_.strip():
             continue
@@ -2345,12 +2357,9 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         "url": f"{BASE_URL}/",
         "author": author_ld(),
     }
-    # 首頁的分享圖示放兩處：最上面那一排（和字級／配色鈕併排），以及免責聲明下方。
-    # 原本上面那組在「這個網站怎麼用」下方，2026-09-05 移到頁首下方那一排——
-    # 那一排本來只有右邊兩顆控制項，左邊是空的。
-    # 腳本只輸出一次，掛在後者——它在文件的後面，執行時兩組都已經存在。
+    # 首頁分享列保留於文末，開場優先呈現搜尋與快捷入口。
     return page(title, desc, "", body, jsonld,
-                pref_left=share_buttons("", HOME_SHARE_TITLE, top=True),
+                extra_head=HOME_LAYOUT_CSS,
                 after_disclaimer=share_buttons("", HOME_SHARE_TITLE, top=True)
                 + share_script() + search_script(),
                 banded=True, opening=opening)
