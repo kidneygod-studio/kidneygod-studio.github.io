@@ -1547,12 +1547,14 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
                     [("/food.html", "食物查詢", "food")]
                     + ([("/calc.html", "腎功能計算", "calc")] if CALC_PUBLISHED else []))
            + navlink("/about.html", "", "關於作者", "about")
-           + navlink("/shop.html", "", "護腎遊戲", "shop", "shoplink")
            # 姊妹站，另開分頁（理由見 FOOD_TOUR_URL 的註解）
            + f'<a href="{FOOD_TOUR_URL}" class="sitelink" rel="noopener"'
              f' target="_blank">{esc(FOOD_TOUR_NAME)}'
              f'<span class="nx" aria-hidden="true">↗</span>'
-             f'<span class="svisually">（另開分頁）</span></a>')
+             f'<span class="svisually">（另開分頁）</span></a>'
+           # 護腎遊戲固定壓在選單最底（2026-09-23 作者指示）：它是金色膠囊按鈕，
+           # 視覺上最重，放中間會把它上下的文字連結夾成兩段；擺最後才像個收尾。
+           + navlink("/shop.html", "", "護腎遊戲", "shop", "shoplink"))
     # 每一頁都掛：要的是全站瀏覽數，只算首頁會漏掉從搜尋直接進到某篇文章
     # 就離開的人——而那正是這個站大部分的流量。
     views_block = ('<p class="views" id="siteViews" style="display:none">'
@@ -2340,10 +2342,17 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         f'<div class="d">{esc(CAT_INTRO.get(c, "")[:50])}…</div></a>'
         for c, v in by_cat.items())
 
-    # 首頁固定精選三篇入門文章；完整列表保留所有文章。
+    # 首頁固定精選六篇（三欄兩排，2026-09-23 從三篇增為兩排）；完整列表保留所有文章。
+    # 六篇刻意分屬六個不同的切入點：檢查數字、飲食、血壓、症狀、用藥、識讀話術——
+    # 同一類放兩篇會讓第二排看起來像第一排的補充，而不是另一個入口。
+    # 不放 egfr-meaning-ckd-stages 與 lab-values：那兩篇已經在上方的四個常用入口裡，
+    # 首頁同一屏出現兩次等於浪費一格。
     featured_paths = ["articles/creatinine-high-what-to-do.html",
                       "articles/taiwan-eating-out-sodium.html",
-                      "articles/home-blood-pressure-measurement.html"]
+                      "articles/home-blood-pressure-measurement.html",
+                      "articles/foamy-urine-proteinuria.html",
+                      "articles/painkiller-nsaid-kidney.html",
+                      "articles/no-dialysis-therapy-claims.html"]
     selected = [next(a for a in extra if a["path"] == path) for path in featured_paths]
     feats = "".join(mag_card(a).replace('class="mcard"', 'class="mcard home-reveal"', 1) for a in selected)
     feat_sect = ('<div class="home-section-head home-reveal"><h2 id="deep">精選衛教文章</h2>'
