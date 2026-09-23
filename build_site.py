@@ -26,9 +26,22 @@ import argparse
 import html
 import json
 import re
+import sys
 import urllib.parse
 from datetime import date
 from pathlib import Path
+
+# 進度訊息裡有中文和 ⚠，排程用 powershell 跑時 stdout 是 cp950，印不出來就
+# 直接 UnicodeEncodeError 讓整支程式死掉。
+# 2026-09-23：新匯入的一篇新知主題對不上 NEWS_CATS，觸發第 4899 行那則警告，
+# 於是**建站在寫出 index.html 之前就崩潰**，每日新知連續發佈失敗。
+# 手動在 UTF-8 終端跑完全正常，所以只有排程會中——最難發現的那種。
+# 其餘 25 支腳本早就有這一行，就這支漏了。
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "articles"

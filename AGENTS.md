@@ -45,13 +45,16 @@ articles_src/news.json   articles/news-*.html   articles/news.html
 index.html   search_index.json   sw.js   sitemap.xml   robots.txt
 ```
 
-這是每天 07:00 `NephrologyDailyDigest` 排程的產出（由 `publish_daily.py`
-自己提交）。它的髒檔案檢查只看 `articles_src/news.json`，所以它不會被你
-擋住；但你如果把它的東西包進自己的 commit，作者就失去了「審核後才上線」
-的那一關（新知是等作者在 Telegram 說「可上線」才發佈的）。
+這是每天 07:00 `NephrologyDailyDigest` 排程的產出，由 `publish_daily.py`
+**自動建置、驗證、提交、推上線**（2026-09-23 起作者確認新知一律自動發佈，
+不再經 Telegram 人工放行）。它的髒檔案檢查只看 `articles_src/news.json`，
+所以不會被你擋住；你也不需要替它發佈。
 
 **如果你重建了 `index.html`，它會自動吃進排程尚未提交的新知。** 這種情況
 請在 commit 訊息裡明講，不要假裝沒發生。
+
+自動發佈的安全網只有 `check_site.py`（沒過就不推）和建置本身會不會失敗。
+所以**不要讓建置的診斷訊息變成會拋例外的那一段**——見下面的 cp950 那條。
 
 ### commit 訊息用中文，動詞開頭，說「改了什麼」
 
@@ -100,6 +103,14 @@ python check_site.py      # 推之前對帳，沒過就別推
 **不看 `?v=` 查詢字串**。換了圖卻沒跑 `bump_assets.py`，造訪過的人
 **永遠**看到舊圖，沒有錯誤訊息。`/dialysis/` 與 `/tainanfood/` 已在
 `sw.js` 明確排除（它們有自己的 SW），不要移除那兩行。
+
+**印出來的訊息不可以讓程式死掉**：排程是用 `powershell.exe` 跑的，stdout 是
+**cp950**，印中文以外的符號（`⚠`、日文假名、`�`）會 UnicodeEncodeError。
+每支會被排程呼叫的腳本開頭都要有 `sys.stdout.reconfigure(encoding="utf-8")`。
+2026-09-23 就是 `build_site.py` 少了這行：新匯入的一篇新知主題是空的，觸發
+一則含 `⚠` 的警告，**建站在寫出 index.html 之前就崩潰**，每日新知發佈失敗，
+而 log 裡只看得到 "BUILD FAILED:" 和一段 traceback（因為連錯誤訊息都印不出來）。
+在 UTF-8 終端手動跑完全正常，所以只有無人值守時會中。
 
 **`bump_assets.py` 雜湊的是檔案位元組**，這台 Windows 是 `core.autocrlf=true`
 （JS 檔存成 CRLF）。換機器或換成 LF 會讓所有 `?v=` 全部變動，產生一批

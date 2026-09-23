@@ -21,6 +21,17 @@ Exit 0 = 已發佈或沒有新東西；非 0 = 某一步失敗（呼叫端會警
 """
 import subprocess, sys, os, datetime
 
+# 排程是用 powershell.exe 跑的，stdout 預設 cp950，印不出 build_site 的錯誤訊息
+# （裡面常有 � 或日文假名）就會 UnicodeEncodeError。
+# 2026-09-23：build_site 失敗，而「印出失敗原因」這件事自己又崩潰，於是
+# log 裡只剩一行 "BUILD FAILED:" 加一段 traceback，真正的原因完全看不到。
+# 診斷訊息永遠不該是會拋例外的那一段。
+try:
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+except Exception:
+    pass
+
 # 從腳本自身位置推導，換機器/換平台都不用改（原本寫死舊 Windows 機的路徑，
 # 搬到 macOS 後整個發佈步驟都在 subprocess 的 cwd 上就地失敗）
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -75,12 +86,18 @@ def main():
 
     # 5. 發佈——只 stage 每日新知的產出檔，不碰其他 WIP
     git(['add', '--'] + PUBLISH_PATHS)
-    if git(['diff', '--cached', '--quiet']).returncode == 0:
+    # 判斷「有沒有東西要發」也要限定在 PUBLISH_PATHS，否則別人暫存中的檔案
+    # 會讓這裡誤以為有東西要發。
+    if git(['diff', '--cached', '--quiet', '--'] + PUBLISH_PATHS).returncode == 0:
         print('nothing staged to publish.'); return 0
     date = datetime.date.today().strftime('%Y-%m-%d')
     msg = (f'每日新知自動發佈 {date}\n\n'
-           f'Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>')
-    if git(['commit', '-q', '-m', msg]).returncode != 0:
+           f'Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>')
+    # **commit 一定要帶路徑。** 上面那行 add 很小心只 stage 每日新知的產出，
+    # 但 `git commit -m` 不帶路徑用的是**整個索引**——作者或另一個 AI 助手
+    # 只要有東西還在暫存區，就會被這支無人值守的腳本一起推上線。
+    # 2026-09-23 發現時，索引裡正躺著 146 個還沒完成的台南美食通改版檔案。
+    if git(['commit', '-q', '-m', msg, '--'] + PUBLISH_PATHS).returncode != 0:
         print('COMMIT FAILED'); return 1
     # 推之前先跟遠端對齊。醫院那台現在**只做網站編輯**，白天隨時可能推新的
     # commit；不先 rebase 的話這裡會 non-fast-forward 失敗，而且會一直失敗到
