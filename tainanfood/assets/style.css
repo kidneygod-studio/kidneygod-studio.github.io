@@ -202,6 +202,9 @@ h2.h small{font-size:12px;letter-spacing:3px;color:var(--ink-3);font-family:var(
 
 footer{border-top:1px solid var(--rule);padding:32px 0 60px;margin-top:40px;color:var(--ink-3);font-size:13px}
 footer b{font-family:var(--serif);color:var(--ink);font-size:16px}
+/* 姊妹站連結：頁尾整體是淡的，這一條要看得出來是可以點的 */
+footer a.kglink{color:var(--ink);border-bottom:1px solid var(--rule);font-weight:600}
+footer a.kglink:hover{border-bottom-color:currentColor}
 
 /* bottom tab bar (app-like, mobile) */
 .tabbar{display:none}
