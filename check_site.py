@@ -344,6 +344,50 @@ def check_interviews():
     return bad
 
 
+# ── 9. 每日新知的主題對不對得上分類（WARN_ONLY，不擋發佈）─────────────
+def check_news_topics():
+    """topic 對不上 NEWS_CATS 的新知會存在、卻不出現在任何分類頁。
+
+    2026-09-23 的 BaSICS 與 2026-09-24 的 POTCAST 都是這樣進來的：匯入時
+    沒有 topic。build_site.py 建站時本來就會印一行警告，但**那行警告只在
+    排程的 log 裡，沒有人看**——兩次都是作者自己在網站上發現少了東西。
+    所以同一件事要在這裡再檢一次，這支是推站之前會看的。
+
+    不擋發佈：文章本身是好的、線上其他頁面也正確，只是少一個入口。
+    擋下來會讓整批新知都上不了線，代價比問題本身大。
+
+    主題清單從 build_site.py 解析，不在這裡另外維護一份——
+    兩份手動對照表一定會漂移（NEWS_CATS 第一版就漏了七個主題、18 篇變孤兒）。
+    build_site.py 不能直接 import：它的 main() 在模組層被呼叫，一 import 就重建全站。
+    """
+    src = (ROOT / "build_site.py").read_text(encoding="utf-8")
+    m = re.search(r"NEWS_CATS[^=]*=\s*\[(.*?)\n\]", src, re.S)
+    if not m:
+        return ["在 build_site.py 找不到 NEWS_CATS，這支檢查失效了"]
+    topics = set(re.findall(r'\(\s*"[^"]+"\s*,\s*"([^"]+)"', m.group(1)))
+    if not topics:
+        return ["NEWS_CATS 解析出 0 個主題，這支檢查失效了"]
+
+    f = ROOT / "articles_src" / "news.json"
+    if not f.exists():
+        return []
+    try:
+        papers = json.loads(f.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        return [f"news.json 不是合法 JSON：{e}"]
+
+    bad = []
+    for p in papers:
+        t = (p.get("topic") or "").strip()
+        if t not in topics:
+            label = (p.get("zh") or p.get("en") or p.get("doi") or "?")[:40]
+            bad.append(f'{p.get("date", "?")}　{label}　topic='
+                       f'{t or "（空）"}　→ 不會出現在任何分類頁')
+    if VERBOSE and not bad:
+        print(f"    {len(papers)} 篇新知的主題都對得上 {len(topics)} 個分類")
+    return bad
+
+
 CHECKS = [
     ("卡片資料兩份是否同步", check_card_data_sync),
     ("卡片插圖與產出是否齊全", check_card_assets),
@@ -353,10 +397,11 @@ CHECKS = [
     ("快取版本號是否最新", check_sw_version),
     ("產生器的來源檔", check_generator_sources),
     ("專家訪談稿的鍵", check_interviews),
+    ("每日新知的主題分類", check_news_topics),
 ]
 
 # 只提醒、不擋發佈。判準見檔頭：這一項出問題時線上的站仍然是正確的。
-WARN_ONLY = frozenset({"產生器的來源檔"})
+WARN_ONLY = frozenset({"產生器的來源檔", "每日新知的主題分類"})
 
 
 def main() -> int:

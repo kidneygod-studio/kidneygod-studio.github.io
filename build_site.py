@@ -350,6 +350,37 @@ def load_review_dates() -> dict[str, str]:
 REVIEW_DATES = load_review_dates()
 
 
+# ── 每日新知的逐篇確認 ────────────────────────────────────────────────
+# 分類頁不掛醫師審閱日期（內容每天自動長出來，見下面的 AUTO_UPDATED），
+# 但**每一篇研究摘要本身是固定的**——寫好之後就不會再變。所以審閱的單位
+# 放在「篇」而不是「頁」：作者在後台逐篇（或整批）確認，確認過的那一篇
+# 才顯示「經吳政哲醫師確認」。
+#
+# 這樣兩件事同時成立：新知照常每天自動上線（不必等人），
+# 而「醫師看過」這個聲明只出現在真的看過的那幾篇上。
+#
+# 鍵是 DOI。來源是 Firestore 的 newsreview 集合，由 sync_reviews.py 抓下來。
+NEWS_REVIEWED_FILE = ROOT / "articles_src" / "news_reviewed.json"
+
+
+def load_news_reviewed() -> dict[str, str]:
+    """DOI → 確認日期。檔案不存在就當作還沒有人確認過任何一篇。"""
+    if not NEWS_REVIEWED_FILE.exists():
+        return {}
+    records = json.loads(NEWS_REVIEWED_FILE.read_text(encoding="utf-8"))
+    if not isinstance(records, dict):
+        raise ValueError("news_reviewed.json 必須是 DOI 與日期的對照表")
+    for doi, value in records.items():
+        if not isinstance(value, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+            raise ValueError(f"確認日期格式錯誤：{doi}")
+        if date.fromisoformat(value) > date.today():
+            raise ValueError(f"確認日期不可在未來：{doi}")
+    return records
+
+
+NEWS_REVIEWED = load_news_reviewed()
+
+
 # 內容由排程自動接上去的頁面：每日新知（07:00 自動匯入新論文）與衛教圖卡
 # （import_gallery 匯入）。這些頁**一律不標示醫師審閱日期，即使 reviewed.json
 # 裡有紀錄**。
@@ -1011,6 +1042,16 @@ margin:18px 0 6px;font-weight:700}
 .dgsig{margin:14px 0 0;background:var(--card);border-radius:10px;
 padding:12px 15px;font-weight:500}
 .dglim{margin:10px 0 0;font-size:13px;color:var(--mut);font-style:italic}
+/* 逐篇的醫師確認。刻意做得安靜——它是一個事實標記，不是獎章，
+   而且沒有這行的那些篇並沒有比較差，只是還沒輪到。
+   用 accent 而不是自己開一個成功色：主站調色盤沒有綠色，新增變數得同時
+   維護淺色、深色媒體查詢、深色屬性三處，那本身就是漂移來源。
+   第一版從 admin.html 抄了一個主站沒定義的變數名，check_site 的 CSS 變數
+   檢查一次抓出 50 個頁面。註記時也不要把那個變數名原樣寫在這裡——
+   這段 CSS 是整串輸出到每一頁的，註解也會跟著出去，照樣會被檢查器抓到。 */
+.dgok{margin:12px 0 0;font-size:13px;color:var(--accent);font-weight:600;
+display:flex;align-items:center;gap:6px}
+.dgok::before{content:"✓";font-size:12px;line-height:1}
 @media(max-width:520px){.dg{padding:16px 15px;border-radius:12px}}
 /* ── 新知的入口頁（版面組織參考 wecareheart 的 medical-updates）──
    英文小標＋中文大標、中英並列的分類卡片格、帶日期的清單。 */
@@ -3820,6 +3861,12 @@ def digest_card(x: dict, compact: bool = False) -> str:
         # 明天匯進來的條目又會帶著前綴回來。
         lim = re.sub(r'^\s*(局限性|限制|研究限制)\s*[：:]\s*', '', x["lim"])
         body += f'<p class="dglim">限制：{inline(lim)}</p>'
+    # 逐篇的醫師確認。沒有紀錄就什麼都不顯示——不顯示是正確的預設，
+    # 代表「這篇還沒有人看過」，而不是出了什麼錯。
+    seen = NEWS_REVIEWED.get(x.get("doi", ""))
+    if seen:
+        body += (f'<p class="dgok">本則摘要經{esc(AUTHOR_NAME)}醫師確認'
+                 f'（{esc(seen)}）</p>')
     return f'<article class="dg">{head}{img}{kp}{body}</article>'
 
 

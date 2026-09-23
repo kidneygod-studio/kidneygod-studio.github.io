@@ -307,6 +307,16 @@ margin:18px 0 6px;font-weight:700}
 .dgsig{margin:14px 0 0;background:var(--card);border-radius:10px;
 padding:12px 15px;font-weight:500}
 .dglim{margin:10px 0 0;font-size:13px;color:var(--mut);font-style:italic}
+/* 逐篇的醫師確認。刻意做得安靜——它是一個事實標記，不是獎章，
+   而且沒有這行的那些篇並沒有比較差，只是還沒輪到。
+   用 accent 而不是自己開一個成功色：主站調色盤沒有綠色，新增變數得同時
+   維護淺色、深色媒體查詢、深色屬性三處，那本身就是漂移來源。
+   第一版從 admin.html 抄了一個主站沒定義的變數名，check_site 的 CSS 變數
+   檢查一次抓出 50 個頁面。註記時也不要把那個變數名原樣寫在這裡——
+   這段 CSS 是整串輸出到每一頁的，註解也會跟著出去，照樣會被檢查器抓到。 */
+.dgok{margin:12px 0 0;font-size:13px;color:var(--accent);font-weight:600;
+display:flex;align-items:center;gap:6px}
+.dgok::before{content:"✓";font-size:12px;line-height:1}
 @media(max-width:520px){.dg{padding:16px 15px;border-radius:12px}}
 /* ── 新知的入口頁（版面組織參考 wecareheart 的 medical-updates）──
    英文小標＋中文大標、中英並列的分類卡片格、帶日期的清單。 */

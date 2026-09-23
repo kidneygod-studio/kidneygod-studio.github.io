@@ -33,9 +33,14 @@ ENV = dict(os.environ, GIT_TERMINAL_PROMPT='0')
 
 # 審閱日期會印在每一個由 build_site.py 產生的頁面上（頁尾那行字 ＋ JSON-LD
 # 的 lastReviewed），所以動到的產出跟每日新知那條管線一樣，再加上來源檔本身。
-PUBLISH_PATHS = ['articles_src/reviewed.json', 'articles', 'index.html',
+PUBLISH_PATHS = ['articles_src/reviewed.json', 'articles_src/news_reviewed.json',
+                 'articles', 'index.html',
                  'about.html', 'calc.html', 'food.html', 'legal.html',
                  'sitemap.xml', 'robots.txt', 'sw.js', 'search_index.json']
+
+# 「有沒有新東西」只看這兩個來源檔，不看整個工作區——
+# 作者或另一個 AI 助手的 WIP 不該觸發發佈。
+SOURCES = ['articles_src/reviewed.json', 'articles_src/news_reviewed.json']
 
 
 def run_py(args):
@@ -55,9 +60,8 @@ def main():
     if r.returncode != 0:
         print('SYNC FAILED:', (r.stderr or r.stdout or '')[-500:]); return 1
 
-    # 2. reviewed.json 沒變動 → 沒有新的確認，收工。
-    #    只看這一個檔，不看整個工作區——作者或另一個 AI 的 WIP 不該觸發發佈。
-    if not git(['status', '--porcelain', 'articles_src/reviewed.json']).stdout.strip():
+    # 2. 兩個來源檔都沒變動 → 沒有新的確認，收工。
+    if not git(['status', '--porcelain', '--'] + SOURCES).stdout.strip():
         print('沒有新的審閱確認。'); return 0
 
     # 3. 重建（審閱日期是建站時讀進去的，不重建不會出現在頁面上）

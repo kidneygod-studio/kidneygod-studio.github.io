@@ -24,7 +24,11 @@ rules_version = '2';
      這份規則拒絕，而前端的 catch 只寫 console.debug——畫面上完全看不出失敗。
    ⚠ **改完這個檔案不會自動生效**：它只是版本控制裡的一份副本，
      要到 Firebase console > Firestore > 規則貼上並發布才算數。
-     目前這份與線上發布的內容一致，不需要動 console。
+
+   ⚠ **2026-09-24：這份比線上新**。新增的 newsreview 集合（每日新知的逐篇
+     醫師確認）尚未發布到 console，在發布之前後台按下確認會被規則擋掉
+     （前端只寫 console.debug，畫面上看起來像沒反應）。
+     請把整份貼到 Firebase console > Firestore Database > 規則 > 發布。
 
    ※ 誠實說明：這是提高成本，不是證明。安全規則只看得到單次寫入內容，
      無法驗證題目是否真的答對。要真正保證分數是玩出來的，必須把出題與
@@ -88,6 +92,24 @@ service cloud.firestore {
                    && request.resource.data.keys().hasOnly(['path', 'date', 'at'])
                    && request.resource.data.path is string
                    && request.resource.data.path.size() <= 120
+                   && request.resource.data.date is string
+                   && request.resource.data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+    }
+
+    /* ── 每日新知的逐篇醫師確認 ──
+       分類頁不掛審閱日期（內容每天自動長出來），但每一篇研究摘要本身寫好
+       之後就不會再變，所以確認的單位是「篇」不是「頁」。
+       作者在後台按一下寫一筆，sync_reviews.py 抓回 news_reviewed.json。
+
+       文件 id 是 DOI 把斜線換成 __ 的版本（id 不能含斜線）；
+       原始 DOI 放在欄位裡，同步腳本就不必反推。
+       日期本來就會顯示在頁面上，公開讀沒問題；寫入只有本人可以。 */
+    match /newsreview/{docId} {
+      allow read: if true;
+      allow write: if owner()
+                   && request.resource.data.keys().hasOnly(['doi', 'date', 'at'])
+                   && request.resource.data.doi is string
+                   && request.resource.data.doi.size() <= 120
                    && request.resource.data.date is string
                    && request.resource.data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
     }

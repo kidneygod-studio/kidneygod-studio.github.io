@@ -51,6 +51,10 @@
   .focus .p{font-size:12.5px;color:var(--mut);margin-bottom:12px;word-break:break-all}
   .focus .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   .focus button.act{padding:12px 20px;font-size:15px}
+  /* 每日新知分組列 */
+  td.grp{background:var(--bg);font-weight:700;font-size:13.5px;padding-top:14px}
+  .gn{font-weight:400;font-size:12.5px;color:var(--mut);margin-left:8px}
+  td.grp button.mini{float:right}
   textarea{width:100%;min-height:150px;font-family:ui-monospace,Menlo,Consolas,monospace;
            font-size:12.5px;padding:10px;border:1px solid var(--line);border-radius:9px;
            background:var(--bg);color:var(--fg)}
@@ -95,6 +99,10 @@ const docId = path => path.replace(/\//g, "__");
 const FOCUS = new URLSearchParams(location.search).get("p") || "";
 
 let TAB = "review", PAGES = [], REVIEW = {}, SUBS = [];
+/* 每日新知逐篇確認。分類頁不掛審閱日期（內容每天自動長出來），
+   但每一篇研究摘要寫好之後就不會再變，所以確認的單位是「篇」不是「頁」。 */
+let NEWS = [], NEWSREVIEW = {}, NEWS_ONLY_TODO = true;
+const newsId = doi => doi.replace(/\//g, "__");   // 文件 id 不能含斜線
 
 onAuthStateChanged(auth, async u => {
   const mail = u && !u.isAnonymous && u.email ? u.email.trim().toLowerCase() : "";
@@ -158,17 +166,36 @@ async function loadAll(){
     snap.forEach(d => SUBS.push({mail: d.id, ...d.data()}));
     SUBS.sort((a, b) => String(b.at?.seconds || 0) - String(a.at?.seconds || 0));
   }catch(e){ console.debug("subs", e); }
+  /* 新知清單直接讀站上的 news.json（GitHub Pages 本來就會serve 這個檔），
+     不另外維護一份——那樣一定會跟排程寫進去的內容漂移。 */
+  NEWS = [];
+  try{
+    NEWS = await fetch("/articles_src/news.json?cb=" + Date.now()).then(r => r.json());
+    if(!Array.isArray(NEWS)) NEWS = [];
+  }catch(e){ console.debug("news.json", e); }
+  NEWSREVIEW = {};
+  try{
+    const snap = await getDocs(collection(db, "newsreview"));
+    snap.forEach(d => { const v = d.data(); if(v && v.doi) NEWSREVIEW[v.doi] = v.date; });
+  }catch(e){
+    /* 規則還沒發布到 console 時這裡會 permission-denied。
+       不能只寫 console.debug 就算了——畫面上要看得出來，
+       否則按了沒反應會以為是自己按錯。 */
+    NEWSREVIEW = null;
+    console.debug("newsreview", e);
+  }
 }
 
 function render(){
   $("app").innerHTML = `
     <div class="tabs">
-      <button class="tab${TAB === "review" ? " on" : ""}" data-t="review">審閱紀錄</button>
+      <button class="tab${TAB === "review" ? " on" : ""}" data-t="review">頁面審閱</button>
+      <button class="tab${TAB === "news" ? " on" : ""}" data-t="news">每日新知（${newsTodo()}）</button>
       <button class="tab${TAB === "subs" ? " on" : ""}" data-t="subs">訂閱名單（${SUBS.length}）</button>
     </div>
     <div id="body"></div>`;
   document.querySelectorAll(".tab").forEach(b => b.onclick = () => { TAB = b.dataset.t; render(); });
-  (TAB === "review" ? renderReview : renderSubs)();
+  ({review: renderReview, news: renderNews, subs: renderSubs}[TAB] || renderReview)();
 }
 
 function focusCard(){
@@ -218,6 +245,97 @@ async function mark(btn){
   }catch(e){
     btn.disabled = false; btn.textContent = old;
     alert("寫入失敗：" + (e.code || e.message));
+  }
+}
+
+function newsTodo(){
+  if(NEWSREVIEW === null) return "!";
+  return NEWS.filter(x => x.doi && !NEWSREVIEW[x.doi]).length;
+}
+
+function renderNews(){
+  if(NEWSREVIEW === null){
+    $("body").innerHTML = `<div class="focus">
+      <div class="t">還不能用：Firestore 規則尚未發布</div>
+      <div class="p">後台讀不到 <code>newsreview</code> 集合（權限不足）。
+      請到 Firebase console &gt; Firestore Database &gt; 規則，把 repo 裡
+      <code>firestore.rules</code> 整份貼上並發布，再重新整理這一頁。</div>
+      <div class="row"><a href="https://console.firebase.google.com/project/kidneygod-ea61e/firestore/rules"
+        target="_blank" rel="noopener">開啟 Firebase 規則頁 →</a></div>
+    </div>`;
+    return;
+  }
+  const withDoi = NEWS.filter(x => x.doi);
+  const done = withDoi.filter(x => NEWSREVIEW[x.doi]).length;
+  const nodoi = NEWS.length - withDoi.length;
+
+  /* 依日期由新到舊分組。排程每天匯入一批，所以「一批」就是一個日期，
+     整批確認比逐篇點省事。 */
+  const groups = {};
+  withDoi.forEach(x => { (groups[x.date || "（無日期）"] ||= []).push(x); });
+  const keys = Object.keys(groups).sort().reverse();
+
+  let html = "";
+  for(const k of keys){
+    const items = groups[k].filter(x => !NEWS_ONLY_TODO || !NEWSREVIEW[x.doi]);
+    if(!items.length) continue;
+    const todo = groups[k].filter(x => !NEWSREVIEW[x.doi]).length;
+    html += `<tr><td colspan="3" class="grp">${esc(k)}
+      <span class="gn">${groups[k].length} 篇${todo ? `，${todo} 篇待確認` : "，都確認過了"}</span>
+      ${todo ? `<button class="mini" data-batch="${esc(k)}">確認這一批</button>` : ""}</td></tr>`;
+    html += items.map(x => {
+      const d = NEWSREVIEW[x.doi];
+      return `<tr>
+        <td><a href="${esc(x.url || "#")}" target="_blank" rel="noopener">${esc(x.zh || x.en || x.doi)}</a>
+            <span class="gn">${esc(x.journal || "")}</span></td>
+        <td class="r">${d ? `<span class="done">${esc(d)}</span>` : '<span class="none">未確認</span>'}</td>
+        <td class="r"><button class="mini" data-doi="${esc(x.doi)}">${d ? "更新為今天" : "確認"}</button></td>
+      </tr>`;
+    }).join("");
+  }
+  if(!html) html = `<tr><td colspan="3" class="none">${NEWS_ONLY_TODO ? "全部都確認過了。" : "沒有資料。"}</td></tr>`;
+
+  $("body").innerHTML = `
+    <div class="sum">
+      <div class="box"><b>${done} / ${withDoi.length}</b><span>已確認的研究摘要</span></div>
+      <div class="box"><b>${withDoi.length - done}</b><span>待確認</span></div>
+      <div class="box"><b>${today()}</b><span>今天</span></div>
+    </div>
+    <p><label class="fine"><input type="checkbox" id="onlytodo"${NEWS_ONLY_TODO ? " checked" : ""}>
+      只顯示未確認的</label></p>
+    <table><tr><th>研究</th><th class="r">確認日期</th><th></th></tr>${html}</table>
+    <p class="fine">確認的單位是「一篇研究摘要」，不是整個分類頁——分類頁每天會長出新的內容，
+    掛一個固定的審閱日期會越來越不準。確認過的那一篇會在網站上顯示
+    「本則摘要經吳政哲醫師確認（日期）」，沒確認的就不顯示，不影響閱讀。
+    ${nodoi ? `<br>另有 ${nodoi} 篇沒有 DOI，無法逐篇確認。` : ""}
+    <br>按下去先記到雲端，隔天早上的排程（<code>publish_reviews.py</code>）會同步上線。</p>`;
+
+  $("onlytodo").onchange = e => { NEWS_ONLY_TODO = e.target.checked; renderNews(); };
+  document.querySelectorAll("button[data-doi]").forEach(b =>
+    b.onclick = () => markNews([b.dataset.doi], b));
+  document.querySelectorAll("button[data-batch]").forEach(b =>
+    b.onclick = () => markNews(groups[b.dataset.batch]
+      .filter(x => !NEWSREVIEW[x.doi]).map(x => x.doi), b));
+}
+
+async function markNews(dois, btn){
+  if(!dois.length) return;
+  const d = today();
+  btn.disabled = true; const old = btn.textContent;
+  btn.textContent = dois.length > 1 ? `寫入 ${dois.length} 筆…` : "寫入中…";
+  try{
+    /* 一筆一筆寫。整批用 writeBatch 會快一點，但中途失敗時很難講清楚
+       哪些成功了；這裡量很小（一天三篇），逐筆寫換到的是明確的失敗點。 */
+    for(const doi of dois){
+      await setDoc(doc(db, "newsreview", newsId(doi)), {doi, date: d, at: new Date()});
+      NEWSREVIEW[doi] = d;
+    }
+    render();
+  }catch(e){
+    btn.disabled = false; btn.textContent = old;
+    render();
+    alert("寫入失敗：" + (e.code || e.message)
+          + "\n\n若是 permission-denied，代表 firestore.rules 還沒發布到 Firebase console。");
   }
 }
 

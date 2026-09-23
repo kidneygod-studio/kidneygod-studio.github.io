@@ -228,10 +228,25 @@ python check_site.py
   作者按信裡的按鈕 → 寫進 Firestore → 隔天早上排程跑 `publish_reviews.py`
   → 頁面才出現「本頁內容最後由吳政哲醫師審閱於 …」。要立刻上線就手動跑那支。
 
-- **絕對不要自己去填 `articles_src/reviewed.json`**（格式見 `REVIEW_DATES.md`）。
-  那個檔是「醫師本人確認過」的證據，唯一的來源是作者在 `admin.html` 按下的那一下
-  （寫入限定 Google 登入且信箱相符）。拿建置日、拿「作者說寫得不錯」、
-  拿「信應該有讀到吧」去填，都是在公開醫療網站上做一個不成立的聲明。
+- **絕對不要自己去填 `articles_src/reviewed.json` 或 `articles_src/news_reviewed.json`**
+  （格式見 `REVIEW_DATES.md`）。那兩個檔是「醫師本人確認過」的證據，唯一的來源是
+  作者在 `admin.html` 按下的那一下（寫入限定 Google 登入且信箱相符）。
+  拿建置日、拿「作者說寫得不錯」、拿「信應該有讀到吧」去填，
+  都是在公開醫療網站上做一個不成立的聲明。
+
+### 每日新知的確認是「逐篇」，不是「逐頁」
+
+新知分類頁（`articles/news*.html`）**不掛頁面層級的審閱日期**——內容每天自動
+長出來，掛一個固定日期會越來越不準（見第四節）。但每一篇研究摘要寫好之後
+就不會再變，所以確認的單位是「篇」：
+
+| 檔案 | 單位 | 鍵 | Firestore 集合 |
+|---|---|---|---|
+| `articles_src/reviewed.json` | 頁 | 網站相對路徑 | `review` |
+| `articles_src/news_reviewed.json` | 篇 | DOI | `newsreview` |
+
+確認過的那一篇會顯示「本則摘要經吳政哲醫師確認（日期）」，沒確認的不顯示，
+不影響閱讀也不影響發佈——**新知照常每天自動上線，不必等人**。
 - 首頁精選六篇是手挑的（`build_site.py` 的 `featured_paths`）。新文章要不要
   擠進去是編輯決定，不是自動的。
 
