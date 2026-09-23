@@ -37,6 +37,47 @@ python check_site.py      # 推之前對帳
 
 ---
 
+## 2026-09-23（晚）　長文審閱：信件一鍵確認，確認後自動補上審閱日期
+
+後台審閱頁（上一則）已經能按，但**按完之後沒有人跑 `sync_reviews.py`**，
+Firestore 有紀錄、網站上什麼都沒變——作者以為完成了，讀者看到的還是舊的。
+這次把整條路接起來：
+
+```
+python request_review.py <slug>        寄信（文章連結 ＋ 一鍵確認連結）
+  → 作者按 /admin.html?p=<路徑>        寫進 Firestore（限 Google 登入且信箱相符）
+  → publish_reviews.py                 隔天早上排程跑：sync → build → check → push
+  → 頁面出現「本頁內容最後由吳政哲醫師審閱於 …」
+```
+
+- **`admin.html` 新增 `?p=<路徑>`**：把那一篇單獨提到最上面加一個大按鈕，
+  手機上不必在幾十列裡面找。找不到對應頁面就當作沒帶。
+- **新增 `publish_reviews.py`**：冪等，雲端沒新東西就什麼都不做。
+  掛在 `run_daily_nephrology.ps1` 的每日新知之後，**刻意不另開排程**。
+- **新增 `request_review.py`**：寄審閱請求信，`--dry-run` 可先看內容。
+  信件走 `nephrology_digest\scripts\email_delivery.py` 新增的 `send_mail()`。
+- 上線時機採「**先上線、後補審閱日期**」（作者定案）：內容早點被索引比較重要，
+  而「醫師審閱」這個聲明晚一點出現是誠實的。沒有審閱紀錄時 `build_site.py`
+  本來就不印那行字，也不輸出 `lastReviewed`。
+
+### 為什麼不用「信讀過就算確認」
+
+作者原本的構想是「我讀了又沒回來找你改，就當作確認」。兩層都不成立：
+Resend 目前那把 key 是 `restricted_api_key`（只能寄信，讀不到事件），
+而且追蹤像素回答的是「有沒有東西抓了這張圖」——iPhone 的郵件隱私權保護
+會預先載入所有遠端內容，信一送到就可能回報已開啟。
+頁面上要印的是醫師審閱聲明加日期，`REVIEW_DATES.md` 寫明只接受人工確認；
+用會被裝置自動觸發的訊號去滿足那句話，等於把那份紀錄存在的理由抵銷掉。
+
+### 順帶刪掉的
+
+`publish_digest.py`（Telegram 說「可上線」才發佈的那支）已無呼叫者。
+留在共用 repo 裡比刪掉危險：另一個 AI 助手看到「publish」字樣很可能拿去用，
+而它的前置檢查跟 `publish_daily.py` 不同（要求整個工作區乾淨）。
+`NephrologyBot`／`NephrologyBotWatchdog` 兩個排程也一併刪除。
+
+---
+
 ## 2026-09-23　Email 訂閱、就醫資訊與門診時刻表、後台審閱頁
 
 ### Email 訂閱

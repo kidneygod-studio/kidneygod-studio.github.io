@@ -44,6 +44,13 @@
   .box{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)}
   .box b{display:block;font-size:24px}
   .box span{font-size:12px;color:var(--mut)}
+  /* 信裡的連結帶 ?p=<路徑> 時，把那一篇單獨提到最上面，手機上一眼就看到 */
+  .focus{border:2px solid var(--accent);border-radius:12px;padding:14px;margin-bottom:16px;
+         background:var(--bg)}
+  .focus .t{font-size:15px;font-weight:700;margin-bottom:2px;line-height:1.5}
+  .focus .p{font-size:12.5px;color:var(--mut);margin-bottom:12px;word-break:break-all}
+  .focus .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .focus button.act{padding:12px 20px;font-size:15px}
   textarea{width:100%;min-height:150px;font-family:ui-monospace,Menlo,Consolas,monospace;
            font-size:12.5px;padding:10px;border:1px solid var(--line);border-radius:9px;
            background:var(--bg);color:var(--fg)}
@@ -81,6 +88,11 @@ const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const today = () => new Date().toLocaleDateString("sv-SE");   // sv-SE 剛好就是 YYYY-MM-DD
 const docId = path => path.replace(/\//g, "__");
+
+/* 審閱請求信裡的連結長這樣：/admin.html?p=articles/<slug>.html
+   帶了就把那一篇提到最上面、給一個大按鈕，省得在幾十列裡面找。
+   找不到對應頁面時就當作沒帶（例如網址打錯、或那篇還沒上線）。 */
+const FOCUS = new URLSearchParams(location.search).get("p") || "";
 
 let TAB = "review", PAGES = [], REVIEW = {}, SUBS = [];
 
@@ -154,6 +166,19 @@ function render(){
   (TAB === "review" ? renderReview : renderSubs)();
 }
 
+function focusCard(){
+  if(!FOCUS || !PAGES.includes(FOCUS)) return "";
+  const d = REVIEW[FOCUS];
+  return `<div class="focus">
+    <div class="t">${d ? "這一篇已經標記過審閱" : "這一篇等你確認"}</div>
+    <div class="p">${esc(FOCUS)}${d ? `　·　審閱日期 ${esc(d)}` : ""}</div>
+    <div class="row">
+      <button class="act" data-p="${esc(FOCUS)}">${d ? "更新為今天" : "我已看過，可標示醫師審閱"}</button>
+      <a href="/${esc(FOCUS)}" target="_blank" rel="noopener">先看文章 →</a>
+    </div>
+  </div>`;
+}
+
 function renderReview(){
   const done = PAGES.filter(p => REVIEW[p]).length;
   const rows = PAGES.map(p => {
@@ -166,14 +191,15 @@ function renderReview(){
     </tr>`;
   }).join("");
   $("body").innerHTML = `
+    ${focusCard()}
     <div class="sum">
       <div class="box"><b>${done} / ${PAGES.length}</b><span>已有審閱紀錄</span></div>
       <div class="box"><b>${today()}</b><span>今天</span></div>
     </div>
     <table><tr><th>頁面</th><th class="r">審閱日期</th><th></th></tr>${rows}</table>
-    <p class="fine">按下去只是把日期記到雲端。<b>要顯示在網站上，還要有人跑一次
-    <code>python sync_reviews.py</code> 再重新建站</b>——所以看完一批之後跟我或
-    Codex 說一聲就好。日期是公開資訊（本來就會印在頁面上），名單則完全不公開。</p>`;
+    <p class="fine">按下去先記到雲端，<b>隔天早上的排程會把日期同步進網站</b>
+    （<code>publish_reviews.py</code>，掛在每日新知那條管線後面）。要立刻上線就跟我或
+    Codex 說一聲。日期是公開資訊（本來就會印在頁面上），名單則完全不公開。</p>`;
   document.querySelectorAll("button[data-p]").forEach(b => b.onclick = () => mark(b));
 }
 
