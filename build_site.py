@@ -3813,7 +3813,13 @@ def digest_card(x: dict, compact: bool = False) -> str:
     if x.get("sig"):
         body += f'<p class="dgsig">{inline(x["sig"])}</p>'
     if x.get("lim"):
-        body += f'<p class="dglim">限制：{inline(x["lim"])}</p>'
+        # 這裡自己加「限制：」，但每日新知匯入的條目有一大半在內文開頭就先寫了
+        # 「局限性：」，於是線上顯示成「限制：局限性：…」。2026-09-24 發現時，
+        # 光是 news-kidney.html 一頁就有 24 處。
+        # 修在這裡而不是修 news.json：那個檔每天由排程寫入，只清一次資料的話
+        # 明天匯進來的條目又會帶著前綴回來。
+        lim = re.sub(r'^\s*(局限性|限制|研究限制)\s*[：:]\s*', '', x["lim"])
+        body += f'<p class="dglim">限制：{inline(lim)}</p>'
     return f'<article class="dg">{head}{img}{kp}{body}</article>'
 
 
