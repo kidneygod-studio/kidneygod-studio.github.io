@@ -215,10 +215,28 @@ def author_ld(full: bool = False) -> dict:
     return d
 
 
-def reviewed_ld() -> dict:
-    """醫療內容專用的審閱欄位。Google 對 MedicalWebPage 明確支援這兩個欄位，
-    是「這篇有醫師看過」最直接的機器可讀訊號。審閱者就是作者本人。"""
-    return {"lastReviewed": TODAY, "reviewedBy": {"@id": AUTHOR_ID}}
+REVIEW_DATES_FILE = ROOT / "articles_src" / "reviewed.json"
+
+
+def load_review_dates() -> dict[str, str]:
+    """只接受人工確認的逐頁審閱日期；不得由重建日期推算。"""
+    records = json.loads(REVIEW_DATES_FILE.read_text(encoding="utf-8"))
+    if not isinstance(records, dict):
+        raise ValueError("reviewed.json 必須是頁面路徑與日期的對照表")
+    for path, value in records.items():
+        if not isinstance(value, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+            raise ValueError(f"審閱日期格式錯誤：{path}")
+        if date.fromisoformat(value) > date.today():
+            raise ValueError(f"審閱日期不可在未來：{path}")
+    return records
+
+
+REVIEW_DATES = load_review_dates()
+
+
+def reviewed_ld(path: str) -> dict:
+    reviewed = REVIEW_DATES.get(path or "index.html")
+    return {"lastReviewed": reviewed, "reviewedBy": {"@id": AUTHOR_ID}} if reviewed else {}
 
 
 DISCLAIMER = ("本站內容為一般健康衛教資訊，不針對任何個人提供診斷或治療建議，"
@@ -1510,6 +1528,14 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
                    f'const VIEWS_PATH="{VIEWS_PATH}";</script>'
                    + VIEWS_SCRIPT)
 
+    review = reviewed_ld(path)
+    review_text = (f"本頁內容最後由{esc(AUTHOR_NAME)}醫師審閱於 {review['lastReviewed']}　·　"
+                   if review else "")
+    if jsonld:
+        jsonld = dict(jsonld)
+        jsonld.pop("lastReviewed", None)
+        jsonld.pop("reviewedBy", None)
+        jsonld.update(review)
     ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
 
     # 全站統一用橫帶骨架：main 滿版，內容切成一條一條 <section class="band">。
@@ -1584,7 +1610,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
   <div>
     <div class="n"><a href="/about.html">{esc(AUTHOR_NAME)}</a>　<span class="r">{esc(AUTHOR_TITLE)}</span></div>
     <div>{esc(AUTHOR_BIO)}</div>
-    <div class="rev">本頁內容最後由{esc(AUTHOR_NAME)}醫師審閱於 {TODAY}　·　<a href="/about.html">完整資歷與撰寫原則</a></div>
+    <div class="rev">{review_text}<a href="/about.html">完整資歷與撰寫原則</a></div>
   </div>
 </div>
 <div class="disclaimer">{esc(DISCLAIMER)}</div>
@@ -1676,7 +1702,6 @@ def build_category(cat: str, items: list[dict],
         "url": f"{BASE_URL}/{path}",
         "dateModified": TODAY,
         "author": author_ld(),
-        **reviewed_ld(),
         "publisher": {"@type": "Organization", "name": SITE_NAME},
         "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"},
         "audience": {"@type": "PeopleAudience", "geographicArea": {"@type": "Country", "name": "台灣"}},
@@ -2059,7 +2084,6 @@ def build_markdown_articles() -> list[dict]:
             "url": f"{BASE_URL}/{path}",
             "datePublished": published, "dateModified": TODAY,
             "author": author_ld(),
-            **reviewed_ld(),
             "publisher": {"@type": "Organization", "name": SITE_NAME},
             "about": {"@type": "MedicalCondition", "name": "慢性腎臟病"},
         }
@@ -2139,6 +2163,19 @@ def build_search_index(data: list[dict], md_pages: list[dict],
         idx.append({"t": g.get("cap", ""), "c": g.get("cat") or "衛教圖卡",
                     "b": g.get("text", ""), "g": 1,
                     "u": f"/articles/gallery-{slug}.html#g-{g['id']}"})
+
+    # 每篇研究都有獨立搜尋結果，連到分類頁的既有摘要錨點。
+    for paper in PAPERS:
+        category = TOPIC2CAT.get(paper.get("topic", ""))
+        if not category:
+            continue
+        fields = [paper.get(k, "") for k in
+                  ("en", "journal", "date", "doi", "cite", "q", "f", "m", "bg", "me", "sig", "lim")]
+        fields.extend(paper.get("r", []))
+        idx.append({"t": paper["zh"], "c": "醫學新知・" + paper["topic"],
+                    "b": " ".join([paper.get("en", ""), paper.get("doi", ""),
+                                    _plain(" ".join(str(v) for v in fields if v))]),
+                    "u": f"/{news_cat_path(category)}#{paper['id']}"})
 
     # 工具與導覽頁：使用者常直接搜「計算」「食物」而不是搜內容
     for t, u, c, b in [
@@ -4419,7 +4456,6 @@ def build_food() -> str:
         "url": f"{BASE_URL}/food.html",
         "dateModified": TODAY,
         "author": author_ld(),
-        **reviewed_ld(),
         "citation": {"@type": "Dataset", "name": db["source"], "url": db["source_url"]},
     }
     return page(title, desc, "food.html", body, jsonld, extra_head=extra)
@@ -4557,6 +4593,7 @@ function calcInit(){
   const num = id => { const v = parseFloat($(id).value); return isFinite(v) ? v : null; };
 
   function run(){
+    $("cRes").classList.remove("on");
     const age = num("cAge"), scr = num("cScr"), cys = num("cCys"), acr = num("cAcr");
     const female = $("cSex").value === "f";
     const err = $("cErr"); err.textContent = "";
@@ -4569,6 +4606,9 @@ function calcInit(){
     if(cys !== null && (cys <= 0 || cys > 12)){
       err.textContent = "胱抑素 C 的數值看起來不合理，請確認單位是 mg/L。"; return; }
 
+    if(acr !== null && acr <= 0){
+      err.textContent = "UACR 請填入大於 0 的數值，單位為 mg/g；沒有數值可留白。"; return;
+    }
     const useCys = cys !== null;
     const e = useCys ? ckdEpiCrCys(scr, cys, age, female) : ckdEpiCr(scr, age, female);
     const [sg, sdesc] = stageOf(e);
@@ -4618,6 +4658,15 @@ function calcInit(){
     $("cRes").classList.add("on");
   }
 
+  ["cAge","cSex","cScr","cCys","cAcr","cRegion"].forEach(id => {
+    function invalidate(){
+      const hadResult = $("cRes").classList.contains("on");
+      $("cRes").classList.remove("on");
+      if(hadResult) $("cErr").textContent = "輸入已變更，請重新計算。";
+    }
+    $(id).addEventListener("input", invalidate);
+    $(id).addEventListener("change", invalidate);
+  });
   $("cRun").addEventListener("click", run);
   $("cClear").addEventListener("click", () => {
     ["cAge","cScr","cCys","cAcr"].forEach(i => document.getElementById(i).value = "");
@@ -4689,7 +4738,7 @@ def build_calc() -> str:
     <button id="cRun" class="cbtn" type="button">計算</button>
     <button id="cClear" class="cbtn ghost" type="button">清除</button>
   </div>
-  <div class="cfield wide"><div class="cerr" id="cErr"></div></div>
+  <div class="cfield wide"><div class="cerr" id="cErr" role="status" aria-live="polite"></div></div>
 </div>
 
 <div class="cres" id="cRes">
@@ -4762,7 +4811,6 @@ def build_calc() -> str:
         "url": f"{BASE_URL}/calc.html",
         "dateModified": TODAY,
         "author": author_ld(),
-        **reviewed_ld(),
     }
     return page(title, desc, "calc.html", body, jsonld, extra_head=CALC_CSS_JS)
 
