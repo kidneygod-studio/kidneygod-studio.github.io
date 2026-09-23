@@ -3,8 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>台南美食通</title>
-<meta name="description" content="台南美食通：府城餐廳與小吃的雜誌式導覽，招牌菜介紹、網友評價歸納與實用資訊。">
+<title>台南美食通｜台南餐廳與小吃全攻略：89 家老店、隱藏美食與米其林必比登</title>
+<meta name="description" content="台南美食雜誌式導覽：89 家餐廳與小吃的詳細評論、招牌菜介紹、網友評價歸納與必比登名單，含美食地圖與在地人私藏隱藏美食。">
+
+<link rel="canonical" href="https://kidneygod.net/tainanfood/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="台南美食通｜台南餐廳與小吃全攻略：89 家老店、隱藏美食與米其林必比登">
+<meta property="og:description" content="台南美食雜誌式導覽：89 家餐廳與小吃的詳細評論、招牌菜介紹、網友評價歸納與必比登名單，含美食地圖與在地人私藏隱藏美食。">
+<meta property="og:url" content="https://kidneygod.net/tainanfood/">
+<meta property="og:site_name" content="台南美食通">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Anping_Old_Street.jpg/1280px-Anping_Old_Street.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#b3261e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -12,629 +22,227 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<style>
-:root{
-  --paper:#f6f1e7; --paper-2:#efe7d6; --card:#fffdf8;
-  --ink:#1d1a16; --ink-2:#5b544a; --ink-3:#8a8175;
-  --red:#b3261e; --red-2:#8f1d17; --gold:#b98a2e; --jade:#2f6b5a;
-  --rule:#d9cfbd; --shadow:0 1px 2px rgba(40,30,10,.06),0 8px 24px rgba(40,30,10,.08);
-  --serif:"Noto Serif TC","Songti TC","PMingLiU",serif;
-  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-  --max:1180px;
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#16130f; --paper-2:#1f1b16; --card:#211d18;
-  --ink:#f1ead9; --ink-2:#c3b9a6; --ink-3:#8f8676;
-  --red:#e0574c; --red-2:#f07a6f; --gold:#d8ae57; --jade:#6fb39d;
-  --rule:#3a332a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
-}}
-:root[data-theme="dark"]{
-  --paper:#16130f; --paper-2:#1f1b16; --card:#211d18;
-  --ink:#f1ead9; --ink-2:#c3b9a6; --ink-3:#8f8676;
-  --red:#e0574c; --red-2:#f07a6f; --gold:#d8ae57; --jade:#6fb39d;
-  --rule:#3a332a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
-}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.8;font-size:16px;overflow-x:hidden}
-img{max-width:100%;display:block}
-a{color:inherit}
-button{font:inherit;color:inherit}
-.wrap{max-width:var(--max);margin:0 auto;padding:0 16px}
-
-/* ---------- masthead ---------- */
-.mast{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
-.mast .wrap{display:flex;align-items:center;gap:16px;height:60px}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo .seal{width:34px;height:34px;border-radius:6px;background:var(--red);color:#fff;display:grid;place-items:center;font-family:var(--serif);font-weight:900;font-size:17px;letter-spacing:-1px}
-.logo b{font-family:var(--serif);font-weight:900;font-size:21px;letter-spacing:2px}
-.logo small{display:block;font-size:10px;letter-spacing:3px;color:var(--ink-3);line-height:1;margin-top:-2px}
-.nav{margin-left:auto;display:flex;gap:4px}
-.nav a{text-decoration:none;font-size:14px;padding:6px 10px;border-radius:999px;color:var(--ink-2)}
-.nav a.on,.nav a:hover{background:var(--paper-2);color:var(--ink)}
-.icon-btn{border:0;background:none;padding:6px;border-radius:8px;cursor:pointer;color:var(--ink-2)}
-.icon-btn:hover{background:var(--paper-2)}
-
-/* ---------- home ---------- */
-.cover{position:relative;border-bottom:1px solid var(--rule);overflow:hidden}
-.cover-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding-top:48px;padding-bottom:40px}
-.issue{font-size:12px;letter-spacing:4px;color:var(--red);font-weight:700;text-transform:uppercase}
-.cover h1{font-family:var(--serif);font-weight:900;font-size:clamp(44px,8vw,96px);line-height:1.05;margin:10px 0 18px;letter-spacing:4px}
-.cover h1 em{font-style:normal;color:var(--red)}
-.cover p.lede{font-family:var(--serif);font-size:19px;color:var(--ink-2);max-width:32em;margin:0 0 24px}
-.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--rule);border-radius:999px;padding:6px 6px 6px 18px;box-shadow:var(--shadow);max-width:520px}
-.search input{flex:1;border:0;background:none;font:inherit;color:var(--ink);outline:none;min-width:0;font-size:16px}
-.search button{border:0;background:var(--red);color:#fff;border-radius:999px;padding:8px 18px;cursor:pointer;font-weight:700}
-.cover-img{position:relative;aspect-ratio:4/5;border-radius:4px;overflow:hidden;box-shadow:var(--shadow)}
-.cover-img img{width:100%;height:100%;object-fit:cover}
-.cover-img figcaption{position:absolute;left:0;right:0;bottom:0;padding:40px 18px 14px;background:linear-gradient(transparent,rgba(0,0,0,.72));color:#fff;font-family:var(--serif)}
-.cover-img figcaption b{display:block;font-size:22px}
-.stats{display:flex;gap:28px;margin-top:26px;flex-wrap:wrap}
-.stats div b{font-family:var(--serif);font-size:30px;display:block;line-height:1}
-.stats div span{font-size:12px;color:var(--ink-3);letter-spacing:2px}
-
-.section-h{display:flex;align-items:baseline;gap:14px;margin:48px 0 18px;border-top:3px double var(--ink);padding-top:14px}
-.section-h h2{font-family:var(--serif);font-size:28px;margin:0;letter-spacing:2px}
-.section-h span{font-size:12px;letter-spacing:3px;color:var(--ink-3)}
-.section-h .more{margin-left:auto;font-size:14px;color:var(--red);text-decoration:none}
-
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{border:1px solid var(--rule);background:var(--card);border-radius:999px;padding:5px 14px;font-size:14px;cursor:pointer;text-decoration:none;white-space:nowrap}
-.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.chip small{color:var(--ink-3);margin-left:4px}
-.chip.on small{color:inherit;opacity:.7}
-
-.feature{display:grid;grid-template-columns:1.3fr 1fr;gap:0;background:var(--card);box-shadow:var(--shadow);border-radius:4px;overflow:hidden;text-decoration:none}
-.feature .ph{aspect-ratio:16/11;overflow:hidden}
-.feature .ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
-.feature:hover .ph img{transform:scale(1.04)}
-.feature .tx{padding:32px}
-.kicker{font-size:12px;letter-spacing:3px;color:var(--red);font-weight:700}
-.feature h3{font-family:var(--serif);font-size:34px;line-height:1.25;margin:8px 0 12px}
-.feature .tag{font-family:var(--serif);font-size:18px;color:var(--ink-2);margin:0 0 16px}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:28px 22px}
-.card{text-decoration:none;display:block;position:relative}
-.card .ph{aspect-ratio:4/3;overflow:hidden;border-radius:3px;background:var(--paper-2)}
-.card .ph img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
-.card:hover .ph img{transform:scale(1.05)}
-.card .meta{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink-3);margin-top:10px;letter-spacing:1px}
-.card .meta .cat{color:var(--red);font-weight:700}
-.card h3{font-family:var(--serif);font-size:21px;margin:2px 0 4px;line-height:1.35}
-.card p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card .fav{position:absolute;top:8px;right:8px}
-.rating{display:inline-flex;align-items:center;gap:3px;color:var(--gold);font-weight:700}
-.nosite{font-size:11px;border:1px solid var(--jade);color:var(--jade);border-radius:3px;padding:0 5px;letter-spacing:0}
-
-.fav{border:0;background:rgba(255,255,255,.9);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#888;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-.fav.on{color:var(--red)}
-
-.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:18px 0 24px}
-.toolbar select{font:inherit;padding:6px 10px;border:1px solid var(--rule);border-radius:6px;background:var(--card);color:var(--ink)}
-.toolbar .count{margin-left:auto;font-size:13px;color:var(--ink-3)}
-.empty{padding:60px 0;text-align:center;color:var(--ink-3);font-family:var(--serif);font-size:18px}
-
-.ph,.dish .ph,.feature .ph{position:relative}
-.demo{position:absolute;left:8px;bottom:8px;font-size:11px;letter-spacing:1px;background:rgba(0,0,0,.55);color:#fff;padding:1px 7px;border-radius:2px;pointer-events:none}
-.hero .demo{left:auto;right:16px;bottom:16px;z-index:3}
-.bib{display:inline-flex;align-items:center;gap:4px;font-size:11px;background:#c8102e;color:#fff;border-radius:2px;padding:0 6px;letter-spacing:1px;font-weight:700;white-space:nowrap}
-.bib svg{flex:none}
-.years{display:flex;gap:6px;flex-wrap:wrap}
-.years span{font-family:var(--serif);font-weight:700;font-size:14px;border:1.5px solid #c8102e;color:#c8102e;border-radius:3px;padding:0 8px}
-.years span.off{border-color:var(--rule);color:var(--ink-3);text-decoration:line-through;font-weight:500}
-.bibtable{width:100%;border-collapse:collapse;font-size:15px}
-.bibtable th{text-align:left;font-size:12px;letter-spacing:2px;color:var(--ink-3);font-weight:500;border-bottom:2px solid var(--ink);padding:8px 6px}
-.bibtable td{border-bottom:1px solid var(--rule);padding:12px 6px;vertical-align:middle}
-.bibtable td b{font-family:var(--serif);font-size:17px}
-.bibtable td small{color:var(--ink-3);display:block}
-.bibtable a{color:var(--red);text-decoration:none;white-space:nowrap}
-@media (max-width:860px){.bibtable .hide-m{display:none}}
-.gem{font-size:11px;background:var(--gold);color:#fff;border-radius:2px;padding:0 6px;letter-spacing:1px;font-weight:700}
-.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
-.gallery a{display:block;aspect-ratio:1;overflow:hidden;border-radius:3px}
-.gallery img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
-.gallery a:hover img{transform:scale(1.05)}
-.embeds{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;align-items:start}
-.embed iframe{display:block;width:100%;height:620px;border:1px solid var(--rule);border-radius:6px;background:#fff}
-.embed-link{display:inline-block;margin-top:6px;font-size:13px;color:var(--red);text-decoration:none}
-
-/* placeholder art when no photo */
-.ph-art{width:100%;height:100%;display:grid;place-items:center;background:
-  radial-gradient(circle at 30% 20%,color-mix(in srgb,var(--gold) 35%,transparent),transparent 60%),
-  linear-gradient(135deg,var(--red),var(--red-2));color:#fff8ea;font-family:var(--serif);font-weight:900;font-size:clamp(36px,6vw,64px);letter-spacing:6px;text-shadow:0 2px 12px rgba(0,0,0,.25)}
-
-/* ---------- article ---------- */
-.hero{position:relative;min-height:min(78vh,720px);display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:#222}
-.hero>img,.hero>.ph-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 30%,rgba(0,0,0,.78))}
-.hero .wrap{position:relative;z-index:2;padding-bottom:48px;width:100%}
-.hero .kicker{color:#ffd9a0}
-.hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(40px,7vw,84px);line-height:1.1;margin:10px 0 14px;letter-spacing:3px}
-.hero .tag{font-family:var(--serif);font-size:clamp(18px,2.4vw,24px);max-width:30em;margin:0;opacity:.95}
-.hero .hmeta{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px;font-size:14px;opacity:.92}
-.hero .fav{position:absolute;right:16px;top:16px;z-index:3}
-
-.article{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:56px;padding:48px 0 24px}
-.byline{font-size:13px;color:var(--ink-3);letter-spacing:1px;border-bottom:1px solid var(--rule);padding-bottom:14px;margin-bottom:26px}
-.prose{font-family:var(--serif);font-size:18.5px;line-height:2}
-.prose p{margin:0 0 1.2em;text-align:justify}
-.prose p.first::first-letter{float:left;font-size:4.2em;line-height:.9;font-weight:900;color:var(--red);margin:.08em .12em 0 0}
-.pull{margin:34px 0;padding:22px 0;border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.5;color:var(--red-2)}
-.pull::before{content:"「"}
-.pull::after{content:"」"}
-h2.h{font-family:var(--serif);font-size:26px;margin:48px 0 18px;letter-spacing:2px;display:flex;align-items:center;gap:12px}
-h2.h::after{content:"";flex:1;height:1px;background:var(--rule)}
-h2.h small{font-size:12px;letter-spacing:3px;color:var(--ink-3);font-family:var(--sans)}
-
-.dish{display:grid;grid-template-columns:220px 1fr;gap:22px;padding:22px 0;border-bottom:1px solid var(--rule)}
-.dish .ph{aspect-ratio:1;overflow:hidden;border-radius:3px}
-.dish .ph img{width:100%;height:100%;object-fit:cover}
-.dish .ph .ph-art{font-size:34px;letter-spacing:2px}
-.dish h3{font-family:var(--serif);font-size:23px;margin:0 0 4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.dish .price{font-family:var(--sans);font-size:15px;color:var(--red);font-weight:700}
-.dish .sig{font-family:var(--sans);font-size:11px;background:var(--red);color:#fff;padding:1px 8px;border-radius:2px;letter-spacing:2px}
-.dish p{margin:6px 0 0;color:var(--ink-2);line-height:1.9}
-
-.voices{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-.voices .box{background:var(--card);border-radius:4px;padding:20px 22px;box-shadow:var(--shadow)}
-.voices h4{margin:0 0 8px;font-family:var(--serif);font-size:18px}
-.voices ul{margin:0;padding-left:1.2em;color:var(--ink-2)}
-.voices li{margin:4px 0}
-.voices .good h4{color:var(--jade)}
-.voices .bad h4{color:var(--red)}
-
-.tips{counter-reset:t;list-style:none;padding:0;margin:0}
-.tips li{counter-increment:t;position:relative;padding:12px 0 12px 48px;border-bottom:1px dashed var(--rule)}
-.tips li::before{content:counter(t,decimal-leading-zero);position:absolute;left:0;top:8px;font-family:var(--serif);font-size:24px;font-weight:900;color:var(--gold)}
-
-.side{position:relative}
-.side .sticky{position:sticky;top:80px;display:flex;flex-direction:column;gap:20px}
-.panel{background:var(--card);border-radius:4px;box-shadow:var(--shadow);padding:20px 22px}
-.panel h4{margin:0 0 12px;font-family:var(--serif);font-size:17px;letter-spacing:2px;border-bottom:2px solid var(--ink);padding-bottom:8px}
-.info dt{font-size:12px;color:var(--ink-3);letter-spacing:2px;margin-top:10px}
-.info dd{margin:0;font-size:15px;line-height:1.6;word-break:break-word}
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:var(--red);color:#fff;border-radius:4px;padding:10px 14px;font-weight:700;margin-top:14px}
-.btn.ghost{background:none;color:var(--ink);border:1px solid var(--rule);margin-top:8px}
-.score{display:grid;grid-template-columns:64px 1fr 30px;gap:10px;align-items:center;font-size:14px;margin:8px 0}
-.score .bar{height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden}
-.score .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--red))}
-.score b{font-family:var(--serif);text-align:right}
-.bigscore{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
-.bigscore b{font-family:var(--serif);font-size:44px;line-height:1;color:var(--red)}
-.bigscore span{font-size:13px;color:var(--ink-3)}
-.minimap{height:200px;border-radius:4px;overflow:hidden;margin-top:12px;background:var(--paper-2)}
-
-.fine{font-size:12.5px;color:var(--ink-3);line-height:1.7}
-.fine a{color:var(--ink-2);word-break:break-all}
-.notice{border-left:3px solid var(--gold);background:var(--paper-2);padding:12px 16px;font-size:13.5px;color:var(--ink-2);margin:28px 0 0}
-
-.related{padding-bottom:40px}
-
-/* map page */
-#bigmap{height:calc(100vh - 60px - 150px);min-height:420px;border-radius:4px;overflow:hidden;box-shadow:var(--shadow)}
-.leaflet-popup-content{font-family:var(--sans)}
-.leaflet-popup-content b{font-family:var(--serif);font-size:16px}
-
-footer{border-top:1px solid var(--rule);padding:32px 0 60px;margin-top:40px;color:var(--ink-3);font-size:13px}
-footer b{font-family:var(--serif);color:var(--ink);font-size:16px}
-
-/* bottom tab bar (app-like, mobile) */
-.tabbar{display:none}
-@media (max-width:860px){
-  .cover-grid{grid-template-columns:1fr;padding-top:28px;padding-bottom:28px}
-  .cover-img{aspect-ratio:16/10}
-  .feature{grid-template-columns:1fr}
-  .feature .tx{padding:22px}
-  .feature h3{font-size:27px}
-  .article{grid-template-columns:1fr;gap:24px;padding-top:28px}
-  .side .sticky{position:static}
-  .dish{grid-template-columns:110px 1fr;gap:14px}
-  .dish h3{font-size:20px}
-  .voices{grid-template-columns:1fr}
-  .prose{font-size:17px}
-  .pull{font-size:21px}
-  .nav{display:none}
-  #themeBtn{margin-left:auto}
-  .chips.scroll{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
-  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--card);border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom)}
-  .tabbar a{flex:1;text-align:center;text-decoration:none;font-size:11px;padding:8px 0 6px;color:var(--ink-3);line-height:1.3}
-  .tabbar a svg{display:block;margin:0 auto 2px}
-  .tabbar a.on{color:var(--red)}
-  body{padding-bottom:64px}
-  #bigmap{height:calc(100vh - 60px - 64px - 150px)}
-}
-</style>
+<link rel="stylesheet" href="assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "台南美食通", "url": "https://kidneygod.net/tainanfood/", "inLanguage": "zh-Hant-TW", "potentialAction": {"@type": "SearchAction", "target": {"@type": "EntryPoint", "urlTemplate": "https://kidneygod.net/tainanfood/list/?q={search_term_string}"}, "query-input": "required name=search_term_string"}}</script>
 </head>
-<body>
+<body data-page="home" data-sw="sw.js">
+<a class="skip" href="#main">跳到主要內容</a>
 <header class="mast">
   <div class="wrap">
-    <a class="logo" href="#/"><span class="seal">食</span><span><b>台南美食通</b><small>TAINAN FOOD GUIDE</small></span></a>
-    <nav class="nav">
-      <a href="#/" data-nav="home">首頁</a>
-      <a href="#/list" data-nav="list">全部店家</a>
-      <a href="#/bib" data-nav="bib">必比登</a>
-      <a href="#/map" data-nav="map">美食地圖</a>
-      <a href="#/fav" data-nav="fav">我的收藏</a>
-    </nav>
+    <a class="logo" href=""><span class="seal">食</span><span><b>台南美食通</b><small>TAINAN FOOD GUIDE</small></span></a>
+    <nav class="nav"><a href="" class="on">首頁</a><a href="list/" class="">全部店家</a><a href="bib/" class="">必比登</a><a href="map/" class="">美食地圖</a><a href="fav/" class="">我的收藏</a></nav>
     <button class="icon-btn" id="themeBtn" aria-label="切換深淺色" title="切換深淺色">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
     </button>
   </div>
 </header>
 
-<main id="app"></main>
+<main id="main"><section class="cover"><div class="wrap cover-grid">
+  <div>
+    <div class="issue">2026 秋季號 ・ 府城味覺特輯</div>
+    <h1>一口一口<br>吃懂<em>台南</em></h1>
+    <p class="lede">從清晨五點的溫體牛肉湯，到深夜的鹹粥與香腸熟肉——我們走進巷弄，把老店的手路、網友的口碑與在地人的吃法，整理成一本隨身的府城美食誌。</p>
+    <form class="search" action="list/" method="get"><input name="q" placeholder="搜尋店名、料理、街道…" aria-label="搜尋"><button type="submit">搜尋</button></form>
+    <div class="stats">
+      <div><b>89</b><span>精選店家</span></div>
+      <div><b>31</b><span>料理類型</span></div>
+      <div><b>35</b><span>必比登店家</span></div>
+      <div><b>10萬+</b><span>彙整評論數</span></div>
+    </div>
+  </div>
+  <figure class="cover-img" style="margin:0">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Anping_Old_Street.jpg/1280px-Anping_Old_Street.jpg" alt="台南街景" referrerpolicy="no-referrer">
+    <figcaption><span class="kicker" style="color:#ffd9a0">本期推薦</span><b>葉家小卷米粉</b>米其林連年點名，國華街小卷米粉的另一派宗師</figcaption>
+  </figure>
+</div></section>
+<div class="wrap">
+  <div class="section-h"><h2>依料理找</h2><span>BY DISH</span></div><div class="chips"><a class="chip" href="c/%E5%85%B6%E4%BB%96/">其他<small>18</small></a><a class="chip" href="c/%E5%8F%B0%E8%8F%9C/">台菜<small>10</small></a><a class="chip" href="c/%E7%89%9B%E8%82%89%E6%B9%AF/">牛肉湯<small>6</small></a><a class="chip" href="c/%E7%BE%8A%E8%82%89%E6%B9%AF/">羊肉湯<small>5</small></a><a class="chip" href="c/%E9%B9%B9%E7%B2%A5/">鹹粥<small>5</small></a><a class="chip" href="c/%E7%A2%97%E7%B2%BF/">碗粿<small>4</small></a><a class="chip" href="c/%E7%B1%B3%E7%B3%95/">米糕<small>4</small></a><a class="chip" href="c/%E5%89%89%E5%86%B0/">剉冰<small>4</small></a><a class="chip" href="c/%E6%B0%B4%E6%9E%9C%E5%86%B0/">水果冰<small>4</small></a><a class="chip" href="c/%E8%82%89%E5%9C%93/">肉圓<small>3</small></a><a class="chip" href="c/%E9%8D%8B%E7%87%92%E6%84%8F%E9%BA%B5/">鍋燒意麵<small>3</small></a><a class="chip" href="c/%E5%B0%8F%E5%8D%B7%E7%B1%B3%E7%B2%89/">小卷米粉<small>2</small></a><a class="chip" href="c/%E8%9D%A6%E4%BB%81%E9%A3%AF/">蝦仁飯<small>2</small></a><a class="chip" href="c/%E8%82%89%E7%B2%BD/">肉粽<small>2</small></a><a class="chip" href="c/%E5%8C%85%E5%AD%90/">包子<small>1</small></a><a class="chip" href="c/%E6%98%A5%E6%8D%B2/">春捲<small>1</small></a><a class="chip" href="c/%E8%9D%A6%E6%8D%B2/">蝦捲<small>1</small></a><a class="chip" href="c/%E9%AD%9A%E7%BE%B9/">魚羹<small>1</small></a><a class="chip" href="c/%E5%9C%9F%E9%AD%A0%E9%AD%9A%E7%BE%B9/">土魠魚羹<small>1</small></a><a class="chip" href="c/%E8%99%B1%E7%9B%AE%E9%AD%9A%E7%B2%A5/">虱目魚粥<small>1</small></a><a class="chip" href="c/%E9%A6%99%E8%85%B8%E7%86%9F%E8%82%89/">香腸熟肉<small>1</small></a><a class="chip" href="c/%E6%BB%B7%E5%91%B3/">滷味<small>1</small></a><a class="chip" href="c/%E5%89%B2%E5%8C%85/">割包<small>1</small></a><a class="chip" href="c/%E8%9A%B5%E4%BB%94%E7%85%8E/">蚵仔煎<small>1</small></a><a class="chip" href="c/%E8%82%89%E7%87%A5%E9%A3%AF/">肉燥飯<small>1</small></a><a class="chip" href="c/%E8%B1%AC%E5%BF%83%E5%86%AC%E7%B2%89/">豬心冬粉<small>1</small></a><a class="chip" href="c/%E9%B1%94%E9%AD%9A%E6%84%8F%E9%BA%B5/">鱔魚意麵<small>1</small></a><a class="chip" href="c/%E6%93%94%E4%BB%94%E9%BA%B5/">擔仔麵<small>1</small></a><a class="chip" href="c/%E8%99%B1%E7%9B%AE%E9%AD%9A%E7%9A%AE/">虱目魚皮<small>1</small></a><a class="chip" href="c/%E8%B1%86%E8%8A%B1/">豆花<small>1</small></a><a class="chip" href="c/%E6%A3%BA%E6%9D%90%E6%9D%BF/">棺材板<small>1</small></a></div>
 
+  <div class="section-h"><h2>封面故事</h2><span>COVER STORY</span></div>
+  <a class="feature" href="r/yeh-squid-rice-noodles/">
+    <div class="ph"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/%E8%91%89%E5%AE%B6%E5%B0%8F%E5%8D%B7%E7%B1%B3%E7%B2%89_Yie%27s_Neritic_Squid_Rice_Noodles-20191218.jpg/1280px-%E8%91%89%E5%AE%B6%E5%B0%8F%E5%8D%B7%E7%B1%B3%E7%B2%89_Yie%27s_Neritic_Squid_Rice_Noodles-20191218.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail" alt="小卷米粉" loading="lazy" referrerpolicy="no-referrer"></div>
+    <div class="tx"><div class="kicker"><span class="bib" title="米其林必比登 2024、2025、2026"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="4"/><circle cx="12" cy="15" r="5"/></svg>必比登 2024・2025・2026</span></div>
+      <h3>葉家小卷米粉</h3><p class="tag">米其林連年點名，國華街小卷米粉的另一派宗師</p>
+      <p style="color:var(--ink-2);font-size:15px">葉家小卷米粉創立於1935年，至今已傳承三代、超過八十年歷史，與鄰近的邱家小卷米粉各有擁戴者，是國華街上另一條排隊人龍的來源。店家維持傳統做法，大鍋熬湯、現燙小卷，連續多年獲得米其林必比登推薦，觀光客與饕客絡繹不絕。米粉…</p>
+      <span style="color:var(--red);font-weight:700">閱讀全文 →</span></div>
+  </a>
+
+  <div class="section-h"><h2>米其林必比登</h2><span>BIB GOURMAND</span><a class="more" href="bib/">完整名單 →</a></div><div class="grid"><a class="card" href="r/yi-wei-pin-wan-guo-fish-broth/"
+   data-id="yi-wei-pin-wan-guo-fish-broth" data-cat="碗粿" data-district="中西區"
+   data-bib="1" data-gem="0"
+   data-rating="0" data-reviews="0"
+   data-since="" data-editor="4.2" data-text="一味品碗粿魚羹 碗粿 中西區 國華街 台南市中西區國華街三段177號 永樂市場裡的碗粿魚羹雙拼，蒸與煮各自見真章 碗粿 魚羹">
+  <div class="ph"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/Female_restaurant_staffs_serving_boxed_savory_rice_pudding_wearing_face_masks_at_Waguilan_in_the_afternoon_on_18_January_2015.jpg/1280px-Female_restaurant_staffs_serving_boxed_savory_rice_pudding_wearing_face_masks_at_Waguilan_in_the_afternoon_on_18_January_2015.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail" alt="碗粿示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="yi-wei-pin-wan-guo-fish-broth" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="bib" title="米其林必比登 2024、2025、2026"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="4"/><circle cx="12" cy="15" r="5"/></svg>必比登</span><span class="cat">碗粿</span><span>中西區・國華街</span></div>
+  <h3>一味品碗粿魚羹</h3>
+  <p>永樂市場裡的碗粿魚羹雙拼，蒸與煮各自見真章</p>
+</a><a class="card" href="r/san-hao-yi-gong-dao-angelica-duck/"
+   data-id="san-hao-yi-gong-dao-angelica-duck" data-cat="台菜" data-district="中西區"
+   data-bib="1" data-gem="0"
+   data-rating="4.4" data-reviews="800"
+   data-since="約1949年創立，傳承逾75年" data-editor="4.2" data-text="三好一公道當歸鴨 台菜 中西區 東門圓環 台南市中西區府前路一段2號 東門圓環一角，七十五年不換的當歸清香 當歸鴨腿麵線 當歸米血麵線 鴨肝">
+  <div class="ph"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Taiwanese_cuisine.jpg/1280px-Taiwanese_cuisine.jpg" alt="台菜示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="san-hao-yi-gong-dao-angelica-duck" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="bib" title="米其林必比登 2024、2025、2026"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="4"/><circle cx="12" cy="15" r="5"/></svg>必比登</span><span class="cat">台菜</span><span>中西區・東門圓環</span><span style="margin-left:auto" class="rating">★ 4.4</span></div>
+  <h3>三好一公道當歸鴨</h3>
+  <p>東門圓環一角，七十五年不換的當歸清香</p>
+</a><a class="card" href="r/ba-bao-bin-yuan-zai-hui/"
+   data-id="ba-bao-bin-yuan-zai-hui" data-cat="剉冰" data-district="中西區"
+   data-bib="1" data-gem="0"
+   data-rating="4.3" data-reviews="5200"
+   data-since="約1970年代" data-editor="4.2" data-text="八寶彬圓仔惠 剉冰 中西區 國華街 台南市中西區國華街二段99號 傳承三代半世紀，五種配料就能堆出滿滿幸福 自選五味剉冰 手工湯圓 蜜芋頭剉冰">
+  <div class="ph"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Baobing_in_Taipei_2023-09-01.jpg/1280px-Baobing_in_Taipei_2023-09-01.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail" alt="剉冰示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="ba-bao-bin-yuan-zai-hui" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="bib" title="米其林必比登 2024、2025、2026"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="4"/><circle cx="12" cy="15" r="5"/></svg>必比登</span><span class="cat">剉冰</span><span>中西區・國華街</span><span style="margin-left:auto" class="rating">★ 4.3</span></div>
+  <h3>八寶彬圓仔惠</h3>
+  <p>傳承三代半世紀，五種配料就能堆出滿滿幸福</p>
+</a><a class="card" href="r/po-jen-tang/"
+   data-id="po-jen-tang" data-cat="台菜" data-district="中西區"
+   data-bib="1" data-gem="0"
+   data-rating="4.3" data-reviews="1500"
+   data-since="中藥行創於1961年，2016年轉型藥膳餐廳" data-editor="4.2" data-text="博仁堂 台菜 中西區 西門路商圈 台南市中西區西門路二段300巷27號 老藥櫃前喝湯，六代中藥行熬出的溫補人生 何首烏排骨湯 藥膳四物排骨 十全大補湯">
+  <div class="ph"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Taiwanese_cuisine.jpg/1280px-Taiwanese_cuisine.jpg" alt="台菜示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="po-jen-tang" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="bib" title="米其林必比登 2024、2025、2026"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="4"/><circle cx="12" cy="15" r="5"/></svg>必比登</span><span class="cat">台菜</span><span>中西區・西門路商圈</span><span style="margin-left:auto" class="rating">★ 4.3</span></div>
+  <h3>博仁堂</h3>
+  <p>老藥櫃前喝湯，六代中藥行熬出的溫補人生</p>
+</a></div>
+  <div class="section-h"><h2>在地人私藏</h2><span>HIDDEN GEMS</span><a class="more" href="list/?gem=1">看全部 →</a></div><div class="grid"><a class="card" href="r/hong-pin-beef-soup-yongkang/"
+   data-id="hong-pin-beef-soup-yongkang" data-cat="牛肉湯" data-district="永康區"
+   data-bib="0" data-gem="1"
+   data-rating="0" data-reviews="0"
+   data-since="約2006" data-editor="4.2" data-text="鴻品牛肉湯 牛肉湯 永康區 大灣 台南市永康區大安街288號 永康巷口溫體牛香，在地人排隊也甘願的日常奢侈 溫體牛肉湯 鐵板牛肉 芥蘭炒牛肉 肉燥飯">
+  <div class="ph"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/14-%E6%8A%B5%E9%81%94%E5%8F%B0%E5%8D%97%E6%99%82%E7%9A%84%E6%99%9A%E9%A4%90%E7%89%9B%E8%82%89%E6%B9%AF%E9%85%8D%E7%99%BD%E9%A3%AF_%2829484619936%29.jpg/1280px-14-%E6%8A%B5%E9%81%94%E5%8F%B0%E5%8D%97%E6%99%82%E7%9A%84%E6%99%9A%E9%A4%90%E7%89%9B%E8%82%89%E6%B9%AF%E9%85%8D%E7%99%BD%E9%A3%AF_%2829484619936%29.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail" alt="牛肉湯示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="hong-pin-beef-soup-yongkang" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="gem">隱藏版</span><span class="cat">牛肉湯</span><span>永康區・大灣</span></div>
+  <h3>鴻品牛肉湯</h3>
+  <p>永康巷口溫體牛香，在地人排隊也甘願的日常奢侈</p>
+</a><a class="card" href="r/wang-ma-jian-guo-dawan/"
+   data-id="wang-ma-jian-guo-dawan" data-cat="其他" data-district="永康區"
+   data-bib="0" data-gem="1"
+   data-rating="0" data-reviews="0"
+   data-since="約1980" data-editor="4.2" data-text="王媽煎粿（原大灣三王廟肉粿） 其他 永康區 大灣 台南市永康區大安街150號 廟埕消失的老攤，肉粿香氣卻在大灣飄了四十年 肉粿（加蛋） 肉粿（原味） 炒粿仔">
+  <div class="ph"><div class="ph-art">其他</div></div>
+  <button class="fav" data-fav="wang-ma-jian-guo-dawan" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="gem">隱藏版</span><span class="cat">其他</span><span>永康區・大灣</span></div>
+  <h3>王媽煎粿（原大灣三王廟肉粿）</h3>
+  <p>廟埕消失的老攤，肉粿香氣卻在大灣飄了四十年</p>
+</a><a class="card" href="r/su-mama-wanguo-zongzi/"
+   data-id="su-mama-wanguo-zongzi" data-cat="碗粿" data-district="南區"
+   data-bib="0" data-gem="1"
+   data-rating="0" data-reviews="0"
+   data-since="" data-editor="3.9" data-text="蘇媽媽碗粿肉粽 碗粿 南區 灣裡 台南市南區灣裡路209號 灣裡老街深處，一碗碗粿撐起三代人的早餐記憶 招牌碗粿 南部肉粽 清湯">
+  <div class="ph"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/15-%E5%8F%B0%E5%8D%97%E6%97%A9%E9%A4%90%E5%AF%8C%E7%9B%9B%E8%99%9F%E7%A2%97%E7%B2%BF_%2829484620896%29.jpg/1280px-15-%E5%8F%B0%E5%8D%97%E6%97%A9%E9%A4%90%E5%AF%8C%E7%9B%9B%E8%99%9F%E7%A2%97%E7%B2%BF_%2829484620896%29.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail" alt="碗粿示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="su-mama-wanguo-zongzi" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="gem">隱藏版</span><span class="cat">碗粿</span><span>南區・灣裡</span></div>
+  <h3>蘇媽媽碗粿肉粽</h3>
+  <p>灣裡老街深處，一碗碗粿撐起三代人的早餐記憶</p>
+</a><a class="card" href="r/yi-wei-xiang-bakery-wanli/"
+   data-id="yi-wei-xiang-bakery-wanli" data-cat="其他" data-district="南區"
+   data-bib="0" data-gem="1"
+   data-rating="0" data-reviews="0"
+   data-since="1973" data-editor="4.0" data-text="一味香餅家 其他 南區 灣裡 台南市南區灣裡路338號 灣裡老街唯一傳承的餅舖，一顆杏仁糕裝滿半世紀手路 杏仁糕 彩花糕 鹹光餅">
+  <div class="ph"><div class="ph-art">其他</div></div>
+  <button class="fav" data-fav="yi-wei-xiang-bakery-wanli" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="gem">隱藏版</span><span class="cat">其他</span><span>南區・灣裡</span></div>
+  <h3>一味香餅家</h3>
+  <p>灣裡老街唯一傳承的餅舖，一顆杏仁糕裝滿半世紀手路</p>
+</a></div>
+  <div class="section-h"><h2>人氣排行</h2><span>MOST REVIEWED</span><a class="more" href="list/">看全部 →</a></div><div class="grid"><a class="card" href="r/wen-chang-beef-soup/"
+   data-id="wen-chang-beef-soup" data-cat="牛肉湯" data-district="安平區"
+   data-bib="0" data-gem="0"
+   data-rating="4.3" data-reviews="15000"
+   data-since="1994" data-editor="4.1" data-text="文章牛肉湯 牛肉湯 安平區 安平路 台南市安平區安平路300號 從討海人的一鍋湯，喝成安平街頭的深夜傳奇 溫體牛肉湯 牛腩湯 牛肉燥飯 燙牛雜">
+  <div class="ph"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/16-%E5%8F%B0%E5%8D%97%E6%97%A9%E9%A4%90%E5%9C%8B%E8%8F%AF%E8%A1%97%E9%98%BF%E6%9D%91%E7%89%9B%E8%82%89%E6%B9%AF%EF%BC%8C%E5%8F%B0%E5%8D%97%E7%9C%9F%E5%A5%BD_%2829484622036%29.jpg/1280px-16-%E5%8F%B0%E5%8D%97%E6%97%A9%E9%A4%90%E5%9C%8B%E8%8F%AF%E8%A1%97%E9%98%BF%E6%9D%91%E7%89%9B%E8%82%89%E6%B9%AF%EF%BC%8C%E5%8F%B0%E5%8D%97%E7%9C%9F%E5%A5%BD_%2829484622036%29.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail" alt="牛肉湯示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="wen-chang-beef-soup" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="cat">牛肉湯</span><span>安平區・安平路</span><span style="margin-left:auto" class="rating">★ 4.3</span></div>
+  <h3>文章牛肉湯</h3>
+  <p>從討海人的一鍋湯，喝成安平街頭的深夜傳奇</p>
+</a><a class="card" href="r/fu-sheng-hao-wan-guo/"
+   data-id="fu-sheng-hao-wan-guo" data-cat="碗粿" data-district="中西區"
+   data-bib="0" data-gem="0"
+   data-rating="4.1" data-reviews="6800"
+   data-since="1947" data-editor="4.2" data-text="富盛號碗粿 碗粿 中西區 國華街／永樂市場 台南市中西區民族路三段11號（另有外帶點：西門路二段333巷8號） 永樂市場口，一碗蒸了近八十年的府城古早味 碗粿 虱目魚羹">
+  <div class="ph"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/15-%E5%8F%B0%E5%8D%97%E6%97%A9%E9%A4%90%E5%AF%8C%E7%9B%9B%E8%99%9F%E7%A2%97%E7%B2%BF_%2829484620896%29.jpg/1280px-15-%E5%8F%B0%E5%8D%97%E6%97%A9%E9%A4%90%E5%AF%8C%E7%9B%9B%E8%99%9F%E7%A2%97%E7%B2%BF_%2829484620896%29.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail" alt="碗粿" loading="lazy" referrerpolicy="no-referrer"></div>
+  <button class="fav" data-fav="fu-sheng-hao-wan-guo" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="cat">碗粿</span><span>中西區・國華街／永樂市場</span><span style="margin-left:auto" class="rating">★ 4.1</span></div>
+  <h3>富盛號碗粿</h3>
+  <p>永樂市場口，一碗蒸了近八十年的府城古早味</p>
+</a><a class="card" href="r/chun-sian-fang-guo-shao-yi-mian/"
+   data-id="chun-sian-fang-guo-shao-yi-mian" data-cat="鍋燒意麵" data-district="中西區"
+   data-bib="0" data-gem="0"
+   data-rating="4.2" data-reviews="6300"
+   data-since="" data-editor="3.9" data-text="醇涎坊鍋燒意麵 鍋燒意麵 中西區 保安路 台南市中西區保安路53號 保安路上一鍋滾燙的古早味，從清晨吃到深夜都不冷場 招牌鍋燒意麵 鍋燒烏龍 鍋燒細粉">
+  <div class="ph"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Taiwanese_Nabeyaki_egg_noodles_20181103.jpg/1280px-Taiwanese_Nabeyaki_egg_noodles_20181103.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail" alt="鍋燒意麵示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="chun-sian-fang-guo-shao-yi-mian" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="cat">鍋燒意麵</span><span>中西區・保安路</span><span style="margin-left:auto" class="rating">★ 4.2</span></div>
+  <h3>醇涎坊鍋燒意麵</h3>
+  <p>保安路上一鍋滾燙的古早味，從清晨吃到深夜都不冷場</p>
+</a><a class="card" href="r/chiu-squid-rice-noodles/"
+   data-id="chiu-squid-rice-noodles" data-cat="小卷米粉" data-district="中西區"
+   data-bib="0" data-gem="0"
+   data-rating="4.0" data-reviews="6000"
+   data-since="" data-editor="4.0" data-text="邱家小卷米粉 小卷米粉 中西區 國華街 台南市中西區國華街三段251號 大鍋熬出的甘甜湯頭，國華街排隊排出來的實力派 小卷米粉 丸皮米粉 綜合配料米粉">
+  <div class="ph"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/%E6%96%BD%E5%AE%B6%E5%B0%8F%E5%8D%B7%E7%B1%B3%E7%B2%89_Shih%27s_Neritic_Squid_Rice_Noodles-20210827.jpg/1280px-%E6%96%BD%E5%AE%B6%E5%B0%8F%E5%8D%B7%E7%B1%B3%E7%B2%89_Shih%27s_Neritic_Squid_Rice_Noodles-20210827.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail" alt="小卷米粉示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="chiu-squid-rice-noodles" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="cat">小卷米粉</span><span>中西區・國華街</span><span style="margin-left:auto" class="rating">★ 4.0</span></div>
+  <h3>邱家小卷米粉</h3>
+  <p>大鍋熬出的甘甜湯頭，國華街排隊排出來的實力派</p>
+</a><a class="card" href="r/wang-fish-skin/"
+   data-id="wang-fish-skin" data-cat="虱目魚皮" data-district="安平區"
+   data-bib="0" data-gem="0"
+   data-rating="4.3" data-reviews="5700"
+   data-since="" data-editor="4.2" data-text="王氏魚皮 虱目魚皮 安平區 安平路 台南市安平區安平路612號 安平早市的魚鮮日常，一碗魚皮湯喝進三十年功夫 招牌魚皮湯 肉燥飯 煎魚肚 海鮮鹹粥">
+  <div class="ph"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Taiwanese_khong_bah_png%2C_Tofu%2C_Milkfish_Skin_Soup.jpg/1280px-Taiwanese_khong_bah_png%2C_Tofu%2C_Milkfish_Skin_Soup.jpg" alt="虱目魚皮示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="wang-fish-skin" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="cat">虱目魚皮</span><span>安平區・安平路</span><span style="margin-left:auto" class="rating">★ 4.3</span></div>
+  <h3>王氏魚皮</h3>
+  <p>安平早市的魚鮮日常，一碗魚皮湯喝進三十年功夫</p>
+</a><a class="card" href="r/ba-bao-bin-yuan-zai-hui/"
+   data-id="ba-bao-bin-yuan-zai-hui" data-cat="剉冰" data-district="中西區"
+   data-bib="1" data-gem="0"
+   data-rating="4.3" data-reviews="5200"
+   data-since="約1970年代" data-editor="4.2" data-text="八寶彬圓仔惠 剉冰 中西區 國華街 台南市中西區國華街二段99號 傳承三代半世紀，五種配料就能堆出滿滿幸福 自選五味剉冰 手工湯圓 蜜芋頭剉冰">
+  <div class="ph"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Baobing_in_Taipei_2023-09-01.jpg/1280px-Baobing_in_Taipei_2023-09-01.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail" alt="剉冰示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="ba-bao-bin-yuan-zai-hui" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="bib" title="米其林必比登 2024、2025、2026"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="4"/><circle cx="12" cy="15" r="5"/></svg>必比登</span><span class="cat">剉冰</span><span>中西區・國華街</span><span style="margin-left:auto" class="rating">★ 4.3</span></div>
+  <h3>八寶彬圓仔惠</h3>
+  <p>傳承三代半世紀，五種配料就能堆出滿滿幸福</p>
+</a><a class="card" href="r/a-ming-zhu-xin-dong-fen/"
+   data-id="a-ming-zhu-xin-dong-fen" data-cat="豬心冬粉" data-district="中西區"
+   data-bib="0" data-gem="0"
+   data-rating="4.2" data-reviews="5000"
+   data-since="" data-editor="4.0" data-text="阿明豬心冬粉 豬心冬粉 中西區 保安路 台南市中西區保安路72號 深夜裡也大排長龍，一碗豬心冬粉燙出的台南宵夜魂 豬心冬粉 綜合冬粉（心肝腰） 蒜頭豬腳">
+  <div class="ph"><div class="ph-art">豬心冬粉</div></div>
+  <button class="fav" data-fav="a-ming-zhu-xin-dong-fen" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="cat">豬心冬粉</span><span>中西區・保安路</span><span style="margin-left:auto" class="rating">★ 4.2</span></div>
+  <h3>阿明豬心冬粉</h3>
+  <p>深夜裡也大排長龍，一碗豬心冬粉燙出的台南宵夜魂</p>
+</a><a class="card" href="r/a-long-sausage/"
+   data-id="a-long-sausage" data-cat="香腸熟肉" data-district="中西區"
+   data-bib="0" data-gem="0"
+   data-rating="4.3" data-reviews="4800"
+   data-since="約1940年代" data-editor="4.2" data-text="阿龍香腸熟肉 香腸熟肉 中西區 保安路 台南市中西區保安路34號 保安路八十年黑白切，切什麼都是老台南的下酒菜 综合黑白切 隱藏版肉燥飯 粉腸">
+  <div class="ph"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Sheng_Yi_Taiwanese_sausage_with_sticky_rice.jpg?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail_unscaled" alt="香腸熟肉示意圖" loading="lazy" referrerpolicy="no-referrer"><span class="demo">示意圖</span></div>
+  <button class="fav" data-fav="a-long-sausage" aria-label="加入收藏" title="加入收藏"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>
+  <div class="meta"><span class="cat">香腸熟肉</span><span>中西區・保安路</span><span style="margin-left:auto" class="rating">★ 4.3</span></div>
+  <h3>阿龍香腸熟肉</h3>
+  <p>保安路八十年黑白切，切什麼都是老台南的下酒菜</p>
+</a></div>
+  <div class="section-h"><h2>依區域找</h2><span>BY DISTRICT</span></div><div class="chips"><a class="chip" href="d/%E4%B8%83%E8%82%A1%E5%8D%80/">七股區</a><a class="chip" href="d/%E4%B8%AD%E8%A5%BF%E5%8D%80/">中西區</a><a class="chip" href="d/%E5%8C%97%E5%8D%80/">北區</a><a class="chip" href="d/%E5%8C%97%E9%96%80%E5%8D%80/">北門區</a><a class="chip" href="d/%E5%8D%97%E5%8D%80/">南區</a><a class="chip" href="d/%E5%AD%B8%E7%94%B2%E5%8D%80/">學甲區</a><a class="chip" href="d/%E5%AE%89%E5%8D%97%E5%8D%80/">安南區</a><a class="chip" href="d/%E5%AE%89%E5%B9%B3%E5%8D%80/">安平區</a><a class="chip" href="d/%E6%96%B0%E5%8C%96%E5%8D%80/">新化區</a><a class="chip" href="d/%E6%96%B0%E7%87%9F%E5%8D%80/">新營區</a><a class="chip" href="d/%E6%9D%B1%E5%8D%80/">東區</a><a class="chip" href="d/%E6%AD%B8%E4%BB%81%E5%8D%80/">歸仁區</a><a class="chip" href="d/%E6%B0%B8%E5%BA%B7%E5%8D%80/">永康區</a><a class="chip" href="d/%E9%B9%BD%E6%B0%B4%E5%8D%80/">鹽水區</a><a class="chip" href="d/%E9%BA%BB%E8%B1%86%E5%8D%80/">麻豆區</a></div>
+  <div style="height:30px"></div>
+</div></main>
 <footer>
   <div class="wrap">
     <b>台南美食通</b><br>
     本站為獨立編輯整理的美食導覽，非任何店家之官方網站；內容綜合公開網路資料與網友評論歸納，營業時間與價格請以店家現場公告為準。<br>
-    料理照片來自 Wikimedia Commons 開放授權圖庫，為同類料理示意圖，未必為該店實際餐點；各圖作者與授權列於店家頁底部。
+    料理照片來自 Wikimedia Commons 開放授權圖庫，為同類料理示意圖，未必為該店實際餐點；各圖作者與授權列於店家頁底部。<br>
+    資料最後整理：2026-09-23
   </div>
 </footer>
+<nav class="tabbar"><a href="" class="on"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>首頁</a><a href="list/" class=""><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>全部店家</a><a href="bib/" class=""><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="4"/><circle cx="12" cy="15" r="5"/></svg>必比登</a><a href="map/" class=""><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>美食地圖</a><a href="fav/" class=""><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg>我的收藏</a></nav>
 
-<nav class="tabbar">
-  <a href="#/" data-nav="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>首頁</a>
-  <a href="#/list" data-nav="list"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>店家</a>
-  <a href="#/bib" data-nav="bib"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="4"/><circle cx="12" cy="15" r="5"/></svg>必比登</a>
-  <a href="#/map" data-nav="map"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>地圖</a>
-  <a href="#/fav" data-nav="fav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg>收藏</a>
-</nav>
-
-<script src="data/restaurants.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script>
-(function(){
-const DATA = window.TNF_DATA || {restaurants:[],images:{}};
-const R = DATA.restaurants, IMG = DATA.images || {};
-const byId = Object.fromEntries(R.map(r=>[r.id,r]));
-const app = document.getElementById('app');
-
-/* ---------- utils ---------- */
-const esc = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const hash = s => [...String(s)].reduce((h,c)=>(h*31+c.codePointAt(0))>>>0,7);
-function pickImg(type, seed){
-  const list = IMG[type] && IMG[type].length ? IMG[type] : null;
-  return list ? list[hash(seed)%list.length] : null;
-}
-// 店家實拍（r.photos）優先；否則退回同類料理示意圖並加上「示意圖」標籤
-const shopImg = r => (r.photos||[])[0] || null;
-function imgTag(type, seed, label, eager, im){
-  const real = !!im;
-  im = im || pickImg(type, seed);
-  if(!im) return `<div class="ph-art">${esc(label||type||'台南')}</div>`;
-  return `<img src="${esc(im.url)}" alt="${esc(label||type)}${real?'':'示意圖'}" ${eager?'':'loading="lazy"'} referrerpolicy="no-referrer" onerror="this.outerHTML='<div class=&quot;ph-art&quot;>${esc(label||type)}</div>'">${real?'':'<span class="demo">示意圖</span>'}`;
-}
-const store = {
-  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
-  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-};
-let favs = new Set(store.get('tnf-favs',[]));
-function favBtn(id){
-  const on = favs.has(id);
-  return `<button class="fav ${on?'on':''}" data-fav="${esc(id)}" aria-label="${on?'取消收藏':'加入收藏'}" title="${on?'取消收藏':'加入收藏'}"><svg width="18" height="18" viewBox="0 0 24 24" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg></button>`;
-}
-document.addEventListener('click',e=>{
-  const b = e.target.closest('[data-fav]'); if(!b) return;
-  e.preventDefault(); e.stopPropagation();
-  const id=b.dataset.fav; favs.has(id)?favs.delete(id):favs.add(id); store.set('tnf-favs',[...favs]);
-  document.querySelectorAll(`[data-fav="${CSS.escape(id)}"]`).forEach(x=>x.outerHTML=favBtn(id));
-  if(location.hash.startsWith('#/fav')) route();
-});
-const star = n => n ? `<span class="rating">★ ${Number(n).toFixed(1)}</span>` : '';
-const fmtCount = n => n ? (n>=10000?(n/10000).toFixed(1)+' 萬':n.toLocaleString())+' 則評論' : '';
-const cats = (()=>{const m={};R.forEach(r=>m[r.category]=(m[r.category]||0)+1);return Object.entries(m).sort((a,b)=>b[1]-a[1]);})();
-const districts = [...new Set(R.map(r=>r.district).filter(Boolean))].sort();
-const issueNo = r => String(R.indexOf(r)+1).padStart(2,'0');
-
-function card(r){
-  return `<a class="card" href="#/r/${esc(r.id)}">
-    <div class="ph">${imgTag(r.category, r.id, r.category, false, shopImg(r))}</div>
-    <span class="fav-wrap">${favBtn(r.id)}</span>
-    <div class="meta">${bibBadge(r)}${r.hidden_gem?'<span class="gem">隱藏版</span>':''}<span class="cat">${esc(r.category)}</span><span>${esc(r.district||'')}${r.area?'・'+esc(r.area):''}</span>${r.google_rating?'<span style="margin-left:auto">'+star(r.google_rating)+'</span>':''}</div>
-    <h3>${esc(r.name)}</h3>
-    <p>${esc(r.tagline||'')}</p>
-  </a>`;
-}
-const MICH = DATA.michelin;
-const BIB_ICON = '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="9" r="4"/><circle cx="12" cy="15" r="5"/></svg>';
-const bibBadge = (r, full) => (r.michelin_bib||[]).length ? `<span class="bib" title="米其林必比登 ${r.michelin_bib.join('、')}">${BIB_ICON}必比登${full?' '+r.michelin_bib.join('・'):''}</span>` : '';
-function yearsHtml(years){
-  const eds = (MICH&&MICH.editions_checked)||[];
-  return `<div class="years">${eds.map(y=>`<span class="${years.includes(y)?'':'off'}" title="${years.includes(y)?y+' 入選':y+' 未入選'}">${y}</span>`).join('')}</div>`;
-}
-function setNav(k){document.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===k));}
-
-/* ---------- views ---------- */
-function home(){
-  setNav('home');
-  const top = R.filter(r=>!r.hidden_gem).sort((a,b)=>(b.google_review_count||0)-(a.google_review_count||0));
-  const feat = R.length ? R[hash(new Date().toDateString())%R.length] : null;
-  const coverIm = pickImg('台南街景', new Date().toDateString()) || pickImg(feat?.category, 'cover');
-  const reviews = R.reduce((s,r)=>s+(r.google_review_count||0),0);
-  const d = new Date();
-  app.innerHTML = `
-  <section class="cover"><div class="wrap cover-grid">
-    <div>
-      <div class="issue">${d.getFullYear()} 秋季號 ・ 府城味覺特輯</div>
-      <h1>一口一口<br>吃懂<em>台南</em></h1>
-      <p class="lede">從清晨五點的溫體牛肉湯，到深夜的鹹粥與香腸熟肉——我們走進巷弄，把老店的手路、網友的口碑與在地人的吃法，整理成一本隨身的府城美食誌。</p>
-      <form class="search" id="homeSearch"><input name="q" placeholder="搜尋店名、料理、街道…" aria-label="搜尋"><button>搜尋</button></form>
-      <div class="stats">
-        <div><b>${R.length}</b><span>精選店家</span></div>
-        <div><b>${cats.length}</b><span>料理類型</span></div>
-        <div><b>${reviews?(reviews/10000).toFixed(0)+'萬+':'—'}</b><span>彙整評論數</span></div>
-      </div>
-    </div>
-    <figure class="cover-img" style="margin:0">
-      ${coverIm?`<img src="${esc(coverIm.url)}" alt="台南" referrerpolicy="no-referrer">`:'<div class="ph-art">府城</div>'}
-      ${feat?`<figcaption><span class="kicker" style="color:#ffd9a0">本日推薦</span><b>${esc(feat.name)}</b>${esc(feat.tagline||'')}</figcaption>`:''}
-    </figure>
-  </div></section>
-  <div class="wrap">
-    <div class="section-h"><h2>依料理找</h2><span>BY DISH</span></div>
-    <div class="chips">${cats.map(([c,n])=>`<a class="chip" href="#/list?cat=${encodeURIComponent(c)}">${esc(c)}<small>${n}</small></a>`).join('')}</div>
-
-    ${feat?`<div class="section-h"><h2>封面故事</h2><span>COVER STORY</span></div>
-    <a class="feature" href="#/r/${esc(feat.id)}">
-      <div class="ph">${imgTag(feat.category, feat.id+'f', feat.category, false, shopImg(feat))}</div>
-      <div class="tx"><div class="kicker">NO.${issueNo(feat)} ・ ${esc(feat.category)}</div>
-        <h3>${esc(feat.name)}</h3><p class="tag">${esc(feat.tagline||'')}</p>
-        <p style="color:var(--ink-2);font-size:15px">${esc((feat.story||'').slice(0,110))}…</p>
-        <span style="color:var(--red);font-weight:700">閱讀全文 →</span></div>
-    </a>`:''}
-
-    ${MICH?`<div class="section-h"><h2>米其林必比登</h2><span>BIB GOURMAND</span><a class="more" href="#/bib">完整名單 →</a></div>
-    <div class="grid">${R.filter(r=>(r.michelin_bib||[]).length).sort((a,b)=>b.michelin_bib.length-a.michelin_bib.length||hash(a.id+d.toDateString())-hash(b.id+d.toDateString())).slice(0,4).map(card).join('')}</div>`:''}
-
-    ${R.some(r=>r.hidden_gem)?`<div class="section-h"><h2>在地人私藏</h2><span>HIDDEN GEMS</span><a class="more" href="#/list?gem=1">看全部 →</a></div>
-    <div class="grid">${R.filter(r=>r.hidden_gem).sort((a,b)=>hash(a.id+d.toDateString())-hash(b.id+d.toDateString())).slice(0,4).map(card).join('')}</div>`:''}
-
-    <div class="section-h"><h2>人氣排行</h2><span>MOST REVIEWED</span><a class="more" href="#/list?sort=reviews">看全部 →</a></div>
-    <div class="grid">${top.slice(0,8).map(card).join('')}</div>
-
-    ${districts.length>1?`<div class="section-h"><h2>依區域找</h2><span>BY DISTRICT</span></div>
-    <div class="chips">${districts.map(d=>`<a class="chip" href="#/list?d=${encodeURIComponent(d)}">${esc(d)}</a>`).join('')}</div>`:''}
-    <div style="height:30px"></div>
-  </div>`;
-  document.getElementById('homeSearch').onsubmit = e=>{e.preventDefault();location.hash='#/list?q='+encodeURIComponent(e.target.q.value.trim());};
-}
-
-function list(params, favOnly){
-  setNav(favOnly?'fav':'list');
-  const q = params.get('q')||'', cat=params.get('cat')||'', dist=params.get('d')||'', sort=params.get('sort')||'rating', gem=params.get('gem')==='1', bib=params.get('bib')==='1';
-  let rows = R.filter(r=>{
-    if(favOnly && !favs.has(r.id)) return false;
-    if(gem && !r.hidden_gem) return false;
-    if(bib && !(r.michelin_bib||[]).length) return false;
-    if(cat && r.category!==cat) return false;
-    if(dist && r.district!==dist) return false;
-    if(q){
-      const hay=[r.name,r.category,r.district,r.area,r.address,r.tagline,...(r.dishes||[]).map(d=>d.name)].join(' ');
-      if(!q.split(/\s+/).every(w=>hay.includes(w))) return false;
-    }
-    return true;
-  });
-  const sorters={rating:(a,b)=>(b.google_rating||0)-(a.google_rating||0),reviews:(a,b)=>(b.google_review_count||0)-(a.google_review_count||0),old:(a,b)=>(+a.since||9999)-(+b.since||9999),editor:(a,b)=>avg(b)-avg(a)};
-  rows.sort(sorters[sort]||sorters.rating);
-  const upd=(k,v)=>{const p=new URLSearchParams(params);v?p.set(k,v):p.delete(k);location.hash=(favOnly?'#/fav?':'#/list?')+p.toString();};
-  app.innerHTML = `<div class="wrap">
-    <div class="section-h" style="margin-top:28px"><h2>${favOnly?'我的收藏':'全部店家'}</h2><span>${favOnly?'SAVED':'DIRECTORY'}</span></div>
-    <div class="toolbar">
-      <form class="search" id="ls" style="flex:1;min-width:220px;box-shadow:none"><input name="q" value="${esc(q)}" placeholder="搜尋店名、料理、街道…"><button>搜尋</button></form>
-      <select id="fc" aria-label="料理"><option value="">全部料理</option>${cats.map(([c])=>`<option ${c===cat?'selected':''}>${esc(c)}</option>`).join('')}</select>
-      <select id="fd" aria-label="區域"><option value="">全部區域</option>${districts.map(d=>`<option ${d===dist?'selected':''}>${esc(d)}</option>`).join('')}</select>
-      <select id="fs" aria-label="排序">
-        <option value="rating" ${sort==='rating'?'selected':''}>Google 評分高→低</option>
-        <option value="reviews" ${sort==='reviews'?'selected':''}>評論數多→少</option>
-        <option value="editor" ${sort==='editor'?'selected':''}>編輯評分</option>
-        <option value="old" ${sort==='old'?'selected':''}>老字號優先</option>
-      </select>
-      ${R.some(r=>r.hidden_gem)?`<label style="font-size:14px;display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" id="fg" ${gem?'checked':''}>只看隱藏版</label>`:''}
-      <label style="font-size:14px;display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" id="fb" ${bib?'checked':''}>只看必比登</label>
-      <span class="count">${rows.length} 家</span>
-    </div>
-    ${rows.length?`<div class="grid">${rows.map(card).join('')}</div>`:`<div class="empty">${favOnly?'還沒有收藏，逛逛店家按下 ♡ 吧。':'找不到符合的店家。'}</div>`}
-    <div style="height:30px"></div></div>`;
-  document.getElementById('ls').onsubmit=e=>{e.preventDefault();upd('q',e.target.q.value.trim());};
-  document.getElementById('fc').onchange=e=>upd('cat',e.target.value);
-  document.getElementById('fd').onchange=e=>upd('d',e.target.value);
-  document.getElementById('fs').onchange=e=>upd('sort',e.target.value);
-  document.getElementById('fb').onchange=e=>upd('bib',e.target.checked?'1':'');
-  const fg=document.getElementById('fg'); if(fg) fg.onchange=e=>upd('gem',e.target.checked?'1':'');
-}
-function avg(r){const v=Object.values(r.scores||{});return v.length?v.reduce((a,b)=>a+b,0)/v.length:0;}
-
-function detail(id){
-  setNav('');
-  const r = byId[id];
-  if(!r){app.innerHTML='<div class="wrap empty">找不到這家店。<a href="#/">回首頁</a></div>';return;}
-  document.title = r.name+'｜台南美食通';
-  const photos = r.photos||[], heroReal = photos.length>0;
-  const heroIm = shopImg(r) || pickImg(r.category, r.id);
-  const credits = new Map();
-  if(heroIm) credits.set(heroIm.url,heroIm);
-  photos.forEach(p=>credits.set(p.url,p));
-  (r.dishes||[]).forEach((d,i)=>{const im=pickImg(d.dish_type||r.category, r.id+i);if(im)credits.set(im.url,im);});
-  const mapQ = encodeURIComponent(r.name+' '+(r.address||'台南'));
-  const sc = r.scores||{};
-  const related = R.filter(x=>x.id!==r.id && (x.category===r.category || x.area===r.area)).slice(0,4);
-  const para = (r.review||[]).map((p,i)=>`<p class="${i===0?'first':''}">${esc(p)}</p>`);
-  if(para.length>1) para.splice(1,0,`<blockquote class="pull">${esc(r.tagline||'')}</blockquote>`);
-  app.innerHTML = `
-  <section class="hero">
-    ${heroIm?`<img src="${esc(heroIm.url)}" alt="${esc(r.category)}示意圖" referrerpolicy="no-referrer" onerror="this.outerHTML='<div class=&quot;ph-art&quot;>${esc(r.category)}</div>'">`:`<div class="ph-art">${esc(r.category)}</div>`}
-    ${favBtn(r.id)}
-    ${heroIm&&!heroReal?'<span class="demo">同類料理示意圖</span>':''}
-    <div class="wrap">
-      ${(r.michelin_bib||[]).length?`<div style="margin-bottom:10px">${bibBadge(r,true)}</div>`:''}
-      <div class="kicker">NO.${issueNo(r)} ・ ${r.hidden_gem?'在地隱藏版 ・ ':''}${esc(r.category)} ・ ${esc(r.district||'')}</div>
-      <h1>${esc(r.name)}</h1>
-      <p class="tag">${esc(r.tagline||'')}</p>
-      <div class="hmeta">
-        ${r.google_rating?`<span>★ ${Number(r.google_rating).toFixed(1)} Google ${r.google_review_count?'（'+fmtCount(r.google_review_count)+'）':''}</span>`:''}
-        ${r.since?`<span>創立 ${esc(r.since)}</span>`:''}
-        ${r.price_range?`<span>${esc(r.price_range)}</span>`:''}
-      </div>
-    </div>
-  </section>
-  <div class="wrap">
-    <div class="article">
-      <article>
-        <div class="byline">文／台南美食通編輯部 ・ 綜合網路評論與公開資料整理</div>
-        <div class="prose">${para.join('')}</div>
-
-        <h2 class="h">招牌菜單 <small>SIGNATURE DISHES</small></h2>
-        ${(r.dishes||[]).map((d,i)=>`<div class="dish">
-          <div class="ph">${imgTag(d.dish_type||r.category, r.id+i, d.dish_type||r.category)}</div>
-          <div><h3>${esc(d.name)} ${d.price?`<span class="price">${esc(d.price)}</span>`:''} ${d.signature?'<span class="sig">招牌</span>':''}</h3>
-          <p>${esc(d.desc)}</p></div></div>`).join('')}
-
-        ${photos.length>1?`<h2 class="h">店家實拍 <small>GALLERY</small></h2>
-        <div class="gallery">${photos.slice(1).map(p=>`<a href="${esc(p.page||p.url)}" target="_blank" rel="noopener" title="${esc(p.author||'')}（${esc(p.license||'')}）"><img src="${esc(p.url)}" alt="${esc(r.name)}實拍" loading="lazy" referrerpolicy="no-referrer"></a>`).join('')}</div>`:''}
-
-        ${(r.embeds||[]).length?`<h2 class="h">網友實拍分享 <small>FROM IG / THREADS</small></h2>
-        <div class="embeds">${r.embeds.map(embedHtml).join('')}</div>
-        <p class="fine" style="margin-top:10px">以上為社群平台官方嵌入的公開貼文，著作權屬原作者；貼文若被刪除或設為私人將不再顯示。</p>`:''}
-
-        ${r.story?`<h2 class="h">老店故事 <small>THE STORY</small></h2><div class="prose"><p>${esc(r.story)}</p></div>`:''}
-
-        <h2 class="h">網友怎麼說 <small>VOICES</small></h2>
-        <div class="voices">
-          <div class="box good"><h4>讚不絕口</h4><ul>${(r.praise||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
-          <div class="box bad"><h4>要有心理準備</h4><ul>${(r.critique||[]).map(x=>`<li>${esc(x)}</li>`).join('')||'<li>暫無明顯負評</li>'}</ul></div>
-        </div>
-
-        ${(r.tips||[]).length?`<h2 class="h">編輯的吃法建議 <small>TIPS</small></h2><ol class="tips">${r.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>`:''}
-
-        <div class="notice">本頁為「台南美食通」編輯整理的非官方介紹頁，內容綜合公開網路資料與網友評論歸納。${r.status_note?'資料狀態：'+esc(r.status_note)+'。':''}營業時間、價格可能異動，出發前請先確認。</div>
-        <div class="fine" style="margin-top:18px">
-          ${r.sources&&r.sources.length?`<b>參考資料</b><br>${r.sources.map(s=>`<a href="${esc(s)}" target="_blank" rel="noopener">${esc(s)}</a>`).join('<br>')}<br><br>`:''}
-          ${credits.size?`<b>圖片來源</b>${heroReal?'':'（同類料理示意圖，非該店實拍）'}<br>${[...credits.values()].map(c=>`<a href="${esc(c.page||c.url)}" target="_blank" rel="noopener">${esc(c.author||'Wikimedia Commons')}</a>，${esc(c.license||'')}`).join('<br>')}`:''}
-        </div>
-      </article>
-
-      <aside class="side"><div class="sticky">
-        <div class="panel">
-          <h4>店家資訊</h4>
-          <dl class="info">
-            ${r.address?`<dt>地址</dt><dd>${esc(r.address)}</dd>`:''}
-            ${r.hours?`<dt>營業時間</dt><dd>${esc(r.hours)}</dd>`:''}
-            ${r.closed?`<dt>公休</dt><dd>${esc(r.closed)}</dd>`:''}
-            ${r.phone?`<dt>電話</dt><dd><a href="tel:${esc(r.phone.replace(/[^\d+]/g,''))}">${esc(r.phone)}</a></dd>`:''}
-            ${r.price_range?`<dt>價位</dt><dd>${esc(r.price_range)}</dd>`:''}
-          </dl>
-          ${r.lat&&r.lng?`<div class="minimap" id="minimap"></div>`:''}
-          <a class="btn" href="https://www.google.com/maps/search/?api=1&query=${mapQ}" target="_blank" rel="noopener">在 Google 地圖導航</a>
-          ${r.social&&r.social.facebook?`<a class="btn ghost" href="${esc(r.social.facebook)}" target="_blank" rel="noopener">Facebook 粉專</a>`:''}
-          ${r.social&&r.social.instagram?`<a class="btn ghost" href="${esc(r.social.instagram)}" target="_blank" rel="noopener">Instagram</a>`:''}
-        </div>
-        ${(r.michelin_bib||[]).length?`<div class="panel"><h4>米其林必比登</h4>
-          <p style="margin:0 0 10px;font-size:14px;color:var(--ink-2)">${r.michelin_bib.length>1?`連續 ${r.michelin_bib.length} 年入選`:`${r.michelin_bib[0]} 年入選`}台灣米其林指南「必比登推介」。</p>
-          ${yearsHtml(r.michelin_bib)}
-          <a class="btn ghost" href="#/bib">看台南必比登全名單</a>
-        </div>`:''}
-        ${Object.keys(sc).length?`<div class="panel"><h4>編輯評分</h4>
-          <div class="bigscore"><b>${avg(r).toFixed(1)}</b><span>/ 5 綜合</span></div>
-          ${Object.entries(sc).map(([k,v])=>`<div class="score"><span>${esc(k)}</span><span class="bar"><i style="width:${v/5*100}%"></i></span><b>${Number(v).toFixed(1)}</b></div>`).join('')}
-        </div>`:''}
-      </div></aside>
-    </div>
-
-    ${related.length?`<section class="related"><div class="section-h"><h2>延伸閱讀</h2><span>YOU MAY ALSO LIKE</span></div><div class="grid">${related.map(card).join('')}</div></section>`:''}
-  </div>`;
-  window.scrollTo(0,0);
-  if(r.lat&&r.lng&&window.L){
-    const m=L.map('minimap',{zoomControl:false,attributionControl:true,scrollWheelZoom:false}).setView([r.lat,r.lng],16);
-    tiles().addTo(m); L.marker([r.lat,r.lng]).addTo(m);
-  }
-}
-
-function bibView(params){
-  setNav('bib');
-  if(!MICH){app.innerHTML='<div class="wrap empty">尚無必比登資料。</div>';return;}
-  const eds = MICH.editions_checked, y = +params.get('y')||0;
-  const rows = MICH.bib.filter(b=>!y||b.years.includes(y))
-    .sort((a,b)=>b.years.length-a.years.length || Math.min(...a.years)-Math.min(...b.years) || a.name.localeCompare(b.name,'zh-Hant'));
-  const have = rows.filter(b=>b.id&&byId[b.id]).map(b=>byId[b.id]);
-  const cnt = yy => MICH.bib.filter(b=>b.years.includes(yy)).length;
-  const fresh = yy => MICH.bib.filter(b=>b.years.includes(yy)&&!b.years.includes(yy-1)&&eds.includes(yy-1)).map(b=>b.name);
-  app.innerHTML = `<div class="wrap">
-    <div class="section-h" style="margin-top:28px"><h2>米其林必比登・台南</h2><span>BIB GOURMAND</span></div>
-    <p class="fine" style="font-size:14px;max-width:46em;margin:0 0 18px">「必比登推介」是米其林指南給予「以合理價格提供高品質料理」店家的標誌。台南自 2024 年版起納入台灣米其林指南，以下整理歷年入選名單；紅框為入選年份，灰色刪除線為該年未入選。</p>
-    <div class="chips" style="margin-bottom:8px">
-      <a class="chip ${y?'':'on'}" href="#/bib">全部<small>${MICH.bib.length}</small></a>
-      ${eds.map(e=>`<a class="chip ${e===y?'on':''}" href="#/bib?y=${e}">${e} 年版<small>${cnt(e)}</small></a>`).join('')}
-    </div>
-    ${y&&fresh(y).length?`<p class="fine" style="font-size:14px">${y} 年新入選：${fresh(y).map(esc).join('、')}</p>`:''}
-    <table class="bibtable" style="margin-top:14px">
-      <thead><tr><th>店家</th><th class="hide-m">料理</th><th>入選年份</th><th></th></tr></thead>
-      <tbody>${rows.map(b=>{
-        const r=b.id&&byId[b.id];
-        const link = r ? `<a href="#/r/${esc(r.id)}">看介紹 →</a>` : `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.name+' '+(b.address||'台南'))}" target="_blank" rel="noopener">地圖 ↗</a>`;
-        return `<tr><td><b>${esc(b.name)}</b><small>${esc(b.district||'')}${b.address?'・'+esc(b.address):''}</small></td>
-          <td class="hide-m">${esc(b.cuisine||'')}</td><td>${yearsHtml(b.years)}</td><td style="text-align:right">${link}</td></tr>`;
-      }).join('')}</tbody>
-    </table>
-    ${have.length?`<div class="section-h"><h2>必比登店家誌</h2><span>FEATURED</span></div><div class="grid">${have.map(card).join('')}</div>`:''}
-    <p class="fine" style="margin-top:28px">名單整理自米其林官方公布與新聞報導${MICH.sources&&MICH.sources.length?'：'+MICH.sources.map(s=>`<a href="${esc(s)}" target="_blank" rel="noopener">${esc(s.replace(/^https?:\/\/(www\.)?/,'').split('/')[0])}</a>`).join('、'):''}。本站與米其林無關，正確資訊請以 guide.michelin.com 為準。</p>
-    <div style="height:30px"></div></div>`;
-}
-
-/* 社群平台官方嵌入頁（/embed）直接用 iframe，不依賴 embed.js；下方附原貼文連結，網路擋 CDN 時仍可點開 */
-function embedHtml(u){
-  const ig = /instagram\.com/.test(u);
-  const m = ig ? u.match(/instagram\.com\/(p|reel)\/([^/?#]+)/) : null;
-  const src = ig ? `https://www.instagram.com/${m?m[1]:'p'}/${m?m[2]:''}/embed/captioned/` : u.replace(/[?#].*$/,'').replace(/\/$/,'')+'/embed';
-  return `<figure class="embed" style="margin:0"><iframe src="${esc(src)}" loading="lazy" title="${ig?'Instagram':'Threads'} 貼文" allowtransparency="true" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-    <a class="embed-link" href="${esc(u)}" target="_blank" rel="noopener">在 ${ig?'Instagram':'Threads'} 開啟 ↗</a></figure>`;
-}
-
-function tiles(){return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'});}
-
-function mapView(params){
-  setNav('map');
-  const cat=params.get('cat')||'';
-  app.innerHTML=`<div class="wrap"><div class="section-h" style="margin-top:28px"><h2>美食地圖</h2><span>FOOD MAP</span></div>
-    <div class="chips scroll" style="margin-bottom:14px"><a class="chip ${cat?'':'on'}" href="#/map">全部</a>${cats.map(([c])=>`<a class="chip ${c===cat?'on':''}" href="#/map?cat=${encodeURIComponent(c)}">${esc(c)}</a>`).join('')}</div>
-    <div id="bigmap"></div></div>`;
-  if(!window.L){document.getElementById('bigmap').innerHTML='<div class="empty">地圖需要網路連線才能載入。</div>';return;}
-  const m=L.map('bigmap').setView([22.993,120.204],14); tiles().addTo(m);
-  const pts=[];
-  R.filter(r=>r.lat&&r.lng&&(!cat||r.category===cat)).forEach(r=>{
-    pts.push([r.lat,r.lng]);
-    L.marker([r.lat,r.lng]).addTo(m).bindPopup(`<b>${esc(r.name)}</b><br>${esc(r.category)} ${r.google_rating?'★'+r.google_rating:''}<br><a href="#/r/${esc(r.id)}">看介紹 →</a>`);
-  });
-  if(pts.length) m.fitBounds(pts,{padding:[30,30],maxZoom:16});
-}
-
-/* ---------- router ---------- */
-function route(){
-  const h = location.hash.slice(1)||'/';
-  const [path, qs] = h.split('?'); const params=new URLSearchParams(qs||'');
-  if(!path.startsWith('/r/')) document.title='台南美食通';
-  if(path.startsWith('/r/')) detail(decodeURIComponent(path.slice(3)));
-  else if(path==='/list') list(params,false);
-  else if(path==='/fav') list(params,true);
-  else if(path==='/map') mapView(params);
-  else if(path==='/bib') bibView(params);
-  else home();
-  if(!path.startsWith('/r/')) window.scrollTo(0,0);
-}
-window.addEventListener('hashchange',route);
-route();
-
-/* ---------- theme ---------- */
-const root=document.documentElement;
-const saved=store.get('tnf-theme',null); if(saved) root.dataset.theme=saved;
-document.getElementById('themeBtn').onclick=()=>{
-  const dark = root.dataset.theme ? root.dataset.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-  root.dataset.theme = dark?'light':'dark'; store.set('tnf-theme',root.dataset.theme);
-};
-
-/* ---------- PWA ---------- */
-if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
-})();
-</script>
+<script src="assets/app.js" defer></script>
 </body>
 </html>
