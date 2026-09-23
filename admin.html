@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>後台 — 護腎教室</title>
+<style>
+  /* 衛教站的變數（--fg / --bg / --card / --mut），不要混用商城那套 --ink */
+  :root{--bg:#fdfeff;--fg:#28313d;--mut:#5c6774;--line:#dbe5ee;--card:#f2f7fb;
+        --accent:#2e7fb8;--accent2:#1e3a63;--warn:#8a5a00;--ok:#15803d;}
+  @media (prefers-color-scheme:dark){:root{--bg:#0e1620;--fg:#e6edf5;--mut:#9fb2c6;
+        --line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--warn:#fbbf24;--ok:#4ade80;}}
+  *{box-sizing:border-box;margin:0;padding:0}
+  /* 關掉瀏覽器的自動字體放大，否則橫置時表格的字會被放大到破版
+     （check_site.py 會擋這一項） */
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{background:var(--bg);color:var(--fg);line-height:1.65;padding:22px 14px 70px;
+       font-family:"Segoe UI","Microsoft JhengHei",system-ui,sans-serif}
+  .wrap{max-width:900px;margin:0 auto}
+  h1{font-size:21px;margin-bottom:2px}
+  .sub{color:var(--mut);font-size:13.5px;margin-bottom:18px}
+  .tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+  .tab{padding:8px 16px;border:1px solid var(--line);background:var(--card);color:var(--fg);
+       border-radius:999px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .panel{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--card)}
+  button.act{padding:9px 16px;font:inherit;font-size:14px;font-weight:700;border:0;
+             border-radius:9px;background:var(--accent);color:#fff;cursor:pointer}
+  button.act:disabled{opacity:.55;cursor:default}
+  button.ghost{background:none;border:1px solid var(--line);color:var(--fg)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+  th{font-size:12.5px;color:var(--mut);white-space:nowrap}
+  td.r,th.r{text-align:right;white-space:nowrap}
+  .done{color:var(--ok);font-weight:700;white-space:nowrap}
+  .none{color:var(--mut)}
+  .stale{color:var(--warn);font-weight:700;white-space:nowrap}
+  .mini{padding:5px 11px;font-size:13px;border-radius:8px;border:1px solid var(--line);
+        background:var(--bg);color:var(--fg);cursor:pointer;font:inherit;font-size:13px;white-space:nowrap}
+  .mini:hover{border-color:var(--accent);color:var(--accent)}
+  .fine{font-size:12.5px;color:var(--mut);margin-top:12px;line-height:1.7}
+  .sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+  .box{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)}
+  .box b{display:block;font-size:24px}
+  .box span{font-size:12px;color:var(--mut)}
+  textarea{width:100%;min-height:150px;font-family:ui-monospace,Menlo,Consolas,monospace;
+           font-size:12.5px;padding:10px;border:1px solid var(--line);border-radius:9px;
+           background:var(--bg);color:var(--fg)}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>後台</h1>
+  <div class="sub">只有站長本人看得到。審閱紀錄與訂閱名單。</div>
+  <div id="app" class="panel">載入中…</div>
+</div>
+
+<script type="module">
+/* 護腎教室後台。認的是 Google 登入身分，不是網址保密。
+   醫院擋 Telegram，但擋不住網頁——審閱確認改成在這裡按一下。 */
+const OWNER_MAIL = "a778040@gmail.com";
+const CFG = {
+  apiKey: "AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU",
+  authDomain: "kidneygod-ea61e.firebaseapp.com",
+  projectId: "kidneygod-ea61e",
+  storageBucket: "kidneygod-ea61e.firebasestorage.app",
+  messagingSenderId: "494753459903",
+  appId: "1:494753459903:web:281898dfc087dad416600a",
+};
+const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js");
+const { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } =
+  await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js");
+const { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } =
+  await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+
+const app = initializeApp(CFG), auth = getAuth(app), db = getFirestore(app);
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today = () => new Date().toLocaleDateString("sv-SE");   // sv-SE 剛好就是 YYYY-MM-DD
+const docId = path => path.replace(/\//g, "__");
+
+let TAB = "review", PAGES = [], REVIEW = {}, SUBS = [];
+
+onAuthStateChanged(auth, async u => {
+  const mail = u && !u.isAnonymous && u.email ? u.email.trim().toLowerCase() : "";
+  if(!mail) return signInView();
+  if(mail !== OWNER_MAIL){
+    $("app").innerHTML = `<b>這個頁面只開放站長本人。</b>
+      <div class="fine">目前登入：${esc(mail)}</div>
+      <p style="margin-top:12px"><button class="act ghost" id="out">換一個帳號</button></p>`;
+    $("out").onclick = () => signOut(auth);
+    return;
+  }
+  $("app").textContent = "讀取中…";
+  await loadAll();
+  render();
+});
+
+function signInView(){
+  $("app").innerHTML = `<b>請用站長的 Google 帳號登入。</b>
+    <p style="margin-top:12px"><button class="act" id="in">使用 Google 登入</button></p>`;
+  $("in").onclick = () => signInWithPopup(auth, new GoogleAuthProvider())
+    .catch(e => { $("app").innerHTML = `<b>登入未完成。</b><div class="fine">${esc(e.code || e.message)}</div>`; });
+}
+
+/* 頁面清單直接讀 sitemap.xml —— 建站時本來就會產生，不必另外維護一份，
+   也不會有「新文章沒出現在後台」這種漏掉的情況。 */
+async function loadPages(){
+  const xml = await fetch("/sitemap.xml?cb=" + Date.now()).then(r => r.text());
+  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+  return locs.map(u => {
+    let p = u.replace(/^https?:\/\/[^/]+\//, "");
+    if(p === "" || p === "/") p = "index.html";
+    return p;
+  }).filter(p => !p.startsWith("tainanfood/") && !p.startsWith("dialysis/"));
+}
+
+async function loadAll(){
+  PAGES = await loadPages();
+  REVIEW = {};
+  try{
+    const snap = await getDocs(collection(db, "review"));
+    snap.forEach(d => { const v = d.data(); if(v && v.path) REVIEW[v.path] = v.date; });
+  }catch(e){ console.debug("review", e); }
+  SUBS = [];
+  try{
+    const snap = await getDocs(collection(db, "subs"));
+    snap.forEach(d => SUBS.push({mail: d.id, ...d.data()}));
+    SUBS.sort((a, b) => String(b.at?.seconds || 0) - String(a.at?.seconds || 0));
+  }catch(e){ console.debug("subs", e); }
+}
+
+function render(){
+  $("app").innerHTML = `
+    <div class="tabs">
+      <button class="tab${TAB === "review" ? " on" : ""}" data-t="review">審閱紀錄</button>
+      <button class="tab${TAB === "subs" ? " on" : ""}" data-t="subs">訂閱名單（${SUBS.length}）</button>
+    </div>
+    <div id="body"></div>`;
+  document.querySelectorAll(".tab").forEach(b => b.onclick = () => { TAB = b.dataset.t; render(); });
+  (TAB === "review" ? renderReview : renderSubs)();
+}
+
+function renderReview(){
+  const done = PAGES.filter(p => REVIEW[p]).length;
+  const rows = PAGES.map(p => {
+    const d = REVIEW[p];
+    return `<tr>
+      <td><a href="/${esc(p)}" target="_blank" rel="noopener">${esc(p)}</a></td>
+      <td class="r">${d ? `<span class="done">${esc(d)}</span>`
+                        : '<span class="none">未審閱</span>'}</td>
+      <td class="r"><button class="mini" data-p="${esc(p)}">${d ? "更新為今天" : "標記今天已審閱"}</button></td>
+    </tr>`;
+  }).join("");
+  $("body").innerHTML = `
+    <div class="sum">
+      <div class="box"><b>${done} / ${PAGES.length}</b><span>已有審閱紀錄</span></div>
+      <div class="box"><b>${today()}</b><span>今天</span></div>
+    </div>
+    <table><tr><th>頁面</th><th class="r">審閱日期</th><th></th></tr>${rows}</table>
+    <p class="fine">按下去只是把日期記到雲端。<b>要顯示在網站上，還要有人跑一次
+    <code>python sync_reviews.py</code> 再重新建站</b>——所以看完一批之後跟我或
+    Codex 說一聲就好。日期是公開資訊（本來就會印在頁面上），名單則完全不公開。</p>`;
+  document.querySelectorAll("button[data-p]").forEach(b => b.onclick = () => mark(b));
+}
+
+async function mark(btn){
+  const p = btn.dataset.p, d = today();
+  btn.disabled = true; const old = btn.textContent; btn.textContent = "寫入中…";
+  try{
+    await setDoc(doc(db, "review", docId(p)), {path: p, date: d, at: new Date()});
+    REVIEW[p] = d;
+    renderReview();
+  }catch(e){
+    btn.disabled = false; btn.textContent = old;
+    alert("寫入失敗：" + (e.code || e.message));
+  }
+}
+
+function renderSubs(){
+  if(!SUBS.length){
+    $("body").innerHTML = `<p class="none">還沒有人訂閱。</p>
+      <p class="fine">訂閱表單在首頁最下方與「關於作者」頁。</p>`;
+    return;
+  }
+  const rows = SUBS.map(s => `<tr>
+      <td>${esc(s.mail)}</td>
+      <td class="r none">${esc(s.src || "")}</td>
+      <td class="r none">${s.at?.seconds
+        ? new Date(s.at.seconds * 1000).toLocaleDateString("sv-SE") : ""}</td>
+      <td class="r"><button class="mini" data-m="${esc(s.mail)}">退訂</button></td>
+    </tr>`).join("");
+  $("body").innerHTML = `
+    <div class="sum"><div class="box"><b>${SUBS.length}</b><span>訂閱人數</span></div></div>
+    <p><button class="act" id="csv">複製全部信箱</button>
+       <button class="act ghost" id="dl">下載 CSV</button></p>
+    <table style="margin-top:12px">
+      <tr><th>信箱</th><th class="r">來源頁</th><th class="r">訂閱日</th><th></th></tr>${rows}</table>
+    <p class="fine">名單只有你讀得到（安全規則限定本人）。
+    收到退訂來信時在這裡按「退訂」刪掉那一筆。</p>`;
+  $("csv").onclick = () => {
+    navigator.clipboard.writeText(SUBS.map(s => s.mail).join(", "))
+      .then(() => { $("csv").textContent = "已複製 ✓"; setTimeout(() => $("csv").textContent = "複製全部信箱", 1600); });
+  };
+  $("dl").onclick = () => {
+    const csv = "email,src,date\n" + SUBS.map(s => [s.mail, s.src || "",
+      s.at?.seconds ? new Date(s.at.seconds * 1000).toISOString().slice(0, 10) : ""].join(",")).join("\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob(["﻿" + csv], {type: "text/csv;charset=utf-8"}));
+    a.download = "kidneygod-subscribers-" + today() + ".csv";
+    a.click();
+  };
+  document.querySelectorAll("button[data-m]").forEach(b => b.onclick = async () => {
+    if(!confirm("確定要刪掉 " + b.dataset.m + " 嗎？")) return;
+    b.disabled = true;
+    try{
+      await deleteDoc(doc(db, "subs", b.dataset.m));
+      SUBS = SUBS.filter(s => s.mail !== b.dataset.m);
+      render();
+    }catch(e){ b.disabled = false; alert("刪除失敗：" + (e.code || e.message)); }
+  });
+}
+</script>
+</body>
+</html>

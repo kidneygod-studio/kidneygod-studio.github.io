@@ -28,12 +28,13 @@
    不需要達到文字對比的視覺錨點。 */
 :root{--bg:#fdfeff;--fg:#28313d;--mut:#5c6774;--line:#dbe5ee;--card:#f2f7fb;
 --accent:#2e7fb8;--accent2:#1e3a63;--link:#175c8e;--warn:#8a5a00;--maxw:720px;
+--accent-soft:#e3f0fa;
 --serif:"Noto Serif TC",Georgia,"Songti TC","MingLiU",serif}
 /* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1620;--fg:#e6edf5;--mut:#9fb2c6;
---line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24}}
+--line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24;--accent-soft:#122c3d}}
 :root[data-theme="dark"]{--bg:#0e1620;--fg:#e6edf5;--mut:#9fb2c6;
---line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24}
+--line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24;--accent-soft:#122c3d}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
@@ -464,6 +465,45 @@ footer.site .fcontact .note{font-size:12.5px;color:var(--mut)}
    QR 的 viewBox 只有 37x37（一個模組一格），所以一定要用
    image-rendering:pixelated，不然瀏覽器會把邊緣做平滑，
    模組之間糊在一起會掃不到。 */
+/* 門診時刻表。有診的格子除了底色之外另外放「看診」兩個字與一個圓點，
+   不靠顏色單獨傳達資訊——色盲讀者與黑白列印都還看得懂。 */
+.ctwrap{overflow-x:auto;margin:18px 0 14px;-webkit-overflow-scrolling:touch}
+.ctable{border-collapse:separate;border-spacing:6px;width:100%;min-width:340px;
+text-align:center;font-size:15px}
+.ctable th[scope=col]{font-size:13.5px;color:var(--mut);font-weight:700;padding:2px 0}
+.ctable .cth{display:block;font-size:11.5px;font-weight:400;opacity:.85;margin-top:2px;
+letter-spacing:.01em;white-space:nowrap}
+.ctable th[scope=row]{text-align:left;font-weight:700;white-space:nowrap;
+padding-right:8px;font-size:14.5px}
+.ctable td{border:1px solid var(--line);border-radius:10px;padding:11px 6px;
+background:var(--card);color:var(--mut);font-size:14px}
+.ctable td.on{border-color:var(--accent);background:var(--accent-soft,var(--card));
+color:var(--fg);font-weight:800;box-shadow:inset 0 0 0 1px var(--accent)}
+.ctable td.on .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
+background:var(--accent);margin-right:6px;vertical-align:1px}
+.ctable td .off{opacity:.45}
+.clinicinfo dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px;
+margin:0;font-size:15px;line-height:1.75}
+.clinicinfo dt{font-weight:700;color:var(--mut);white-space:nowrap;font-size:14px}
+.clinicinfo dd{margin:0}
+@media(max-width:560px){
+  .clinicinfo dl{grid-template-columns:1fr;gap:2px}
+  .clinicinfo dt{margin-top:10px}
+}
+/* Email 訂閱 */
+.subbox{margin:18px 0 0}
+.subbox form{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0}
+.subbox input{flex:1;min-width:200px;padding:11px 14px;font:inherit;font-size:15px;
+border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg)}
+.subbox input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.subbox button{padding:11px 22px;font:inherit;font-size:15px;font-weight:700;
+border:0;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;white-space:nowrap}
+.subbox button:hover{filter:brightness(1.08)}
+.subbox button:disabled{opacity:.6;cursor:default}
+.submsg{margin:10px 0 0;font-size:14.5px;min-height:1.2em}
+.submsg.ok{color:var(--accent2)}
+.submsg.no{color:var(--warn)}
+.subbox .fine{margin-top:10px}
 .lineqr{display:flex;gap:20px;align-items:center;margin:22px 0 0;
 padding:18px;border:1px solid var(--line);border-radius:14px;
 background:var(--card)}
@@ -851,6 +891,34 @@ letter-spacing:.4px;line-height:1.5}
 有沒有其他共病的人身上，意義可能完全不同。這些判斷需要完整的病史、
 檢查結果與當面評估，不是任何網站能取代的。<strong>請與你的主治醫師討論。</strong></p>
 
+<h2 id="jiu-yi">就醫資訊</h2>
+<p>我在<strong>郭綜合醫院腎臟內科</strong>擔任專任主治醫師。
+如果你想掛我的門診，時段如下。</p>
+
+<div class='ctwrap'><table class='ctable'><caption class='svisually'>吳政哲醫師門診時段表</caption><tr><td></td><th scope='col'>上午<span class='cth'>9:00–12:00</span></th><th scope='col'>下午<span class='cth'>14:00–17:00</span></th><th scope='col'>晚上<span class='cth'>18:00–21:00</span></th></tr><tr><th scope='row'>星期一</th><td class='on'><span class='dot' aria-hidden='true'></span>看診</td><td><span class='off'>—</span><span class='svisually'>無診</span></td><td><span class='off'>—</span><span class='svisually'>無診</span></td></tr><tr><th scope='row'>星期二</th><td class='on'><span class='dot' aria-hidden='true'></span>看診</td><td><span class='off'>—</span><span class='svisually'>無診</span></td><td><span class='off'>—</span><span class='svisually'>無診</span></td></tr><tr><th scope='row'>星期三</th><td><span class='off'>—</span><span class='svisually'>無診</span></td><td><span class='off'>—</span><span class='svisually'>無診</span></td><td><span class='off'>—</span><span class='svisually'>無診</span></td></tr><tr><th scope='row'>星期四</th><td><span class='off'>—</span><span class='svisually'>無診</span></td><td><span class='off'>—</span><span class='svisually'>無診</span></td><td><span class='off'>—</span><span class='svisually'>無診</span></td></tr><tr><th scope='row'>星期五</th><td><span class='off'>—</span><span class='svisually'>無診</span></td><td><span class='off'>—</span><span class='svisually'>無診</span></td><td class='on'><span class='dot' aria-hidden='true'></span>看診</td></tr><tr><th scope='row'>星期六</th><td><span class='off'>—</span><span class='svisually'>無診</span></td><td><span class='off'>—</span><span class='svisually'>無診</span></td><td><span class='off'>—</span><span class='svisually'>無診</span></td></tr></table></div>
+
+<div class="clinicinfo">
+  <dl>
+    <dt>看診地點</dt>
+    <dd><a href="https://www.kgh.com.tw/" rel="noopener" target="_blank">郭綜合醫院</a>
+        腎臟內科<br>700002 臺南市中西區民生路二段 22 號</dd>
+    <dt>掛號專線</dt>
+    <dd>(06)222-6677、(06)222-7766</dd>
+    <dt>醫院總機</dt>
+    <dd>(06)222-1111</dd>
+    <dt>官方時刻表</dt>
+    <dd><a href="https://www.kgh.com.tw/EasyInquiry/HospitalNews" rel="noopener" target="_blank">醫院門診時刻表與網路掛號</a></dd>
+  </dl>
+</div>
+<p class="fine"><strong>臨時停診與代診一律以醫院公告為準</strong>，出發前建議先用上面的
+掛號專線或官方時刻表確認一次。</p>
+<div class="warnbox">
+  <b>放這些資訊，是為了讓需要的人找得到路，不是要把讀者變成我的病人</b>
+  <p>這個網站的內容對誰都一樣適用，不會因為你有沒有來看我的門診而不同。
+  住得遠、或已經有固定的主治醫師，<strong>請繼續在原本的地方就醫</strong>——
+  換醫師會中斷病情的連續性，對慢性腎臟病來說那是實實在在的損失。</p>
+</div>
+
 <h2 id="lian-luo">聯絡方式</h2>
 <p>媒體採訪、授權轉載、演講邀約，或發現內容有誤，歡迎來信：</p>
 <p class="contact"><a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a></p>
@@ -882,6 +950,71 @@ letter-spacing:.4px;line-height:1.5}
     <p class="qid">帳號代號 <code>@511dxhiz</code></p>
   </div>
 </div>
+
+<h2 id="ding-yue">訂閱新文章</h2>
+<p>不想追蹤社群也沒關係，留個信箱就好。新的長文發布時我會寄一封給你，
+大概一個月一次。</p>
+
+<div class="subbox">
+  
+  <form id="subForm" novalidate>
+    <label class="svisually" for="subMail">你的電子信箱</label>
+    <input id="subMail" type="email" name="email" required
+           autocomplete="email" spellcheck="false" placeholder="your@email.com">
+    <button type="submit">訂閱</button>
+  </form>
+  <p id="subMsg" class="submsg" role="status" aria-live="polite"></p>
+  <p class="fine">只收信箱，不收姓名，也不會問你的病情或檢查數值。
+  只用來寄這個網站的新文章通知，<strong>不轉給任何第三方、不做廣告用途</strong>。
+  想退訂隨時來信 <a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a>，我會直接刪掉。</p>
+</div>
+<script>const SUBS_URL="https://firestore.googleapis.com/v1/projects/kidneygod-ea61e/databases/(default)/documents/subs?key=AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU&documentId=__ID__";</script>
+<script>
+(() => {
+  const f = document.getElementById("subForm");
+  if(!f) return;
+  const inp = f.querySelector("input[type=email]");
+  const btn = f.querySelector("button");
+  const msg = document.getElementById("subMsg");
+  const say = (t, ok) => { msg.textContent = t; msg.className = "submsg " + (ok ? "ok" : "no"); };
+
+  f.addEventListener("submit", async e => {
+    e.preventDefault();
+    const mail = (inp.value || "").trim().toLowerCase();
+    // 送出前先擋明顯不對的，省一次往返，也避免在集合裡留下垃圾文件
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail) || mail.length > 120){
+      say("這個信箱看起來不太對，再確認一次？", false); inp.focus(); return;
+    }
+    btn.disabled = true; const old = btn.textContent; btn.textContent = "送出中…";
+    try{
+      const r = await fetch(SUBS_URL.replace("__ID__", encodeURIComponent(mail)), {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({fields: {
+          email: {stringValue: mail},
+          src:   {stringValue: (location.pathname || "/").slice(0, 60)},
+          at:    {timestampValue: new Date().toISOString()},
+        }}),
+      });
+      if(r.ok){
+        f.reset();
+        say("訂閱成功，新文章發布時會寄給你。", true);
+      }else if(r.status === 409 || r.status === 403){
+        // 規則只允許 create：已存在的信箱會被擋下，那代表本來就訂閱過了
+        f.reset();
+        say("這個信箱已經訂閱過了，不用再送一次。", true);
+      }else{
+        say("送出失敗，請稍後再試，或直接來信 contact@kidneygod.net。", false);
+      }
+    }catch(err){
+      say("連線失敗，請稍後再試。", false);
+    }finally{
+      btn.disabled = false; btn.textContent = old;
+    }
+  });
+})();
+</script>
+
 </div></div></section>
 
 <section class="band tint tail"><div class="wrap"><div class="zoomable">

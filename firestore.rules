@@ -48,6 +48,50 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    /* ── Email 訂閱名單 ──
+       文件 id 就是信箱本身，這一步同時做到三件事：
+         1. 同一個信箱只會有一筆，重複送出不會塞滿集合
+         2. id 與 email 欄位互相綁定（下面那條 d.email == mail）
+         3. 只允許 create、不允許 update，所以重複訂閱會被擋下 ——
+            前端收到 403 就顯示「已經訂閱過了」，那是正確結果不是錯誤
+
+       **一律不可公開讀取**：這是個資，外洩等於把讀者的信箱送給爬蟲。
+       只有站長本人（用 Google 登入）讀得到，給後台頁面匯出名單用。
+       刪除也只有站長能做（要能處理退訂）。 */
+    function owner() {
+      return request.auth != null && request.auth.token.email == 'a778040@gmail.com';
+    }
+    match /subs/{mail} {
+      function valid() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['email', 'src', 'at'])
+            && d.email is string && d.email == mail
+            && mail.size() <= 120
+            && mail.matches('^[^@]+@[^@]+[.][^@]+$')
+            && d.src is string && d.src.size() <= 60
+            && d.at is timestamp;
+      }
+      allow create: if valid();
+      allow update: if false;          // 重複訂閱擋在這裡
+      allow read, delete: if owner();  // 匯出名單與處理退訂
+    }
+
+    /* ── 醫師審閱紀錄 ──
+       作者在後台頁面按一下就寫一筆，之後 sync_reviews.py 抓回
+       articles_src/reviewed.json 再重新建站。醫院擋 Telegram，但擋不住網頁。
+       日期本來就會publish在網站上，所以公開讀沒有問題；寫入只有本人可以。 */
+    match /review/{page} {
+      allow read: if true;
+      /* path 一起存起來：文件 id 不能有斜線，所以 id 是把 / 換成 __ 的版本。
+         把原始路徑放在欄位裡，同步腳本就不必反推，少一個會對不起來的地方。 */
+      allow write: if owner()
+                   && request.resource.data.keys().hasOnly(['path', 'date', 'at'])
+                   && request.resource.data.path is string
+                   && request.resource.data.path.size() <= 120
+                   && request.resource.data.date is string
+                   && request.resource.data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+    }
+
     /* ── 每題作答統計：聚合數字，不含任何身分 ──
        只記「第 N 題被作答幾次、答對幾次」，回推不到個人，也不影響排行榜。
        分成 s0–s3 數份，避免單一文件的每秒一次寫入上限在尖峰塞車。

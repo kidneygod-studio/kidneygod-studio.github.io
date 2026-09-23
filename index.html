@@ -28,12 +28,13 @@
    不需要達到文字對比的視覺錨點。 */
 :root{--bg:#fdfeff;--fg:#28313d;--mut:#5c6774;--line:#dbe5ee;--card:#f2f7fb;
 --accent:#2e7fb8;--accent2:#1e3a63;--link:#175c8e;--warn:#8a5a00;--maxw:720px;
+--accent-soft:#e3f0fa;
 --serif:"Noto Serif TC",Georgia,"Songti TC","MingLiU",serif}
 /* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1620;--fg:#e6edf5;--mut:#9fb2c6;
---line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24}}
+--line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24;--accent-soft:#122c3d}}
 :root[data-theme="dark"]{--bg:#0e1620;--fg:#e6edf5;--mut:#9fb2c6;
---line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24}
+--line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24;--accent-soft:#122c3d}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
@@ -464,6 +465,45 @@ footer.site .fcontact .note{font-size:12.5px;color:var(--mut)}
    QR 的 viewBox 只有 37x37（一個模組一格），所以一定要用
    image-rendering:pixelated，不然瀏覽器會把邊緣做平滑，
    模組之間糊在一起會掃不到。 */
+/* 門診時刻表。有診的格子除了底色之外另外放「看診」兩個字與一個圓點，
+   不靠顏色單獨傳達資訊——色盲讀者與黑白列印都還看得懂。 */
+.ctwrap{overflow-x:auto;margin:18px 0 14px;-webkit-overflow-scrolling:touch}
+.ctable{border-collapse:separate;border-spacing:6px;width:100%;min-width:340px;
+text-align:center;font-size:15px}
+.ctable th[scope=col]{font-size:13.5px;color:var(--mut);font-weight:700;padding:2px 0}
+.ctable .cth{display:block;font-size:11.5px;font-weight:400;opacity:.85;margin-top:2px;
+letter-spacing:.01em;white-space:nowrap}
+.ctable th[scope=row]{text-align:left;font-weight:700;white-space:nowrap;
+padding-right:8px;font-size:14.5px}
+.ctable td{border:1px solid var(--line);border-radius:10px;padding:11px 6px;
+background:var(--card);color:var(--mut);font-size:14px}
+.ctable td.on{border-color:var(--accent);background:var(--accent-soft,var(--card));
+color:var(--fg);font-weight:800;box-shadow:inset 0 0 0 1px var(--accent)}
+.ctable td.on .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
+background:var(--accent);margin-right:6px;vertical-align:1px}
+.ctable td .off{opacity:.45}
+.clinicinfo dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px;
+margin:0;font-size:15px;line-height:1.75}
+.clinicinfo dt{font-weight:700;color:var(--mut);white-space:nowrap;font-size:14px}
+.clinicinfo dd{margin:0}
+@media(max-width:560px){
+  .clinicinfo dl{grid-template-columns:1fr;gap:2px}
+  .clinicinfo dt{margin-top:10px}
+}
+/* Email 訂閱 */
+.subbox{margin:18px 0 0}
+.subbox form{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0}
+.subbox input{flex:1;min-width:200px;padding:11px 14px;font:inherit;font-size:15px;
+border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg)}
+.subbox input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.subbox button{padding:11px 22px;font:inherit;font-size:15px;font-weight:700;
+border:0;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;white-space:nowrap}
+.subbox button:hover{filter:brightness(1.08)}
+.subbox button:disabled{opacity:.6;cursor:default}
+.submsg{margin:10px 0 0;font-size:14.5px;min-height:1.2em}
+.submsg.ok{color:var(--accent2)}
+.submsg.no{color:var(--warn)}
+.subbox .fine{margin-top:10px}
 .lineqr{display:flex;gap:20px;align-items:center;margin:22px 0 0;
 padding:18px;border:1px solid var(--line);border-radius:14px;
 background:var(--card)}
@@ -868,7 +908,68 @@ padding:18px 22px;border:1px solid var(--line);border-radius:10px;background:var
 <section class="band tint"><div class="wrap wide"><div class="zoomable"><div class="shead home-reveal"><span class="en" aria-hidden="true">BROWSE BY TOPIC</span><h2 class="sect" id="topics">主題衛教</h2><div class="sd">100 則衛教內容，分成 8 個主題，適合想直接找答案的人</div></div><div class="cats home-reveal" style="--d:.08s"><a href="/articles/blood-pressure.html"><div class="t">血壓管理（17 則）</div><div class="d">血壓與腎臟是雙向的關係：高血壓會傷腎，腎功能變差又會讓血壓更難控制。這一頁整理血壓與腎臟之間最常被問…</div></a><a href="/articles/blood-sugar.html"><div class="t">血糖管理（17 則）</div><div class="d">糖尿病是台灣洗腎最主要的原因。血糖控制得好不好，直接決定腎臟能撐多久。這一頁整理血糖與腎臟的關聯與實…</div></a><a href="/articles/lipids.html"><div class="t">血脂代謝（16 則）</div><div class="d">血脂異常對腎臟的影響常被忽略，但它同時牽動心血管與腎臟的長期風險。這一頁整理血脂與腎臟保護的重點。…</div></a><a href="/articles/diet.html"><div class="t">飲食護腎（13 則）</div><div class="d">「腎不好要吃什麼」是最常見的問題，答案卻會隨腎功能階段而改變。這一頁整理飲食上真正有證據的原則與常見…</div></a><a href="/articles/medication-safety.html"><div class="t">用藥安全（10 則）</div><div class="d">很多腎損傷來自可以避免的用藥。這一頁整理常見的傷腎藥物、危險組合，以及什麼情況下該先問過醫師。…</div></a><a href="/articles/lifestyle.html"><div class="t">生活習慣（10 則）</div><div class="d">腎臟的保養沒有捷徑，但有幾個生活習慣的影響比多數人想的大。這一頁整理實際有幫助的部分。…</div></a><a href="/articles/lab-values.html"><div class="t">檢查數值（9 則）</div><div class="d">肌酸酐、eGFR、蛋白尿——健檢報告上的腎功能數字到底代表什麼。這一頁教你看懂自己的報告。…</div></a><a href="/articles/myths.html"><div class="t">警訊與迷思（8 則）</div><div class="d">哪些症狀該就醫、哪些流傳很廣的說法其實沒有根據。這一頁整理腎臟相關的警訊與常見迷思。…</div></a></div></div></div></section>
 <section class="band"><div class="wrap wide"><div class="zoomable"><div class="shead home-reveal"><span class="en" aria-hidden="true">CARD GALLERY</span><h2 class="sect" id="gallery">衛教圖卡</h2><div class="sd">社群上發表過的圖解，依主題整理並附上完整說明</div></div><a class="feat home-reveal" style="--d:.08s" href="/articles/gallery.html"><div class="t">119 張衛教圖卡</div><div class="d">血壓、血糖、血脂、飲食、用藥安全、檢查數值…點主題可跳到該區。</div></a></div></div></section>
 <section class="band tint"><div class="wrap wide"><div class="zoomable"><div class="shead home-reveal"><span class="en" aria-hidden="true">LEARN BY PLAYING</span><h2 class="sect" id="play">從免費遊戲學習</h2><div class="sd">邊玩邊收集護腎知識卡與貓咪貼圖——不收費、沒有金流，唯一會出貨的是護腎知識</div></div><a class="gamebtn home-reveal" style="--d:.08s" href="/shop.html"><img src="/logo.png" alt="" aria-hidden="true" width="684" height="370"><span class="cap">護腎知識卡片收集遊戲</span></a></div></div></section>
-<section class="band"><div class="wrap wide"><div class="zoomable"><div class="shead home-reveal"><span class="en" aria-hidden="true">LINE OFFICIAL ACCOUNT</span><h2 class="sect" id="line">LINE 官方帳號</h2><div class="sd">新文章與衛教圖卡發布時，直接送到你的 LINE</div></div><div class="lineqr home-reveal" style="--d:.08s">
+<section class="band"><div class="wrap wide"><div class="zoomable"><div class="shead home-reveal"><span class="en" aria-hidden="true">EMAIL UPDATES</span><h2 class="sect" id="sub">訂閱新文章</h2><div class="sd">留個信箱，新的長文發布時寄給你</div></div>
+<div class="subbox">
+  <p>新的長文發布時寄一封給你，大概一個月一次。平台可能關帳號，信箱不會——這也是我自己留一份名單的原因。</p>
+  <form id="subForm" novalidate>
+    <label class="svisually" for="subMail">你的電子信箱</label>
+    <input id="subMail" type="email" name="email" required
+           autocomplete="email" spellcheck="false" placeholder="your@email.com">
+    <button type="submit">訂閱</button>
+  </form>
+  <p id="subMsg" class="submsg" role="status" aria-live="polite"></p>
+  <p class="fine">只收信箱，不收姓名，也不會問你的病情或檢查數值。
+  只用來寄這個網站的新文章通知，<strong>不轉給任何第三方、不做廣告用途</strong>。
+  想退訂隨時來信 <a href="mailto:contact@kidneygod.net">contact@kidneygod.net</a>，我會直接刪掉。</p>
+</div>
+<script>const SUBS_URL="https://firestore.googleapis.com/v1/projects/kidneygod-ea61e/databases/(default)/documents/subs?key=AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU&documentId=__ID__";</script>
+<script>
+(() => {
+  const f = document.getElementById("subForm");
+  if(!f) return;
+  const inp = f.querySelector("input[type=email]");
+  const btn = f.querySelector("button");
+  const msg = document.getElementById("subMsg");
+  const say = (t, ok) => { msg.textContent = t; msg.className = "submsg " + (ok ? "ok" : "no"); };
+
+  f.addEventListener("submit", async e => {
+    e.preventDefault();
+    const mail = (inp.value || "").trim().toLowerCase();
+    // 送出前先擋明顯不對的，省一次往返，也避免在集合裡留下垃圾文件
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail) || mail.length > 120){
+      say("這個信箱看起來不太對，再確認一次？", false); inp.focus(); return;
+    }
+    btn.disabled = true; const old = btn.textContent; btn.textContent = "送出中…";
+    try{
+      const r = await fetch(SUBS_URL.replace("__ID__", encodeURIComponent(mail)), {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({fields: {
+          email: {stringValue: mail},
+          src:   {stringValue: (location.pathname || "/").slice(0, 60)},
+          at:    {timestampValue: new Date().toISOString()},
+        }}),
+      });
+      if(r.ok){
+        f.reset();
+        say("訂閱成功，新文章發布時會寄給你。", true);
+      }else if(r.status === 409 || r.status === 403){
+        // 規則只允許 create：已存在的信箱會被擋下，那代表本來就訂閱過了
+        f.reset();
+        say("這個信箱已經訂閱過了，不用再送一次。", true);
+      }else{
+        say("送出失敗，請稍後再試，或直接來信 contact@kidneygod.net。", false);
+      }
+    }catch(err){
+      say("連線失敗，請稍後再試。", false);
+    }finally{
+      btn.disabled = false; btn.textContent = old;
+    }
+  });
+})();
+</script>
+</div></div></section>
+<section class="band tint"><div class="wrap wide"><div class="zoomable"><div class="shead home-reveal"><span class="en" aria-hidden="true">LINE OFFICIAL ACCOUNT</span><h2 class="sect" id="line">LINE 官方帳號</h2><div class="sd">新文章與衛教圖卡發布時，直接送到你的 LINE</div></div><div class="lineqr home-reveal" style="--d:.08s">
   <img src="/line-qr.svg" alt="護腎教室 LINE 官方帳號的 QR code"
        width="37" height="37" loading="lazy">
   <div class="qtx">

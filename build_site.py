@@ -62,6 +62,32 @@ SITE_NAME = "護腎教室"
 #
 # 一律另開分頁：美食通那邊沒有連回衛教站的入口（它的來源在桌面，是另一套
 # 產生器，不能從這個 repo 改），同分頁跳過去讀者就回不來了。
+# ── 就醫資訊（2026-09-23 作者指示放上）──────────────────────────
+# 全部取自郭綜合醫院官網，**不要憑印象改**（AGENTS.md 第四節：不要憑空生出
+# 醫療機構的事實）。門診時段由作者本人提供。
+#   全名／地址／總機／掛號專線　https://www.kgh.com.tw/
+#   腎臟內科　　　　　　　　　　https://www.kgh.com.tw/Dep/OG01/91
+#   醫師名單（專任主治醫師）　　https://www.kgh.com.tw/Team/DocList/91
+#
+# ⚠ 官網的「門診時刻表」是一張圖片，鐘點讀不出來。
+#   下面 CLINIC_COLS 的 9:00–12:00 / 14:00–17:00 / 18:00–21:00 **由作者本人提供**
+#   （2026-09-23），不是從掛號網站那類二手資料抄的。醫院若調整時段，改這裡。
+HOSPITAL = {
+    "name": "郭綜合醫院",
+    "dept": "腎臟內科",
+    "title": "專任主治醫師",
+    "addr": "700002 臺南市中西區民生路二段 22 號",
+    "tel": "(06)222-1111",
+    "reg_tel": "(06)222-6677、(06)222-7766",
+    "url": "https://www.kgh.com.tw/",
+    "dept_url": "https://www.kgh.com.tw/Dep/OG01/91",
+    "sched_url": "https://www.kgh.com.tw/EasyInquiry/HospitalNews",
+}
+# 作者提供的門診時段。改這裡就好，時刻表是照這份資料畫的。
+CLINIC_SLOTS = [("一", "上午"), ("二", "上午"), ("五", "晚上")]
+CLINIC_COLS = [("上午", "9:00–12:00"), ("下午", "14:00–17:00"), ("晚上", "18:00–21:00")]
+CLINIC_DAYS = ["一", "二", "三", "四", "五", "六"]
+
 FOOD_TOUR_URL = "/tainanfood/"
 FOOD_TOUR_NAME = "台南美食通"
 FOOD_TOUR_PLAN_URL = "/tainanfood/plan/"
@@ -109,6 +135,70 @@ _KEY = "AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU"   # 前端公開識別碼，非
 VIEWS_DOC = f"{_FS}/documents/stats/site?key={_KEY}&mask.fieldPaths=views"
 VIEWS_COMMIT = f"{_FS}/documents:commit?key={_KEY}"
 VIEWS_PATH = "projects/kidneygod-ea61e/databases/(default)/documents/stats/site"
+
+# ── Email 訂閱 ────────────────────────────────────────────────
+# 為什麼要做：現在所有的讀者入口都是別人的平台（Threads、LINE、搜尋），
+# 而原帳號曾經被平台無預警永久停用一次。信箱名單是唯一「被停權也拿不走」的資產。
+#
+# 一樣不載入 Firebase SDK，沿用瀏覽次數那套 REST 寫法。
+#
+# **文件 id 就是信箱本身**，這一步解決三件事：
+#   1. 同一個信箱只會有一筆，不會因為重複送出而塞滿整個集合
+#   2. 規則裡可以用 `request.resource.data.email == email` 綁住 id 與欄位
+#   3. 重複訂閱會被規則擋下（只允許 create、不允許 update），
+#      前端收到 409/403 就顯示「已經訂閱過了」，這是正確結果不是錯誤
+#
+# 只收信箱，不收姓名、不收任何健康資訊——簡介頁那段「不要在信裡提供檢查數值」
+# 的承諾仍然成立。
+SUBS_URL = f"{_FS}/documents/subs?key={_KEY}&documentId=__ID__"
+
+SUBS_SCRIPT = """
+<script>
+(() => {
+  const f = document.getElementById("subForm");
+  if(!f) return;
+  const inp = f.querySelector("input[type=email]");
+  const btn = f.querySelector("button");
+  const msg = document.getElementById("subMsg");
+  const say = (t, ok) => { msg.textContent = t; msg.className = "submsg " + (ok ? "ok" : "no"); };
+
+  f.addEventListener("submit", async e => {
+    e.preventDefault();
+    const mail = (inp.value || "").trim().toLowerCase();
+    // 送出前先擋明顯不對的，省一次往返，也避免在集合裡留下垃圾文件
+    if(!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(mail) || mail.length > 120){
+      say("這個信箱看起來不太對，再確認一次？", false); inp.focus(); return;
+    }
+    btn.disabled = true; const old = btn.textContent; btn.textContent = "送出中…";
+    try{
+      const r = await fetch(SUBS_URL.replace("__ID__", encodeURIComponent(mail)), {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({fields: {
+          email: {stringValue: mail},
+          src:   {stringValue: (location.pathname || "/").slice(0, 60)},
+          at:    {timestampValue: new Date().toISOString()},
+        }}),
+      });
+      if(r.ok){
+        f.reset();
+        say("訂閱成功，新文章發布時會寄給你。", true);
+      }else if(r.status === 409 || r.status === 403){
+        // 規則只允許 create：已存在的信箱會被擋下，那代表本來就訂閱過了
+        f.reset();
+        say("這個信箱已經訂閱過了，不用再送一次。", true);
+      }else{
+        say("送出失敗，請稍後再試，或直接來信 contact@kidneygod.net。", false);
+      }
+    }catch(err){
+      say("連線失敗，請稍後再試。", false);
+    }finally{
+      btn.disabled = false; btn.textContent = old;
+    }
+  });
+})();
+</script>
+"""
 
 VIEWS_SCRIPT = """
 <script>
@@ -623,12 +713,13 @@ CSS = """
    不需要達到文字對比的視覺錨點。 */
 :root{--bg:#fdfeff;--fg:#28313d;--mut:#5c6774;--line:#dbe5ee;--card:#f2f7fb;
 --accent:#2e7fb8;--accent2:#1e3a63;--link:#175c8e;--warn:#8a5a00;--maxw:720px;
+--accent-soft:#e3f0fa;
 --serif:"Noto Serif TC",Georgia,"Songti TC","MingLiU",serif}
 /* ⚠ 深色宣告有兩份（媒體查詢與 [data-theme=dark]），改一份就要改另一份 */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1620;--fg:#e6edf5;--mut:#9fb2c6;
---line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24}}
+--line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24;--accent-soft:#122c3d}}
 :root[data-theme="dark"]{--bg:#0e1620;--fg:#e6edf5;--mut:#9fb2c6;
---line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24}
+--line:#22303f;--card:#15202c;--accent:#7cc4ee;--accent2:#a9d9f7;--link:#8fd0f5;--warn:#fbbf24;--accent-soft:#122c3d}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);
 font:17px/1.85 -apple-system,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;
@@ -1059,6 +1150,45 @@ footer.site .fcontact .note{font-size:12.5px;color:var(--mut)}
    QR 的 viewBox 只有 37x37（一個模組一格），所以一定要用
    image-rendering:pixelated，不然瀏覽器會把邊緣做平滑，
    模組之間糊在一起會掃不到。 */
+/* 門診時刻表。有診的格子除了底色之外另外放「看診」兩個字與一個圓點，
+   不靠顏色單獨傳達資訊——色盲讀者與黑白列印都還看得懂。 */
+.ctwrap{overflow-x:auto;margin:18px 0 14px;-webkit-overflow-scrolling:touch}
+.ctable{border-collapse:separate;border-spacing:6px;width:100%;min-width:340px;
+text-align:center;font-size:15px}
+.ctable th[scope=col]{font-size:13.5px;color:var(--mut);font-weight:700;padding:2px 0}
+.ctable .cth{display:block;font-size:11.5px;font-weight:400;opacity:.85;margin-top:2px;
+letter-spacing:.01em;white-space:nowrap}
+.ctable th[scope=row]{text-align:left;font-weight:700;white-space:nowrap;
+padding-right:8px;font-size:14.5px}
+.ctable td{border:1px solid var(--line);border-radius:10px;padding:11px 6px;
+background:var(--card);color:var(--mut);font-size:14px}
+.ctable td.on{border-color:var(--accent);background:var(--accent-soft,var(--card));
+color:var(--fg);font-weight:800;box-shadow:inset 0 0 0 1px var(--accent)}
+.ctable td.on .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
+background:var(--accent);margin-right:6px;vertical-align:1px}
+.ctable td .off{opacity:.45}
+.clinicinfo dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px;
+margin:0;font-size:15px;line-height:1.75}
+.clinicinfo dt{font-weight:700;color:var(--mut);white-space:nowrap;font-size:14px}
+.clinicinfo dd{margin:0}
+@media(max-width:560px){
+  .clinicinfo dl{grid-template-columns:1fr;gap:2px}
+  .clinicinfo dt{margin-top:10px}
+}
+/* Email 訂閱 */
+.subbox{margin:18px 0 0}
+.subbox form{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0}
+.subbox input{flex:1;min-width:200px;padding:11px 14px;font:inherit;font-size:15px;
+border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg)}
+.subbox input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.subbox button{padding:11px 22px;font:inherit;font-size:15px;font-weight:700;
+border:0;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;white-space:nowrap}
+.subbox button:hover{filter:brightness(1.08)}
+.subbox button:disabled{opacity:.6;cursor:default}
+.submsg{margin:10px 0 0;font-size:14.5px;min-height:1.2em}
+.submsg.ok{color:var(--accent2)}
+.submsg.no{color:var(--warn)}
+.subbox .fine{margin-top:10px}
 .lineqr{display:flex;gap:20px;align-items:center;margin:22px 0 0;
 padding:18px;border:1px solid var(--line);border-radius:14px;
 background:var(--card)}
@@ -2448,6 +2578,13 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     # 圖檔與 about.html 共用同一份 /line-qr.svg（make_line_qr.py 產生，
     # 那支會用 OpenCV 反向解碼確認掃出來的網址正確才輸出），樣式也共用 .lineqr，
     # 所以這裡只是把同一個區塊搬到首頁，沒有第二套要維護。
+    # 訂閱放在 LINE 前面：兩個都是「留下聯絡方式」，但信箱是自己的名單，
+    # 平台關帳號也拿不走，所以擺在先被看到的位置。
+    sub_sect = (
+        sect_head("sub", "訂閱新文章", "EMAIL UPDATES",
+                  "留個信箱，新的長文發布時寄給你")
+        + subscribe_block())
+
     line_sect = (
         sect_head("line", "LINE 官方帳號", "LINE OFFICIAL ACCOUNT",
                   "新文章與衛教圖卡發布時，直接送到你的 LINE")
@@ -2467,7 +2604,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     # 用固定的 i%2 會在某一區消失時出現兩條同色相鄰。
     sections = [(quick_sect + feat_sect + news_sect, "快捷入口與精選"),
                 (topics_sect, "主題"), (gal_sect, "圖卡"),
-                (play_sect, "遊戲"), (line_sect, "LINE")]
+                (play_sect, "遊戲"), (sub_sect, "訂閱"), (line_sect, "LINE")]
     parts, tint = [], False
     for html_, _name in sections:
         if not html_.strip():
@@ -4055,6 +4192,57 @@ def build_legal() -> str:
                 "醫療免責聲明與資料來源說明。", "legal.html", body)
 
 
+def subscribe_block(compact: bool = False) -> str:
+    """Email 訂閱表單。一頁只放一次——腳本跟著表單一起送出，放兩次會綁兩次事件。
+
+    同意聲明就寫在按鈕旁邊，不藏在連結後面：這是個資，讀者按下去之前
+    應該看得到「收什麼、拿來做什麼、怎麼退訂」。
+    """
+    lede = ("" if compact else
+            "<p>新的長文發布時寄一封給你，大概一個月一次。"
+            "平台可能關帳號，信箱不會——這也是我自己留一份名單的原因。</p>")
+    return f"""
+<div class="subbox">
+  {lede}
+  <form id="subForm" novalidate>
+    <label class="svisually" for="subMail">你的電子信箱</label>
+    <input id="subMail" type="email" name="email" required
+           autocomplete="email" spellcheck="false" placeholder="your@email.com">
+    <button type="submit">訂閱</button>
+  </form>
+  <p id="subMsg" class="submsg" role="status" aria-live="polite"></p>
+  <p class="fine">只收信箱，不收姓名，也不會問你的病情或檢查數值。
+  只用來寄這個網站的新文章通知，<strong>不轉給任何第三方、不做廣告用途</strong>。
+  想退訂隨時來信 <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>，我會直接刪掉。</p>
+</div>
+<script>const SUBS_URL={json.dumps(SUBS_URL)};</script>{SUBS_SCRIPT}"""
+
+
+def clinic_table() -> str:
+    """門診時刻表。
+
+    做成真正的 <table> 而不是一堆 div：週幾×時段本來就是二維表格，
+    用表格標記讀螢幕軟體才唸得出「星期一・上午・看診」這個對應關係。
+    有診的格子除了顏色之外**另外放一個字**（看診），不靠顏色單獨傳達資訊——
+    色盲讀者與黑白列印都還看得懂。
+    """
+    have = {(d, s) for d, s in CLINIC_SLOTS}
+    head = "".join(f"<th scope='col'>{c}<span class='cth'>{t}</span></th>"
+                   for c, t in CLINIC_COLS)
+    rows = ""
+    for d in CLINIC_DAYS:
+        tds = ""
+        for c, _t in CLINIC_COLS:
+            on = (d, c) in have
+            tds += (f"<td class='on'><span class='dot' aria-hidden='true'></span>看診</td>"
+                    if on else "<td><span class='off'>—</span>"
+                               "<span class='svisually'>無診</span></td>")
+        rows += f"<tr><th scope='row'>星期{d}</th>{tds}</tr>"
+    return (f"<div class='ctwrap'><table class='ctable'>"
+            f"<caption class='svisually'>吳政哲醫師門診時段表</caption>"
+            f"<tr><td></td>{head}</tr>{rows}</table></div>")
+
+
 def build_about() -> str:
     """關於作者頁。
 
@@ -4157,6 +4345,34 @@ def build_about() -> str:
 有沒有其他共病的人身上，意義可能完全不同。這些判斷需要完整的病史、
 檢查結果與當面評估，不是任何網站能取代的。<strong>請與你的主治醫師討論。</strong></p>
 
+<h2 id="jiu-yi">就醫資訊</h2>
+<p>我在<strong>{HOSPITAL['name']}{HOSPITAL['dept']}</strong>擔任{HOSPITAL['title']}。
+如果你想掛我的門診，時段如下。</p>
+
+{clinic_table()}
+
+<div class="clinicinfo">
+  <dl>
+    <dt>看診地點</dt>
+    <dd><a href="{HOSPITAL['url']}" rel="noopener" target="_blank">{HOSPITAL['name']}</a>
+        {HOSPITAL['dept']}<br>{HOSPITAL['addr']}</dd>
+    <dt>掛號專線</dt>
+    <dd>{HOSPITAL['reg_tel']}</dd>
+    <dt>醫院總機</dt>
+    <dd>{HOSPITAL['tel']}</dd>
+    <dt>官方時刻表</dt>
+    <dd><a href="{HOSPITAL['sched_url']}" rel="noopener" target="_blank">醫院門診時刻表與網路掛號</a></dd>
+  </dl>
+</div>
+<p class="fine"><strong>臨時停診與代診一律以醫院公告為準</strong>，出發前建議先用上面的
+掛號專線或官方時刻表確認一次。</p>
+<div class="warnbox">
+  <b>放這些資訊，是為了讓需要的人找得到路，不是要把讀者變成我的病人</b>
+  <p>這個網站的內容對誰都一樣適用，不會因為你有沒有來看我的門診而不同。
+  住得遠、或已經有固定的主治醫師，<strong>請繼續在原本的地方就醫</strong>——
+  換醫師會中斷病情的連續性，對慢性腎臟病來說那是實實在在的損失。</p>
+</div>
+
 <h2 id="lian-luo">聯絡方式</h2>
 <p>媒體採訪、授權轉載、演講邀約，或發現內容有誤，歡迎來信：</p>
 <p class="contact"><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p>
@@ -4187,7 +4403,12 @@ def build_about() -> str:
     在手機上看這一頁的話，直接點<a href="{LINE_URL}">加入好友</a>比較快。</p>
     <p class="qid">帳號代號 <code>{LINE_ID}</code></p>
   </div>
-</div>{dialysis}
+</div>
+
+<h2 id="ding-yue">訂閱新文章</h2>
+<p>不想追蹤社群也沒關係，留個信箱就好。新的長文發布時我會寄一封給你，
+大概一個月一次。</p>
+{subscribe_block(compact=True)}{dialysis}
 """
 
     jsonld = {
