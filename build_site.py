@@ -2223,7 +2223,7 @@ def build_search_index(data: list[dict], md_pages: list[dict],
 HOME_LAYOUT_CSS = """<style>
 .band.opening .prefbar{padding-top:8px;min-height:0}
 .hero{padding:8px 0 4px}.hero h1{font-size:clamp(1.65rem,3.2vw,2.6rem);line-height:1.45}
-.home-eyebrow{font-size:.92rem;letter-spacing:.08em;color:var(--accent2);margin:0 0 10px}
+.home-eyebrow{font-size:clamp(1.25rem,2.2vw,1.6rem);font-weight:700;line-height:1.55;letter-spacing:.035em;color:var(--accent2);margin:0 0 10px}
 .hero .sub{color:var(--fg);margin:0 0 8px}.hero .cred{margin:0 0 14px}
 .hero .ssearch{margin:16px 0 0}.band.opening{padding-bottom:24px}
 .home-shortcuts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
@@ -2236,6 +2236,13 @@ background:color-mix(in srgb,var(--accent) 9%,var(--bg));scroll-margin-top:90px}
 .home-shortcut svg{width:46px;height:46px;color:var(--accent2);margin-bottom:8px}
 .home-shortcut strong{font-family:var(--serif);font-size:1.15rem}.home-shortcut span{font-size:.85rem;color:var(--mut)}
 .home-shortcut:hover{border-color:var(--link);box-shadow:0 4px 14px #16395712}
+/* 內容預設可見，動畫只是增強效果；無 JS 或回呼失敗仍可閱讀。 */
+@keyframes home-enter{from{opacity:.55;transform:translateY(12px)}to{opacity:1;transform:none}}
+.home-reveal.home-enter{animation:home-enter .48s cubic-bezier(.22,.61,.36,1)}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){
+.home-shortcut svg{transition:transform .18s ease}
+.home-shortcut:hover svg{transform:translateY(-3px)}}
+@media(prefers-reduced-motion:reduce){.home-reveal.home-enter{animation:none}}
 .home-shortcut:focus-visible,.home-questions a:focus-visible,.home-news:focus-visible{outline:3px solid var(--link);outline-offset:4px}
 .home-questions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:24px 0;border-bottom:1px solid var(--line)}
 .home-questions strong{font-size:1rem}.home-questions>div{display:flex;flex-wrap:wrap;gap:10px}
@@ -2251,7 +2258,7 @@ padding:18px 22px;border:1px solid var(--line);border-radius:10px;background:var
 .home-news>span:first-child{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.home-news strong{font-family:var(--serif);font-size:1.2rem}
 .home-news span span,.home-news>span:last-child{font-size:.9rem}
 @media(max-width:700px){
-.hero{padding-top:4px}.home-eyebrow{font-size:.82rem;letter-spacing:.03em}.hero .sub{font-size:1rem}
+.hero{padding-top:4px}.home-eyebrow{font-size:1.15rem;letter-spacing:.02em}.hero .sub{font-size:1rem}
 .hero .cred{font-size:.8rem}.home-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .home-shortcut{padding:16px 8px}.home-shortcut svg{width:36px;height:36px;margin-bottom:2px}
 .home-shortcut strong{font-size:1rem}.home-shortcut span{font-size:.76rem}
@@ -2265,6 +2272,39 @@ padding:18px 22px;border:1px solid var(--line);border-radius:10px;background:var
 .home-news>span:first-child{gap:6px 12px}
 }
 </style>"""
+
+
+# 首頁元素預設可見，不沿用共用 reveal 的三秒強制完成計時器。
+# 每個元素只播一次；待播清單清空後移除事件，不載入動畫套件。
+HOME_MOTION_SCRIPT = """<script>
+(function(){
+  var motion=matchMedia('(prefers-reduced-motion: reduce)');
+  if(motion.matches) return;
+  var pending=[].slice.call(document.querySelectorAll('.home-reveal')), ticking=false;
+  function stop(){
+    removeEventListener('scroll', schedule); removeEventListener('resize', schedule);
+    if(motion.removeEventListener) motion.removeEventListener('change', preference);
+  }
+  function check(){
+    ticking=false;
+    if(motion.matches){pending=[];stop();return;}
+    var edge=(innerHeight||document.documentElement.clientHeight)*.94;
+    pending=pending.filter(function(el){
+      var rect=el.getBoundingClientRect();
+      if(rect.top>=edge) return true;
+      if(rect.bottom>0) el.classList.add('home-enter');
+      return false;
+    });
+    if(!pending.length) stop();
+  }
+  function schedule(){if(!ticking){ticking=true;requestAnimationFrame(check);}}
+  function preference(){if(motion.matches){pending=[];stop();}}
+  addEventListener('scroll', schedule, {passive:true});
+  addEventListener('resize', schedule);
+  if(motion.addEventListener) motion.addEventListener('change', preference);
+  schedule();
+})();
+</script>"""
 
 
 def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int = 0) -> str:
@@ -2284,8 +2324,8 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
                       "articles/taiwan-eating-out-sodium.html",
                       "articles/home-blood-pressure-measurement.html"]
     selected = [next(a for a in extra if a["path"] == path) for path in featured_paths]
-    feats = "".join(mag_card(a) for a in selected)
-    feat_sect = ('<div class="home-section-head"><h2 id="deep">精選衛教文章</h2>'
+    feats = "".join(mag_card(a).replace('class="mcard"', 'class="mcard home-reveal"', 1) for a in selected)
+    feat_sect = ('<div class="home-section-head home-reveal"><h2 id="deep">精選衛教文章</h2>'
                  f'<a href="/{ALL_ARTICLES}">查看全部 {len(extra)} 篇 →</a></div>'
                  f'<div class="home-featured">{feats}</div>')
     news_sect = ""
@@ -2293,7 +2333,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         # 首頁依資料日期選最新一篇；只有年份的條目不視為當年年底。
         latest = max(PAPERS, key=lambda x: x.get("date", "") +
                      "-01" * (2 - x.get("date", "").count("-")))
-        news_sect = ('<section aria-labelledby="news">'
+        news_sect = ('<section class="home-reveal" aria-labelledby="news">'
                      '<div class="home-section-head"><h2 id="news">醫學新知</h2>'
                      f'<a href="/{ALL_NEWS}">查看全部 {len(PAPERS)} 篇 →</a></div>'
                      + digest_card(latest, compact=True) + '</section>')
@@ -2324,7 +2364,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         ("/articles/egfr-meaning-ckd-stages.html", "護腎入門", "第一次來，從這裡開始", "start"),
     ]
     quick = ''.join(
-        f'<a class="home-shortcut" id="{anchor}" href="{href}">'
+        f'<a class="home-shortcut home-reveal" id="{anchor}" href="{href}">'
         f'<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" '
         f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{icon}</svg>'
         f'<strong>{label}</strong><span>{hint}</span></a>'
@@ -2404,7 +2444,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
             continue
         parts.append(band(html_, tint=tint))
         tint = not tint
-    body = "\n".join(parts)
+    body = "\n".join(parts).replace(" reveal", " home-reveal")
     jsonld = {
         "@context": "https://schema.org",
         "@type": "WebSite",
@@ -2418,7 +2458,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     return page(title, desc, "", body, jsonld,
                 extra_head=HOME_LAYOUT_CSS,
                 after_disclaimer=share_buttons("", HOME_SHARE_TITLE, top=True)
-                + share_script() + search_script(),
+                + share_script() + search_script() + HOME_MOTION_SCRIPT,
                 banded=True, opening=opening)
 
 
@@ -3555,7 +3595,7 @@ def digest_card(x: dict, compact: bool = False) -> str:
               f'<p>{inline(x["m"])}</p></div>' if x.get("m") else "")
         return (f'<article class="dg compact">{top}'
                 f'<h3><a href="{href}">{esc(x["zh"])}</a></h3>{tail}'
-                f'{kp}<span class="dgmore">看完整摘要 →</span></article>')
+                f'{kp}<a class="dgmore" href="{href}">看完整摘要 →</a></article>')
 
     # 視覺摘要。**只放自有或有授權的圖**——每日摘要是傳給作者本人的私人檔案，
     # 嵌入期刊的 graphical abstract 沒問題；這個站是公開的，
