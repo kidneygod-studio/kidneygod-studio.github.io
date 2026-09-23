@@ -129,6 +129,11 @@ function signInView(){
    手寫頁（商城、遊戲、收藏冊、後台）不列入：那些不由 build_site.py 產生，
    填了審閱日期也不會顯示在任何地方。 */
 const SKIP = ["shop.html", "game.html", "library.html", "dash.html", "admin.html"];
+/* 內容由排程自動接上去的頁面（每日新知、衛教圖卡）也不列入：
+   按了也不會顯示——build_site.py 的 reviewed_ld() 對這些頁一律回空。
+   理由寫在那裡：內容沒有人逐篇看過，就不該掛醫師審閱的名字，
+   而且日期會停在按下去那天，隔天新知一進來就開始失真。 */
+const AUTO = /^articles\/(news|gallery)/;
 async function loadPages(){
   const xml = await fetch("/sitemap.xml?cb=" + Date.now()).then(r => r.text());
   const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
@@ -137,7 +142,7 @@ async function loadPages(){
     if(p === "" || p.endsWith("/")) p += "index.html";     // "" → index.html、articles/ → articles/index.html
     return p;
   }).filter(p => !p.startsWith("tainanfood/") && !p.startsWith("dialysis/")
-                 && !SKIP.includes(p));
+                 && !SKIP.includes(p) && !AUTO.test(p));
 }
 
 async function loadAll(){

@@ -350,8 +350,27 @@ def load_review_dates() -> dict[str, str]:
 REVIEW_DATES = load_review_dates()
 
 
+# 內容由排程自動接上去的頁面：每日新知（07:00 自動匯入新論文）與衛教圖卡
+# （import_gallery 匯入）。這些頁**一律不標示醫師審閱日期，即使 reviewed.json
+# 裡有紀錄**。
+#
+# 2026-09-23：作者在後台一次確認了 43 頁，其中含這 13 頁。當下是成立的——
+# 他確實看過了——但隔天早上 07:00 新知就會自動加入新論文，而日期會停在 9/23。
+# 頁面上寫的是「本頁內容最後由吳政哲醫師審閱於 …」，讀者與 Google 會理解成
+# 「這頁的內容經過醫師檢視」，於是這句話會**在沒有任何錯誤訊息的情況下**
+# 慢慢變成不實陳述。這跟同一天決定的「新知一律自動上線、不經人工審核」
+# 直接衝突：內容沒有人逐篇看過，就不該掛醫師審閱的名字。
+#
+# 擋在這裡而不是擋在 reviewed.json，是因為那個檔會被 sync_reviews.py 從雲端
+# 重新灌回來——擋在來源只會每天被覆蓋一次。
+AUTO_UPDATED = re.compile(r"^articles/(news|gallery)")
+
+
 def reviewed_ld(path: str) -> dict:
-    reviewed = REVIEW_DATES.get(path or "index.html")
+    key = path or "index.html"
+    if AUTO_UPDATED.match(key):
+        return {}
+    reviewed = REVIEW_DATES.get(key)
     return {"lastReviewed": reviewed, "reviewedBy": {"@id": AUTHOR_ID}} if reviewed else {}
 
 

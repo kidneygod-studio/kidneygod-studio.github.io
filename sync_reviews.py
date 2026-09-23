@@ -23,6 +23,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -36,6 +37,12 @@ PROJECT = "kidneygod-ea61e"
 KEY = "AIzaSyCbwPTuDOYdE1TjTd7pzLI6GUXCOPpgJNU"     # 前端公開識別碼，非機密
 URL = (f"https://firestore.googleapis.com/v1/projects/{PROJECT}"
        f"/databases/(default)/documents/review?key={KEY}&pageSize=300")
+
+# 內容由排程自動接上去的頁面（每日新知、衛教圖卡）不收進 reviewed.json。
+# build_site.py 的 reviewed_ld() 也擋了一層——那裡是權威，這裡只是不要讓
+# 檔案裡躺著一堆不會生效的鍵。雲端那幾筆留著不管（這支沒有刪除權限，
+# 而且留著也無害）。理由見 build_site.py 的 AUTO_UPDATED 註解。
+AUTO_UPDATED = re.compile(r"^articles/(news|gallery)")
 
 
 def fetch() -> dict[str, str]:
@@ -54,7 +61,7 @@ def fetch() -> dict[str, str]:
             f = d.get("fields", {})
             path = f.get("path", {}).get("stringValue")
             date = f.get("date", {}).get("stringValue")
-            if path and date:
+            if path and date and not AUTO_UPDATED.match(path):
                 out[path] = date
         token = data.get("nextPageToken")
         if not token:
