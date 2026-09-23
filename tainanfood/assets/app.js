@@ -40,18 +40,32 @@
   });
 
   /* ---------- 列表／收藏頁：篩選與排序 ---------- */
+  /* 現在是否營業：data-periods 形如 "1|0500-1|1300;2|0500-2|1300"，跨夜時結束日不同 */
+  function openNow(spec) {
+    if (!spec) return false;
+    var now = new Date(), day = now.getDay(), mins = now.getHours() * 60 + now.getMinutes();
+    return spec.split(';').some(function (seg) {
+      var m = seg.match(/^(\d)\|(\d{2})(\d{2})-(\d)\|(\d{2})(\d{2})$/);
+      if (!m) return false;
+      var od = +m[1], ot = +m[2] * 60 + +m[3], cd = +m[4], ct = +m[5] * 60 + +m[6];
+      if (od === cd) return day === od && mins >= ot && mins < ct;
+      // 跨夜：開店日的開店時間之後，或收店日的收店時間之前
+      return (day === od && mins >= ot) || (day === cd && mins < ct);
+    });
+  }
+
   var grid = document.getElementById('grid');
   var favPage = document.body.dataset.page === 'fav';
   function val(id) { var el = document.getElementById(id); return el ? (el.type === 'checkbox' ? el.checked : el.value) : ''; }
   function applyFilters() {
     if (!grid) return;
     var q = (val('fq') || '').trim(), cat = val('fc'), dist = val('fd'), sort = val('fs') || 'rating';
-    var gem = val('fg'), bib = val('fb'), words = q ? q.split(/\s+/) : [];
+    var gem = val('fg'), bib = val('fb'), open = val('fo'), words = q ? q.split(/\s+/) : [];
     var cards = [].slice.call(grid.children), shown = 0;
     cards.forEach(function (c) {
       var d = c.dataset;
       var ok = (!cat || d.cat === cat) && (!dist || d.district === dist) &&
-        (!gem || d.gem === '1') && (!bib || d.bib === '1') &&
+        (!gem || d.gem === '1') && (!bib || d.bib === '1') && (!open || openNow(d.periods)) &&
         (!favPage || favs.has(d.id)) &&
         words.every(function (w) { return d.text.indexOf(w) >= 0; });
       c.hidden = !ok;
@@ -70,6 +84,7 @@
     var p = new URLSearchParams();
     if (q) p.set('q', q); if (cat) p.set('cat', cat); if (dist) p.set('d', dist);
     if (sort !== 'rating') p.set('sort', sort); if (gem) p.set('gem', '1'); if (bib) p.set('bib', '1');
+    if (open) p.set('open', '1');
     history.replaceState(null, '', location.pathname + (p.toString() ? '?' + p : ''));
   }
   if (grid) {
@@ -78,11 +93,11 @@
       var el = document.getElementById(pair[0]);
       if (el && qs.get(pair[1])) el.value = qs.get(pair[1]);
     });
-    [['fg', 'gem'], ['fb', 'bib']].forEach(function (pair) {
+    [['fg', 'gem'], ['fb', 'bib'], ['fo', 'open']].forEach(function (pair) {
       var el = document.getElementById(pair[0]);
       if (el && qs.get(pair[1]) === '1') el.checked = true;
     });
-    ['fc', 'fd', 'fs', 'fg', 'fb'].forEach(function (id) {
+    ['fc', 'fd', 'fs', 'fg', 'fb', 'fo'].forEach(function (id) {
       var el = document.getElementById(id); if (el) el.onchange = applyFilters;
     });
     var fq = document.getElementById('fq');

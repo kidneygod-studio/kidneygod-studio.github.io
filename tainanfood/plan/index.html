@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>健康美食之旅：台南小吃鈉鉀蛋白質熱量試算｜台南美食通</title>
+<meta name="description" content="把想吃的台南小吃加進本日菜單，自動加總熱量、蛋白質、鈉、鉀、磷，並依一般成人／CKD／透析身分給出護腎飲食建議。目前已收錄 278 道料理的營養粗估。">
+
+<link rel="canonical" href="https://kidneygod.net/tainanfood/plan/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="健康美食之旅：台南小吃鈉鉀蛋白質熱量試算｜台南美食通">
+<meta property="og:description" content="把想吃的台南小吃加進本日菜單，自動加總熱量、蛋白質、鈉、鉀、磷，並依一般成人／CKD／透析身分給出護腎飲食建議。目前已收錄 278 道料理的營養粗估。">
+<meta property="og:url" content="https://kidneygod.net/tainanfood/plan/">
+<meta property="og:site_name" content="台南美食通">
+<meta property="og:locale" content="zh_TW">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#b3261e">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+
+</head>
+<body data-page="plan" data-sw="../sw.js">
+<a class="skip" href="#main">跳到主要內容</a>
+<header class="mast">
+  <div class="wrap">
+    <a class="logo" href="../"><span class="seal">食</span><span><b>台南美食通</b><small>TAINAN FOOD GUIDE</small></span></a>
+    <nav class="nav"><a href="../" class="">首頁</a><a href="../list/" class="">全部店家</a><a href="../bib/" class="">必比登</a><a href="../map/" class="">美食地圖</a><a href="../plan/" class="on">健康之旅</a><a href="../fav/" class="">我的收藏</a></nav>
+    <button class="icon-btn" id="themeBtn" aria-label="切換深淺色" title="切換深淺色">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+<div class="wrap"><nav class="crumbs" aria-label="麵包屑"><a href="../">首頁</a><span aria-hidden="true">›</span><span>健康美食之旅</span></nav></div>
+<main id="main"><div class="wrap">
+  <div class="section-h"><h2>健康美食之旅</h2><span>PLAN YOUR DAY</span></div>
+  <p class="intro">把想吃的料理加進「本日菜單」，這裡會幫你加總熱量、蛋白質、鈉、鉀、磷，
+  並依你的身分給出護腎飲食建議。台南小吃好吃，但重鹹、湯汁多，對腎臟病友來說最需要的
+  不是不吃，而是知道怎麼吃、吃多少。</p>
+
+  <div class="profile-bar">
+    <label>身分
+      <select id="pmode">
+        <option value="normal">一般成人</option>
+        <option value="ckd">CKD 第 3–4 期（未透析）</option>
+        <option value="hd">血液透析中</option>
+      </select>
+    </label>
+    <label>體重 <input id="pweight" type="number" min="30" max="150" step="1" value="60"> 公斤</label>
+    <button class="linkbtn" id="pclear" style="margin-left:auto">清空菜單</button>
+  </div>
+
+  <div id="plan"></div>
+
+  <div class="notice" style="margin-top:26px">
+    <b>關於這些數字</b>：台南小吃是店家現做的，食藥署資料庫只收錄有包裝標示的食品，查不到成品。
+    因此本頁數值是依<strong>典型食譜與常見份量推估</strong>的參考值，同一道菜不同店家、不同人的份量都會有差異，
+    誤差可能達三成以上。湯喝多少、醬汁淋多少，影響往往比食材本身更大。
+  </div>
+  <div class="notice">
+    <b>這不是個人化醫療建議</b>：每個人的腎功能分期、尿量、抽血數值與用藥都不同，
+    限鉀需不需要、蛋白質該吃多少，請以你的主治醫師與營養師的指示為準。
+    本頁提供的是一般衛教性質的參考範圍。想了解背後的原理，可以看
+    <a href="https://kidneygod.net/articles/" target="_blank" rel="noopener">護腎教室的衛教文章</a>。
+  </div>
+  <div style="height:30px"></div>
+</div></main>
+<footer>
+  <div class="wrap">
+    <b>台南美食通</b><br>
+    本站為獨立編輯整理的美食導覽，非任何店家之官方網站；內容綜合公開網路資料與網友評論歸納，營業時間與價格請以店家現場公告為準。<br>
+    本站只放該店的實拍照片，且必須是開放授權；沒有合法來源的店家一律以文字封面呈現，不以其他店家或同類料理的照片充數。<br>
+    資料最後整理：2026-09-23
+  </div>
+</footer>
+<nav class="tabbar"><a href="../" class=""><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>首頁</a><a href="../list/" class=""><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>全部店家</a><a href="../plan/" class="on"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6v3H9zM7 6h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M9 12h6M9 16h4"/></svg>健康之旅</a><a href="../map/" class=""><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>美食地圖</a><a href="../fav/" class=""><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg>我的收藏</a></nav>
+
+<script src="../assets/app.js" defer></script>
+<script src="../assets/plan.js" defer></script>
+</body>
+</html>

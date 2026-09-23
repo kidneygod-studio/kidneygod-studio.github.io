@@ -261,3 +261,59 @@ footer b{font-family:var(--serif);color:var(--ink);font-size:16px}
 .hero .ph-art{justify-content:flex-start;padding-top:8%}
 .hero .ph-word{opacity:.3;font-size:clamp(56px,13cqw,150px)}
 .hero .ph-mark{display:none}
+
+/* ---------- Google Places 照片與作者標示 ---------- */
+.gcredit{position:absolute;right:8px;bottom:8px;z-index:3;font-size:11px;letter-spacing:.5px;
+  background:rgba(0,0,0,.58);color:#fff;padding:2px 8px;border-radius:2px;text-decoration:none;max-width:70%;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gcredit:hover{background:rgba(0,0,0,.8)}
+.hero .gcredit{right:16px;bottom:16px}
+.gshot{position:relative;margin:0;aspect-ratio:1;overflow:hidden;border-radius:3px}
+.gshot img{width:100%;height:100%;object-fit:cover}
+.gshot .gcredit{font-size:10px;right:4px;bottom:4px;padding:1px 6px}
+.powered{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);margin-top:6px}
+
+/* ---------- 護腎營養：料理營養素與本日菜單 ---------- */
+.nut{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.nut span{font-size:12px;border:1px solid var(--rule);border-radius:999px;padding:1px 9px;color:var(--ink-2);background:var(--card)}
+.nut span b{font-family:var(--serif);color:var(--ink);font-weight:700}
+.nut span.hi{border-color:var(--red);color:var(--red)}
+.nut span.hi b{color:var(--red)}
+.nut-note{font-size:13px;color:var(--ink-2);background:var(--paper-2);border-left:3px solid var(--jade);padding:8px 12px;margin:8px 0 0;line-height:1.7}
+.addbtn{font-size:13px;border:1px solid var(--jade);color:var(--jade);background:none;border-radius:999px;padding:3px 12px;cursor:pointer;margin-top:8px}
+.addbtn:hover{background:color-mix(in srgb,var(--jade) 12%,transparent)}
+.addbtn.on{background:var(--jade);color:#fff}
+.linkbtn{border:0;background:none;color:var(--red);cursor:pointer;font-size:13px;padding:0}
+.menu-dot{display:inline-block;min-width:17px;height:17px;line-height:17px;border-radius:999px;background:var(--red);color:#fff;font-size:11px;text-align:center;margin-left:4px;padding:0 4px}
+.toast{position:fixed;left:50%;bottom:78px;transform:translateX(-50%);z-index:90;background:var(--ink);color:var(--paper);
+  padding:9px 18px;border-radius:999px;font-size:14px;box-shadow:var(--shadow);animation:tup .25s ease}
+@keyframes tup{from{opacity:0;transform:translate(-50%,10px)}}
+.plan-table td small{display:block;color:var(--ink-3);font-size:12px}
+.plan-table th small{display:block;font-weight:400;color:var(--ink-3);font-size:11px}
+.plan-table tfoot th{border-top:2px solid var(--ink);font-family:var(--serif);font-size:16px}
+.npanel{background:var(--card);border-radius:4px;box-shadow:var(--shadow);padding:20px 22px;margin:22px 0}
+.npanel h3{margin:0 0 14px;font-family:var(--serif);font-size:19px}
+.nrow{display:grid;grid-template-columns:52px 1fr 92px 64px;gap:10px;align-items:center;margin:9px 0;font-size:14px}
+.nlab{color:var(--ink-2)}
+.nbar{height:8px;background:var(--paper-2);border-radius:4px;overflow:hidden}
+.nbar i{display:block;height:100%}
+.nrow b{font-family:var(--serif);text-align:right}
+.nrow small{color:var(--ink-3)}
+.advice p{margin:0 0 10px;padding-left:26px;position:relative;line-height:1.8}
+.advice p::before{position:absolute;left:0;top:0;font-size:15px}
+.advice .a-good::before{content:"✓";color:var(--jade)}
+.advice .a-ok::before{content:"！";color:var(--gold)}
+.advice .a-warn::before{content:"▲";color:var(--red)}
+.profile-bar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:var(--paper-2);border-radius:4px;padding:12px 16px;margin-bottom:18px}
+.profile-bar label{font-size:14px;display:flex;gap:6px;align-items:center}
+.profile-bar select,.profile-bar input{font:inherit;padding:5px 9px;border:1px solid var(--rule);border-radius:6px;background:var(--card);color:var(--ink)}
+.profile-bar input{width:72px}
+@media (max-width:860px){.nrow{grid-template-columns:44px 1fr 78px 50px;font-size:13px}}
+/* 首頁的健康美食之旅入口 */
+.planbar{display:flex;align-items:center;gap:16px;text-decoration:none;background:var(--card);border-left:4px solid var(--jade);
+  box-shadow:var(--shadow);border-radius:4px;padding:16px 20px;margin:34px 0 0;color:var(--ink-2);font-size:14.5px;line-height:1.7}
+.planbar b{display:block;font-family:var(--serif);font-size:19px;color:var(--ink);letter-spacing:1px}
+.planbar-ic{font-size:26px;flex:none}
+.planbar-go{margin-left:auto;color:var(--jade);font-weight:700;white-space:nowrap}
+.planbar:hover .planbar-go{text-decoration:underline}
+@media (max-width:860px){.planbar{flex-wrap:wrap;gap:10px}.planbar-go{margin-left:0}}
