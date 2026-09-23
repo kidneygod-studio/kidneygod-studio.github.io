@@ -1,0 +1,153 @@
+# 給 AI 助手的工作守則（Claude Code / Codex 共用）
+
+這個 repo 由作者（吳政哲醫師）、Claude Code、Codex 三方共同編輯，另外還有
+**排程機器人每天自動寫入**。這份檔案是三方共同的規則，不是建議。
+
+Codex 會自動讀這個檔；Claude Code 從 `CLAUDE.md` 轉過來也是讀這一份。
+**只維護這一份，不要另外寫一份給自己看的。**
+
+歷史紀錄在 `CHANGELOG.md`（那裡寫「為什麼」，這裡寫「怎麼做」）。
+
+---
+
+## 一、這個 repo 裡有三個不相干的網站
+
+| 網址 | 目錄 | 產生器 | 狀態 |
+|---|---|---|---|
+| kidneygod.net | repo 根目錄 | `build_site.py` | 已上線，主力 |
+| kidneygod.net/dialysis/ | `dialysis/` | `build_dialysis.py` | **尚未公開**，等醫院公關室 |
+| kidneygod.net/tainanfood/ | `tainanfood/` | 來源在桌面，見下 | 已上線 |
+
+**三個站不共用樣式、不互相連結、內容互不相干。** 改其中一個時不要順手
+「統一」另一個的風格或導覽列——那是刻意分開的。
+
+---
+
+## 二、開工前 / 收工前（協作規則，最重要）
+
+```bash
+git pull --rebase origin main     # 開工第一件事
+git status                        # 確認你要改的檔案沒有別人的未提交變更
+```
+
+**收工時工作區必須是乾淨的。** 不要留未提交的改動過夜——排程半夜會跑，
+另一個 AI 隔天早上會接手，留著的髒東西會被誤當成自己的改動一起提交。
+
+### 禁止 `git add -A` / `git add .`
+
+只 stage 你自己動過的檔案，逐一列出。這條有實際事故：
+未完成的長文被掃進一個「透析中心文案微調」的 commit，og 圖還沒產生就上線了。
+
+### 看到這些檔案是 `M` 但不是你改的，**不要碰、不要提交**
+
+```
+articles_src/news.json   articles/news-*.html   articles/news.html
+index.html   search_index.json   sw.js   sitemap.xml   robots.txt
+```
+
+這是每天 07:00 `NephrologyDailyDigest` 排程的產出（由 `publish_daily.py`
+自己提交）。它的髒檔案檢查只看 `articles_src/news.json`，所以它不會被你
+擋住；但你如果把它的東西包進自己的 commit，作者就失去了「審核後才上線」
+的那一關（新知是等作者在 Telegram 說「可上線」才發佈的）。
+
+**如果你重建了 `index.html`，它會自動吃進排程尚未提交的新知。** 這種情況
+請在 commit 訊息裡明講，不要假裝沒發生。
+
+### commit 訊息用中文，動詞開頭，說「改了什麼」
+
+```
+首頁改版：常用入口前移與精選衛教文章
+```
+
+不要寫 `fix`、`update`、`chore:`。這個 repo 的歷史是寫給人看的。
+
+### 每次有意義的改動都要在 `CHANGELOG.md` 最上面加一則
+
+格式看現有的。重點寫**為什麼這樣改、踩到什麼坑**，不是寫改了哪幾行
+（那個 `git diff` 就有）。沒有坑的小改動可以不寫。
+
+---
+
+## 三、改東西之前：先確認你改的是「來源」還是「產出」
+
+改到產出，下次重跑產生器就被蓋掉，**而且不會有任何警告**。
+完整對照表在 `CHANGELOG.md` 開頭第一張表，先去看那張。
+
+摘要：
+
+- `articles/*.html`、`index.html`、`about.html`、`calc.html`、`food.html`、
+  `legal.html` ← `build_site.py` 產生，來源是 `knowledge_export.json`
+  和 `articles_src/*.md`
+- **手寫、不由產生器管的**：`shop.html`、`game.html`、`library.html`、`dash.html`
+- `dialysis/` 全部 ← `build_dialysis.py`（事實資料寫在該檔的 `FACTS` 字典）
+
+### 改完一定要跑這三個
+
+```bash
+python build_site.py      # 內容有改
+python bump_assets.py     # 資產有改（圖片、js、任何頁面）
+python check_site.py      # 推之前對帳，沒過就別推
+```
+
+`check_site.py` 查的都是「不會噴錯、只會讓使用者看到舊的或錯的東西」那一類
+問題，每一項都對應一次真實事故。它回傳 1 就不要推。
+
+---
+
+## 四、地雷（都是被咬過的）
+
+**Service Worker 快取**：`sw.js` 對圖片、`hero/`、`og/` 是快取優先且
+**不看 `?v=` 查詢字串**。換了圖卻沒跑 `bump_assets.py`，造訪過的人
+**永遠**看到舊圖，沒有錯誤訊息。`/dialysis/` 與 `/tainanfood/` 已在
+`sw.js` 明確排除（它們有自己的 SW），不要移除那兩行。
+
+**`bump_assets.py` 雜湊的是檔案位元組**，這台 Windows 是 `core.autocrlf=true`
+（JS 檔存成 CRLF）。換機器或換成 LF 會讓所有 `?v=` 全部變動，產生一批
+看起來莫名其妙的 diff。看到只有 `?v=` 在變，那就是這個原因，不是有人亂改。
+
+**CSS 變數別混用**：衛教站（根目錄）用 `--fg`，卡片區用 `--ink`。混用不會
+報錯，只會在深色模式下變成看不見的字。
+
+**`dialysis/` 的 `PUBLISH = False`**（`build_dialysis.py:269`）。
+**不要自己改成 True。** 上線前還有四件事沒跟醫院確認：機器的三個選配功能、
+技術員人數（站上寫 2、醫院官網寫 3）、聯絡窗口的姓名/LINE/手機能不能公開、
+`NOTICE_CHECKED` 要更新。這是真實醫療機構的公開資訊，錯了有後果。
+
+**不要憑空生出醫療機構的事實。** 機器型號、人數、時段、交通，沒有來源就
+去問作者，不要推測，也不要抄廠商的宣傳詞（「業界領先」那種一律不要）。
+曾經把代理商當成製造商寫上去（實際上機器是日本 NIPRO）。
+
+**病患資料一律不進這個 repo。** 任何病歷號、床號、姓名、檢驗值都不行。
+
+**金鑰不寫進檔案、不寫進 CHANGELOG、不印在輸出裡。**
+
+---
+
+## 五、台南美食通（`tainanfood/`）
+
+**這裡的 `tainanfood/` 是產出，來源在 `C:\Users\user\Desktop\台南美食通`。**
+
+`deploy.py` 會 `shutil.rmtree` 整個 `tainanfood/` 再重建。直接改這裡的檔案
+下次部署會被**整個刪掉**，連 git 紀錄都救不回你沒提交的部分。
+
+流程：改桌面那邊的 `data/raw/*.json` → `py build_static.py` → `py deploy.py --push`
+（新增店家的欄位規格看該資料夾的 `data/SPEC.md`）
+
+**照片授權**：料理照只用 Wikimedia Commons 開放授權（頁面標「示意圖」並列作者）。
+**網友在 Google／IG／FB 的評論照片一律不可下載使用，修圖也不行**——
+著作權屬拍攝者。要放只能用平台官方嵌入。
+評論內容一律歸納改寫，不逐字轉貼。
+
+---
+
+## 六、交接時互相要講清楚的事
+
+在回覆作者時，如果你做了下面任何一件，明講：
+
+- 動了另一個 AI 正在進行中的檔案（`git status` 有別人的暫存內容時）
+- 重建產出時順帶吃進了排程未提交的內容
+- 改了架構（例如把單頁 hash 路由改成每頁靜態），而 README 還沒更新
+- `check_site.py` 沒過但仍然推了（要說明為什麼）
+
+作者是腎臟科醫師，不是工程師。**講結論、講代價，不要列一堆選項。**
+測不出來的事情不要宣稱測過了。
