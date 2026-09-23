@@ -317,3 +317,6 @@ footer b{font-family:var(--serif);color:var(--ink);font-size:16px}
 .planbar-go{margin-left:auto;color:var(--jade);font-weight:700;white-space:nowrap}
 .planbar:hover .planbar-go{text-decoration:underline}
 @media (max-width:860px){.planbar{flex-wrap:wrap;gap:10px}.planbar-go{margin-left:0}}
+/* 卡片上的照片作者標示：必要但要低調 */
+.gcredit.sm{font-size:9.5px;letter-spacing:0;padding:1px 6px;right:6px;bottom:6px;background:rgba(0,0,0,.45);max-width:80%}
+.card:hover .gcredit.sm{background:rgba(0,0,0,.7)}
