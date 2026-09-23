@@ -238,3 +238,26 @@ footer b{font-family:var(--serif);color:var(--ink);font-size:16px}
 .card[hidden]{display:none}
 .skip{position:absolute;left:-9999px}
 .skip:focus{left:16px;top:8px;z-index:100;background:var(--card);padding:6px 12px}
+
+/* ---------- 文字封面（沒有合法實拍照時用，不放別家店的照片） ---------- */
+.ph-art{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;overflow:hidden;
+  background:
+    repeating-linear-gradient(135deg,rgba(255,255,255,.055) 0 2px,transparent 2px 9px),
+    radial-gradient(120% 90% at 22% 12%,hsl(var(--h) 55% 46%),transparent 62%),
+    linear-gradient(150deg,hsl(var(--h) 42% 30%),hsl(calc(var(--h) + 24) 48% 19%));
+  color:#fdf6e6;text-align:center;padding:10%}
+.ph-art::before{content:"";position:absolute;inset:7%;border:1px solid rgba(253,246,230,.28);border-radius:2px;pointer-events:none}
+.ph-word{font-family:var(--serif);font-weight:900;letter-spacing:.14em;text-indent:.14em;line-height:1.1;
+  font-size:clamp(20px,calc(var(--art-size,10) * 1cqw + 8px),64px);text-shadow:0 2px 14px rgba(0,0,0,.3)}
+.ph-mark{font-size:10px;letter-spacing:.42em;text-indent:.42em;opacity:.72}
+.ph,.dish .ph,.feature .ph,.cover-img,.hero{container-type:inline-size}
+.card .ph-word{font-size:clamp(22px,13cqw,46px)}
+.dish .ph-word{font-size:clamp(15px,17cqw,30px)}
+.dish .ph-mark{display:none}
+.hero .ph-word{font-size:clamp(44px,9cqw,120px)}
+.hero .ph-mark{font-size:12px}
+.feature .ph-word{font-size:clamp(30px,11cqw,64px)}
+/* 店家頁頂部：大字改當浮水印，避免和店名打架 */
+.hero .ph-art{justify-content:flex-start;padding-top:8%}
+.hero .ph-word{opacity:.3;font-size:clamp(56px,13cqw,150px)}
+.hero .ph-mark{display:none}
