@@ -53,6 +53,19 @@ BASE_URL = "https://kidneygod.net"
 
 SITE_NAME = "護腎教室"
 
+# 同一個網域下的姊妹站（台南美食通）。兩個站的樣式、產生器、內容都是分開的
+# ——這裡只放連結，不要去統一它的導覽或配色（見 AGENTS.md 第一節）。
+#
+# 為什麼值得從衛教站連過去：食物查詢頁查得到包裝食品，但查不到店家現做的
+# 料理（滷肉飯、牛肉麵那些），而美食通的「健康美食之旅」正好把 278 道台南
+# 小吃的鈉鉀磷蛋白質依典型食譜推估出來，補的是同一個缺口。
+#
+# 一律另開分頁：美食通那邊沒有連回衛教站的入口（它的來源在桌面，是另一套
+# 產生器，不能從這個 repo 改），同分頁跳過去讀者就回不來了。
+FOOD_TOUR_URL = "/tainanfood/"
+FOOD_TOUR_NAME = "台南美食通"
+FOOD_TOUR_PLAN_URL = "/tainanfood/plan/"
+
 # 聯絡信箱。用途刻意限縮在媒體、轉載、演講與勘誤——不做個人醫療諮詢，
 # 避免讀者寄來檢查數值而讓本站持有個資法第 6 條的特種個人資料。
 # 收信靠 Porkbun 的網域轉發（MX 已指向 fwd1/fwd2.porkbun.com），
@@ -748,6 +761,9 @@ margin:14px 22px 0;border-radius:999px;text-align:center;border-bottom:0;
 padding:13px 20px}
 header.site nav a.shoplink:hover{color:#2b2115;background:#e8c65a;
 filter:brightness(1.07)}
+/* 姊妹站（台南美食通）：低調，但用箭頭明示會離開這個站、另開分頁 */
+header.site nav a.sitelink{display:flex;align-items:center;gap:6px}
+header.site nav a.sitelink .nx{font-size:11px;opacity:.65}
 /* 桌機：抽屜收成靠右的面板，不要拉滿整個寬度——1600px 上滿版抽屜
    右邊會空掉一大片，看起來像版面壞了。手機維持滿版（那裡本來就窄）。 */
 @media(min-width:700px){
@@ -1531,7 +1547,12 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
                     [("/food.html", "食物查詢", "food")]
                     + ([("/calc.html", "腎功能計算", "calc")] if CALC_PUBLISHED else []))
            + navlink("/about.html", "", "關於作者", "about")
-           + navlink("/shop.html", "", "護腎遊戲", "shop", "shoplink"))
+           + navlink("/shop.html", "", "護腎遊戲", "shop", "shoplink")
+           # 姊妹站，另開分頁（理由見 FOOD_TOUR_URL 的註解）
+           + f'<a href="{FOOD_TOUR_URL}" class="sitelink" rel="noopener"'
+             f' target="_blank">{esc(FOOD_TOUR_NAME)}'
+             f'<span class="nx" aria-hidden="true">↗</span>'
+             f'<span class="svisually">（另開分頁）</span></a>')
     # 每一頁都掛：要的是全站瀏覽數，只算首頁會漏掉從搜尋直接進到某篇文章
     # 就離開的人——而那正是這個站大部分的流量。
     views_block = ('<p class="views" id="siteViews" style="display:none">'
@@ -1632,7 +1653,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
 {FS_SCRIPT}{NAVMENU_SCRIPT}
 </main>
 <footer class="site"><div class="wrap{wide_cls}">
-<p>{SITE_NAME}　·　最後更新 {TODAY}　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a></p>
+<p>{SITE_NAME}　·　最後更新 {TODAY}　·　<a href="/articles/">全部文章</a>　·　<a href="/">主站</a>　·　<a href="{FOOD_TOUR_URL}" rel="noopener" target="_blank">{esc(FOOD_TOUR_NAME)}<span class="svisually">（另開分頁）</span></a></p>
 <!-- 用途說明跟著信箱一起出現。信箱會出現在每一頁，但完整的界線說明只在
      簡介頁，所以這裡帶一句最關鍵的，並連到完整版。 -->
 <p class="fcontact"><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>
@@ -4497,6 +4518,11 @@ def build_food() -> str:
 <li>同一種食物多次取樣且差異較大時，會同時顯示<strong>代表值與範圍</strong>，
 不挑單一數字假裝精確</li>
 </ul>
+
+<p class="lede">那外食呢？姊妹站<a href="{FOOD_TOUR_PLAN_URL}" rel="noopener" target="_blank">{esc(FOOD_TOUR_NAME)}的「健康美食之旅」<span class="svisually">（另開分頁）</span></a>把
+278 道台南小吃依<strong>典型食譜推估</strong>出鈉、鉀、磷、蛋白質與熱量，補的正是上面這個缺口。
+但要清楚它的性質：那是<strong>推估值，不是實測</strong>——店家的做法差異可能讓誤差達到三成，
+適合用來比較「哪一道明顯比較鹹」，不適合拿來精算。</p>
 """
 
     extra = FOOD_CSS_JS.replace("__TIERS__", json.dumps(FOOD_TIERS, ensure_ascii=False))
