@@ -107,15 +107,25 @@ function signInView(){
 }
 
 /* 頁面清單直接讀 sitemap.xml —— 建站時本來就會產生，不必另外維護一份，
-   也不會有「新文章沒出現在後台」這種漏掉的情況。 */
+   也不會有「新文章沒出現在後台」這種漏掉的情況。
+
+   ⚠ 鍵一定要跟 build_site.py 查 REVIEW_DATES 時用的路徑一模一樣，不然會
+   「按了有寫進去、網站上卻永遠不顯示」——不會報錯的那種錯。
+   sitemap 收的是網址（首頁是空字串、文章匯總頁是 articles/），
+   而建站查的是檔案路徑（index.html、articles/index.html），所以要補回來。
+
+   手寫頁（商城、遊戲、收藏冊、後台）不列入：那些不由 build_site.py 產生，
+   填了審閱日期也不會顯示在任何地方。 */
+const SKIP = ["shop.html", "game.html", "library.html", "dash.html", "admin.html"];
 async function loadPages(){
   const xml = await fetch("/sitemap.xml?cb=" + Date.now()).then(r => r.text());
   const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
   return locs.map(u => {
     let p = u.replace(/^https?:\/\/[^/]+\//, "");
-    if(p === "" || p === "/") p = "index.html";
+    if(p === "" || p.endsWith("/")) p += "index.html";     // "" → index.html、articles/ → articles/index.html
     return p;
-  }).filter(p => !p.startsWith("tainanfood/") && !p.startsWith("dialysis/"));
+  }).filter(p => !p.startsWith("tainanfood/") && !p.startsWith("dialysis/")
+                 && !SKIP.includes(p));
 }
 
 async function loadAll(){
