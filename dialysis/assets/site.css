@@ -454,5 +454,12 @@ background:var(--mist)}
 .docs .r{display:block;font-size:14px;color:var(--blue);margin-top:2px}
 .docs .s{display:block;font-size:14.5px;color:var(--mut);margin-top:6px;
 line-height:1.75}
+/* 衛教文章署名：緊貼在標題下，小而淡，不和內文搶 */
+.prose .byline{margin:-6px 0 18px;font-size:13.5px;color:var(--mut)}
+/* 「這些情況不要等」的撥號段。暖紅色是這個站唯一的警示色，只用在這裡——
+   到處都用就不警示了。文字色維持 --ink，對比在淺底上 >10:1。 */
+.urgent{margin:0 0 16px;padding:14px 18px;background:#fdf1ee;
+border-left:4px solid #c2412d;border-radius:0 10px 10px 0;color:var(--ink)}
+.urgent a{font-weight:700;white-space:nowrap}
 .disc{margin-top:48px;background:var(--mist);border-left:4px solid var(--blue);
 border-radius:0 10px 10px 0;padding:18px 22px;font-size:14.5px;color:var(--mut)}

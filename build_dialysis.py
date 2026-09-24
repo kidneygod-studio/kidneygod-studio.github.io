@@ -18,7 +18,13 @@ from __future__ import annotations
 import html
 import json
 import re
+import sys
+from datetime import date
 from pathlib import Path
+
+# 排程用 powershell 跑時 stdout 是 cp950，印到 ⚠ 之類的符號會直接崩潰。
+# 這支目前沒進排程，但 AGENTS.md 的規則是每支都要有，先補上。
+sys.stdout.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "dialysis"
@@ -27,7 +33,13 @@ BASE_URL = "https://kidneygod.net/dialysis"
 # 這是醫院的資產，不是這個站自己的——只用來標示隸屬關係，
 # 不放在頁首當主標誌（那會讀成「這是醫院官網」）。
 HOSP_LOGO = OUT / "img" / "KGH.png"
-TODAY = "2026-09-05"
+# 只在「這一頁的內容真的變了」時拿來當新的更新日期，見 page_dates()。
+# 原本這裡寫死 "2026-09-05"，之後改了五天內容，頁尾仍然宣稱 9/5 更新。
+TODAY = date.today().isoformat()
+# 頁尾那行（與 JSON-LD 的 dateModified）的佔位字。shell() 先填這個，
+# main() 決定每頁的日期後再換掉。要是可列印字元：json.dumps 會把控制字元
+# 跳脫成 \\u0000，換不回來。
+DATE_MARK = "@@UPDATED@@"
 
 
 def esc(s: str) -> str:
@@ -140,6 +152,8 @@ FACTS: dict[str, str] = {
 DOCTORS: list[dict] = [
     {
         "name": "吳政哲",
+        # 關於頁那張卡的 id。衛教文章的署名連到這裡。
+        "anchor": "dr-wu",
         "title": "腎臟內科主治醫師",
         "photo": "img/doc-wu.jpg",
         "spec": ("三高（高血壓、糖尿病、高血脂）、慢性腎臟病、急性腎衰竭、"
@@ -255,6 +269,131 @@ def booking_link() -> str:
     label = re.sub(r"^https?://", "", u).rstrip("/")
     return (f'<a href="{esc(u)}" target="_blank" rel="noopener">'
             f'{esc(label)}</a>')
+
+
+def call_now() -> str:
+    """「這些情況不要等」底下那一段。
+
+    原本只寫「請直接聯絡透析室」，號碼要自己去頁尾找——讀到這段的人
+    多半正在出狀況，不該讓他再捲一次頁面。手機上點一下就撥。
+    服務時間以外沒人接，所以一併講急診與 119，不讓人對著沒人接的電話等。
+    """
+    return (f'<p class="urgent">請直接打透析室電話 {tel_link()}'
+            f'（{fact("tel_note")}）。服務時間以外，或狀況緊急時，'
+            f'請直接到急診或撥 119。</p>')
+
+
+# 衛教文章的醫師審閱日期，{COLUMNS 的 slug: "YYYY-MM-DD"}。
+#
+# **只填作者實際看過的日期。** 不要拿建置日或提交日充數——那等於替醫師
+# 宣稱他審閱過。沒填的那篇只顯示作者，不顯示審閱日；全部填齊後，
+# 衛教頁的 JSON-LD 才會帶 lastReviewed（取最舊的一篇）。
+# 主站的同一件事在 articles_src/reviewed.json，規則相同。
+REVIEWED: dict[str, str] = {}
+
+
+def byline(slug: str) -> str:
+    """文章署名。醫療內容沒有署名，讀者與搜尋引擎都無從判斷可信度。"""
+    if not DOCTORS:
+        return ""
+    d = DOCTORS[0]
+    who = esc(d["name"])
+    if d.get("anchor"):
+        who = f'<a href="about.html#{esc(d["anchor"])}">{who}</a>'
+    rv_date = REVIEWED.get(slug)
+    tail = f'　·　醫師審閱 {esc(rv_date)}' if rv_date else ""
+    return (f'<p class="byline">作者：{who}　{esc(d.get("title", ""))}'
+            f'{tail}</p>')
+
+
+def _postal_address() -> dict:
+    """把 FACTS["addr"] 拆成 schema.org 的欄位。
+
+    只是拆字，不補任何原文沒有的東西；拆不開就退回整串放 streetAddress。
+    """
+    a = {"@type": "PostalAddress", "addressCountry": "TW"}
+    m = re.match(r"\s*(\d{3,6})\s*(\S+?[市縣])(\S+?[區鄉鎮市])(.+)", FACTS["addr"])
+    if m:
+        a.update(postalCode=m.group(1), addressRegion=m.group(2),
+                 addressLocality=m.group(3), streetAddress=m.group(4).strip())
+    else:
+        a["streetAddress"] = FACTS["addr"]
+    return a
+
+
+_DOW = {"一": "Monday", "二": "Tuesday", "三": "Wednesday", "四": "Thursday",
+        "五": "Friday", "六": "Saturday", "日": "Sunday"}
+
+
+def _opening_hours() -> list[dict]:
+    """從 FACTS["tel_note"]（「週一三五 07:00–21:00，週二四六 07:00–17:00」）
+    轉成 openingHoursSpecification。
+
+    不另外維護一份營業時間：兩份資料一定會有一天對不起來。
+    格式改了解析不到，就回空清單，JSON-LD 少這一欄而已，不會寫錯的時間上去。
+    """
+    out = []
+    for days, start, end in re.findall(
+            r"週?([一二三四五六日]+)\s*(\d{1,2}:\d{2})\s*[–~-]\s*(\d{1,2}:\d{2})",
+            FACTS["tel_note"]):
+        out.append({"@type": "OpeningHoursSpecification",
+                    "dayOfWeek": [_DOW[c] for c in days],
+                    "opens": start, "closes": end})
+    return out
+
+
+def clinic_ld() -> dict:
+    """中心本身的結構化資料。首頁與就醫資訊頁共用。"""
+    ld = {
+        "@context": "https://schema.org",
+        "@type": "MedicalClinic",
+        "name": FACTS["center"],
+        "medicalSpecialty": "Nephrologic",
+        "url": f"{BASE_URL}/",
+        "image": f"{BASE_URL}/img/og.jpg",
+        "parentOrganization": {"@type": "Hospital", "name": FACTS["hospital"]},
+        "availableService": [{"@type": "MedicalTherapy", "name": n}
+                             for n, _s, _t in SERVICES],
+    }
+    # 院徽掛在 parentOrganization 底下而不是 MedicalClinic 底下：
+    # 這是醫院的標誌，不是這個中心自己的。掛錯層級等於告訴搜尋引擎
+    # 「血液透析中心的 logo 長這樣」，之後院方要用自己的識別會打架。
+    if HOSP_LOGO.exists():
+        ld["parentOrganization"]["logo"] = f"{BASE_URL}/img/KGH.png"
+    if has("addr"):
+        ld["address"] = _postal_address()
+    if has("tel"):
+        ld["telephone"] = FACTS["tel"]
+    if has("tel_note") and (oh := _opening_hours()):
+        ld["openingHoursSpecification"] = oh
+    return ld
+
+
+def education_ld() -> dict:
+    """衛教頁的 MedicalWebPage：作者、所屬機構、最後更新日。"""
+    ld = {
+        "@context": "https://schema.org",
+        "@type": "MedicalWebPage",
+        "name": f"透析衛教｜{FACTS['center']}",
+        "url": f"{BASE_URL}/education.html",
+        "inLanguage": "zh-Hant",
+        "audience": {"@type": "PeopleAudience",
+                     "audienceType": "血液透析病人與家屬"},
+        "publisher": {"@type": "MedicalClinic", "name": FACTS["center"],
+                      "url": f"{BASE_URL}/"},
+        "dateModified": DATE_MARK,
+    }
+    if DOCTORS:
+        d = DOCTORS[0]
+        ld["author"] = {"@type": "Physician", "name": d["name"],
+                        "jobTitle": d.get("title", ""),
+                        "url": f"{BASE_URL}/about.html#{d.get('anchor', '')}"}
+    slugs = [s for _n, s, _l in COLUMNS]
+    if all(s in REVIEWED for s in slugs):
+        ld["lastReviewed"] = min(REVIEWED[s] for s in slugs)
+        if "author" in ld:
+            ld["reviewedBy"] = ld["author"]
+    return ld
 
 
 # 要不要讓搜尋引擎收錄這個站。
@@ -743,6 +882,13 @@ background:var(--mist)}
 .docs .r{display:block;font-size:14px;color:var(--blue);margin-top:2px}
 .docs .s{display:block;font-size:14.5px;color:var(--mut);margin-top:6px;
 line-height:1.75}
+/* 衛教文章署名：緊貼在標題下，小而淡，不和內文搶 */
+.prose .byline{margin:-6px 0 18px;font-size:13.5px;color:var(--mut)}
+/* 「這些情況不要等」的撥號段。暖紅色是這個站唯一的警示色，只用在這裡——
+   到處都用就不警示了。文字色維持 --ink，對比在淺底上 >10:1。 */
+.urgent{margin:0 0 16px;padding:14px 18px;background:#fdf1ee;
+border-left:4px solid #c2412d;border-radius:0 10px 10px 0;color:var(--ink)}
+.urgent a{font-weight:700;white-space:nowrap}
 .disc{margin-top:48px;background:var(--mist);border-left:4px solid var(--blue);
 border-radius:0 10px 10px 0;padding:18px 22px;font-size:14.5px;color:var(--mut)}
 """
@@ -960,7 +1106,7 @@ def shell(path: str, title: str, desc: str, body: str,
   <p class="fnote">
   本網站內容為一般醫療與衛教資訊，用於說明本中心提供的服務，
   不針對任何個人提供診斷或治療建議，亦不能取代您與主治醫師的討論。<br>
-  © {esc(FACTS['hospital'])}　·　本頁最後更新於 {TODAY}
+  © {esc(FACTS['hospital'])}　·　本頁最後更新於 {DATE_MARK}
   </p>
 </div>
 </footer>
@@ -1001,8 +1147,8 @@ COLUMNS = [
      "是蛋白質的量夠不夠、以及吃進去的是什麼。"),
     ("兩次透析之間，體重可以增加多少？", "col-fluid",
      "水分控制的目標不是「不要喝水」，而是把增加量控制在乾體重的一定比例內。"),
-    ("瘻管每天要摸、要聽：三個自我檢查", "col-fistula",
-     "瘻管出問題往往有前兆。學會每天花三十秒檢查，可以早一步發現。"),
+    ("廔管每天要摸、要聽：三個自我檢查", "col-fistula",
+     "廔管出問題往往有前兆。學會每天花三十秒檢查，可以早一步發現。"),
     ("洗腎之後還能旅行嗎？", "col-travel",
      "可以。但要提前安排——國內一到兩週、國外一到兩個月，"
      "而準備的時間點決定了你能去哪裡。"),
@@ -1190,23 +1336,7 @@ def build_home() -> str:
   <div class="faq" style="max-width:56em;margin:0 auto">{faq}</div>
 </div></section>
 """
-    ld = {
-        "@context": "https://schema.org",
-        "@type": "MedicalClinic",
-        "name": FACTS["center"],
-        "medicalSpecialty": "Nephrologic",
-        "url": f"{BASE_URL}/",
-        "parentOrganization": {"@type": "Hospital", "name": FACTS["hospital"]},
-    }
-    # 院徽掛在 parentOrganization 底下而不是 MedicalClinic 底下：
-    # 這是醫院的標誌，不是這個中心自己的。掛錯層級等於告訴搜尋引擎
-    # 「血液透析中心的 logo 長這樣」，之後院方要用自己的識別會打架。
-    if HOSP_LOGO.exists():
-        ld["parentOrganization"]["logo"] = f"{BASE_URL}/img/KGH.png"
-    if has("addr"):
-        ld["address"] = {"@type": "PostalAddress", "streetAddress": FACTS["addr"]}
-    if has("tel"):
-        ld["telephone"] = FACTS["tel"]
+    ld = clinic_ld()
     return shell("index.html",
                  f"{FACTS['center']}｜血液透析、血液透析過濾與血管通路照護",
                  "郭綜合醫院血液透析中心：血液透析、血液透析過濾（HDF）、"
@@ -1243,8 +1373,9 @@ def doctors_html() -> str:
             for label, rows in d.get("cred", []) if rows)
         spec = (f'<p class="docspec"><b>臨床專長</b>{esc(d["spec"])}</p>'
                 if d.get("spec") else "")
+        aid = f' id="{esc(d["anchor"])}"' if d.get("anchor") else ""
         cards.append(
-            f'<article class="doccard{"" if has_photo else " nophoto"}">'
+            f'<article class="doccard{"" if has_photo else " nophoto"}"{aid}>'
             f'{img}'
             f'<div class="docbody">'
             f'<h3 class="docname">{esc(d["name"])}'
@@ -1514,7 +1645,7 @@ def build_about() -> str:
 
 <h3>血管通路</h3>
 <ul>
-  <li>成立專責的瘻管照護團隊，定期安排瘻管超音波檢查。</li>
+  <li>成立專責的廔管照護團隊，定期安排廔管超音波檢查。</li>
   <li>定期評估血流與再循環，在狹窄還來得及處理的時候發現它。</li>
 </ul>
 
@@ -1591,6 +1722,7 @@ def build_services() -> str:
             "<li><strong>聽</strong>：有沒有連續的雜音（bruit）</li>"
             "<li><strong>看</strong>：有沒有紅、腫、熱、痛或滲液</li></ul>",
             "<p>震顫變弱或消失、出現搏動感，請立刻聯絡透析室，不要等到下次透析。</p>",
+            call_now(),
         ],
         "svc-care": [
             "<h3>營養</h3>",
@@ -1670,7 +1802,7 @@ def build_education() -> str:
             "<p>有導管的期間，那一側的手或腳不要隨意彎曲或用力拉扯；"
             "導管出口如果紅、腫、熱、痛或有分泌物，要盡快回來讓人看。"
             "廔管的日常照顧另外寫在"
-            "<a href=\"education.html#col-fistula\">瘻管自我檢查</a>那一篇。</p>",
+            "<a href=\"education.html#col-fistula\">廔管自我檢查</a>那一篇。</p>",
 
             "<h3>可能會有的不舒服</h3>",
             "<p>透析當中比較常見的是血壓下降、噁心想吐、頭暈頭痛、抽筋，"
@@ -1703,7 +1835,7 @@ def build_education() -> str:
             "<li>廔管的震顫變弱或摸不到</li>"
             "<li>導管出口紅腫熱痛、有分泌物，或發燒</li>"
             "</ul>",
-            "<p>請直接聯絡透析室，或到急診。</p>",
+            call_now(),
 
             "<h3>最後一件事</h3>",
             "<p>第一次結束之後，很多人的第一句話是「原來沒有想像中那麼可怕」。"
@@ -1748,10 +1880,10 @@ def build_education() -> str:
             "<li>每天固定時間、同樣的衣著量體重，數字才有比較的意義。</li></ul>",
         ],
         "col-fistula": [
-            "<p>瘻管出問題通常有前兆。每天花三十秒檢查，可以在還來得及處理的"
+            "<p>廔管出問題通常有前兆。每天花三十秒檢查，可以在還來得及處理的"
             "時候發現它。</p>",
             "<h3>摸、聽、看</h3>",
-            "<ul><li><strong>摸</strong>：把手指輕放在瘻管上，"
+            "<ul><li><strong>摸</strong>：把手指輕放在廔管上，"
             "應該摸得到持續的震顫，像小貓打呼。</li>"
             "<li><strong>聽</strong>：貼著聽，應該是連續的「呼——」聲，"
             "不是一跳一跳的。</li>"
@@ -1761,8 +1893,9 @@ def build_education() -> str:
             "<ul><li>震顫變弱或摸不到</li><li>聲音從連續變成一跳一跳</li>"
             "<li>局部紅腫熱痛，或有分泌物</li>"
             "<li>止血時間明顯變長</li></ul>",
+            call_now(),
             "<h3>日常要避免的事</h3>",
-            "<p>有瘻管的那隻手不量血壓、不抽血、不打點滴，"
+            "<p>有廔管的那隻手不量血壓、不抽血、不打點滴，"
             "不提重物、不戴太緊的手錶或袖口，睡覺時不要壓著。</p>",
         ],
         "col-travel": [
@@ -1786,7 +1919,7 @@ def build_education() -> str:
         blocks.append(
             f'<section{" class=\"tint\"" if i % 2 else ""} id="{slug}">'
             f'<div class="wrap"><div class="prose reveal">'
-            f'<h2>{esc(name)}</h2>'
+            f'<h2>{esc(name)}</h2>{byline(slug)}'
             + "".join(arts.get(slug, [f"<p>{esc(lead)}</p>"]))
             + '</div></div></section>')
     body = (page_hero("Column", "透析衛教",
@@ -1796,8 +1929,11 @@ def build_education() -> str:
               '以上內容為一般衛教資訊，實際的飲食限制、水分目標與用藥，'
               '請依你的抽血結果與主治醫師的評估為準。</div></div></section>')
     return shell("education.html", f"透析衛教｜{FACTS['center']}",
-                 "透析飲食、水分控制、瘻管自我照護與旅遊透析——"
-                 "透析室裡最常被問到的四件事。", body)
+                 # 篇數不寫死：2026-09-09 加了〈初次透析〉之後這裡還寫
+                 # 「四件事」，一直到 9/23 盤點才發現。
+                 f"第一次透析、透析飲食、水分控制、廔管自我照護與旅遊透析——"
+                 f"透析室裡最常被問到的{'一二三四五六七八九十'[len(COLUMNS) - 1]}件事。",
+                 body, education_ld())
 
 
 def build_visit() -> str:
@@ -1874,15 +2010,46 @@ rel="noopener">交通資訊頁</a>；公車路線於 2026 年 9 月逐條核對�
 rel="noopener">大台南公車</a>查即時動態。</p>
 
 <div class="disc">若您出現喘不過氣、胸悶、意識改變、
-瘻管處大量出血或劇烈疼痛等狀況，請直接就醫或撥打 119，不要等到下次透析。</div>
+廔管處大量出血或劇烈疼痛等狀況，請直接就醫或撥打 119，不要等到下次透析。</div>
 </div></div></section>
 """
     return shell("visit.html", f"就醫資訊｜{FACTS['center']}",
                  "郭綜合醫院血液透析中心的預約方式、透析時段、"
-                 "第一次就診要準備的東西與交通資訊。", body)
+                 "第一次就診要準備的東西與交通資訊。", body, clinic_ld())
 
 
 # ---------------------------------------------------------------------------
+# 每頁的「最後更新」日期
+#
+# 不能用建置當天：重跑一次產生器不代表內容有變，那樣日期會每次都往前跳，
+# 等於用日期說謊（和 NOTICE_CHECKED 不自動帶入是同一個理由）。
+# 也不能寫死：9/5 寫上去之後改了五天內容，頁尾仍說 9/5。
+#
+# 做法：拿新產生的頁和硬碟上現有的那一份比。去掉日期與 ?v= 之後一模一樣，
+# 就沿用舊檔上的日期；有任何差異才換成今天。不需要另外的狀態檔——
+# 已提交的產出本身就是紀錄。
+#
+# ?v= 要排除：只改 CSS 是改版面，不是改內容，不該讓五頁的日期一起跳。
+# ---------------------------------------------------------------------------
+_DATE_RE = re.compile(r"(本頁最後更新於 |\"dateModified\": \")\d{4}-\d{2}-\d{2}")
+
+
+def _norm(text: str) -> str:
+    text = text.replace(DATE_MARK, "0000-00-00")
+    text = _DATE_RE.sub(r"\g<1>0000-00-00", text)
+    return re.sub(r"\?v=[0-9a-f]+", "?v=", text)
+
+
+def page_date(path: Path, new_html: str) -> str:
+    if not path.exists():
+        return TODAY
+    old = path.read_text(encoding="utf-8")
+    m = re.search(r"本頁最後更新於 (\d{4}-\d{2}-\d{2})", old)
+    if m and _norm(old) == _norm(new_html):
+        return m.group(1)
+    return TODAY
+
+
 ASSET_V = "1"
 
 
@@ -1909,9 +2076,13 @@ def main() -> None:
         "education.html": build_education(),
         "visit.html": build_visit(),
     }
+    dates = {}
     for name, html_text in pages.items():
+        dates[name] = page_date(OUT / name, html_text)
+        html_text = html_text.replace(DATE_MARK, dates[name])
+        pages[name] = html_text
         (OUT / name).write_text(html_text, encoding="utf-8")
-        print(f"  dialysis/{name}　({len(html_text):,} bytes)")
+        print(f"  dialysis/{name}　({len(html_text):,} bytes)　更新日 {dates[name]}")
     print(f"  dialysis/assets/site.css　({len(css):,} bytes)")
     print(f"  dialysis/assets/site.js　({len(js):,} bytes)　v={ASSET_V}")
 
@@ -1921,7 +2092,7 @@ def main() -> None:
     if live():
         urls = "".join(
             f"<url><loc>{BASE_URL}/{'' if n == 'index.html' else n}</loc>"
-            f"<lastmod>{TODAY}</lastmod><changefreq>monthly</changefreq>"
+            f"<lastmod>{dates[n]}</lastmod><changefreq>monthly</changefreq>"
             f"<priority>{'1.0' if n == 'index.html' else '0.8'}</priority></url>"
             for n in pages)
         sm.write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
