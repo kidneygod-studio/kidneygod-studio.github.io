@@ -1,10 +1,15 @@
-# 給 AI 助手的工作守則（Claude Code / Codex 共用）
+# 給 AI 助手的工作守則
 
-這個 repo 由作者（吳政哲醫師）、Claude Code、Codex 三方共同編輯，另外還有
-**排程機器人每天自動寫入**。這份檔案是三方共同的規則，不是建議。
+這個 repo 由作者（吳政哲醫師）與 **Claude Code** 編輯，另外還有
+**排程機器人每天自動寫入**。這份檔案是規則，不是建議。
 
-Codex 會自動讀這個檔；Claude Code 從 `CLAUDE.md` 轉過來也是讀這一份。
-**只維護這一份，不要另外寫一份給自己看的。**
+**2026-09-24 起 Codex 不再參與**（作者指示由 Claude Code 全部接手）。
+下面若還看到「Codex」字樣是歷史敘述，不是現行分工。哪天要再找別的助手進來，
+它讀的也是這一份——**只維護這一份，不要另外寫一份給自己看的。**
+
+⚠ 一個人做的副作用：以前互相看對方的 commit 等於有第二雙眼睛，現在沒有了。
+所以 `check_site.py` 與 CHANGELOG 的「踩到什麼坑」更重要——那是唯一會
+提醒下一輪的東西。
 
 歷史紀錄在 `CHANGELOG.md`（那裡寫「為什麼」，這裡寫「怎麼做」）。
 
@@ -42,8 +47,9 @@ git pull --rebase origin main     # 開工第一件事
 git status                        # 確認你要改的檔案沒有別人的未提交變更
 ```
 
-**收工時工作區必須是乾淨的。** 不要留未提交的改動過夜——排程半夜會跑，
-另一個 AI 隔天早上會接手，留著的髒東西會被誤當成自己的改動一起提交。
+**收工時工作區必須是乾淨的。** 不要留未提交的改動過夜——**排程每天 07:00 會跑，
+它會建置、驗證、提交、推上線**，留著的髒東西會被那一趟誤當成新知的一部分帶上去。
+（以前的理由是「另一個 AI 隔天會接手」，Codex 退出後理由換成排程，但結論一樣。）
 
 ### 禁止 `git add -A` / `git add .`
 
@@ -93,7 +99,8 @@ index.html   search_index.json   sw.js   sitemap.xml   robots.txt
 - `articles/*.html`、`index.html`、`about.html`、`calc.html`、`food.html`、
   `legal.html` ← `build_site.py` 產生，來源是 `knowledge_export.json`
   和 `articles_src/*.md`
-- **手寫、不由產生器管的**：`shop.html`、`game.html`、`library.html`、`dash.html`
+- **手寫、不由產生器管的**：`shop.html`、`game.html`、`library.html`、
+  `dash.html`、`admin.html`（後台：審閱紀錄與訂閱名單，只有站長登入看得到）
 - `dialysis/` 全部 ← `build_dialysis.py`（事實資料寫在該檔的 `FACTS` 字典）
 
 ### 改完一定要跑這三個
@@ -178,19 +185,28 @@ python check_site.py      # 推之前對帳，沒過就別推
 
 ---
 
-## 六、長文怎麼分工（2026-09-23 作者定案）
+## 六、長文怎麼分工（2026-09-24 更新：Codex 已退出）
 
-新增一篇長文時，**文字與配圖分開做**：
+**2026-09-24 作者指示，這個 repo 的工作全部由 Claude Code 接手，Codex 不再參與。**
+上一版（09-23）寫的「Claude 寫字、Codex 畫圖」已作廢。
 
 | 誰 | 做什麼 |
 |---|---|
-| Claude Code | `articles_src/<slug>.md` 的內容、查證、來源連結；建置、驗證、提交 |
-| Codex | `hero_src/<slug>.*` 那張原圖 |
+| Claude Code | `articles_src/<slug>.md` 的內容、查證、來源連結；建置、驗證、提交；除了生圖以外的一切 |
+| 作者 | `hero_src/<slug>.*` 那張原圖 |
 
-理由：長文的成本幾乎都在查證與改寫，Codex 能生圖而 Claude 不能。
-**不要互相代勞**——Claude 不要拿現成圖硬湊，Codex 不要順手改文字內容。
+**為什麼配圖還是要作者出手：Claude Code 不會生圖，這是能力限制不是分工偏好。**
+Codex 走了之後這一格沒有人能補，所以流程是：
 
-### 交圖規格（Codex 看這裡）
+1. Claude 寫完長文，**同時給出一段生圖 prompt**（英文、含構圖與禁止事項）
+2. 作者拿去 Gemini 之類的工具生圖（60 張知識卡插圖當初就是這樣做的）
+3. 圖丟進 `hero_src/`，跟 Claude 說一聲，由 Claude 跑後面的建置
+
+**沒有圖也可以先上線**——`hero_for()` 只認檔案在不在，缺圖時卡片會用
+同尺寸的漸層佔位塊（不是破圖，格線也不會亂），`og/` 則沿用站徽。
+內容早點被索引比等一張圖重要。圖到了再放進 `hero_src/`、重跑一次就換上。
+
+### 交圖規格（生圖 prompt 要照這個寫）
 
 檔名 **必須等於 `articles_src/` 那篇的 slug**，副檔名 `.jpg/.png/.webp` 皆可
 （`make_hero.py` 會統一轉成 `hero/<slug>.jpg`）。
@@ -204,7 +220,7 @@ python check_site.py      # 推之前對帳，沒過就別推
   不要出現可辨識的真人、病歷、檢驗單。
 - 原圖放進 `hero_src/`（**已 gitignore，不要提交**，那是雲端素材夾的符號連結）。
 
-### 圖進來之後（Claude 或 Codex 都可以做，做的人要講）
+### 圖進來之後
 
 ```bash
 python make_hero.py      # hero_src/<slug>.* → hero/<slug>.jpg（1600×900）
