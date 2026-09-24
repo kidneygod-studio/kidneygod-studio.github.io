@@ -461,6 +461,12 @@ transition:border-color .15s,color .15s}
 .sb.line:hover{border-color:#06c755;color:#06c755}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}
 .sb.th:hover{border-color:var(--fg);color:var(--fg)}
+/* 每日新知每一則右下角的小分享列。靠右、小一號：一頁三十幾則，
+   每則都掛四顆 44px 的圓鈕會把版面吃光，也會蓋過內容本身。 */
+.share.mini{margin:14px 0 0;display:flex;justify-content:flex-end}
+.share.mini .sbtns{margin-top:0;gap:7px}
+.share.mini .sb{width:34px;height:34px;border-width:1px}
+.share.mini .sb svg{width:15px;height:15px}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
 font-size:14.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}

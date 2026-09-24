@@ -607,7 +607,8 @@ def icon(key: str, cls: str = "", hidden: bool = False) -> str:
 HOME_SHARE_TITLE = f"護腎專家－{AUTHOR_NAME}醫師的護腎教室"
 
 
-def share_buttons(path: str, title: str, top: bool = False) -> str:
+def share_buttons(path: str, title: str, top: bool = False,
+                  mini: bool = False) -> str:
     """轉發按鈕。文章頂端與文末各放一組，內容相同。
 
     純圖示、不放文字：四顆帶文字的按鈕在 375px 手機上約需 445px，而可用寬度
@@ -640,6 +641,10 @@ def share_buttons(path: str, title: str, top: bool = False) -> str:
           f'title="複製連結" data-url="{esc(url)}">'
           f'{icon("copy", cls="i-off")}{icon("done", cls="i-on", hidden=True)}</button>'
     )
+    # mini：每日新知每一則摘要右下角那一組。不帶標題與說明，按鈕也小一號——
+    # 一頁上有三十幾則，每則都掛一組 44px 的圓鈕會把版面吃光。
+    if mini:
+        return f'<div class="share mini"><div class="sbtns">{btns}</div></div>'
     head = "" if top else '<h2 class="backlink" id="share">分享這篇</h2>'
     note = "" if top else '<p class="sd">覺得有幫助的話，轉給需要的人。</p>'
     cls = "share top" if top else "share"
@@ -1196,6 +1201,12 @@ transition:border-color .15s,color .15s}
 .sb.line:hover{border-color:#06c755;color:#06c755}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}
 .sb.th:hover{border-color:var(--fg);color:var(--fg)}
+/* 每日新知每一則右下角的小分享列。靠右、小一號：一頁三十幾則，
+   每則都掛四顆 44px 的圓鈕會把版面吃光，也會蓋過內容本身。 */
+.share.mini{margin:14px 0 0;display:flex;justify-content:flex-end}
+.share.mini .sbtns{margin-top:0;gap:7px}
+.share.mini .sb{width:34px;height:34px;border-width:1px}
+.share.mini .sb svg{width:15px;height:15px}
 footer.site{border-top:1px solid var(--line);margin-top:50px;padding:24px 0 60px;
 font-size:14.5px;color:var(--mut)}
 footer.site a{color:var(--mut)}
@@ -3760,17 +3771,29 @@ def news_cat_path(slug: str) -> str:
 
 
 def _assign_paper_ids() -> None:
-    """給每篇一個穩定的錨點 id。
+    """給每篇一個穩定的錨點 id。**用 DOI**。
 
-    用「日期＋期刊」而不是流水號：清單改順序或中間插一篇時，
-    流水號會讓所有既有連結指到別篇文章，而且不會噴錯。
+    2026-09-24 從「日期＋期刊」改成 DOI。原本那套的註解寫著它是穩定的，
+    因為避開了流水號——但碰撞後綴（-2、-3）**取決於 news.json 裡的排列順序**：
+    中間插進一篇同日期同期刊的，後面的後綴就會往後推，於是
+    **已經分享出去的連結會指到另一篇研究**。不是 404，是安靜地指錯，
+    正是這個站最不能接受的那種錯。
+
+    年份型日期（例如只有 "2026"）特別容易碰撞，而排程每天加三篇。
+    改用 DOI 之後 id 由內容本身決定，插隊、改順序、改日期都不會動到它。
+
+    `legacy_id` 留著當別名錨點：舊網址可能已經被 Google 索引或被分享過，
+    讓它們繼續落在正確的那一則上。沒有 DOI 的（目前 0 篇）仍走舊規則。
     """
     seen: dict[str, int] = {}
     for x in PAPERS:
         base = re.sub(r"[^a-z0-9]+", "-",
                       f'{x["date"]}-{x["journal"]}'.lower()).strip("-")
         seen[base] = seen.get(base, 0) + 1
-        x["id"] = base if seen[base] == 1 else f"{base}-{seen[base]}"
+        legacy = base if seen[base] == 1 else f"{base}-{seen[base]}"
+        doi = (x.get("doi") or "").strip()
+        x["id"] = re.sub(r"[^a-z0-9]+", "-", doi.lower()).strip("-") if doi else legacy
+        x["legacy_id"] = legacy if legacy != x["id"] else ""
 
 
 _assign_paper_ids()
@@ -3867,6 +3890,13 @@ def digest_card(x: dict, compact: bool = False) -> str:
     if seen:
         body += (f'<p class="dgok">本則摘要經{esc(AUTHOR_NAME)}醫師確認'
                  f'（{esc(seen)}）</p>')
+    # 每一則右下角的分享列。分享出去的網址**帶錨點**，別人點進來會直接
+    # 落在這一則上，不必自己在三十幾則裡面找。
+    # 固定頁首的遮擋由 html{scroll-padding-top} 處理，這裡不必再算偏移。
+    slug = TOPIC2CAT.get(x.get("topic", ""))
+    if slug and x.get("id"):
+        body += share_buttons(f'{news_cat_path(slug)}#{x["id"]}',
+                              x.get("zh") or x.get("en") or "", mini=True)
     return f'<article class="dg">{head}{img}{kp}{body}</article>'
 
 
@@ -3997,8 +4027,13 @@ def build_news_cat_pages() -> list[tuple[str, str]]:
     for slug, zh, en, items in cats:
         path = news_cat_path(slug)
         cards = "".join(
-            digest_card(x).replace('<article class="dg">',
-                                   f'<article class="dg" id="{x["id"]}">', 1)
+            digest_card(x).replace(
+                '<article class="dg">',
+                f'<article class="dg" id="{x["id"]}">'
+                # 舊錨點（日期＋期刊）當別名，讓已經被索引或分享過的網址
+                # 繼續落在正確的那一則上。見 _assign_paper_ids 的說明。
+                + (f'<span id="{x["legacy_id"]}" aria-hidden="true"></span>'
+                   if x.get("legacy_id") else ""), 1)
             for x in items)
         others = "".join(
             f'<a href="/{news_cat_path(s2)}"><div class="t">{esc(z2)}</div>'
@@ -4023,6 +4058,7 @@ def build_news_cat_pages() -> list[tuple[str, str]]:
 <h2 class="backlink">其他主題</h2>
 <div class="cats">{others}</div>
 {CROSSLINK}
+{share_script()}
 """
         jsonld = {"@context": "https://schema.org", "@type": "CollectionPage",
                   "name": f"{zh}的最新研究", "description": desc,
