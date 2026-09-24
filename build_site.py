@@ -4272,8 +4272,13 @@ def build_legal() -> str:
 若未來有任何合作關係，會在相關頁面明確標示。</p>
 
 <h2>七、資料收集</h2>
-<p>護腎遊戲區的排行榜功能會記錄暱稱與分數，用於顯示排名。
-除此之外，本站不主動蒐集可識別個人身分的資料。
+<p>護腎遊戲區的排行榜功能會記錄暱稱與分數，用於顯示排名。</p>
+<p><strong>電子報訂閱</strong>：如果你主動填寫訂閱表單，本站會保存你的電子信箱，
+用於寄送新文章通知，以及日後與本站衛教活動或門診相關的訊息。
+只保存信箱，不會要求姓名、病情或任何檢查數值；
+這份名單<strong>不會提供、交換或出售給任何第三方</strong>。
+想退訂或要求刪除，來信 <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a> 即可，我會直接刪除該筆紀錄。</p>
+<p>除此之外，本站不主動蒐集可識別個人身分的資料。
 網站使用第三方服務（如流量統計、字型與資料庫服務），
 這些服務可能依其自身的政策記錄技術性資訊。</p>
 <p>如需刪除您在排行榜上的紀錄，請來信告知。</p>
@@ -4320,7 +4325,8 @@ def subscribe_block(compact: bool = False) -> str:
   </form>
   <p id="subMsg" class="submsg" role="status" aria-live="polite"></p>
   <p class="fine">只收信箱，不收姓名，也不會問你的病情或檢查數值。
-  只用來寄這個網站的新文章通知，<strong>不轉給任何第三方、不做廣告用途</strong>。
+  用來寄這個網站的新文章通知，以及日後我自己的衛教活動或門診相關訊息，
+  <strong>不會提供、交換或出售給任何第三方</strong>。
   想退訂隨時來信 <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>，我會直接刪掉。</p>
 </div>
 <script>const SUBS_URL={json.dumps(SUBS_URL)};</script>{SUBS_SCRIPT}"""
