@@ -97,8 +97,12 @@ const docId = path => path.replace(/\//g, "__");
    帶了就把那一篇提到最上面、給一個大按鈕，省得在幾十列裡面找。
    找不到對應頁面時就當作沒帶（例如網址打錯、或那篇還沒上線）。 */
 const FOCUS = new URLSearchParams(location.search).get("p") || "";
+/* 每日摘要的信裡附的連結帶 ?tab=news，直接開在新知分頁，
+   不必先進來再點一次。無法辨識的值就當作沒帶。 */
+const WANT_TAB = new URLSearchParams(location.search).get("tab") || "";
 
-let TAB = "review", PAGES = [], REVIEW = {}, SUBS = [];
+let TAB = ["review", "news", "subs"].includes(WANT_TAB) ? WANT_TAB : "review";
+let PAGES = [], REVIEW = {}, SUBS = [];
 /* 每日新知逐篇確認。分類頁不掛審閱日期（內容每天自動長出來），
    但每一篇研究摘要寫好之後就不會再變，所以確認的單位是「篇」不是「頁」。 */
 let NEWS = [], NEWSREVIEW = {}, NEWS_ONLY_TODO = true;
