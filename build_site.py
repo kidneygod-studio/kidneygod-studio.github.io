@@ -1659,7 +1659,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     # 首頁的 path 是空字串（canonical 要 https://kidneygod.net/ 而不是 /index.html），
     # 所以兩種寫法都要列，只寫 index.html 首頁會漏掉。
     WIDE_PAGES = {"", "index.html", "articles/index.html", "articles/gallery.html",
-                  "food.html"}
+                  "food.html", HOME_PREVIEW}
     # food.html 放寬的理由和匯總頁一樣：主體是一次七八十筆的查詢結果卡片，
     # 是「掃過去找」不是「一行一行讀」。calc.html 不放寬——它的主體是表單，
     # 數字欄位拉到 500px 寬只會更難用，而它的公式表已用 .tw.prose 修好。
@@ -2529,6 +2529,277 @@ HOME_MOTION_SCRIPT = """<script>
   schedule();
 })();
 </script>"""
+
+
+# ── 首頁雜誌版（試作）────────────────────────────────────────────
+# 2026-09-25 作者要求「更有雜誌感，先做一個試作版本」。
+#
+# **刻意做成另一個網址，不動 index.html。** 理由有三個：
+#   1. 首頁是排程每天 07:00 會重建並自動推上線的檔案，改它等於把還沒定案的
+#      版面塞進那條自動發佈的路徑
+#   2. 作者要的是「看看再決定」，那就要能用自己的手機開同一份真實內容來比
+#   3. 真的要換的時候，是把 build_home 的呼叫換成這一支，不是重寫
+#
+# 資料來源與正式首頁完全相同（同一批精選、同一批新知、同一份分類），
+# 差別只在版面，所以兩邊比較的是設計，不是內容。
+# 這一頁 noindex，也不進 sitemap——它是給作者看的草稿，不是要被搜尋到的頁面。
+HOME_PREVIEW = "home-preview.html"
+
+HOME_MAG_CSS = """
+<style>
+/* 雜誌版首頁。只有這一頁載入，不影響其他頁面。
+   字體沿用全站的 --serif（Noto Serif TC），顏色一律用衛教站那套 --fg/--mut/--line，
+   不要混到卡片區的 --ink（深色模式會變成看不見的字）。 */
+.mg{max-width:1060px;margin:0 auto;padding:0 20px}
+.mg a{text-decoration:none;color:inherit}
+
+/* 報頭：細線夾住站名，像雜誌的 masthead */
+.mg-head{text-align:center;padding:30px 0 22px;border-bottom:3px double var(--line);
+margin-bottom:26px}
+.mg-kicker{font-size:11.5px;letter-spacing:.34em;text-transform:uppercase;
+color:var(--mut);margin-bottom:12px}
+.mg-name{font-family:var(--serif);font-size:clamp(30px,6.4vw,46px);font-weight:700;
+line-height:1.15;letter-spacing:.02em;margin-bottom:10px}
+.mg-by{font-size:13.5px;color:var(--mut);line-height:1.9}
+.mg-by b{color:var(--fg);font-weight:700}
+.mg-by .dot{opacity:.45;margin:0 8px}
+
+/* 搜尋：一條細線，不做成圓角膠囊 */
+.mg-search{position:relative;max-width:520px;margin:20px auto 0}
+.mg-search input{width:100%;padding:11px 14px 11px 38px;font:inherit;font-size:15px;
+background:transparent;color:var(--fg);border:0;border-bottom:1px solid var(--line)}
+.mg-search input:focus{outline:none;border-bottom-color:var(--accent)}
+.mg-search .sicon{position:absolute;left:8px;top:50%;transform:translateY(-50%);
+width:18px;height:18px;color:var(--mut);pointer-events:none}
+.mg-search input:focus ~ .sicon{color:var(--accent)}
+
+/* 區塊標：左右細線夾住小標 */
+.mg-rule{display:flex;align-items:center;gap:14px;margin:38px 0 20px}
+.mg-rule::before,.mg-rule::after{content:"";flex:1;height:1px;background:var(--line)}
+.mg-rule span{font-size:12px;letter-spacing:.3em;text-transform:uppercase;
+color:var(--mut);font-weight:700;white-space:nowrap}
+
+/* 封面故事：大圖＋大標，單欄置中 */
+.mg-cover{display:block;margin-bottom:8px}
+.mg-cover img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;
+border-radius:2px;background:linear-gradient(135deg,var(--card),var(--line))}
+.mg-cover .cat{font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;
+color:var(--link);font-weight:700;margin:18px 0 8px;display:block}
+.mg-cover h3{font-family:var(--serif);font-size:clamp(24px,4.6vw,38px);line-height:1.32;
+font-weight:700;margin-bottom:12px;letter-spacing:.01em;color:var(--fg)}
+.mg-cover:hover h3{color:var(--link)}
+.mg-cover p{font-size:16px;line-height:1.9;color:var(--mut);margin:0}
+.mg-cover .more{display:inline-block;margin-top:12px;font-size:14px;
+color:var(--link);font-weight:700}
+
+/* 次要兩篇：並排 */
+.mg-pair{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:30px;
+padding-top:26px;border-top:1px solid var(--line)}
+.mg-pair img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;
+border-radius:2px;margin-bottom:12px;background:linear-gradient(135deg,var(--card),var(--line))}
+.mg-pair .cat{font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+color:var(--link);font-weight:700;display:block;margin-bottom:6px}
+.mg-pair h3{font-family:var(--serif);font-size:19px;line-height:1.5;font-weight:700;margin:0;
+color:var(--fg)}
+.mg-pair a:hover h3{color:var(--link)}
+
+/* 其餘三篇：編號清單，不放圖——雜誌的「另外還有」那一區 */
+.mg-list{margin-top:30px;padding-top:22px;border-top:1px solid var(--line);
+display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.mg-list a{display:flex;gap:12px;align-items:flex-start}
+.mg-list .no{font-family:var(--serif);font-size:30px;line-height:1;color:var(--mut);
+opacity:.38;font-weight:700;flex:none;margin-top:-2px}
+.mg-list h3{font-family:var(--serif);font-size:16.5px;line-height:1.6;font-weight:700;margin:0;
+color:var(--fg)}
+.mg-list a:hover h3{color:var(--link)}
+
+/* 兩欄：左邊工具、右邊最新研究 */
+.mg-two{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+.mg-tools a{display:flex;align-items:baseline;gap:12px;padding:13px 0;
+border-bottom:1px solid var(--line)}
+.mg-tools a:first-child{border-top:1px solid var(--line)}
+.mg-tools strong{font-size:16px;font-weight:700;white-space:nowrap}
+.mg-tools span{font-size:13.5px;color:var(--mut);flex:1}
+.mg-tools a:hover strong{color:var(--link)}
+.mg-tools .arw{color:var(--mut);font-size:13px}
+
+/* 目錄式分類清單，帶點線 */
+.mg-toc a{display:flex;align-items:baseline;padding:9px 0;border-bottom:1px dotted var(--line);
+font-size:15px}
+.mg-toc .nm{font-weight:700;white-space:nowrap}
+.mg-toc .fill{flex:1;margin:0 8px;border-bottom:1px dotted var(--line);
+transform:translateY(-3px)}
+.mg-toc .ct{color:var(--mut);font-size:13.5px;white-space:nowrap}
+.mg-toc a:hover .nm{color:var(--link)}
+
+/* 頁尾的三個去處（圖卡／遊戲／收藏冊） */
+.mg-ends{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:6px}
+.mg-ends a{border:1px solid var(--line);border-radius:3px;padding:18px 16px;
+text-align:center;transition:.15s}
+.mg-ends a:hover{border-color:var(--accent)}
+.mg-ends b{display:block;font-family:var(--serif);font-size:17px;margin-bottom:5px;
+color:var(--fg)}
+.mg-ends span{font-size:13px;color:var(--mut);line-height:1.7}
+
+.mg-note{font-size:13px;color:var(--mut);text-align:center;line-height:1.9;
+padding:26px 0 6px;border-top:1px solid var(--line);margin-top:36px}
+
+@media(max-width:760px){
+  .mg-pair,.mg-list,.mg-two,.mg-ends{grid-template-columns:1fr}
+  .mg-pair{gap:24px}
+  .mg-list{gap:16px}
+  .mg-two{gap:30px}
+  .mg-rule{margin:30px 0 16px}
+  .mg-head{padding:22px 0 18px}
+}
+</style>
+"""
+
+
+def build_home_magazine(by_cat: dict[str, list[dict]], extra: list[dict],
+                        n_gallery: int = 0) -> str:
+    """首頁的雜誌版試作。資料與正式首頁相同，只換版面。
+
+    設計上的取捨（給作者看的時候可以對照）：
+      · 一篇封面故事吃掉整個寬度，其餘由大到小遞減——雜誌感來自「有主有次」，
+        目前的正式首頁是六張等大的卡片，等大就沒有階層
+      · 標題全部改用襯線體（全站本來就有 --serif），小標用字距拉開的大寫拉丁字
+      · 分隔一律用細線，不用色塊；顏色只剩下分類標籤那一點強調色
+      · 導流沒有被犧牲：搜尋、四個常用入口、分類目錄、圖卡／遊戲／收藏冊
+        全部都在，只是改成清單與目錄的形式，密度反而比卡片高
+    """
+    title = f"護腎教室｜腎臟與三高衛教．{AUTHOR_NAME}{AUTHOR_TITLE}（版面試作）"
+    desc = "首頁版面試作。內容與正式首頁相同，只有排版不同。"
+
+    def art(path: str) -> dict:
+        return next(a for a in extra if a["path"] == path)
+
+    # 與正式首頁同一批精選，順序也一樣——比較的是版面不是選題
+    featured_paths = ["articles/creatinine-high-what-to-do.html",
+                      "articles/taiwan-eating-out-sodium.html",
+                      "articles/home-blood-pressure-measurement.html",
+                      "articles/foamy-urine-proteinuria.html",
+                      "articles/painkiller-nsaid-kidney.html",
+                      "articles/no-dialysis-therapy-claims.html"]
+    feats = [art(p) for p in featured_paths]
+
+    def img_tag(a: dict, lazy: bool = True) -> str:
+        """缺圖時退回漸層佔位塊，與正式首頁的 mag_card 同一個作法——
+        混排「有圖」與「沒圖」會讓整區看起來像壞掉。"""
+        src, dims = hero_for(a["path"])
+        if not src:
+            return (f'<div class="mph" aria-hidden="true">'
+                    f'<span>{esc(a.get("cat") or "深入文章")}</span></div>')
+        w, h = dims or (1600, 900)
+        return (f'<img src="/{src}" alt="" width="{w}" height="{h}"'
+                f'{" loading=\"lazy\"" if lazy else ""}>')
+
+    cover = feats[0]
+    cover_html = (
+        f'<a class="mg-cover" href="/{cover["path"]}">'
+        f'{img_tag(cover, lazy=False)}'
+        f'<span class="cat">{esc(cover.get("cat", ""))}</span>'
+        f'<h3>{esc(cover["title"])}</h3>'
+        f'<p>{esc(cover["summary"][:110])}…</p>'
+        f'<span class="more">閱讀全文 →</span></a>')
+
+    pair_html = '<div class="mg-pair">' + "".join(
+        f'<a href="/{a["path"]}">{img_tag(a)}'
+        f'<span class="cat">{esc(a.get("cat", ""))}</span>'
+        f'<h3>{esc(a["title"])}</h3></a>' for a in feats[1:3]) + "</div>"
+
+    list_html = '<div class="mg-list">' + "".join(
+        f'<a href="/{a["path"]}">'
+        f'<span class="no" aria-hidden="true">{i:02d}</span>'
+        f'<h3>{esc(a["title"])}</h3></a>'
+        for i, a in enumerate(feats[3:6], 4)) + "</div>"
+
+    tools = [("/articles/lab-values.html", "看懂報告", "肌酸酐・eGFR・蛋白尿"),
+             ("/food.html", "查食物營養", "鈉・鉀・磷・蛋白質"),
+             ("/calc.html", "算腎功能", "eGFR 與腎衰竭風險"),
+             ("/articles/egfr-meaning-ckd-stages.html", "護腎入門", "第一次來，從這裡開始")]
+    tools_html = '<div class="mg-tools">' + "".join(
+        f'<a href="{h}"><strong>{esc(t)}</strong><span>{esc(s)}</span>'
+        f'<span class="arw">→</span></a>' for h, t, s in tools) + "</div>"
+
+    news_html = ""
+    if PAPERS:
+        latest = max(PAPERS, key=lambda x: x.get("date", "") +
+                     "-01" * (2 - x.get("date", "").count("-")))
+        news_html = (digest_card(latest, compact=True)
+                     + f'<p style="margin-top:14px;font-size:14px">'
+                       f'<a href="/{ALL_NEWS}" style="color:var(--link);font-weight:700">'
+                       f'全部 {len(PAPERS)} 則醫學新知 →</a></p>')
+
+    toc_html = '<div class="mg-toc">' + "".join(
+        f'<a href="/articles/{CAT_SLUG[c]}.html">'
+        f'<span class="nm">{esc(c)}</span><span class="fill"></span>'
+        f'<span class="ct">{len(v)} 則</span></a>'
+        for c, v in by_cat.items()) + "</div>"
+
+    ends = [("/shop.html", "護腎知識卡片收集遊戲", "邊玩邊收集知識卡，不收費、沒有金流"),
+            ("/library.html", "收藏冊", "已收集的知識卡與貓咪貼圖")]
+    if n_gallery:
+        ends.insert(0, ("/articles/gallery.html", "衛教圖卡",
+                        f"{n_gallery} 張整理過的圖卡，適合轉給家人"))
+    ends_html = '<div class="mg-ends">' + "".join(
+        f'<a href="{h}"><b>{esc(t)}</b><span>{esc(s)}</span></a>'
+        for h, t, s in ends) + "</div>"
+
+    body = f"""
+<div class="mg">
+  <header class="mg-head">
+    <div class="mg-kicker">KIDNEYGOD.NET</div>
+    <div class="mg-name">護腎教室</div>
+    <div class="mg-by">腎臟與三高衛教<span class="dot">·</span>
+      <b>{esc(AUTHOR_NAME)}</b> {esc(AUTHOR_TITLE)}<span class="dot">·</span>
+      最近更新 {TODAY}</div>
+    <div class="mg-search">
+      <label class="svisually" for="sq">搜尋站內衛教內容</label>
+      <input id="sq" type="search" autocomplete="off" spellcheck="false"
+             placeholder="想了解什麼？搜尋蛋白尿、血壓、飲食…">
+      <svg class="sicon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>
+      <div id="sres" class="sres" hidden></div>
+    </div>
+  </header>
+
+  <div class="mg-rule"><span>Cover Story</span></div>
+  {cover_html}
+  {pair_html}
+  {list_html}
+  <p style="margin-top:22px;font-size:14px">
+    <a href="/{ALL_ARTICLES}" style="color:var(--link);font-weight:700">
+      查看全部 {len(extra)} 篇深入文章 →</a></p>
+
+  <div class="mg-rule"><span>Tools &amp; Research</span></div>
+  <div class="mg-two">
+    <div>{tools_html}</div>
+    <div>{news_html}</div>
+  </div>
+
+  <div class="mg-rule"><span>Browse by Topic</span></div>
+  {toc_html}
+
+  <div class="mg-rule"><span>More</span></div>
+  {ends_html}
+
+  <div class="mg-rule"><span>Newsletter</span></div>
+  {subscribe_block()}
+
+  <p class="mg-note"><b>這是版面試作頁</b>，內容與正式首頁相同，只有排版不同。<br>
+  正式首頁在 <a href="/" style="color:var(--link)">kidneygod.net</a>。</p>
+</div>
+"""
+    extra_head = (HOME_MAG_CSS
+                  + '<meta name="robots" content="noindex,nofollow">')
+    html = page(title, desc, HOME_PREVIEW, body, None,
+                extra_head=extra_head,
+                after_disclaimer=search_script() + HOME_MOTION_SCRIPT)
+    # canonical 指回正式首頁：這一頁只是草稿，不該被當成另一個首頁
+    return html.replace(f'<link rel="canonical" href="{BASE_URL}/{HOME_PREVIEW}">',
+                        f'<link rel="canonical" href="{BASE_URL}/">')
 
 
 def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int = 0) -> str:
@@ -5330,6 +5601,11 @@ def main() -> int:
     (ROOT / "index.html").write_text(
         build_home(by_cat, md_pages, len(gallery_items)), encoding="utf-8")
     print("  index.html　(網站首頁，衛教為主 + 商城大按鈕)")
+    # 首頁版面試作（2026-09-25）。另一個網址、noindex、不進 sitemap，
+    # 正式首頁完全不受影響。定案之後才會換掉上面那一行。
+    (ROOT / HOME_PREVIEW).write_text(
+        build_home_magazine(by_cat, md_pages, len(gallery_items)), encoding="utf-8")
+    print(f"  {HOME_PREVIEW}　(首頁雜誌版試作，noindex)")
 
     food_html = build_food()
     if food_html:
@@ -5342,7 +5618,7 @@ def main() -> int:
     # sitemap：讓搜尋引擎一次拿到所有網址。
     # 排除轉址頁——它自己帶 noindex，收進 sitemap 等於一邊叫 Google 別收、
     # 一邊把網址遞給它，自相矛盾。
-    NO_SITEMAP = {ALL_UPDATES}
+    NO_SITEMAP = {ALL_UPDATES, HOME_PREVIEW}
     urls = ["", "articles/", "about.html", "legal.html", "shop.html"] + (
         ["food.html"] if food_html else []) + (
         ["calc.html"] if CALC_PUBLISHED else []) + [
