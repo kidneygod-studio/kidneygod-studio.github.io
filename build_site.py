@@ -1659,7 +1659,7 @@ def page(title: str, desc: str, path: str, body: str, jsonld: dict | None = None
     # 首頁的 path 是空字串（canonical 要 https://kidneygod.net/ 而不是 /index.html），
     # 所以兩種寫法都要列，只寫 index.html 首頁會漏掉。
     WIDE_PAGES = {"", "index.html", "articles/index.html", "articles/gallery.html",
-                  "food.html", HOME_PREVIEW}
+                  "food.html"}
     # food.html 放寬的理由和匯總頁一樣：主體是一次七八十筆的查詢結果卡片，
     # 是「掃過去找」不是「一行一行讀」。calc.html 不放寬——它的主體是表單，
     # 數字欄位拉到 500px 寬只會更難用，而它的公式表已用 .tw.prose 修好。
@@ -2543,7 +2543,10 @@ HOME_MOTION_SCRIPT = """<script>
 # 資料來源與正式首頁完全相同（同一批精選、同一批新知、同一份分類），
 # 差別只在版面，所以兩邊比較的是設計，不是內容。
 # 這一頁 noindex，也不進 sitemap——它是給作者看的草稿，不是要被搜尋到的頁面。
-HOME_PREVIEW = "home-preview.html"
+# 首頁用哪一種版面。2026-09-26 作者看過試作版後決定全採用雜誌版。
+# 舊的卡片版留著並且仍然被這個開關參照（不是死程式碼）——住一陣子之後
+# 若想換回去，改這一個字就好，不必翻 git 歷史。
+HOME_STYLE = "magazine"        # "magazine" 或 "cards"
 
 HOME_MAG_CSS = """
 <style>
@@ -2559,7 +2562,9 @@ margin-bottom:26px}
 .mg-kicker{font-size:11.5px;letter-spacing:.34em;text-transform:uppercase;
 color:var(--mut);margin-bottom:12px}
 .mg-name{font-family:var(--serif);font-size:clamp(30px,6.4vw,46px);font-weight:700;
-line-height:1.15;letter-spacing:.02em;margin-bottom:10px}
+line-height:1.15;letter-spacing:.02em;margin-bottom:8px;color:var(--fg)}
+.mg-strap{font-family:var(--serif);font-size:clamp(15px,2.6vw,19px);color:var(--fg);
+margin:0 0 10px;line-height:1.6}
 .mg-by{font-size:13.5px;color:var(--mut);line-height:1.9}
 .mg-by b{color:var(--fg);font-weight:700}
 .mg-by .dot{opacity:.45;margin:0 8px}
@@ -2658,18 +2663,23 @@ padding:26px 0 6px;border-top:1px solid var(--line);margin-top:36px}
 
 def build_home_magazine(by_cat: dict[str, list[dict]], extra: list[dict],
                         n_gallery: int = 0) -> str:
-    """首頁的雜誌版試作。資料與正式首頁相同，只換版面。
+    """首頁的雜誌版（2026-09-26 起是正式首頁，見 HOME_STYLE）。
 
-    設計上的取捨（給作者看的時候可以對照）：
+    設計上的取捨：
       · 一篇封面故事吃掉整個寬度，其餘由大到小遞減——雜誌感來自「有主有次」，
-        目前的正式首頁是六張等大的卡片，等大就沒有階層
+        舊的卡片版是六張等大的卡片，等大就沒有階層
       · 標題全部改用襯線體（全站本來就有 --serif），小標用字距拉開的大寫拉丁字
       · 分隔一律用細線，不用色塊；顏色只剩下分類標籤那一點強調色
-      · 導流沒有被犧牲：搜尋、四個常用入口、分類目錄、圖卡／遊戲／收藏冊
-        全部都在，只是改成清單與目錄的形式，密度反而比卡片高
+      · 導流沒有被犧牲：搜尋、四個常用入口、分類目錄、圖卡／遊戲／收藏冊、
+        訂閱、LINE 全部都在，只是改成清單與目錄的形式，密度反而比卡片高
+
+    ⚠ 這一頁是首頁，下面這幾件事**不能少**（2026-09-26 從試作轉正時就是漏了
+      才發現的，每一項都不會報錯）：
+        h1、WebSite 的 JSON-LD、LINE 區塊、分享按鈕。
     """
-    title = f"護腎教室｜腎臟與三高衛教．{AUTHOR_NAME}{AUTHOR_TITLE}（版面試作）"
-    desc = "首頁版面試作。內容與正式首頁相同，只有排版不同。"
+    title = f"護腎教室｜腎臟與三高衛教．{AUTHOR_NAME}{AUTHOR_TITLE}"
+    desc = ("腎臟科醫師撰寫的慢性腎臟病與三高衛教：看懂 eGFR 與腎功能報告、"
+            "血壓血糖血脂如何影響腎臟、傷腎藥物與飲食原則。依據國際指引，持續更新。")
 
     def art(path: str) -> dict:
         return next(a for a in extra if a["path"] == path)
@@ -2750,7 +2760,8 @@ def build_home_magazine(by_cat: dict[str, list[dict]], extra: list[dict],
 <div class="mg">
   <header class="mg-head">
     <div class="mg-kicker">KIDNEYGOD.NET</div>
-    <div class="mg-name">護腎教室</div>
+    <h1 class="mg-name">護腎教室</h1>
+    <p class="mg-strap">把腎臟的事，講到你聽得懂。</p>
     <div class="mg-by">腎臟與三高衛教<span class="dot">·</span>
       <b>{esc(AUTHOR_NAME)}</b> {esc(AUTHOR_TITLE)}<span class="dot">·</span>
       最近更新 {TODAY}</div>
@@ -2785,21 +2796,26 @@ def build_home_magazine(by_cat: dict[str, list[dict]], extra: list[dict],
   <div class="mg-rule"><span>More</span></div>
   {ends_html}
 
-  <div class="mg-rule"><span>Newsletter</span></div>
-  {subscribe_block()}
-
-  <p class="mg-note"><b>這是版面試作頁</b>，內容與正式首頁相同，只有排版不同。<br>
-  正式首頁在 <a href="/" style="color:var(--link)">kidneygod.net</a>。</p>
+  <div class="mg-rule"><span>Stay in Touch</span></div>
+  <div class="mg-two">
+    <div>{subscribe_block(compact=True)}</div>
+    <div>{line_block()}</div>
+  </div>
 </div>
 """
-    extra_head = (HOME_MAG_CSS
-                  + '<meta name="robots" content="noindex,nofollow">')
-    html = page(title, desc, HOME_PREVIEW, body, None,
-                extra_head=extra_head,
-                after_disclaimer=search_script() + HOME_MOTION_SCRIPT)
-    # canonical 指回正式首頁：這一頁只是草稿，不該被當成另一個首頁
-    return html.replace(f'<link rel="canonical" href="{BASE_URL}/{HOME_PREVIEW}">',
-                        f'<link rel="canonical" href="{BASE_URL}/">')
+    jsonld = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": SITE_NAME,
+        "description": desc,
+        "inLanguage": "zh-Hant",
+        "url": f"{BASE_URL}/",
+        "author": author_ld(),
+    }
+    return page(title, desc, "", body, jsonld,
+                extra_head=HOME_MAG_CSS,
+                after_disclaimer=share_buttons("", HOME_SHARE_TITLE, top=True)
+                + share_script() + search_script() + HOME_MOTION_SCRIPT)
 
 
 def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int = 0) -> str:
@@ -2930,16 +2946,7 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
     line_sect = (
         sect_head("line", "LINE 官方帳號", "LINE OFFICIAL ACCOUNT",
                   "新文章與衛教圖卡發布時，直接送到你的 LINE")
-        + f"""<div class="lineqr reveal" style="--d:.08s">
-  <img src="/line-qr.svg" alt="{esc(SITE_NAME)} LINE 官方帳號的 QR code"
-       width="37" height="37" loading="lazy">
-  <div class="qtx">
-    <b>加入{esc(SITE_NAME)}</b>
-    <p>用手機相機掃描 QR code 即可加入好友；
-    在手機上看這一頁的話，直接點<a href="{LINE_URL}">加入好友</a>比較快。</p>
-    <p class="qid">帳號代號 <code>{esc(LINE_ID)}</code></p>
-  </div>
-</div>""")
+        + line_block(reveal=True))
 
     # 一區一條橫帶，底色深淺交替。空的區塊（例如沒有圖卡時）band() 會回空字串，
     # 所以交替是「實際排出來的順序」而不是「原始清單的順序」——
@@ -4603,6 +4610,29 @@ def subscribe_block(compact: bool = False) -> str:
 <script>const SUBS_URL={json.dumps(SUBS_URL)};</script>{SUBS_SCRIPT}"""
 
 
+def line_block(heading: str = "", reveal: bool = False) -> str:
+    """LINE 官方帳號的 QR 區塊。
+
+    原本首頁與簡介頁各有一份幾乎一樣的複製品，2026-09-26 首頁改版時本來要
+    再抄第三份，改成抽成這一支。兩邊只差在標題文字與進場動畫的 class。
+
+    圖檔由 make_line_qr.py 產生（帳號代號改了就重跑），那支會用 OpenCV
+    反向解碼、確認掃出來的網址正確才輸出——所以這裡不必再驗一次。
+    """
+    cls = "lineqr reveal" if reveal else "lineqr"
+    style = ' style="--d:.08s"' if reveal else ""
+    return f"""<div class="{cls}"{style}>
+  <img src="/line-qr.svg" alt="{esc(SITE_NAME)} LINE 官方帳號的 QR code"
+       width="37" height="37" loading="lazy">
+  <div class="qtx">
+    <b>{esc(heading or f"加入{SITE_NAME}")}</b>
+    <p>用手機相機掃描 QR code 即可加入好友；
+    在手機上看這一頁的話，直接點<a href="{LINE_URL}">加入好友</a>比較快。</p>
+    <p class="qid">帳號代號 <code>{esc(LINE_ID)}</code></p>
+  </div>
+</div>"""
+
+
 def clinic_table() -> str:
     """門診時刻表。
 
@@ -4779,16 +4809,7 @@ def build_about() -> str:
 <!-- LINE 的 QR。用 SVG 不用 PNG：1.5 KB、任何螢幕都銳利。
      圖檔由 make_line_qr.py 產生（帳號代號改了就重跑），
      那支會用 OpenCV 反向解碼、確認掃出來的網址正確才輸出。 -->
-<div class="lineqr">
-  <img src="/line-qr.svg" alt="護腎教室 LINE 官方帳號的 QR code"
-       width="37" height="37" loading="lazy">
-  <div class="qtx">
-    <b>LINE 官方帳號</b>
-    <p>用手機相機掃描 QR code 即可加入好友；
-    在手機上看這一頁的話，直接點<a href="{LINE_URL}">加入好友</a>比較快。</p>
-    <p class="qid">帳號代號 <code>{LINE_ID}</code></p>
-  </div>
-</div>
+{line_block("LINE 官方帳號")}
 
 <h2 id="ding-yue">訂閱新文章</h2>
 <p>不想追蹤社群也沒關係，留個信箱就好。新的長文發布時我會寄一封給你，
@@ -5599,13 +5620,9 @@ def main() -> int:
 
 
     (ROOT / "index.html").write_text(
-        build_home(by_cat, md_pages, len(gallery_items)), encoding="utf-8")
-    print("  index.html　(網站首頁，衛教為主 + 商城大按鈕)")
-    # 首頁版面試作（2026-09-25）。另一個網址、noindex、不進 sitemap，
-    # 正式首頁完全不受影響。定案之後才會換掉上面那一行。
-    (ROOT / HOME_PREVIEW).write_text(
-        build_home_magazine(by_cat, md_pages, len(gallery_items)), encoding="utf-8")
-    print(f"  {HOME_PREVIEW}　(首頁雜誌版試作，noindex)")
+        (build_home_magazine if HOME_STYLE == "magazine" else build_home)(
+            by_cat, md_pages, len(gallery_items)), encoding="utf-8")
+    print(f"  index.html　(網站首頁，{HOME_STYLE} 版面)")
 
     food_html = build_food()
     if food_html:
@@ -5618,7 +5635,7 @@ def main() -> int:
     # sitemap：讓搜尋引擎一次拿到所有網址。
     # 排除轉址頁——它自己帶 noindex，收進 sitemap 等於一邊叫 Google 別收、
     # 一邊把網址遞給它，自相矛盾。
-    NO_SITEMAP = {ALL_UPDATES, HOME_PREVIEW}
+    NO_SITEMAP = {ALL_UPDATES}
     urls = ["", "articles/", "about.html", "legal.html", "shop.html"] + (
         ["food.html"] if food_html else []) + (
         ["calc.html"] if CALC_PUBLISHED else []) + [
