@@ -2104,7 +2104,16 @@ def md_to_html(text: str) -> tuple[list[str], list[tuple[str, str]]]:
             continue
         first = lines[0]
 
-        if first.startswith("### "):
+        image_match = re.fullmatch(r"!\[([^\]]*)\]\((/illustrations/[a-z0-9-]+\.(?:jpg|png|webp))\)", b.strip())
+        if image_match:
+            alt, src = image_match.groups()
+            dims = img_size(ROOT / src.lstrip("/"))
+            wh = f' width="{dims[0]}" height="{dims[1]}"' if dims else ""
+            out.append(f'<figure style="margin:1.5rem 0"><a href="{esc(src)}">'
+                       f'<img src="{esc(src)}" alt="{esc(alt)}"{wh} '
+                       f'loading="lazy" decoding="async" style="display:block;width:100%;height:auto">'
+                       f'</a></figure>')
+        elif first.startswith("### "):
             out.append(f"<h3>{inline(first[4:].strip())}</h3>")
             if lines[1:]:
                 out.append("<p>" + inline("".join(lines[1:])) + "</p>")
