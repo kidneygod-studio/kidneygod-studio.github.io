@@ -37,6 +37,12 @@ python check_site.py      # 推之前對帳
 
 ---
 
+## 2026-09-26　依交接單重做七張長文與首頁配圖
+
+- 依 HANDOVER_hero_images.md 重做 cystatin-c-egfr、acei-arb-creatinine-rise、ckd-warning-signs、sglt2-kidney-protection、egfr-meaning-ckd-stages、dialysis-access-preparation 與 home-bg；移除發光3D及重複腎臟模型，改為自然光攝影情境與低對比紙張背景。
+- 使用內建 imagegen。原圖不入版控，七張1600×900網站圖與六張1200×630文章分享圖已更新，其餘16張封面保持原始位元組不變。
+- 已跑五支產生與驗證腳本；make_og.py 既有跨站掃描問題會產生美食站無關輸出，本次在隔離工作目錄清掉該批新檔，未更動工具或其他網站。更新快取版本，未改文章文字、審閱資料或首頁版面。
+
 ## 2026-09-26　修好首頁圖片被裁切，收緊上方留白，並開出配圖重做的工作單
 
 ### 圖片被裁切：是 CSS 少一行，不是圖的問題
