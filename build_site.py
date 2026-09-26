@@ -2108,6 +2108,10 @@ def md_to_html(text: str) -> tuple[list[str], list[tuple[str, str]]]:
         if image_match:
             alt, src = image_match.groups()
             dims = img_size(ROOT / src.lstrip("/"))
+            if dims is None and src.endswith(".webp"):
+                from PIL import Image
+                with Image.open(ROOT / src.lstrip("/")) as illustration:
+                    dims = illustration.size
             wh = f' width="{dims[0]}" height="{dims[1]}"' if dims else ""
             out.append(f'<figure style="margin:1.5rem 0"><a href="{esc(src)}">'
                        f'<img src="{esc(src)}" alt="{esc(alt)}"{wh} '
