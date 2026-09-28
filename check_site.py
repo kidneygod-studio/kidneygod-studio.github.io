@@ -353,7 +353,11 @@ def check_news_topics():
     排程的 log 裡，沒有人看**——兩次都是作者自己在網站上發現少了東西。
     所以同一件事要在這裡再檢一次，這支是推站之前會看的。
 
-    不擋發佈：文章本身是好的、線上其他頁面也正確，只是少一個入口。
+    2026-09-28 起 build_site.py 多了一層保險（NEWS_FALLBACK_CAT）：主題對不上
+    的會先歸到腎臟疾病，**不會再整篇消失**。所以這一項的性質從「看不到」
+    變成「可能分錯類」——還是要修，但不再是急件。
+
+    不擋發佈：文章本身是好的、線上其他頁面也正確，分類也有地方放。
     擋下來會讓整批新知都上不了線，代價比問題本身大。
 
     主題清單從 build_site.py 解析，不在這裡另外維護一份——
@@ -382,7 +386,8 @@ def check_news_topics():
         if t not in topics:
             label = (p.get("zh") or p.get("en") or p.get("doi") or "?")[:40]
             bad.append(f'{p.get("date", "?")}　{label}　topic='
-                       f'{t or "（空）"}　→ 不會出現在任何分類頁')
+                       f'{t or "（空）"}　→ 已被 NEWS_FALLBACK_CAT 收容，'
+                       f'請補正確主題')
     if VERBOSE and not bad:
         print(f"    {len(papers)} 篇新知的主題都對得上 {len(topics)} 個分類")
     return bad

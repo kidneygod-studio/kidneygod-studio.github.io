@@ -2416,9 +2416,8 @@ def build_search_index(data: list[dict], md_pages: list[dict],
 
     # 每篇研究都有獨立搜尋結果，連到分類頁的既有摘要錨點。
     for paper in PAPERS:
-        category = TOPIC2CAT.get(paper.get("topic", ""))
-        if not category:
-            continue
+        # cat_of 一定給得出分類，所以不會再有「搜尋裡找不到這篇」的情況
+        category = cat_of(paper)
         fields = [paper.get(k, "") for k in
                   ("en", "journal", "date", "doi", "cite", "q", "f", "m", "bg", "me", "sig", "lim")]
         fields.extend(paper.get("r", []))
@@ -4100,8 +4099,28 @@ def _assign_paper_ids() -> None:
 _assign_paper_ids()
 
 
+# topic 對不上 NEWS_CATS 時要落腳的分類。
+#
+# **為什麼需要這個保險**：原本的寫法是「每個分類去挑自己的文章」，所以主題
+# 對不上的那一篇不會被任何分類挑走——文章在 news.json 裡、卻不出現在網站的
+# 任何角落，而且不會噴錯。這件事發生過三次（2026-09-23 BaSICS、09-24 POTCAST、
+# 09-27 LoVAS），三次都是靠人眼發現的。
+#
+# 光印警告不夠，因為警告只在排程的 log 裡。改成「一定有地方放」：對不上就先
+# 歸到腎臟疾病（這個站的主場，也是最大的分類），**寧可分錯類，也不要整篇消失**。
+# 分錯類看得見、可以改；消失看不見。
+#
+# 這只影響原本就不會出現的那些；已經對得上的文章分類與網址完全不變。
+NEWS_FALLBACK_CAT = "kidney"
+
+
+def cat_of(paper: dict) -> str:
+    """一篇新知該歸到哪個分類的 slug。對不上就退回 NEWS_FALLBACK_CAT。"""
+    return TOPIC2CAT.get((paper.get("topic") or "").strip(), NEWS_FALLBACK_CAT)
+
+
 def papers_in(slug: str) -> list[dict]:
-    return [x for x in PAPERS if TOPIC2CAT.get(x.get("topic", "")) == slug]
+    return [x for x in PAPERS if cat_of(x) == slug]
 
 
 def live_news_cats() -> list[tuple[str, str, str, list[dict]]]:
@@ -4140,8 +4159,8 @@ def digest_card(x: dict, compact: bool = False) -> str:
         # 首頁這張的標題連到站內的完整摘要，不是連到期刊。
         # 讀者按下去是想看這篇在講什麼，不是想馬上讀原文——
         # 原文連結在完整摘要那一頁上，少一次跳出站外。
-        slug = TOPIC2CAT.get(x.get("topic", ""))
-        href = f'/{news_cat_path(slug)}#{x["id"]}' if slug else f"/{ALL_NEWS}"
+        slug = cat_of(x)
+        href = f'/{news_cat_path(slug)}#{x["id"]}' if x.get("id") else f"/{ALL_NEWS}"
         kp = (f'<div class="dgkp"><b>意義 MEANING</b>'
               f'<p>{inline(x["m"])}</p></div>' if x.get("m") else "")
         return (f'<article class="dg compact">{top}'
@@ -4194,8 +4213,8 @@ def digest_card(x: dict, compact: bool = False) -> str:
     # 每一則右下角的分享列。分享出去的網址**帶錨點**，別人點進來會直接
     # 落在這一則上，不必自己在三十幾則裡面找。
     # 固定頁首的遮擋由 html{scroll-padding-top} 處理，這裡不必再算偏移。
-    slug = TOPIC2CAT.get(x.get("topic", ""))
-    if slug and x.get("id"):
+    slug = cat_of(x)
+    if x.get("id"):
         body += share_buttons(f'{news_cat_path(slug)}#{x["id"]}',
                               x.get("zh") or x.get("en") or "", mini=True)
     return f'<article class="dg">{head}{img}{kp}{body}</article>'
@@ -4230,8 +4249,8 @@ def news_list_rows(items: list[dict], in_group: bool = False) -> str:
     """
     rows = []
     for x in items:
-        slug = TOPIC2CAT.get(x.get("topic", ""))
-        href = (f'/{news_cat_path(slug)}#{x["id"]}' if slug
+        slug = cat_of(x)
+        href = (f'/{news_cat_path(slug)}#{x["id"]}' if x.get("id")
                 else f"/{ALL_NEWS}")
         cat = ("" if in_group
                else f'<span class="nlc">{esc(x.get("topic", ""))}</span>')
@@ -5631,11 +5650,13 @@ def main() -> int:
         print(f"    {news_cat_path(slug)}　({zh} {len(items)} 篇)")
     # 對帳：topic 對不上 NEWS_CATS 的文章會存在卻不出現在任何分類頁，
     # 而且不會噴錯。第一版就這樣漏掉 18 篇。
-    orphan = [x for x in PAPERS if x.get("topic") not in TOPIC2CAT]
+    orphan = [x for x in PAPERS if (x.get("topic") or "").strip() not in TOPIC2CAT]
     if orphan:
         from collections import Counter as _C
-        print(f"    ⚠ {len(orphan)} 篇的主題不在 NEWS_CATS，不會出現在分類頁："
-              + "、".join(f"{t}×{n}" for t, n in
+        zh = dict((s, z) for s, z, _e in NEWS_CATS)[NEWS_FALLBACK_CAT]
+        print(f"    ! {len(orphan)} 篇的主題不在 NEWS_CATS，已暫時歸入「{zh}」，"
+              f"請補上正確主題："
+              + "、".join(f"{t}x{n}" for t, n in
                           _C(x.get("topic") or "（空）"
                              for x in orphan).most_common()))
     print(f"  {ALL_GUIDE}　(指引：{n_guide} 份，盤點於 {UPDATES_REVIEWED})")
