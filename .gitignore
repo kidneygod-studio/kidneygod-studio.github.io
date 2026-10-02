@@ -28,3 +28,4 @@ assets_src
 # 不需要進版控。
 articles_src/news_dropped.json
 articles_src/news_before_filter.json
+.publish_state.json
