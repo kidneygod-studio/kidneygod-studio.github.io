@@ -4015,6 +4015,12 @@ GUIDELINES: list[tuple[str, str, list[tuple[str, str, str, str, str, str]]]] = [
 NEWS_JSON = ROOT / "articles_src" / "news.json"
 
 
+# 沒有主題的新知要填什麼。定義在這裡是因為 PAPERS 在模組層就會建好，
+# 比下面的 NEWS_CATS 早——下面有一行 assert 確保這個字串真的是合法主題，
+# 打錯字的話建站當場就會停，不會安靜地生出一個新的孤兒。
+NEWS_FALLBACK_TOPIC = "腎臟疾病"
+
+
 def load_papers() -> list[dict]:
     """新知的資料。
 
@@ -4037,6 +4043,26 @@ def load_papers() -> list[dict]:
         d = x.get("date", "")
         return d + "-99" * (2 - d.count("-"))
     rows.sort(key=key, reverse=True)
+
+    # 進門先正規化 topic，之後所有地方都可以當它一定存在。
+    #
+    # **為什麼修在這裡**：2026-09-28 加了 cat_of() 的保險，讓主題對不上的條目
+    # 不會再從網站上消失。但那只處理了「要不要選進來」，沒處理「選進來之後
+    # 怎麼渲染」——`digest_card()` 與搜尋索引是用 `x["topic"]` 硬下標取值的，
+    # 鍵不存在就 KeyError。於是 10-01 匯入一則沒有 topic 鍵的條目時，
+    # **整個建站崩在那一行**，每日新知連續三天沒發出去。
+    #
+    # 也就是說：原本是「安靜漏掉一篇」，被我改成了「整站建不起來」。
+    # 真正的修法不是在每個取值處各補一次 .get()（那種修法一定會漏），
+    # 而是在資料進來的這一個地方補齊，讓下游只有一種情況要處理。
+    missing = 0
+    for r in rows:
+        if not (r.get("topic") or "").strip():
+            r["topic"] = NEWS_FALLBACK_TOPIC
+            missing += 1
+    if missing:
+        print(f"    ! news.json 有 {missing} 則沒有主題，已填入「"
+              f"{NEWS_FALLBACK_TOPIC}」，請補上正確主題")
     return rows
 
 
@@ -4064,6 +4090,10 @@ NEWS_CATS: list[tuple[str, str, str]] = [
 # 從 NEWS_CATS 推出來，不要另外維護一份——
 # 兩份手動維護的對照表一定會漂移（第一版就漏了七個主題，18 篇變孤兒）。
 TOPIC2CAT = {zh: slug for slug, zh, _en in NEWS_CATS}
+# 退路主題打錯字的話，load_papers() 會把所有缺主題的條目填成一個不存在的
+# 分類，等於保險本身變成製造孤兒的來源。寧可在這裡當場停下來。
+assert NEWS_FALLBACK_TOPIC in TOPIC2CAT, \
+    f"NEWS_FALLBACK_TOPIC「{NEWS_FALLBACK_TOPIC}」不在 NEWS_CATS 裡"
 
 
 def news_cat_path(slug: str) -> str:
