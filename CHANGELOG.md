@@ -5,6 +5,34 @@ git diff 就有，值得記下來的是當時的判斷理由，以及那些不�
 
 ---
 
+## 2026-10-05　發佈失敗會寄 email 警報了
+
+10-02 那則留了一句「真正的通知還沒做」——現在做了。作者指示「未來都寄 email」。
+
+`publish_daily.py` 的 `fail()` 加了 `notify()`，呼叫每日摘要專案的
+`nephrology_digest\scripts\send_alert.py`（那支已改成 email 優先、Telegram
+備援、兩條都不通就落地存檔）。主旨帶連續失敗次數，一眼看出是今天才壞的還是
+已經壞了好幾天。
+
+**為什麼不是 Telegram**：醫院網路擋 `api.telegram.org`。10-05 修好
+claude.exe 路徑後測警報，得到 `_ssl.c:1063: The handshake operation timed
+out`——連「失敗了」這件事都送不出去。這是 10-01 連三天沒發佈卻沒人知道的
+第二層原因。
+
+**兩個刻意的設計**：
+
+* 用 `subprocess` 而不是 `import`。`send_alert.py` 在另一個專案資料夾，而這支
+  腳本必須在**沒有那個專案的機器上也能照常發佈**（搬到 Mac mini 時會用到），
+  所以找不到就印一行帶過，不是 raise。
+* `notify()` 整段包 try。**通知失敗絕對不能變成發佈失敗**——那會把一個「網站
+  有更新但沒寄信」的小問題升級成「網站沒更新」。這跟 09-23 那個教訓同一類：
+  診斷／通知的程式自己崩掉，比原本的問題更難查。
+
+驗證：實際寄了一封測試信（`publish_daily.notify()` 跨專案呼叫），收到；重跑
+`publish_daily.py` 確認 `nothing new to publish`、exit 0，沒有回歸。
+
+---
+
 ## 2026-10-02　每日發佈加上自動重試，並記錄連續失敗次數
 
 作者要求建置失敗時自動重試。**先講清楚重試的界線**：10-01 那次是 `KeyError`，

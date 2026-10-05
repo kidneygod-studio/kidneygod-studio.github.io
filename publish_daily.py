@@ -19,12 +19,12 @@ r"""每日新知自動發佈到護腎教室網站（kidneygod.net / GitHub Pages
 
 Exit 0 = 已發佈或沒有新東西；非 0 = 某一步失敗。
 
-⚠ **沒有人會收到警報。** 呼叫端 run_daily_nephrology.ps1 只是
-  `Write-Output "Website publish returned exit N"` 寫進 log，沒有通知任何人。
-  2026-10-01 建站 KeyError 連續失敗三天，就是這樣沒被發現的——作者是因為
-  後台少了確認選項才察覺。目前的替代方案是 fail() 會累計連續失敗次數並在
-  輸出最前面印一行醒目訊息（見 STATE_FILE），但那仍然要有人去看 log。
-  真正的通知（寄信／Telegram）還沒做，那是作者的決定。
+失敗時會**寄 email 警報**（見 notify()）。2026-10-05 補上，因為在那之前
+呼叫端 run_daily_nephrology.ps1 只是 `Write-Output "Website publish
+returned exit N"` 寫進 log，沒有通知任何人——10-01 建站 KeyError 連續失敗
+三天就是這樣沒被發現的，作者是因為後台少了確認選項才察覺。
+警報走 email 而不是 Telegram：醫院網路擋 api.telegram.org，警報會在最需要
+它的時候送不出去（10-05 實際踩到）。
 
 重試策略見 attempt()：分步給不同次數，確定性失敗不做無謂重試。
 """
@@ -101,6 +101,29 @@ def attempt(what, fn, tries):
 # 這不是通知機制（作者還沒要），但至少讓看 log 的人一眼知道這不是今天才壞的。
 STATE_FILE = os.path.join(ROOT, '.publish_state.json')
 
+# 警報交給每日摘要那邊的 send_alert.py（email 優先、Telegram 備援、都不通就落地
+# 存檔）。刻意用 subprocess 而不是 import：那支程式在另一個專案資料夾，而這支
+# 腳本必須在「沒有那個專案」的機器上也能照常發佈，所以找不到就只印一行帶過。
+ALERT_CANDIDATES = [
+    os.path.join(os.path.expanduser('~'), 'nephrology_digest', 'scripts', 'send_alert.py'),
+    os.path.join(os.path.dirname(ROOT), 'nephrology_digest', 'scripts', 'send_alert.py'),
+]
+
+
+def notify(msg):
+    """寄警報。**絕對不能讓通知失敗變成發佈失敗**，所以整段包起來。"""
+    script = next((p for p in ALERT_CANDIDATES if os.path.exists(p)), None)
+    if not script:
+        print('    （找不到 send_alert.py，略過警報通知）')
+        return
+    try:
+        r = subprocess.run([PY, script, msg], capture_output=True, text=True,
+                           encoding='utf-8', errors='replace', timeout=180)
+        print('    警報已寄出' if r.returncode == 0
+              else f'    警報寄送失敗：{(r.stderr or "").strip()[-200:]}')
+    except Exception as e:
+        print(f'    警報寄送失敗：{e}')
+
 
 def _state():
     try:
@@ -125,6 +148,10 @@ def fail(code, msg):
         print(f'*** 注意：每日新知已連續 {streak} 次發佈失敗'
               f'（最早一次之後就沒有新內容上站）***')
     print(msg)
+    # 連續失敗次數寫進主旨：一眼看出是今天才壞的，還是已經壞了好幾天
+    head = (f'護腎教室每日新知發佈失敗'
+            + (f'（已連續 {streak} 次）' if streak > 1 else ''))
+    notify(f'{head}\n\n{msg}')
     return code
 
 
