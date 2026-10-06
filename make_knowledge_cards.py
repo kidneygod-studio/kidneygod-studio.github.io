@@ -13,22 +13,18 @@
 """
 import os, sys, json, textwrap
 from PIL import Image, ImageDraw, ImageFont
+import font_paths
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-FONTS = {
-    "kai":   r"C:\Windows\Fonts\kaiu.ttf",       # 標楷體
-    "ming":  r"C:\Windows\Fonts\mingliu.ttc",    # 新細明體
-    "sans":  r"C:\Windows\Fonts\msjh.ttc",       # 微軟正黑體
-    "bold":  r"C:\Windows\Fonts\msjhbd.ttc",     # 微軟正黑體 粗
-    "light": r"C:\Windows\Fonts\msjhl.ttc",      # 微軟正黑體 細
-    "emoji": r"C:\Windows\Fonts\seguiemj.ttf",   # Segoe UI Emoji（中文字型無 emoji 字符）
-}
+# 字型位置集中在 font_paths.py（Windows／Mac 都能跑，見該檔說明）
+# 原本是：kai 標楷體、ming 新細明體、sans/bold/light 微軟正黑體、emoji Segoe UI Emoji
+FONTS = {k: font_paths.font(k) for k in ("kai", "ming", "sans", "bold", "light", "emoji")}
 _cache = {}
 def F(key, size):
     k = (key, size)
     if k not in _cache:
-        _cache[k] = ImageFont.truetype(FONTS[key], size)
+        _cache[k] = ImageFont.truetype(FONTS[key][0], size, index=FONTS[key][1])
     return _cache[k]
 
 # 分類 →（主色, 淺色底, 標題字型, 情境說明）
@@ -72,14 +68,16 @@ def draw_body(d, text, x, y, maxw, size, lh, color=BODY, key="sans"):
 
 _emoji_cache = {}
 def render_emoji(ch, size):
-    """Segoe UI Emoji 是點陣彩色字型，只有 109px 這類內建尺寸畫得出來，
-    因此固定用 109 繪製再縮到需要的大小。"""
+    """彩色 emoji 是點陣字型，只有內建尺寸畫得出來（Segoe 109、Apple 160），
+    因此用內建尺寸繪製再縮到需要的大小。"""
     key = (ch, size)
     if key in _emoji_cache: return _emoji_cache[key]
     try:
-        f = ImageFont.truetype(FONTS["emoji"], 109)
-        tmp = Image.new("RGBA", (160, 160), (0, 0, 0, 0))
-        ImageDraw.Draw(tmp).text((80, 80), ch, font=f, anchor="mm", embedded_color=True)
+        es = font_paths.emoji_draw_size()
+        f = ImageFont.truetype(FONTS["emoji"][0], es, index=FONTS["emoji"][1])
+        c = round(es * 1.47)
+        tmp = Image.new("RGBA", (c, c), (0, 0, 0, 0))
+        ImageDraw.Draw(tmp).text((c // 2, c // 2), ch, font=f, anchor="mm", embedded_color=True)
         bb = tmp.getbbox()
         if not bb: raise ValueError("empty")
         out = tmp.crop(bb)

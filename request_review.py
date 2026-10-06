@@ -31,7 +31,8 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ROOT = Path(__file__).resolve().parent
 SITE = "https://kidneygod.net"
 # email_delivery 住在另一個專案，那裡才有 Resend 設定與重試邏輯，不要另外再寫一份
-sys.path.insert(0, r"C:\Users\user\nephrology_digest\scripts")
+# Windows 是 C:\Users\user\nephrology_digest，Mac mini 是 ~/nephrology_digest——兩者都是家目錄底下
+sys.path.insert(0, str(Path.home() / "nephrology_digest" / "scripts"))
 
 
 def resolve(arg: str) -> str:

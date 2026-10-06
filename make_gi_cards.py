@@ -20,6 +20,7 @@
 """
 import os, sys, json, math, random, zlib
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
+import font_paths
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -27,15 +28,9 @@ W, H = 900, 1080
 ART_DIR = "gi/art"
 OUT_DIR = "cards/gi"
 
-FONTS = {
-    "ming":  (r"C:\Windows\Fonts\mingliu.ttc", 0),    # 新細明體
-    # mingliub.ttc 是 Ext-B 專用字型，不含常用中文，別用
-    "serif": (r"C:\Windows\Fonts\mingliu.ttc", 0),    # 新細明體（襯線數字）
-    "kai":   (r"C:\Windows\Fonts\kaiu.ttf", 0),       # 標楷體
-    "sans":  (r"C:\Windows\Fonts\msjh.ttc", 0),       # 微軟正黑體
-    "bold":  (r"C:\Windows\Fonts\msjhbd.ttc", 0),     # 微軟正黑體 粗
-    "emoji": (r"C:\Windows\Fonts\seguiemj.ttf", 0),
-}
+# 字型位置集中在 font_paths.py（Windows／Mac 都能跑，見該檔說明）
+# Windows 上的 mingliub.ttc 是 Ext-B 專用字型，不含常用中文，別用
+FONTS = {k: font_paths.font(k) for k in ("ming", "serif", "kai", "sans", "bold", "emoji")}
 _fc = {}
 def F(key, size):
     k = (key, size)
@@ -91,13 +86,15 @@ def fit_font(d, text, key, maxw, start, floor=20):
 
 _emoji_cache = {}
 def emoji_img(ch, size):
-    """Segoe UI Emoji 是點陣彩色字型，固定用 109px 繪製再縮放。"""
+    """彩色 emoji 是點陣字型，只能用內建尺寸繪製再縮放（見 font_paths）。"""
     key = (ch, size)
     if key in _emoji_cache: return _emoji_cache[key]
     try:
-        f = ImageFont.truetype(FONTS["emoji"][0], 109)
-        tmp = Image.new("RGBA", (170, 170), (0, 0, 0, 0))
-        ImageDraw.Draw(tmp).text((85, 85), ch, font=f, anchor="mm", embedded_color=True)
+        es = font_paths.emoji_draw_size()
+        f = ImageFont.truetype(FONTS["emoji"][0], es, index=FONTS["emoji"][1])
+        c = round(es * 1.56)
+        tmp = Image.new("RGBA", (c, c), (0, 0, 0, 0))
+        ImageDraw.Draw(tmp).text((c // 2, c // 2), ch, font=f, anchor="mm", embedded_color=True)
         bb = tmp.getbbox()
         out = tmp.crop(bb) if bb else None
         if out is not None:

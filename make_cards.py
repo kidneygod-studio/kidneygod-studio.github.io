@@ -7,13 +7,15 @@ A4 @150dpi = 1240x1754。醫學依據：
 """
 import os, sys, json, random
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
+import font_paths
 
 sys.stdout.reconfigure(encoding="utf-8")
 os.makedirs("cards", exist_ok=True)
 
-REG = r"C:\Windows\Fonts\msjh.ttc"
-BLD = r"C:\Windows\Fonts\msjhbd.ttc"
-F = lambda s, b=False: ImageFont.truetype(BLD if b else REG, s)
+# 字型位置集中在 font_paths.py（Windows／Mac 都能跑）
+REG = font_paths.font("sans")
+BLD = font_paths.font("bold")
+F = lambda s, b=False: ImageFont.truetype((BLD if b else REG)[0], s, index=(BLD if b else REG)[1])
 
 ACCENT = (124, 92, 255)
 INK    = (61, 44, 41)

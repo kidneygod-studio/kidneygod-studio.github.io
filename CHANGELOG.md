@@ -5,6 +5,37 @@ git diff 就有，值得記下來的是當時的判斷理由，以及那些不�
 
 ---
 
+## 2026-10-06　圖卡產生器與審閱信改成 Mac 也能跑
+
+搬到 Mac mini 後還有四支寫死 Windows 路徑：
+
+| 腳本 | 原本 | 改成 |
+|---|---|---|
+| `request_review.py` | `C:\Users\user\nephrology_digest\scripts` | `Path.home() / "nephrology_digest" / "scripts"`（兩台都在家目錄底下） |
+| `make_gi_cards.py`、`make_knowledge_cards.py`、`make_cards.py` | `C:\Windows\Fonts\...` | 新增 `font_paths.py` 統一解析 |
+
+`font_paths.py` 的順序：環境變數 `KIDNEYGOD_FONTS`（放 Windows 字型檔的資料夾）→
+Windows 原位置 → macOS 對應字型（黑體 TC、宋體 TC、楷體 TC、Apple Color Emoji）。
+
+**踩到的坑**：
+
+* **Mac 的替代字型外觀不同**（微軟正黑體 → 黑體 TC 等）。全部重產沒問題，
+  但**只補一兩張新卡時，新舊會看得出差異**。要一模一樣，就把 Windows 的
+  `msjh.ttc／msjhbd.ttc／msjhl.ttc／mingliu.ttc／kaiu.ttf／seguiemj.ttf` 複製到
+  一個資料夾，設 `KIDNEYGOD_FONTS` 指向它。
+* **Apple Color Emoji 只接受 20/32/40/48/64/96/160 這幾個尺寸**，用 Segoe 的 109
+  會直接失敗、emoji 變空白（被 try 吞掉，不會報錯）。改成依字型取繪製尺寸，
+  畫布也跟著放大。
+* 楷體 TC 在 macOS 是可下載字型，路徑帶雜湊，用萬用字元找；沒下載的機器
+  退回宋體 TC。collection index 都用 `getname()` 確認過是 TC 不是 SC。
+
+驗證：在 repo 的暫存副本跑三支產生器（不覆蓋正式產出），目視確認一張
+`cards/gi`、一張 `cards/k`、一張 `cards/card-*`：中文、標楷體標題、emoji 都正常；
+`request_review` 在 Mac 上 import `email_delivery` 成功（今天四篇長文的審閱信
+就是用手動指定路徑寄的，這次改完不必再指定）。
+
+---
+
 ## 2026-10-06　新增四篇長文：尿酸與痛風、腎結石、腎性貧血、顯影劑
 
 `uric-acid-gout-kidney`、`kidney-stones-prevention`、`ckd-anemia`、`contrast-ct-kidney`。
