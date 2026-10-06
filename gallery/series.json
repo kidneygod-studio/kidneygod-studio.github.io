@@ -24,8 +24,8 @@
   "name": "三高健康教室 Pro",
   "slug": "metabolic-pro",
   "intro": "進階版，從最新指引的分類、診斷標準到心血管風險評估工具。",
-  "count": 25,
-  "day_range": "Day 1–25"
+  "count": 29,
+  "day_range": "Day 1–30"
  },
  {
   "name": "護腎陪伴日常",
@@ -33,5 +33,12 @@
   "intro": "日常生活裡的護腎提醒，輕鬆一點的一系列。",
   "count": 6,
   "day_range": "Day 1–7"
+ },
+ {
+  "name": "其他",
+  "slug": "others",
+  "intro": "沒有歸入固定系列的單篇衛教圖。",
+  "count": 19,
+  "day_range": "Day 1–15"
  }
 ]
