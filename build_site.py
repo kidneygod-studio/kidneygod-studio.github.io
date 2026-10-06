@@ -453,6 +453,19 @@ SOURCES: dict[str, tuple[str, str, str]] = {
     "fda_tfnd": ("食品藥物管理署 食品營養成分資料庫",
                  "https://consumer.fda.gov.tw/Food/TFND.aspx?nodeID=178",
                  "衛生福利部食品藥物管理署"),
+    "kdigo_anemia": ("KDIGO 2026 慢性腎臟病貧血處置臨床指引",
+                     "https://kdigo.org/guidelines/anemia-in-ckd/", "KDIGO"),
+    "acr_gout": ("2020 ACR 痛風處置指引",
+                 "https://rheumatology.org/gout-guideline",
+                 "American College of Rheumatology"),
+    "acr_contrast": ("ACR 顯影劑使用手冊（ACR Manual on Contrast Media）",
+                     "https://www.acr.org/Clinical-Resources/Clinical-Tools-and-Reference/"
+                     "Contrast-Manual", "American College of Radiology"),
+    "niddk_stones": ("NIDDK 腎結石專區",
+                     "https://www.niddk.nih.gov/health-information/urologic-diseases/"
+                     "kidney-stones",
+                     "National Institute of Diabetes and Digestive and Kidney Diseases"),
+    "tua": ("台灣泌尿科醫學會", "https://www.tua.org.tw/", "台灣泌尿科醫學會"),
     "niddk": ("NIDDK 慢性腎臟病專區",
               "https://www.niddk.nih.gov/health-information/kidney-disease/"
               "chronic-kidney-disease-ckd",
@@ -489,6 +502,11 @@ PAGE_SOURCES: dict[str, list[str]] = {
     # 旅遊透析靠的是實務規定不是臨床指引，所以引的是腎友協會與健保署
     "dialysis-travel": ["capd", "nhi", "tsn"],
     "no-dialysis-therapy-claims": ["kdigo_ckd", "tsn", "hpa_kidney"],
+    "uric-acid-gout-kidney": ["kdigo_ckd", "acr_gout", "tsn"],
+    # 結石的預防屬泌尿科範疇，KDIGO 沒有結石指引，所以引 NIDDK 與泌尿科醫學會
+    "kidney-stones-prevention": ["niddk_stones", "tua", "hpa_kidney"],
+    "ckd-anemia": ["kdigo_anemia", "tsn", "niddk"],
+    "contrast-ct-kidney": ["acr_contrast", "kdigo_ckd", "tsn"],
 }
 
 
