@@ -466,6 +466,10 @@ SOURCES: dict[str, tuple[str, str, str]] = {
                      "kidney-stones",
                      "National Institute of Diabetes and Digestive and Kidney Diseases"),
     "tua": ("台灣泌尿科醫學會", "https://www.tua.org.tw/", "台灣泌尿科醫學會"),
+    "kdigo_igan": ("KDIGO 2025 IgA 腎病變與 IgA 血管炎處置臨床指引",
+                   "https://kdigo.org/guidelines/iga-nephropathy/", "KDIGO"),
+    "pkd_found": ("PKD Foundation（美國多囊腎基金會）病人資源",
+                  "https://pkdcure.org/", "PKD Foundation"),
     "niddk": ("NIDDK 慢性腎臟病專區",
               "https://www.niddk.nih.gov/health-information/kidney-disease/"
               "chronic-kidney-disease-ckd",
@@ -507,6 +511,14 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "kidney-stones-prevention": ["niddk_stones", "tua", "hpa_kidney"],
     "ckd-anemia": ["kdigo_anemia", "tsn", "niddk"],
     "contrast-ct-kidney": ["acr_contrast", "kdigo_ckd", "tsn"],
+    # 「沒有三高為什麼也會腎臟病」的主軸是原發性腎絲球疾病，IgA 腎病變佔最大宗，
+    # 所以引 KDIGO 2025 那份專門指引，而不是只引泛用的 CKD 指引
+    "ckd-without-diabetes-hypertension": ["kdigo_igan", "kdigo_ckd", "tsn"],
+    "water-intake-kidney": ["kdigo_ckd", "hpa_kidney", "niddk"],
+    # 多囊腎是遺傳疾病，KDIGO 沒有專門指引；病人端的追蹤與家族篩檢資源以
+    # NIDDK 與 PKD Foundation 最完整
+    "polycystic-kidney-disease": ["niddk", "pkd_found", "tsn"],
+    "blood-pressure-target-ckd": ["kdigo_bp", "aha_bp", "tsoc"],
 }
 
 
@@ -2724,12 +2736,22 @@ def build_home_magazine(by_cat: dict[str, list[dict]], extra: list[dict],
     def art(path: str) -> dict:
         return next(a for a in extra if a["path"] == path)
 
-    # 與正式首頁同一批精選，順序也一樣——比較的是版面不是選題
-    featured_paths = ["articles/creatinine-high-what-to-do.html",
+    # 首頁精選六篇，**第一篇就是封面故事**（整幅大圖＋摘要，見 cover_html）。
+    # 六篇刻意分屬六個不同的切入點：熱門藥物、檢查數字、飲食、血壓、症狀、
+    # 識讀話術——同一類放兩篇會讓後面幾格看起來像第一格的補充，而不是另一個入口。
+    # 不放 egfr-meaning-ckd-stages 與 lab-values：那兩篇已經在下方的常用入口裡。
+    #
+    # 2026-10-07 作者指定「瘦瘦針」那篇當封面故事。它同屬用藥類，所以讓位的是
+    # painkiller-nsaid-kidney（止痛藥）——保留六個切入點各一篇的設計。止痛藥那篇
+    # 仍在「用藥安全」分類頁，而且被尿酸、腎結石等多篇正文連到，不是從站上消失。
+    #
+    # ⚠ 下面 build_home()（cards 版，目前非正式首頁）有一份同樣的清單，改這裡
+    #   要一起改——兩邊不同步的話，只有切換 HOME_STYLE 的時候才會發現。
+    featured_paths = ["articles/glp1-weight-loss-kidney.html",
+                      "articles/creatinine-high-what-to-do.html",
                       "articles/taiwan-eating-out-sodium.html",
                       "articles/home-blood-pressure-measurement.html",
                       "articles/foamy-urine-proteinuria.html",
-                      "articles/painkiller-nsaid-kidney.html",
                       "articles/no-dialysis-therapy-claims.html"]
     feats = [art(p) for p in featured_paths]
 
@@ -2871,15 +2893,17 @@ def build_home(by_cat: dict[str, list[dict]], extra: list[dict], n_gallery: int 
         for c, v in by_cat.items())
 
     # 首頁固定精選六篇（三欄兩排，2026-09-23 從三篇增為兩排）；完整列表保留所有文章。
-    # 六篇刻意分屬六個不同的切入點：檢查數字、飲食、血壓、症狀、用藥、識讀話術——
+    # 六篇刻意分屬六個不同的切入點：熱門藥物、檢查數字、飲食、血壓、症狀、識讀話術——
     # 同一類放兩篇會讓第二排看起來像第一排的補充，而不是另一個入口。
     # 不放 egfr-meaning-ckd-stages 與 lab-values：那兩篇已經在上方的四個常用入口裡，
     # 首頁同一屏出現兩次等於浪費一格。
-    featured_paths = ["articles/creatinine-high-what-to-do.html",
+    # **與 build_home_magazine() 的清單保持一致**（那邊是目前的正式首頁，第一篇
+    # 會當成封面故事）。選篇的理由寫在那邊。
+    featured_paths = ["articles/glp1-weight-loss-kidney.html",
+                      "articles/creatinine-high-what-to-do.html",
                       "articles/taiwan-eating-out-sodium.html",
                       "articles/home-blood-pressure-measurement.html",
                       "articles/foamy-urine-proteinuria.html",
-                      "articles/painkiller-nsaid-kidney.html",
                       "articles/no-dialysis-therapy-claims.html"]
     selected = [next(a for a in extra if a["path"] == path) for path in featured_paths]
     feats = "".join(mag_card(a).replace('class="mcard"', 'class="mcard home-reveal"', 1) for a in selected)
