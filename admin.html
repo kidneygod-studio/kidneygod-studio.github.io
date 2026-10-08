@@ -146,6 +146,19 @@ const SKIP = ["shop.html", "game.html", "library.html", "dash.html", "admin.html
    理由寫在那裡：內容沒有人逐篇看過，就不該掛醫師審閱的名字，
    而且日期會停在按下去那天，隔天新知一進來就開始失真。 */
 const AUTO = /^articles\/(news|gallery)/;
+/* 不需要醫學審閱的頁面（2026-10-08 作者指定）。
+
+   和上面兩類不一樣：這幾頁**是 build_site.py 產生的，而且技術上掛得上審閱
+   日期**（reviewed_ld() 對它們不會回空）。排除的理由是內容性質——
+   首頁與文章匯總頁是導覽、about 是作者介紹、legal 是法律聲明、
+   food 與 calc 是查詢與計算工具。這些頁面沒有可供審閱的醫學主張，
+   掛上「醫師審閱」不會錯，但也沒有意義，只是讓後台那張表永遠有六列紅字，
+   把真正待審的文章稀釋掉。
+
+   ⚠ 要再加回來的話，直接從這個陣列拿掉即可——reviewed.json 裡目前沒有
+     這六頁的紀錄，所以這次排除不會藏起任何已經按過的確認。 */
+const NO_REVIEW = ["index.html", "articles/index.html", "about.html",
+                   "legal.html", "food.html", "calc.html"];
 async function loadPages(){
   const xml = await fetch("/sitemap.xml?cb=" + Date.now()).then(r => r.text());
   const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
@@ -154,7 +167,7 @@ async function loadPages(){
     if(p === "" || p.endsWith("/")) p += "index.html";     // "" → index.html、articles/ → articles/index.html
     return p;
   }).filter(p => !p.startsWith("tainanfood/") && !p.startsWith("dialysis/")
-                 && !SKIP.includes(p) && !AUTO.test(p));
+                 && !SKIP.includes(p) && !NO_REVIEW.includes(p) && !AUTO.test(p));
 }
 
 async function loadAll(){
