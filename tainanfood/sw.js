@@ -1,5 +1,5 @@
 // 台南美食通 service worker：網站殼層離線可用，資料採網路優先。
-const CACHE = 'tnf-v3';   // 改版就換號，activate 時舊的整批刪掉
+const CACHE = 'tnf-v4';   // 改版就換號，activate 時舊的整批刪掉
 // 靜態站：每頁各自是一個 HTML，這裡只預抓首頁與共用資源，其餘瀏覽到才進快取
 const SHELL = ['./', './assets/style.css', './assets/app.js', './manifest.webmanifest', './icon.svg'];
 

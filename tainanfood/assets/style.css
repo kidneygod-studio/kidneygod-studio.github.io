@@ -325,3 +325,23 @@ footer a.kglink:hover{border-bottom-color:currentColor}
 /* 卡片上的照片作者標示：必要但要低調 */
 .gcredit.sm{font-size:9.5px;letter-spacing:0;padding:1px 6px;right:6px;bottom:6px;background:rgba(0,0,0,.45);max-width:80%}
 .card:hover .gcredit.sm{background:rgba(0,0,0,.7)}
+
+/* 社群分享按鈕（與護腎教室同一套做法，配色用本站的變數）。
+   外框圓鈕而非實心色塊：品牌色只在 hover 上邊框與圖示，不填滿，免得變成廣告帶。
+   一排固定不換行：五顆 44px 加間距約 260px，375px 手機也排得下。 */
+.share .sbtns{display:flex;flex-wrap:nowrap;gap:10px}
+.share.top{margin:14px 0 18px}
+.share.end{margin:34px 0 22px;padding:20px 22px;background:var(--card);border:1px solid var(--rule);border-radius:14px}
+.share.end h3{margin:0 0 4px;font-family:var(--serif);font-size:19px}
+.share.end p{margin:0 0 14px;font-size:14px;color:var(--ink-2)}
+.cover .share.top{margin:16px 0 0}
+.sb{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex-shrink:0;
+  border-radius:999px;cursor:pointer;border:1.5px solid var(--rule);background:var(--card);color:var(--ink);
+  transition:border-color .15s,color .15s;padding:0}
+.sb:hover{border-color:var(--red);color:var(--red)}
+.sb svg{flex-shrink:0}
+/* 必要：hidden 屬性靠瀏覽器預設的 display:none，上面的 inline-flex 會把它蓋掉 */
+.sb[hidden],.sb svg[hidden]{display:none}
+.sb.line:hover{border-color:#06c755;color:#06c755}
+.sb.fb:hover{border-color:#0866ff;color:#0866ff}
+.sb.th:hover{border-color:var(--ink);color:var(--ink)}

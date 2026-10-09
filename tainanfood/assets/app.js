@@ -174,4 +174,51 @@
   if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
     navigator.serviceWorker.register(document.body.dataset.sw || 'sw.js').catch(function () {});
   }
+
+  // ---------------------------------------------------------------- 分享按鈕
+  // 與護腎教室同一份邏輯。各平台的分享頁設計成彈出視窗開啟；當成整頁跳轉時
+  // Facebook 常把人丟到動態牆而不是發文框。彈窗被擋就讓 <a> 照常跳轉。
+  document.querySelectorAll('.share').forEach(function (box) {
+    var copy = box.querySelector('.copy'), native = box.querySelector('.native');
+    box.addEventListener('click', function (ev) {
+      var a = ev.target.closest && ev.target.closest('a.sb');
+      if (!a) return;
+      var w = window.open(a.href, 'tnfshare', 'width=600,height=540');
+      if (!w) return;
+      try { w.opener = null; } catch (err) {}   // window.open 不吃 rel=noopener
+      ev.preventDefault();
+    });
+    // 原生分享面板（主要是手機）排第一顆。觸控裝置上收起 Facebook：FB App
+    // 攔下 facebook.com 連結卻不認得 sharer.php，使用者會落在動態牆。
+    // 判斷用 pointer:coarse 而不是 navigator.share——桌機 Chrome/Edge 也有 share。
+    if (navigator.share) {
+      native.hidden = false;
+      var fbBtn = box.querySelector('a.fb');
+      if (fbBtn && matchMedia('(pointer: coarse)').matches) fbBtn.hidden = true;
+      native.addEventListener('click', function () {
+        navigator.share({ title: native.dataset.title, url: native.dataset.url })
+          .catch(function () {});   // 使用者取消會 reject，不是錯誤
+      });
+    }
+    copy.addEventListener('click', function () {
+      // 純圖示按鈕：把鏈結圖示換成打勾。不要改 textContent，會把 SVG 清掉。
+      var off = copy.querySelector('.i-off'), on = copy.querySelector('.i-on');
+      var url = copy.dataset.url;
+      function done() {
+        off.hidden = true; on.hidden = false;
+        setTimeout(function () { off.hidden = false; on.hidden = true; }, 1600);
+      }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = url; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (err) {}
+        document.body.removeChild(ta);
+      }
+      // clipboard API 需要安全連線；不支援時退回舊做法，按鈕不能沒反應
+      if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, fallback);
+      else fallback();
+    });
+  });
 })();
