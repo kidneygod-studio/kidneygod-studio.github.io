@@ -5,6 +5,23 @@ git diff 就有，值得記下來的是當時的判斷理由，以及那些不�
 
 ---
 
+## 2026-10-31　「血壓目標」長文補上封面圖（第一張用本機 AI 產生的封面）
+
+`blood-pressure-target-ckd` 原本沒有封面。改用 Mac mini 上的 ComfyUI（Z-Image Turbo）
+產生：明亮自然光、淺木桌上的上臂式血壓計＋袖帶＋水杯＋筆記本，無人物、無文字，
+1920×1088 出 3 張，作者選定 #2 → `hero_src/` → `make_hero.py`／`make_og.py`。
+
+**踩到的坑**
+- **AI 會在血壓計螢幕上畫出假數字**（3 張有 2 張）。即使 prompt 寫 blank screen 也擋不住，
+  所以每張都要人看過；選螢幕空白的那張。之後生有螢幕的器材都要特別檢查這點。
+- **ComfyUI 同時跑影片時，生圖會排隊排很久**（3 張排了 77 分鐘，之後伺服器被關掉，
+  後面的請求全部連不上）。生封面前先確認沒有影片工作在跑。
+- `make_og.py` 會順手產生大量本次不相關的 og（美食通各店、其他長文的 logo 版）並改到
+  `og/articles-ckd-exercise.jpg`——只提交本篇的 og，其餘還原／刪掉。
+
+另外三篇（`ckd-without-diabetes-hypertension`、`polycystic-kidney-disease`、
+`water-intake-kidney`）的候選圖還在產生，作者確認後另外提交。
+
 ## 2026-10-07　新增四篇長文（30 → 34），封面故事換成「瘦瘦針」
 
 ### 封面故事
