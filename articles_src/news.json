@@ -848,6 +848,30 @@
   },
   {
     "journal": "NEJM",
+    "date": "2025-06-22",
+    "topic": "心腎糖肝代謝症候群",
+    "zh": "Cagrilintide 併用 semaglutide 於過重或肥胖成人之療效（REDEFINE 1）",
+    "en": "Coadministered Cagrilintide and Semaglutide in Adults with Overweight or Obesity",
+    "cite": "New England Journal of Medicine．2025年6月22日（2025;393(7):635-647）．DOI: 10.1056/NEJMoa2502081",
+    "url": "https://doi.org/10.1056/NEJMoa2502081",
+    "doi": "10.1056/NEJMoa2502081",
+    "q": "對於無糖尿病的過重（合併肥胖相關併發症）或肥胖成人，cagrilintide 2.4 mg 併用 semaglutide 2.4 mg（CagriSema）相較於安慰劑，減重效果如何？",
+    "f": "第 68 週時，cagrilintide-semaglutide 組體重平均變化為 -20.4%，安慰劑組為 -3.0%（估計差異 -17.3 個百分點；95% CI -18.1 至 -16.6；P<0.001）。達到體重下降 5% 以上、20% 以上、25% 以上及 30% 以上的比例，皆顯著高於安慰劑組（所有比較 P<0.001）。",
+    "m": "CagriSema 可帶來具臨床意義的大幅減重，為肥胖藥物治療提供另一種強效選項，但腸胃道不良事件發生率明顯較高。",
+    "bg": "Semaglutide 2.4 mg 已證實具減重與心血管益處，cagrilintide 2.4 mg 在早期試驗中也呈現良好結果。兩者合併（CagriSema）用於過重合併併發症或肥胖族群的減重效果，先前尚不清楚。",
+    "me": "這是一項 3a 期、68 週、多中心、雙盲、安慰劑及活性藥對照的試驗，收納 BMI ≥30，或 BMI ≥27 且至少有一項肥胖相關併發症、且無糖尿病的成人。受試者以 21:3:3:7 隨機分配至 cagrilintide-semaglutide、semaglutide 單用、cagrilintide 單用或安慰劑，所有組別皆搭配生活型態介入。共同主要終點為第 68 週體重相對變化及體重下降 ≥5%，以 treatment-policy estimand（符合 intention-to-treat 原則）分析。",
+    "r": [
+      "共 3417 位受試者完成隨機分配：cagrilintide-semaglutide 2108 人、semaglutide 302 人、cagrilintide 302 人、安慰劑 705 人。",
+      "第 68 週體重平均變化，cagrilintide-semaglutide 組為 -20.4%，安慰劑組為 -3.0%，估計差異 -17.3 個百分點（95% CI -18.1 至 -16.6；P<0.001）。",
+      "cagrilintide-semaglutide 組達到體重下降 ≥5%、≥20%、≥25% 及 ≥30% 的比例皆顯著高於安慰劑組（P<0.001）。",
+      "腸胃道不良事件（包含噁心、嘔吐、腹瀉、便秘或腹痛）在 cagrilintide-semaglutide 組為 79.6%，安慰劑組為 39.9%。",
+      "腸胃道不良事件多為短暫，嚴重程度為輕至中度。"
+    ],
+    "sig": "臨床意義：對於合併肥胖的慢性腎臟病、高血壓、血脂異常及糖尿病前期等代謝風險族群，體重大幅下降有助於改善整體心腎代謝風險，CagriSema 可作為強化減重的潛在選項。不過本試驗納入的是無糖尿病成人，結果不能直接套用於糖尿病或腎功能受損者，腎臟及心血管硬終點的效益仍待進一步研究。使用時需留意腸胃道副作用，特別是嘔吐、腹瀉可能造成脫水，對腎功能不佳或併用 RAAS 抑制劑、利尿劑的病人應加強衛教與監測。",
+    "lim": "局限性：摘要僅呈現 68 週的減重與安全性結果，無法評估長期的心腎硬終點與持續性，且試驗由藥廠資助。納入的是無糖尿病的成人，結果對糖尿病或腎臟病族群的外推性有限。"
+  },
+  {
+    "journal": "NEJM",
     "date": "2025-06-20",
     "topic": "糖尿病",
     "zh": "幹細胞衍生之完全分化胰島細胞治療第 1 型糖尿病（zimislecel，VX-880-101 FORWARD）",
