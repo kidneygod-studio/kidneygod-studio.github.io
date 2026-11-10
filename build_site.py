@@ -2798,7 +2798,17 @@ def build_home_magazine(by_cat: dict[str, list[dict]], extra: list[dict],
     if PAPERS:
         latest = max(PAPERS, key=lambda x: x.get("date", "") +
                      "-01" * (2 - x.get("date", "").count("-")))
-        news_html = (digest_card(latest, compact=True)
+        # 靜態 HTML 放最新一篇（沒有 JS、搜尋引擎看到的都是這張），
+        # 載入後再從全部新知隨機換一篇（作者 2026-11-11 要求）。
+        # 候選卡片直接內嵌成 JSON，不另外放 .json 檔：sw.js 對 .json 是快取優先，
+        # 外部檔會讓造訪過的人永遠抽舊的那一批；index.html 本來就在每日排程的提交清單裡。
+        pool = json.dumps([digest_card(x, compact=True) for x in PAPERS],
+                          ensure_ascii=False).replace("</", "<\\/")
+        news_html = ('<div id="home-news">' + digest_card(latest, compact=True) + '</div>'
+                     f'<script type="application/json" id="home-news-pool">{pool}</script>'
+                     '<script>(()=>{try{const p=JSON.parse(document.getElementById("home-news-pool")'
+                     '.textContent);const b=document.getElementById("home-news");'
+                     'if(p.length>1)b.innerHTML=p[Math.floor(Math.random()*p.length)];}catch(e){}})();</script>'
                      + f'<p style="margin-top:14px;font-size:14px">'
                        f'<a href="/{ALL_NEWS}" style="color:var(--link);font-weight:700">'
                        f'全部 {len(PAPERS)} 則醫學新知 →</a></p>')

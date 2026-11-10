@@ -5,6 +5,22 @@ git diff 就有，值得記下來的是當時的判斷理由，以及那些不�
 
 ---
 
+## 2026-11-11　首頁醫學新知改成每次載入隨機一篇
+
+作者要求首頁的醫學新知每次載入隨機顯示一篇，不再固定最新那篇。
+
+* 靜態 HTML 仍放最新一篇：沒開 JS 的人和搜尋引擎看到的不變。
+* 全部 181 張精簡卡片內嵌在 `index.html` 的 `<script type="application/json" id="home-news-pool">`，
+  載入後由一小段 inline JS 隨機換掉。卡片是 `digest_card(compact=True)` 產出的 HTML，
+  不在 JS 重寫一份模板，避免兩邊樣式不同步。
+* **為什麼不放外部 .json**：`sw.js` 對 `.json` 是快取優先，造訪過的人會永遠抽舊的那一批，
+  而且新檔還得加進 `publish_daily.py` 的提交清單，否則每天建置後會留下未提交的檔案。
+* 代價：`index.html` 從約 97 KB 變成約 263 KB（gzip 35 KB 變成 72 KB），新知越多會越大。
+  如果之後太大，可以改成只抽最近 N 篇。
+* 跑了 `bump_assets.py`（`check_site.py` 要求 sw.js 版本號對應新內容）。
+
+---
+
 ## 2026-11-11　台南美食通：封面故事改成每週一自動換
 
 新增 `weekly_feature.py`（純 Python，不經 Claude），launchd `com.kidneygod.tainanfood-weekly` 每週一 05:20 執行：
