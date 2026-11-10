@@ -28,7 +28,7 @@ import json
 import re
 import sys
 import urllib.parse
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 # 進度訊息裡有中文和 ⚠，排程用 powershell 跑時 stdout 是 cp950，印不出來就
@@ -2799,10 +2799,16 @@ def build_home_magazine(by_cat: dict[str, list[dict]], extra: list[dict],
         latest = max(PAPERS, key=lambda x: x.get("date", "") +
                      "-01" * (2 - x.get("date", "").count("-")))
         # 靜態 HTML 放最新一篇（沒有 JS、搜尋引擎看到的都是這張），
-        # 載入後再從全部新知隨機換一篇（作者 2026-11-11 要求）。
+        # 載入後再從近一年的新知隨機換一篇（作者 2026-11-11 要求）。
         # 候選卡片直接內嵌成 JSON，不另外放 .json 檔：sw.js 對 .json 是快取優先，
         # 外部檔會讓造訪過的人永遠抽舊的那一批；index.html 本來就在每日排程的提交清單裡。
-        pool = json.dumps([digest_card(x, compact=True) for x in PAPERS],
+        # 只抽近一年發表的（作者 2026-11-11 指定），太舊的研究不該當首頁新知；
+        # 近一年不到兩篇就退回全部，免得首頁永遠同一篇。
+        def _d(x):
+            return x.get("date", "") + "-01" * (2 - x.get("date", "").count("-"))
+        cutoff = (date.today() - timedelta(days=365)).isoformat()
+        recent = [x for x in PAPERS if _d(x) >= cutoff]
+        pool = json.dumps([digest_card(x, compact=True) for x in (recent if len(recent) > 1 else PAPERS)],
                           ensure_ascii=False).replace("</", "<\\/")
         news_html = ('<div id="home-news">' + digest_card(latest, compact=True) + '</div>'
                      f'<script type="application/json" id="home-news-pool">{pool}</script>'

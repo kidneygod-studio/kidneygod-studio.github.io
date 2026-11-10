@@ -354,6 +354,7 @@
   {
     "journal": "NEJM",
     "date": "2026-01-29",
+    "topic": "高血脂",
     "zh": "Olezarsen 治療重度高三酸甘油酯血症並降低急性胰臟炎風險（CORE-TIMI 72a／CORE2-TIMI 72b）",
     "en": "Olezarsen for Managing Severe Hypertriglyceridemia and Pancreatitis Risk",
     "cite": "N Engl J Med．2026年1月29日；394(5):429-441（線上 2025年11月8日）．DOI: 10.1056/NEJMoa2512761",
@@ -991,6 +992,7 @@
   {
     "journal": "NEJM",
     "date": "2025-05-07",
+    "topic": "高血脂",
     "zh": "口服 CETP 抑制劑 Obicetrapib 用於高心血管風險病人：BROADWAY 第三期試驗",
     "en": "Safety and Efficacy of Obicetrapib in Patients at High Cardiovascular Risk",
     "cite": "New England Journal of Medicine．2025年5月7日線上發表（2025;393:51–61）．DOI: 10.1056/NEJMoa2415820",
@@ -2484,6 +2486,7 @@
   {
     "journal": "NEJM",
     "date": "2022-11-24",
+    "topic": "高血脂",
     "zh": "以 Pemafibrate 降低三酸甘油酯能否減少心血管風險：PROMINENT 第 3 期隨機試驗",
     "en": "Triglyceride Lowering with Pemafibrate to Reduce Cardiovascular Risk",
     "cite": "New England Journal of Medicine．2022-11-24（線上 2022-11-05）．DOI: 10.1056/NEJMoa2210645",
@@ -2555,6 +2558,7 @@
   {
     "journal": "NEJM",
     "date": "2022-11-06",
+    "topic": "高血脂",
     "zh": "以小型干擾 RNA 降低心血管疾病患者之脂蛋白(a)：Olpasiran 劑量探索試驗（OCEAN(a)-DOSE）",
     "en": "Small Interfering RNA to Reduce Lipoprotein(a) in Cardiovascular Disease",
     "cite": "New England Journal of Medicine．2022年11月6日（2022;387(20):1855-1864）．DOI: 10.1056/NEJMoa2211023",
@@ -2932,6 +2936,7 @@
   {
     "journal": "NEJM",
     "date": "2022-01-18",
+    "topic": "腎臟疾病",
     "zh": "重症成人輸液選擇：平衡多電解質溶液 vs 生理食鹽水（PLUS 試驗）",
     "en": "Balanced Multielectrolyte Solution versus Saline in Critically Ill Adults",
     "cite": "The New England Journal of Medicine．2022年1月18日線上發表（N Engl J Med 2022;386:815-826）．DOI: 10.1056/NEJMoa2114464",
@@ -3400,6 +3405,7 @@
   {
     "journal": "NEJM",
     "date": "2021-05-20",
+    "topic": "高血壓",
     "zh": "強化與標準收縮壓控制試驗之最終報告（SPRINT 最終分析）",
     "en": "Final Report of a Trial of Intensive versus Standard Blood-Pressure Control",
     "cite": "New England Journal of Medicine．2021年5月20日（N Engl J Med 2021;384:1921-1930）．DOI: 10.1056/NEJMoa1901281",
@@ -3657,6 +3663,7 @@
   {
     "journal": "NEJM",
     "date": "2021-02-18",
+    "topic": "腎臟疾病",
     "zh": "Avacopan（C5a 受體抑制劑）治療 ANCA 相關血管炎：ADVOCATE 第三期試驗",
     "en": "Avacopan for the Treatment of ANCA-Associated Vasculitis",
     "cite": "New England Journal of Medicine．2021年2月18日（384:599–609）．DOI: 10.1056/NEJMoa2023386",
@@ -3822,6 +3829,7 @@
   {
     "journal": "JAMA",
     "date": "2020-11-15",
+    "topic": "高血脂",
     "zh": "高劑量 Omega-3 脂肪酸對比玉米油對高心血管風險病人主要心血管不良事件的影響：STRENGTH 隨機臨床試驗",
     "en": "Effect of High-Dose Omega-3 Fatty Acids vs Corn Oil on Major Adverse Cardiovascular Events in Patients at High Cardiovascular Risk: The STRENGTH Randomized Clinical Trial",
     "cite": "JAMA．2020年11月15日線上發表（JAMA 2020;324(22):2268-2280）．DOI: 10.1001/jama.2020.22258",
@@ -3845,6 +3853,7 @@
   {
     "journal": "NEJM",
     "date": "2020-11-13",
+    "topic": "心血管疾病",
     "zh": "複方降壓降脂「多效藥丸」合併或不合併阿斯匹靈用於無心血管疾病者（TIPS-3 試驗）",
     "en": "Polypill with or without Aspirin in Persons without Cardiovascular Disease",
     "cite": "The New England Journal of Medicine．2020年11月13日線上發表（N Engl J Med 2021;384:216-228）．DOI: 10.1056/NEJMoa2028220",
@@ -4030,6 +4039,7 @@
   {
     "journal": "NEJM",
     "date": "2020-01-01",
+    "topic": "高血脂",
     "zh": "心血管疾病患者的脂蛋白(a)降低：APO(a)-LRx 劑量探索試驗",
     "en": "Lipoprotein(a) Reduction in Persons with Cardiovascular Disease",
     "cite": "New England Journal of Medicine．2020年1月1日（2020;382(3):244-255）．DOI: 10.1056/NEJMoa1905239",
