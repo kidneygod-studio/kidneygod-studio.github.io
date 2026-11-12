@@ -345,3 +345,14 @@ footer a.kglink:hover{border-bottom-color:currentColor}
 .sb.line:hover{border-color:#06c755;color:#06c755}
 .sb.fb:hover{border-color:#0866ff;color:#0866ff}
 .sb.th:hover{border-color:var(--ink);color:var(--ink)}
+/* 關於本站（2026-11-12） */
+.wrap.narrow{max-width:820px}
+.author-card{display:flex;gap:24px;align-items:flex-start;background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+.author-card img{width:150px;height:auto;aspect-ratio:2/3;object-fit:cover;border-radius:10px;flex:none}
+.author-card h2{font-family:var(--serif);font-size:28px;margin:2px 0 8px;letter-spacing:2px}
+.author-card h2 span{font-size:15px;color:var(--ink-3);letter-spacing:1px;margin-left:6px}
+.author-card ul{margin:0 0 10px;padding-left:1.2em}
+.author-card .kicker{color:var(--red);letter-spacing:3px}
+.principles{padding-left:1.2em}
+.principles li{margin-bottom:12px}
+@media (max-width:560px){.author-card{flex-direction:column;align-items:center;text-align:left}.author-card img{width:140px}}
