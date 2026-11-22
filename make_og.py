@@ -112,7 +112,10 @@ def main():
     slugs = set()
     for p in ROOT.rglob("*.html"):
         rel = str(p.relative_to(ROOT)).replace("\\", "/")
-        if "/gi/" in "/" + rel or rel in {"dash.html"}:
+        # tainanfood/ 是台南美食通的產出，它有自己的 og 圖（tainanfood/og/*.png，美食通的
+        # build_static.py 畫的）。不排除的話這裡會替它每一頁做一張護腎教室 logo 卡，
+        # 一次多出近兩百個沒人引用的檔案（2026-11-22 發現）。
+        if "/gi/" in "/" + rel or rel in {"dash.html"} or rel.startswith("tainanfood/"):
             continue
         h = p.read_text("utf-8", "replace")
         if not re.search(r"(?s)<h1[^>]*>(.*?)</h1>", h):
@@ -168,6 +171,8 @@ def main():
     # 反查：HTML 引用的每一張 og:image 都要真的存在
     missing = []
     for p in ROOT.rglob("*.html"):
+        if str(p.relative_to(ROOT)).replace("\\", "/").startswith("tainanfood/"):
+            continue    # 美食通引用的是 /tainanfood/og/，不在這裡的 og/
         h = p.read_text("utf-8", "replace")
         for m in re.finditer(r'property="og:image" content="[^"]*/og/([^"]+)"', h):
             # 檔名規則兩邊各寫一次就會有對不上的一天，所以這裡實際去檔案系統確認

@@ -5,6 +5,12 @@ git diff 就有，值得記下來的是當時的判斷理由，以及那些不�
 
 ---
 
+## 2026-11-22 make_og.py 不再替台南美食通產生 og 圖
+
+- `make_og.py` 掃整個 repo 的 HTML，連 `tainanfood/` 也掃，每次替美食通近兩百頁各做一張護腎教室 logo 卡（沒人引用，美食通用自己的 `tainanfood/og/*.png`），破圖檢查也因此誤報一長串。現在兩段都跳過 `tainanfood/`。
+- 順便發現 `og/articles-gallery-others.jpg`、`og/articles-news-lipid.jpg` 有頁面引用卻從沒提交，線上分享預覽是破圖，補上。
+- `og/articles-ckd-exercise.jpg` 每跑一次都會從 hero_src 重壓、檔案變動，不是真的改了，不要提交。
+
 ## 2026-11-22 新長文：尿液檢查報告怎麼看
 
 - `articles_src/urinalysis-report-guide.md`（分類：檢查數值）：依報告順序講試紙 vs 顯微鏡、比重、潛血、尿蛋白、尿糖、酮體、感染三項、上皮細胞／圓柱體／結晶、膽紅素，加上正確留尿方法與就醫時機。
