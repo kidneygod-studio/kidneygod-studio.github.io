@@ -466,6 +466,9 @@ SOURCES: dict[str, tuple[str, str, str]] = {
                      "kidney-stones",
                      "National Institute of Diabetes and Digestive and Kidney Diseases"),
     "tua": ("台灣泌尿科醫學會", "https://www.tua.org.tw/", "台灣泌尿科醫學會"),
+    "aua_mh": ("2025 AUA/SUFU 顯微鏡血尿評估指引",
+               "https://www.auanet.org/guidelines-and-quality/guidelines/microhematuria",
+               "American Urological Association"),
     "kdigo_igan": ("KDIGO 2025 IgA 腎病變與 IgA 血管炎處置臨床指引",
                    "https://kdigo.org/guidelines/iga-nephropathy/", "KDIGO"),
     "pkd_found": ("PKD Foundation（美國多囊腎基金會）病人資源",
@@ -518,6 +521,7 @@ PAGE_SOURCES: dict[str, list[str]] = {
     # 多囊腎是遺傳疾病，KDIGO 沒有專門指引；病人端的追蹤與家族篩檢資源以
     # NIDDK 與 PKD Foundation 最完整
     "polycystic-kidney-disease": ["niddk", "pkd_found", "tsn"],
+    "urinalysis-report-guide": ["kdigo_ckd", "aua_mh", "tua"],
     "blood-pressure-target-ckd": ["kdigo_bp", "aha_bp", "tsoc"],
 }
 
