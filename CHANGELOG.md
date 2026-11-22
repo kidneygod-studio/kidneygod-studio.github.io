@@ -5,6 +5,26 @@ git diff 就有，值得記下來的是當時的判斷理由，以及那些不�
 
 ---
 
+## 2026-11-22　一次新增 10 篇長文
+
+作者要求「開始寫 10 篇長文」。挑的是和既有 35 篇不重疊、民眾常搜的題目：
+腳水腫（leg-edema-kidney）、夜尿（nocturia-kidney）、腎囊腫（kidney-cyst）、
+腎臟超音波報告（kidney-ultrasound-report）、BUN 偏高（bun-high）、
+中藥與腎臟（herbal-medicine-kidney）、反覆泌尿道感染（recurrent-uti）、
+腎臟病疫苗（ckd-vaccination）、洗腎皮膚癢（ckd-pruritus）、腎臟移植（kidney-transplant-guide）。
+
+- `build_site.py` 新增 11 個來源（NIDDK 腎囊腫、EAU 男性下泌尿道症狀與泌尿道感染指引、
+  AUA 反覆泌尿道感染指引、NCI 馬兜鈴酸、中醫藥司、CDC 依疾病分類的成人疫苗時程、疾管署、
+  KDIGO 移植候選人指引、人體器官移植條例、器官捐贈移植登錄中心），各篇 `PAGE_SOURCES` 已補。
+- **活體捐贈的資格直接對照了法規條文**：捐贈者是**滿 20 歲**（18 歲只適用部分肝臟），
+  配偶須生有子女或結婚兩年以上，另有腎臟的組間配對交換條款。初稿寫成 18 歲，查條文後更正。
+- 台灣的公費疫苗資格、尿毒搔癢新藥在台灣是否可用，每年會變，文中刻意寫成「請以公告為準／
+  請問透析團隊」，沒有寫死。
+- 配圖用本機 ComfyUI 生成（gpu_queue 排隊），圖到之後再跑 make_hero → make_og → build → bump → check，
+  只提交這 10 篇自己的 hero／og。
+
+---
+
 ## 2026-11-22 make_og.py 不再替台南美食通產生 og 圖
 
 - `make_og.py` 掃整個 repo 的 HTML，連 `tainanfood/` 也掃，每次替美食通近兩百頁各做一張護腎教室 logo 卡（沒人引用，美食通用自己的 `tainanfood/og/*.png`），破圖檢查也因此誤報一長串。現在兩段都跳過 `tainanfood/`。

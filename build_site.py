@@ -477,6 +477,35 @@ SOURCES: dict[str, tuple[str, str, str]] = {
               "https://www.niddk.nih.gov/health-information/kidney-disease/"
               "chronic-kidney-disease-ckd",
               "National Institute of Diabetes and Digestive and Kidney Diseases"),
+    "niddk_cyst": ("NIDDK 單純性腎囊腫",
+                   "https://www.niddk.nih.gov/health-information/kidney-disease/"
+                   "simple-kidney-cysts",
+                   "National Institute of Diabetes and Digestive and Kidney Diseases"),
+    "eau_luts": ("EAU 非神經性男性下泌尿道症狀處置指引（含夜尿）",
+                 "https://uroweb.org/guidelines/management-of-non-neurogenic-male-luts",
+                 "European Association of Urology"),
+    "aua_ruti": ("2025 AUA/CUA/SUFU 女性反覆單純性泌尿道感染指引",
+                 "https://www.auanet.org/guidelines-and-quality/guidelines/recurrent-uti",
+                 "American Urological Association"),
+    "eau_uti": ("EAU 泌尿道感染指引",
+                "https://uroweb.org/guidelines/urological-infections",
+                "European Association of Urology"),
+    "nci_aa": ("NCI 馬兜鈴酸致癌物說明",
+               "https://www.cancer.gov/about-cancer/causes-prevention/risk/substances/"
+               "aristolochic-acids", "National Cancer Institute"),
+    "mohw_cm": ("衛生福利部中醫藥司", "https://dep.mohw.gov.tw/DOCMAP/",
+                "衛生福利部中醫藥司"),
+    "cdc_adult_mc": ("CDC 成人疫苗接種時程（依疾病與適應症）",
+                     "https://www.cdc.gov/vaccines/hcp/imz-schedules/"
+                     "adult-medical-condition.html",
+                     "Centers for Disease Control and Prevention"),
+    "tw_cdc": ("衛生福利部疾病管制署", "https://www.cdc.gov.tw/", "衛生福利部疾病管制署"),
+    "kdigo_tx": ("KDIGO 2020 腎臟移植候選人評估與處置臨床指引",
+                 "https://kdigo.org/guidelines/transplant-candidate/", "KDIGO"),
+    "organ_law": ("人體器官移植條例（全國法規資料庫）",
+                  "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=L0020024", "法務部"),
+    "torsc": ("財團法人器官捐贈移植登錄及病人自主推廣中心", "https://www.torsc.org.tw/",
+              "財團法人器官捐贈移植登錄及病人自主推廣中心"),
 }
 
 # 每頁 2–3 條。分類頁是十幾則知識卡的彙整、主題跨得廣，所以這裡標示的是
@@ -523,6 +552,20 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "polycystic-kidney-disease": ["niddk", "pkd_found", "tsn"],
     "urinalysis-report-guide": ["kdigo_ckd", "aua_mh", "tua"],
     "blood-pressure-target-ckd": ["kdigo_bp", "aha_bp", "tsoc"],
+    "leg-edema-kidney": ["kdigo_ckd", "niddk", "tsn"],
+    # 夜尿的評估（排尿日記、夜間多尿的定義）屬泌尿科，引 EAU 男性下泌尿道症狀指引
+    "nocturia-kidney": ["eau_luts", "tua", "kdigo_ckd"],
+    "kidney-cyst": ["niddk_cyst", "tua", "kdigo_ckd"],
+    "kidney-ultrasound-report": ["kdigo_ckd", "tsn", "niddk"],
+    "bun-high": ["kdigo_ckd", "tsn", "niddk"],
+    # 馬兜鈴酸的致癌與腎毒性以 NCI 整理最完整；台灣藥材管理的主管機關是中醫藥司
+    "herbal-medicine-kidney": ["nci_aa", "mohw_cm", "kdigo_ckd"],
+    "recurrent-uti": ["aua_ruti", "eau_uti", "tua"],
+    # 疫苗的建議時程以 CDC 依疾病分類的成人時程為準；台灣的公費資格看疾管署
+    "ckd-vaccination": ["cdc_adult_mc", "tw_cdc", "kdigo_ckd"],
+    "ckd-pruritus": ["kdigo_ckd", "tsn", "niddk"],
+    # 活體捐贈的資格是法律規定，直接引條文；等候登錄看登錄中心
+    "kidney-transplant-guide": ["kdigo_tx", "organ_law", "torsc"],
 }
 
 
