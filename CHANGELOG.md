@@ -10,7 +10,8 @@ git diff 就有，值得記下來的是當時的判斷理由，以及那些不�
 - `articles_src/urinalysis-report-guide.md`（分類：檢查數值）：依報告順序講試紙 vs 顯微鏡、比重、潛血、尿蛋白、尿糖、酮體、感染三項、上皮細胞／圓柱體／結晶、膽紅素，加上正確留尿方法與就醫時機。
 - 新增來源 `aua_mh`（2025 AUA/SUFU 顯微鏡血尿指引）；本篇 PAGE_SOURCES 用 kdigo_ckd、aua_mh、tua。
 - 血尿風險分級只寫因子（年齡、性別、抽菸、紅血球數量、肉眼血尿），**刻意不寫各級的確切切點**，那幾個數字沒有逐條查證到原文。
-- 還沒有配圖，等 Codex 依回覆裡的 prompt 生 `hero_src/urinalysis-report-guide.*`。
+- 配圖改由本機 ComfyUI（`~/ComfyUI/scripts/gen.py image`，經 gpu_queue 排隊）生成，作者 2026-11-22 指示「本機 AI 可以生圖，直接生」；三張候選挑了試紙最像尿液試紙的那張（另兩張像驗孕卡匣）。
+- `make_og.py` 會順手產生一大堆無關的 og 圖（含 tainanfood 每頁），只提交本篇那張，其餘刪掉。
 
 ## 2026-11-21 每日醫學新知停發 7 天：候選池耗盡
 

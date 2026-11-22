@@ -197,6 +197,8 @@ python check_site.py      # 推之前對帳，沒過就別推
 
 新增一篇長文時，**文字與配圖分開做**：
 
+> **2026-11-22 更新（作者指示）**：本機已有 ComfyUI 可生圖，Claude Code 寫完長文後**直接自己生配圖**，不必再交給 Codex。用 `~/ComfyUI/scripts/gen.py image "<英文 prompt>" --w 1920 --h 1088 --n 3`，外面包 `~/Desktop/AI影片生成/tools/gpu_queue.sh`（生成工作一律排隊）；三張挑一張放進 `hero_src/<slug>.*`，跑完下面「圖進來之後」那五支，ComfyUI 佇列空了就關掉。下面的交圖規格照舊適用。`make_og.py` 會順手產生一堆無關的 og 圖，只提交本篇那張。
+
 | 誰 | 做什麼 |
 |---|---|
 | Claude Code | `articles_src/<slug>.md` 的內容、查證、來源連結；建置、驗證、提交 |
