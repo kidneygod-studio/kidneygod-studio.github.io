@@ -453,6 +453,12 @@ SOURCES: dict[str, tuple[str, str, str]] = {
     "fda_tfnd": ("食品藥物管理署 食品營養成分資料庫",
                  "https://consumer.fda.gov.tw/Food/TFND.aspx?nodeID=178",
                  "衛生福利部食品藥物管理署"),
+    "kdoqi_va": ("KDOQI 2019 血管通路臨床照護指引", "https://doi.org/10.1053/j.ajkd.2019.12.001",
+                 "National Kidney Foundation"),
+    "tw_ckd": ("2025 台灣慢性腎臟病臨床診療指引", "https://www.tsn.org.tw/guide.html", "台灣腎臟醫學會"),
+    "tw_vaccine": ("2026 台灣腎臟病患疫苗接種建議指引", "https://www.tsn.org.tw/guide.html", "台灣腎臟醫學會"),
+    "tw_lipid": ("2025 台灣血膽固醇管理臨床路徑共識",
+                 "https://doi.org/10.6515/ACS.202503_41(2).20250215A", "中華民國心臟學會等九個學會"),
     "kdigo_anemia": ("KDIGO 2026 慢性腎臟病貧血處置臨床指引",
                      "https://kdigo.org/guidelines/anemia-in-ckd/", "KDIGO"),
     "acr_gout": ("2020 ACR 痛風處置指引",
@@ -521,9 +527,9 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "生活習慣": ["kdigo_ckd", "hpa_kidney", "niddk"],
     "警訊與迷思": ["kdigo_ckd", "tsn", "hpa_kidney"],
     # 四篇長文（用 slug 當 key）
-    "egfr-meaning-ckd-stages": ["kdigo_ckd", "tsn", "niddk"],
+    "egfr-meaning-ckd-stages": ["tw_ckd", "kdigo_ckd", "niddk"],
     "cystatin-c-egfr": ["kdigo_ckd", "tsn", "niddk"],
-    "creatinine-high-what-to-do": ["kdigo_ckd", "tsn", "niddk"],
+    "creatinine-high-what-to-do": ["tw_ckd", "kdigo_ckd", "niddk"],
     "foamy-urine-proteinuria": ["kdigo_ckd", "tsn", "niddk"],
     "taiwan-eating-out-sodium": ["kdigo_ckd", "fda_tfnd", "hpa_kidney"],
     "painkiller-nsaid-kidney": ["kdigo_ckd", "tsn", "niddk"],
@@ -531,10 +537,10 @@ PAGE_SOURCES: dict[str, list[str]] = {
     "diabetes-kidney-disease": ["kdigo_dm", "ada_soc", "endo_dm"],
     "kidney-function-recovery": ["kdigo_ckd", "tsn", "hpa_kidney"],
     "home-blood-pressure-measurement": ["kdigo_bp", "aha_bp", "tsoc"],
-    "cholesterol-report-ckd": ["kdigo_lipid", "aha_lipid", "tsoc"],
+    "cholesterol-report-ckd": ["tw_lipid", "kdigo_lipid", "aha_lipid"],
     "kidney-lifestyle-evidence": ["kdigo_ckd", "hpa_kidney", "niddk"],
     "kidney-replacement-therapy": ["kdigo_ckd", "tsn", "niddk"],
-    "dialysis-access-preparation": ["kdigo_ckd", "tsn", "niddk"],
+    "dialysis-access-preparation": ["kdoqi_va", "tsn", "niddk"],
     # 旅遊透析靠的是實務規定不是臨床指引，所以引的是腎友協會與健保署
     "dialysis-travel": ["capd", "nhi", "tsn"],
     "no-dialysis-therapy-claims": ["kdigo_ckd", "tsn", "hpa_kidney"],
@@ -542,7 +548,7 @@ PAGE_SOURCES: dict[str, list[str]] = {
     # 結石的預防屬泌尿科範疇，KDIGO 沒有結石指引，所以引 NIDDK 與泌尿科醫學會
     "kidney-stones-prevention": ["niddk_stones", "tua", "hpa_kidney"],
     "ckd-anemia": ["kdigo_anemia", "tsn", "niddk"],
-    "contrast-ct-kidney": ["acr_contrast", "kdigo_ckd", "tsn"],
+    "contrast-ct-kidney": ["acr_contrast", "tw_ckd", "kdigo_ckd"],
     # 「沒有三高為什麼也會腎臟病」的主軸是原發性腎絲球疾病，IgA 腎病變佔最大宗，
     # 所以引 KDIGO 2025 那份專門指引，而不是只引泛用的 CKD 指引
     "ckd-without-diabetes-hypertension": ["kdigo_igan", "kdigo_ckd", "tsn"],
@@ -561,8 +567,8 @@ PAGE_SOURCES: dict[str, list[str]] = {
     # 馬兜鈴酸的致癌與腎毒性以 NCI 整理最完整；台灣藥材管理的主管機關是中醫藥司
     "herbal-medicine-kidney": ["nci_aa", "mohw_cm", "kdigo_ckd"],
     "recurrent-uti": ["aua_ruti", "eau_uti", "tua"],
-    # 疫苗的建議時程以 CDC 依疾病分類的成人時程為準；台灣的公費資格看疾管署
-    "ckd-vaccination": ["cdc_adult_mc", "tw_cdc", "kdigo_ckd"],
+    # 疫苗建議以台灣腎臟醫學會 2026 疫苗指引為主，CDC 成人時程為輔；台灣的公費資格看疾管署
+    "ckd-vaccination": ["tw_vaccine", "cdc_adult_mc", "tw_cdc"],
     "ckd-pruritus": ["kdigo_ckd", "tsn", "niddk"],
     # 活體捐贈的資格是法律規定，直接引條文；等候登錄看登錄中心
     "kidney-transplant-guide": ["kdigo_tx", "organ_law", "torsc"],
