@@ -22,6 +22,9 @@ git diff 就有，值得記下來的是當時的判斷理由，以及那些不�
   請問透析團隊」，沒有寫死。
 - 配圖用本機 ComfyUI 生成（gpu_queue 排隊），圖到之後再跑 make_hero → make_og → build → bump → check，
   只提交這 10 篇自己的 hero／og。
+- 11/22 配圖上線：每篇 3 張挑 1 張（避開有假字的，例如疫苗瓶上的「VACCINE」）。中藥那篇三張的藥袋
+  都有假中文字，挑第 2 張後用 OpenCV inpaint 把藥袋上的字抹掉。make_og 順手改到的
+  `og/articles-ckd-exercise.jpg`、新產生的 `og/admin.jpg` 都沒提交。
 
 ---
 
